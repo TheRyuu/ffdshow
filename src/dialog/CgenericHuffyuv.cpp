@@ -30,7 +30,7 @@ void TgenericHuffyuvPage::init(void)
 
 bool TgenericHuffyuvPage::enabled(void)
 {
-    return codecId==CODEC_ID_HUFFYUV || codecId==CODEC_ID_FFVHUFF;
+    return codecId==CODEC_ID_FFVHUFF;
 }
 
 void TgenericHuffyuvPage::cfg2dlg(void)
@@ -39,7 +39,7 @@ void TgenericHuffyuvPage::cfg2dlg(void)
     cbxSetCurSel(IDC_CBX_HUFFYUV_PRED,cfgGet(IDFF_enc_huffyuv_pred));
     setCheck(IDC_CHB_HUFFYUV_CTX,cfgGet(IDFF_enc_huffyuv_ctx));
     setCheck(IDC_CHB_GRAY,cfgGet(IDFF_enc_gray));
-    enable(0,IDC_CHB_GRAY); //maybe lavc will support grayscale huffyuv encoding some day (or should I try to modify it?)
+    enable(0,IDC_CHB_GRAY);
 }
 
 void TgenericHuffyuvPage::translate(void)

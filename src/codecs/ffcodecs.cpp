@@ -23,67 +23,11 @@
 const FOURCC* getCodecFOURCCs(CodecID codecId)
 {
     switch (codecId) {
-        case CODEC_ID_MPEG4:
-        case CODEC_ID_XVID4: {
-            static const FOURCC fccs[]= {FOURCC_XVID,FOURCC_FFDS,FOURCC_FVFW,FOURCC_DX50,FOURCC_DIVX,FOURCC_MP4V,0};
-            return fccs;
-        }
-        case CODEC_ID_MSMPEG4V3: {
-            static const FOURCC fccs[]= {FOURCC_MP43,FOURCC_DIV3,0};
-            return fccs;
-        }
-        case CODEC_ID_MSMPEG4V2: {
-            static const FOURCC fccs[]= {FOURCC_MP42,FOURCC_DIV2,0};
-            return fccs;
-        }
-        case CODEC_ID_MSMPEG4V1: {
-            static const FOURCC fccs[]= {FOURCC_MP41,FOURCC_DIV1,0};
-            return fccs;
-        }
-        case CODEC_ID_MPEG1VIDEO: {
-            static const FOURCC fccs[]= {FOURCC_MPEG,FOURCC_MPG1,0};
-            return fccs;
-        }
-        case CODEC_ID_MPEG2_QUICK_SYNC:
-        case CODEC_ID_MPEG2VIDEO: {
-            static const FOURCC fccs[]= {FOURCC_MPEG,FOURCC_MPG2,0};
-            return fccs;
-        }
-        case CODEC_ID_H263:
-        case CODEC_ID_H263P:
-        case CODEC_ID_H263I: {
-            static const FOURCC fccs[]= {FOURCC_H263,FOURCC_S263,0};
-            return fccs;
-        }
-        case CODEC_ID_H261: {
-            static const FOURCC fccs[]= {FOURCC_H261,0};
-            return fccs;
-        }
-        case CODEC_ID_WMV1: {
-            static const FOURCC fccs[]= {FOURCC_WMV1,0};
-            return fccs;
-        }
-        case CODEC_ID_WMV2: {
-            static const FOURCC fccs[]= {FOURCC_WMV2,0};
-            return fccs;
-        }
-        case CODEC_ID_WMV9_LIB: {
-            static const FOURCC fccs[]= {FOURCC_WVC1,FOURCC_WMV3,FOURCC_WMV2,FOURCC_WMV1,FOURCC_MSS1,FOURCC_MSS2,FOURCC_WMVP,FOURCC_WVP2,0};
-            return fccs;
-        }
         case CODEC_ID_MJPEG: {
             static const FOURCC fccs[]= {FOURCC_MJPG,0};
             return fccs;
         }
-        case CODEC_ID_LJPEG: {
-            static const FOURCC fccs[]= {FOURCC_LJPG,0};
-            return fccs;
-        }
-        case CODEC_ID_HUFFYUV: {
-            static const FOURCC fccs[]= {FOURCC_HFYU,0};
-            return fccs;
-        }
-	    case CODEC_ID_FFVHUFF: {
+        case CODEC_ID_FFVHUFF: {
             static const FOURCC fccs[]= {FOURCC_FFVH,0};
             return fccs;
         }
@@ -94,23 +38,6 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
         case CODEC_ID_DVVIDEO: {
             /* lowercase FourCC 'dvsd' for compatibility with MS DV decoder */
             static const FOURCC fccs[]= {mmioFOURCC('d','v','s','d'),FOURCC_DVSD,mmioFOURCC('d','v','2','5'),FOURCC_DV25,mmioFOURCC('d','v','5','0'),FOURCC_DV50,0};
-            return fccs;
-        }
-        case CODEC_ID_THEORA: {
-            static const FOURCC fccs[]= {FOURCC_THEO,0};
-            return fccs;
-        }
-        case CODEC_ID_H264_QUICK_SYNC:
-        case CODEC_ID_H264: {
-            static const FOURCC fccs[]= {FOURCC_H264,FOURCC_AVC1,0};
-            return fccs;
-        }
-        case CODEC_ID_VC1_QUICK_SYNC: {
-            static const FOURCC fccs[]= {FOURCC_WVC1,FOURCC_WMV3,0};
-            return fccs;
-        }
-        case CODEC_ID_FLV1: {
-            static const FOURCC fccs[]= {FOURCC_FLV1,0};
             return fccs;
         }
         case CODEC_ID_CYUV: {

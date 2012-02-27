@@ -252,13 +252,9 @@ static __inline bool bitstream_codec(int x)
 {
     return x==CODEC_ID_BITSTREAM_TRUEHD || x==CODEC_ID_BITSTREAM_DTSHD || x==CODEC_ID_BITSTREAM_EAC3;
 }
-static __inline bool huffyuv_codec(int x)
-{
-    return x==CODEC_ID_HUFFYUV || x==CODEC_ID_FFVHUFF;
-}
 static __inline bool lossless_codec(int x)
 {
-    return huffyuv_codec(x) || x==CODEC_ID_LJPEG || x==CODEC_ID_FFV1 || x==CODEC_ID_DVVIDEO;
+    return x==CODEC_ID_FFVHUFF || x==CODEC_ID_FFV1 || x==CODEC_ID_DVVIDEO;
 }
 static __inline bool h264_codec(int x)
 {
@@ -293,7 +289,7 @@ static __inline bool sup_VBR_QUANT(int x)
 }
 static __inline bool sup_gray(int x)
 {
-    return x!=CODEC_ID_LJPEG && x!=CODEC_ID_FFV1 && !wmv9_codec(x) && !raw_codec(x) && x!=CODEC_ID_DVVIDEO;
+    return x!=CODEC_ID_FFV1 && !wmv9_codec(x) && !raw_codec(x) && x!=CODEC_ID_DVVIDEO;
 }
 static __inline bool sup_minKeySet(int x)
 {

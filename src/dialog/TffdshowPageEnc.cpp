@@ -24,7 +24,6 @@
 #include "CgenericHuffyuv.h"
 #include "CgenericRAW.h"
 #include "CgenericFFV1.h"
-#include "CgenericLJPEG.h"
 #include "CgenericDV.h"
 #include "Cquant.h"
 #include "Conepass.h"
@@ -154,7 +153,6 @@ void TffdshowPageEnc::onActivate(void)
                                new TgenericHuffyuvPage(this),
                                new TgenericRAWpage(this),
                                new TgenericFFV1page(this),
-                               new TgenericLJPEGpage(this),
                                new TgenericDVpage(this),
                                NULL),&localCfg.codecId);
         HTREEITEM htiQuant=addTI(&tvis,new TquantPage(this))->hti;

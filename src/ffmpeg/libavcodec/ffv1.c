@@ -180,7 +180,6 @@ typedef struct FFV1Context{
     int colorspace;
     int16_t *sample_buffer;
     int gob_count;
-    int packed_at_lsb;
 
     int quant_table_count;
 
@@ -544,14 +543,8 @@ static void encode_plane(FFV1Context *s, uint8_t *src, int w, int h, int stride,
             }
             encode_line(s, w, sample, plane_index, 8);
         }else{
-            if(s->packed_at_lsb){
-                for(x=0; x<w; x++){
-                    sample[0][x]= ((uint16_t*)(src + stride*y))[x];
-                }
-            }else{
-                for(x=0; x<w; x++){
-                    sample[0][x]= ((uint16_t*)(src + stride*y))[x] >> (16 - s->avctx->bits_per_raw_sample);
-                }
+            for(x=0; x<w; x++){
+                sample[0][x]= ((uint16_t*)(src + stride*y))[x] >> (16 - s->avctx->bits_per_raw_sample);
             }
             encode_line(s, w, sample, plane_index, s->avctx->bits_per_raw_sample);
         }
@@ -905,10 +898,6 @@ static av_cold int encode_init(AVCodecContext *avctx)
 
     avctx->coded_frame= &s->picture;
     switch(avctx->pix_fmt){
-    case PIX_FMT_YUV420P9:
-    case PIX_FMT_YUV420P10:
-    case PIX_FMT_YUV422P10:
-        s->packed_at_lsb = 1;
     case PIX_FMT_YUV444P16:
     case PIX_FMT_YUV422P16:
     case PIX_FMT_YUV420P16:
@@ -1072,7 +1061,6 @@ static int encode_slice(AVCodecContext *c, void *arg){
     int x= fs->slice_x;
     int y= fs->slice_y;
     AVFrame * const p= &f->picture;
-    const int ps= (c->bits_per_raw_sample>8)+1;
 
     if(f->colorspace==0){
         const int chroma_width = -((-width )>>f->chroma_h_shift);
@@ -1080,29 +1068,37 @@ static int encode_slice(AVCodecContext *c, void *arg){
         const int cx= x>>f->chroma_h_shift;
         const int cy= y>>f->chroma_v_shift;
 
-        encode_plane(fs, p->data[0] + ps*x + y*p->linesize[0], width, height, p->linesize[0], 0);
+        encode_plane(fs, p->data[0] + x + y*p->linesize[0], width, height, p->linesize[0], 0);
 
-        encode_plane(fs, p->data[1] + ps*cx+cy*p->linesize[1], chroma_width, chroma_height, p->linesize[1], 1);
-        encode_plane(fs, p->data[2] + ps*cx+cy*p->linesize[2], chroma_width, chroma_height, p->linesize[2], 1);
+        encode_plane(fs, p->data[1] + cx+cy*p->linesize[1], chroma_width, chroma_height, p->linesize[1], 1);
+        encode_plane(fs, p->data[2] + cx+cy*p->linesize[2], chroma_width, chroma_height, p->linesize[2], 1);
     }else{
-        encode_rgb_frame(fs, (uint32_t*)(p->data[0]) + ps*x + y*(p->linesize[0]/4), width, height, p->linesize[0]/4);
+        encode_rgb_frame(fs, (uint32_t*)(p->data[0]) + x + y*(p->linesize[0]/4), width, height, p->linesize[0]/4);
     }
     emms_c();
 
     return 0;
 }
 
-static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size, void *data){
+static int encode_frame(AVCodecContext *avctx, AVPacket *pkt,
+                        const AVFrame *pict, int *got_packet)
+{
     FFV1Context *f = avctx->priv_data;
     RangeCoder * const c= &f->slice_context[0]->c;
-    AVFrame *pict = data;
     AVFrame * const p= &f->picture;
     int used_count= 0;
     uint8_t keystate=128;
     uint8_t *buf_p;
-    int i;
+    int i, ret;
 
-    ff_init_range_encoder(c, buf, buf_size);
+    if (!pkt->data &&
+        (ret = av_new_packet(pkt, avctx->width*avctx->height*((8*2+1+1)*4)/8
+                                  + FF_MIN_BUFFER_SIZE)) < 0) {
+        av_log(avctx, AV_LOG_ERROR, "Error getting output packet.\n");
+        return ret;
+    }
+
+    ff_init_range_encoder(c, pkt->data, pkt->size);
     ff_build_rac_states(c, 0.05*(1LL<<32), 256-8);
 
     *p = *pict;
@@ -1122,7 +1118,7 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
     if(!f->ac){
         used_count += ff_rac_terminate(c);
 //printf("pos=%d\n", used_count);
-        init_put_bits(&f->slice_context[0]->pb, buf + used_count, buf_size - used_count);
+        init_put_bits(&f->slice_context[0]->pb, pkt->data + used_count, pkt->size - used_count);
     }else if (f->ac>1){
         int i;
         for(i=1; i<256; i++){
@@ -1133,8 +1129,8 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
 
     for(i=1; i<f->slice_count; i++){
         FFV1Context *fs= f->slice_context[i];
-        uint8_t *start= buf + (buf_size-used_count)*i/f->slice_count;
-        int len= buf_size/f->slice_count;
+        uint8_t *start = pkt->data + (pkt->size-used_count)*i/f->slice_count;
+        int len = pkt->size/f->slice_count;
 
         if(fs->ac){
             ff_init_range_encoder(&fs->c, start, len);
@@ -1144,7 +1140,7 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
     }
     avctx->execute(avctx, encode_slice, &f->slice_context[0], NULL, f->slice_count, sizeof(void*));
 
-    buf_p=buf;
+    buf_p = pkt->data;
     for(i=0; i<f->slice_count; i++){
         FFV1Context *fs= f->slice_context[i];
         int bytes;
@@ -1159,7 +1155,7 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
             used_count= 0;
         }
         if(i>0){
-            av_assert0(bytes < buf_size/f->slice_count);
+            av_assert0(bytes < pkt->size/f->slice_count);
             memmove(buf_p, fs->ac ? fs->c.bytestream_start : fs->pb.buf, bytes);
             av_assert0(bytes < (1<<24));
             AV_WB24(buf_p+bytes, bytes);
@@ -1212,7 +1208,11 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
         avctx->stats_out[0] = '\0';
 
     f->picture_number++;
-    return buf_p-buf;
+    pkt->size   = buf_p - pkt->data;
+    pkt->flags |= AV_PKT_FLAG_KEY*p->key_frame;
+    *got_packet = 1;
+
+    return 0;
 }
 #endif /* CONFIG_FFV1_ENCODER */
 
@@ -1339,14 +1339,8 @@ static void decode_plane(FFV1Context *s, uint8_t *src, int w, int h, int stride,
             }
         }else{
             decode_line(s, w, sample, plane_index, s->avctx->bits_per_raw_sample);
-            if(s->packed_at_lsb){
-                for(x=0; x<w; x++){
-                    ((uint16_t*)(src + stride*y))[x]= sample[1][x];
-                }
-            }else{
-                for(x=0; x<w; x++){
-                    ((uint16_t*)(src + stride*y))[x]= sample[1][x] << (16 - s->avctx->bits_per_raw_sample);
-                }
+            for(x=0; x<w; x++){
+                ((uint16_t*)(src + stride*y))[x]= sample[1][x] << (16 - s->avctx->bits_per_raw_sample);
             }
         }
 //STOP_TIMER("decode-line")}
@@ -1402,7 +1396,6 @@ static int decode_slice(AVCodecContext *c, void *arg){
     int height= fs->slice_height;
     int x= fs->slice_x;
     int y= fs->slice_y;
-    const int ps= (c->bits_per_raw_sample>8)+1;
     AVFrame * const p= &f->picture;
 
     av_assert1(width && height);
@@ -1411,12 +1404,12 @@ static int decode_slice(AVCodecContext *c, void *arg){
         const int chroma_height= -((-height)>>f->chroma_v_shift);
         const int cx= x>>f->chroma_h_shift;
         const int cy= y>>f->chroma_v_shift;
-        decode_plane(fs, p->data[0] + ps*x + y*p->linesize[0], width, height, p->linesize[0], 0);
+        decode_plane(fs, p->data[0] + x + y*p->linesize[0], width, height, p->linesize[0], 0);
 
-        decode_plane(fs, p->data[1] + ps*cx+cy*p->linesize[1], chroma_width, chroma_height, p->linesize[1], 1);
-        decode_plane(fs, p->data[2] + ps*cx+cy*p->linesize[2], chroma_width, chroma_height, p->linesize[2], 1);
+        decode_plane(fs, p->data[1] + cx+cy*p->linesize[1], chroma_width, chroma_height, p->linesize[1], 1);
+        decode_plane(fs, p->data[2] + cx+cy*p->linesize[1], chroma_width, chroma_height, p->linesize[2], 1);
     }else{
-        decode_rgb_frame(fs, (uint32_t*)p->data[0] + ps*x + y*(p->linesize[0]/4), width, height, p->linesize[0]/4);
+        decode_rgb_frame(fs, (uint32_t*)p->data[0] + x + y*(p->linesize[0]/4), width, height, p->linesize[0]/4);
     }
 
     emms_c();
@@ -1562,25 +1555,7 @@ static int read_header(FFV1Context *f){
                 av_log(f->avctx, AV_LOG_ERROR, "format not supported\n");
                 return -1;
             }
-        }else if(f->avctx->bits_per_raw_sample==9) {
-            switch(16*f->chroma_h_shift + f->chroma_v_shift){
-            case 0x00: f->avctx->pix_fmt= PIX_FMT_YUV444P16; break;
-            case 0x10: f->avctx->pix_fmt= PIX_FMT_YUV422P16; break;
-            case 0x11: f->avctx->pix_fmt= PIX_FMT_YUV420P9 ; f->packed_at_lsb=1; break;
-            default:
-                av_log(f->avctx, AV_LOG_ERROR, "format not supported\n");
-                return -1;
-            }
-        }else if(f->avctx->bits_per_raw_sample==10) {
-            switch(16*f->chroma_h_shift + f->chroma_v_shift){
-            case 0x00: f->avctx->pix_fmt= PIX_FMT_YUV444P16; break;
-            case 0x10: f->avctx->pix_fmt= PIX_FMT_YUV422P10; f->packed_at_lsb=1; break;
-            case 0x11: f->avctx->pix_fmt= PIX_FMT_YUV420P10; f->packed_at_lsb=1; break;
-            default:
-                av_log(f->avctx, AV_LOG_ERROR, "format not supported\n");
-                return -1;
-            }
-        }else {
+        }else{
             switch(16*f->chroma_h_shift + f->chroma_v_shift){
             case 0x00: f->avctx->pix_fmt= PIX_FMT_YUV444P16; break;
             case 0x10: f->avctx->pix_fmt= PIX_FMT_YUV422P16; break;
@@ -1617,7 +1592,6 @@ static int read_header(FFV1Context *f){
     for(j=0; j<f->slice_count; j++){
         FFV1Context *fs= f->slice_context[j];
         fs->ac= f->ac;
-        fs->packed_at_lsb= f->packed_at_lsb;
 
         if(f->version >= 2){
             fs->slice_x     = get_symbol(c, state, 0)   *f->width ;
@@ -1780,10 +1754,10 @@ AVCodec ff_ffv1_encoder = {
     .id             = CODEC_ID_FFV1,
     .priv_data_size = sizeof(FFV1Context),
     .init           = encode_init,
-    .encode         = encode_frame,
+    .encode2        = encode_frame,
     .close          = common_end,
     .capabilities = CODEC_CAP_SLICE_THREADS,
-    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV444P, PIX_FMT_YUV422P, PIX_FMT_YUV411P, PIX_FMT_YUV410P, PIX_FMT_RGB32, PIX_FMT_YUV420P16, PIX_FMT_YUV422P16, PIX_FMT_YUV444P16, PIX_FMT_YUV420P9, PIX_FMT_YUV420P10, PIX_FMT_YUV422P10, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV444P, PIX_FMT_YUV422P, PIX_FMT_YUV411P, PIX_FMT_YUV410P, PIX_FMT_RGB32, PIX_FMT_YUV420P16, PIX_FMT_YUV422P16, PIX_FMT_YUV444P16, PIX_FMT_NONE},
     .long_name= NULL_IF_CONFIG_SMALL("FFmpeg video codec #1"),
 };
 #endif

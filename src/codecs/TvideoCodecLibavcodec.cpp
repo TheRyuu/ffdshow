@@ -63,7 +63,6 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
     create();
     if (ok) {
         encoders.push_back(new Tencoder(_l("MJPEG"),CODEC_ID_MJPEG));
-        encoders.push_back(new Tencoder(_l("HuffYUV"),CODEC_ID_HUFFYUV));
         encoders.push_back(new Tencoder(_l("HuffYUV (FFmpeg variant)"),CODEC_ID_FFVHUFF));
         encoders.push_back(new Tencoder(_l("FFV1"),CODEC_ID_FFV1));
         encoders.push_back(new Tencoder(_l("DV"),CODEC_ID_DVVIDEO));
@@ -1098,7 +1097,6 @@ bool TvideoCodecLibavcodec::drawMV(unsigned char *dst,unsigned int dstdx,stride_
 void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outDx,unsigned int outDy)
 {
     switch (coCfg->codecId) {
-        case CODEC_ID_HUFFYUV:
         case CODEC_ID_FFVHUFF:
             if (coCfg->huffyuv_csp==0) {
                 csps.add(FF_CSP_422P);
@@ -1130,13 +1128,6 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outD
             break;
         case CODEC_ID_MJPEG:
             csps.add(FF_CSP_420P|FF_CSP_FLAGS_YUV_JPEG);
-            break;
-        case CODEC_ID_LJPEG:
-            if (coCfg->ljpeg_csp==FOURCC_RGB3) {
-                csps.add(FF_CSP_RGB32);
-            } else {
-                csps.add(FF_CSP_420P);
-            }
             break;
         default:
             csps.add(FF_CSP_420P);
@@ -1235,7 +1226,6 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
 
     avctx->pix_fmt=PIX_FMT_YUV420P;
     switch (coCfg->codecId) {
-        case CODEC_ID_HUFFYUV:
         case CODEC_ID_FFVHUFF: {
             avctx->strict_std_compliance=FF_COMPLIANCE_EXPERIMENTAL;
             avctx->prediction_method=coCfg->huffyuv_pred;
@@ -1279,17 +1269,6 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
         case CODEC_ID_MJPEG:
             avctx->pix_fmt=PIX_FMT_YUVJ420P;
             break;
-        case CODEC_ID_LJPEG: {
-            switch (coCfg->ljpeg_csp) {
-                case FOURCC_YV12:
-                    avctx->pix_fmt=PIX_FMT_YUVJ420P;
-                    break;
-                case FOURCC_RGB3:
-                    avctx->pix_fmt=PIX_FMT_RGB32;
-                    break;
-            }
-            break;
-        }
     }
 
     switch (cfgcomode) {
