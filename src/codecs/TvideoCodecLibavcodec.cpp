@@ -474,6 +474,8 @@ REFERENCE_TIME TvideoCodecLibavcodec::getDuration()
         if (codecId == CODEC_ID_H264)
             duration *= 2;
     }
+    if (duration == 0)
+        return REF_SECOND_MULT / 100;
     return duration;
 }
 
@@ -878,7 +880,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     // We need to fix it.
                     // getDuration returns 10ms if there is no available information.
                     // This meas all videos exceeding 100 fps must have valid frame duration.
-                    pict.rtStop = pict.rtStart + getDuration() - 1;
+                    pict.rtStop = pict.rtStart + getDuration();
                 }
 
                 oldpict=pict;
