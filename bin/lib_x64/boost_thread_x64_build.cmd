@@ -1,6 +1,6 @@
 @ECHO OFF
-rem command line used to build libboost_thread-vcTOOLSET-mt-VARIANT-1_48.lib
-rem You need to build bjam first running bootstrap.bat and the appropriate MSVC version
+rem command line used to build libboost_thread-vcTOOLSET-mt-VARIANT-1_49.lib
+rem You need to build bjam first by running bootstrap.bat and the appropriate MSVC version
 SET toolset=msvc-10.0
 
 FOR %%L IN (

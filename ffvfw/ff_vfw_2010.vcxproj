@@ -79,7 +79,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-sgd-1_48.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-sgd-1_49.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ff_vfw.def</ModuleDefinitionFile>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <SubSystem>Windows</SubSystem>
@@ -110,7 +110,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-sgd-1_48.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-sgd-1_49.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_vfw.def</ModuleDefinitionFile>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <SubSystem>Windows</SubSystem>
@@ -140,7 +140,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-s-1_48.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-s-1_49.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>ff_vfw.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
@@ -170,7 +170,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-s-1_48.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-s-1_49.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_vfw.def</ModuleDefinitionFile>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <SubSystem>Windows</SubSystem>

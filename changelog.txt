@@ -40,7 +40,7 @@ New and improved features:
 * Removed some encoders that were considered obsolete or unstable.
 
 Updates:
-* Updated Boost library to v1.48
+* Updated Boost library to v1.49
 * Updated zlib library to v1.2.6
 * Updated minilzo library to v2.06
 * Updated unrar library to v4.10
