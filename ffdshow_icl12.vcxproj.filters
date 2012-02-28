@@ -746,9 +746,6 @@
     <ClCompile Include="src\dialog\CgenericHuffyuv.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialog\CgenericLJPEG.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
     <ClCompile Include="src\dialog\CgenericRAW.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
@@ -1969,9 +1966,6 @@
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\CgenericHuffyuv.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\CgenericLJPEG.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\CgenericRAW.h">

@@ -467,7 +467,6 @@
     <ClCompile Include="src\dialog\CgenericDV.cpp" />
     <ClCompile Include="src\dialog\CgenericFFV1.cpp" />
     <ClCompile Include="src\dialog\CgenericHuffyuv.cpp" />
-    <ClCompile Include="src\dialog\CgenericLJPEG.cpp" />
     <ClCompile Include="src\dialog\CgenericRAW.cpp" />
     <ClCompile Include="src\dialog\Cgrab.cpp" />
     <ClCompile Include="src\dialog\CgradFun.cpp" />
@@ -897,7 +896,6 @@
     <ClInclude Include="src\dialog\CgenericDV.h" />
     <ClInclude Include="src\dialog\CgenericFFV1.h" />
     <ClInclude Include="src\dialog\CgenericHuffyuv.h" />
-    <ClInclude Include="src\dialog\CgenericLJPEG.h" />
     <ClInclude Include="src\dialog\CgenericRAW.h" />
     <ClInclude Include="src\dialog\Cgrab.h" />
     <ClInclude Include="src\dialog\CgradFun.h" />
