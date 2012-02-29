@@ -84,7 +84,6 @@ void TDXVADecoderH264::Init()
     }
 }
 
-
 void TDXVADecoderH264::CopyBitstream(BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSize)
 {
     CH264Nalu Nalu;
@@ -138,11 +137,14 @@ void TDXVADecoderH264::CopyBitstream(BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSi
                     }
 
                     // For AVC1, put startcode 0x000001
-                    pDXVABuffer[0]=pDXVABuffer[1]=0;
-                    pDXVABuffer[2]=1;
+                    pDXVABuffer[0]=pDXVABuffer[1]=0;pDXVABuffer[2]=1;
+                    if (Nalu.GetDataLength() < 0)
+						            break;
 
-                    // Copy NALU
+                    // Copy NALU 
+                    //__try {
                     memcpy (pDXVABuffer+3, Nalu.GetDataBuffer(), Nalu.GetDataLength());
+                    //} __except (EXCEPTION_EXECUTE_HANDLER) { break; }
 
                     // Update slice control buffer
                     nDxvaNalLength                                   = Nalu.GetDataLength()+3;
@@ -165,7 +167,6 @@ void TDXVADecoderH264::CopyBitstream(BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSi
     }
 }
 
-
 void TDXVADecoderH264::Flush()
 {
     ClearRefFramesList();
@@ -186,8 +187,7 @@ HRESULT TDXVADecoderH264::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME 
     int                            nSliceType;
     int                            nFramePOC;
     CComPtr<IMediaSample>          pSampleToDeliver;
-    //IMFFDSDXVA2Sample    *pDXVA2Sample; Not used
-    int                            nDXIndex = 0;
+    //IMFFDSDXVA2Sample    *pDXVA2Sample;
     UINT                           nNalOffset = 0;
     int                            nOutPOC = INT_MIN;
     REFERENCE_TIME                 rtOutStart;
@@ -229,8 +229,7 @@ HRESULT TDXVADecoderH264::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME 
         return S_FALSE;
     }
 
-    int num_ref=std::max ((int)m_DXVAPicParams.num_ref_frames, 3);
-    m_nMaxWaiting = std::min ( num_ref, 8);
+    m_nMaxWaiting = std::min (std::max ((int)m_DXVAPicParams.num_ref_frames, 3), 8);
 
     // If parsing fail (probably no PPS/SPS), continue anyway it may arrived later (happen on truncated streams)
     if (FAILED (m_pCodec->libavcodec->FFH264BuildPicParams (&m_DXVAPicParams, &m_DXVAScalingMatrix, &nFieldType, &nSliceType, m_pCodec->avctx, m_pCodec->getPCIVendor()))) {
@@ -355,7 +354,6 @@ HRESULT TDXVADecoderH264::DisplayStatus()
 
     return hr;
 }
-
 
 int TDXVADecoderH264::FindOldestFrame()
 {

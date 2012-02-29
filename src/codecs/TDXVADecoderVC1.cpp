@@ -134,15 +134,21 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
     m_SliceInfo.wQuantizerScaleCode = 1;    // TODO : 1->31 ???
     m_SliceInfo.dwSliceBitsInBuffer = nSize_Result * 8;
     CHECK_HR (AddExecuteBuffer (DXVA2_SliceControlBufferType, sizeof (m_SliceInfo), &m_SliceInfo));
+
     // Decode frame
     CHECK_HR (Execute());
     CHECK_HR (EndFrame(nSurfaceIndex));
+
     // ***************
     if(nFrameSize) { // Decoding Second Field
         m_pCodec->libavcodec->FFVC1UpdatePictureParam (&m_PictureParams, m_pCodec->avctx, NULL, NULL, pDataIn, nSize, NULL, TRUE);
+
         CHECK_HR (BeginFrame(nSurfaceIndex, pSampleToDeliver));
+
         DPRINTF(_l("TDXVADecoderVC1::DecodeFrame - PictureType = %s\n"), m_pCodec->libavcodec->GetFFMpegPictureType(nSliceType));
+
         CHECK_HR (AddExecuteBuffer (DXVA2_PictureParametersBufferType, sizeof(m_PictureParams), &m_PictureParams));
+
         // Send bitstream to accelerator
         CHECK_HR (AddExecuteBuffer (DXVA2_BitStreamDateBufferType, nSize - nFrameSize, pDataIn + nFrameSize, &nSize_Result));
     
@@ -182,15 +188,13 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
     AddToStore (nSurfaceIndex, pSampleToDeliver, (m_PictureParams.bPicBackwardPrediction != 1), rtStart, rtStop,
                 false,(FF_FIELD_TYPE)nFieldType, (FF_SLICE_TYPE)nSliceType, 0);
 
-    m_bFlushed = false;
+   m_bFlushed = false;
 
     return DisplayNextFrame();
 }
 
 void TDXVADecoderVC1::SetExtraData (BYTE* pDataIn, UINT nSize)
 {
-    m_PictureParams.wPicWidthInMBminus1              = m_pCodec->mb_width  - 1;
-    m_PictureParams.wPicHeightInMBminus1             = m_pCodec->mb_height - 1;
     m_PictureParams.bMacroblockWidthMinus1           = 15;
     m_PictureParams.bMacroblockHeightMinus1          = 15;
     m_PictureParams.bBlockWidthMinus1                = 7;
@@ -245,6 +249,7 @@ BYTE* TDXVADecoderVC1::FindNextStartCode(BYTE* pBuffer, UINT nSize, UINT& nPacke
     }
 
     ASSERT (FALSE); // Should never happen!
+
     return NULL;
 }
 
@@ -256,13 +261,16 @@ void TDXVADecoderVC1::CopyBitstream(BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSiz
         memcpy (pDXVABuffer, (BYTE*)pBuffer, nSize);
     } else {
         if ( (*((DWORD*)pBuffer) & 0x00FFFFFF) != 0x00010000) {
-            // Some splitter have remove startcode (Haali)
-            pDXVABuffer[0]=pDXVABuffer[1]=0;
-            pDXVABuffer[2]=1;
-            pDXVABuffer[3]=0x0D;
-            pDXVABuffer +=4;
-            memcpy (pDXVABuffer, (BYTE*)pBuffer, nSize);
-            nSize  +=4;
+            if(m_pCodec->avctx->codec_id == CODEC_ID_WMV3) {
+                memcpy (pDXVABuffer, (BYTE*)pBuffer, nSize);			
+            } else { // Some splitter have remove startcode (Haali)
+                pDXVABuffer[0]=pDXVABuffer[1]=0;
+                pDXVABuffer[2]=1;
+                pDXVABuffer[3]=0x0D;
+                pDXVABuffer +=4;
+                memcpy (pDXVABuffer, (BYTE*)pBuffer, nSize);
+                nSize  +=4;
+            }
         } else {
             BYTE*   pStart;
             UINT    nPacketSize;
