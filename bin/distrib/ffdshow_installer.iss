@@ -10,8 +10,9 @@
 
 #define dummy Exec("update_version.bat","","",1,SW_HIDE)
 
-#define ISPP_IS_BUGGY
-#include "..\..\src\version.h"
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 1
+#include "..\..\src\svn_version.h"
 
 
 ; Build specific options
