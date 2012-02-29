@@ -27,7 +27,8 @@ CPPFLAGS+=-fno-rtti
 OUTPUTFLAG=-MMD -o\
 
 ifeq ($(DEBUG),yes)
-  CFLAGS+=-DDEBUG -D_DEBUG -g
+  CFLAGS+=-g -O0
+#  CFLAGS+=-DDEBUG -D_DEBUG -g
   YASMFLAGS+=-g cv8
 else
   CFLAGS+=-DNDEBUG -UDEBUG

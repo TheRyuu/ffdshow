@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "ffdshow WMV9"
             VALUE "FileVersion", "2.7a"
             VALUE "InternalName", "ff_wmv9"
-            //VALUE "LegalCopyright", "©"
+            //VALUE "LegalCopyright", "(C)"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "ff_wmv9.dll"
             VALUE "ProductName", "ffdshow WMV9"

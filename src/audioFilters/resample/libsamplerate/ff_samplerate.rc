@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "libsamplerate DLL built for ffdshow"
             VALUE "FileVersion", "0.1.8"
             VALUE "InternalName", "ff_samplerate"
-            VALUE "LegalCopyright", "© 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>"
+            VALUE "LegalCopyright", "(C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "ff_samplerate.dll"
             VALUE "ProductName", "libsamplerate DLL built for ffdshow"

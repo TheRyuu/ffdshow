@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "liba52 DLL built for ffdshow"
             VALUE "FileVersion", "0.7.4-svn"
             VALUE "InternalName", "ff_liba52"
-            VALUE "LegalCopyright", "© 2000-2003 Michel Lespinasse <walken@zoy.org> © 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca> Dialog normalization, rf mode (DRC), some extended bitstream information © 2004-2005 Simone Karin Lehmann < simone at lisanet dot de >"
+            VALUE "LegalCopyright", "(C) 2000-2003 Michel Lespinasse <walken@zoy.org> (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca> Dialog normalization, rf mode (DRC), some extended bitstream information (C) 2004-2005 Simone Karin Lehmann < simone at lisanet dot de >"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "ff_liba52.dll"
             VALUE "ProductName", "liba52 DLL built for ffdshow"

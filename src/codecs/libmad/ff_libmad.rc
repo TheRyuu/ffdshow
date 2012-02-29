@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "MPEG Audio Decoder DLL built for ffdshow"
             VALUE "FileVersion", "0.15.1"
             VALUE "InternalName", "ff_libmad"
-            VALUE "LegalCopyright", "© 2000-2004, Underbit Technologies, Inc. <info@underbit.com>"
+            VALUE "LegalCopyright", "(C) 2000-2004, Underbit Technologies, Inc. <info@underbit.com>"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "ff_libmad.dll"
             VALUE "ProductName", "MPEG Audio Decoder DLL built for ffdshow"

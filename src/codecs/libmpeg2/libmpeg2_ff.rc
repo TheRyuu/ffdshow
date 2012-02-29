@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "mpeg2dec DLL built for ffdshow"
             VALUE "FileVersion", "0.5.1"
             VALUE "InternalName", "libmpeg2_ff"
-            VALUE "LegalCopyright", "© 2000-2003 Michel Lespinasse <walken@zoy.org> © 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>"
+            VALUE "LegalCopyright", "(C) 2000-2003 Michel Lespinasse <walken@zoy.org> (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "libmpeg2_ff.dll"
             VALUE "ProductName", "mpeg2dec DLL built for ffdshow"

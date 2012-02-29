@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "FAAD2 DLL built for ffdshow"
             VALUE "FileVersion", "2.7"
             VALUE "InternalName", "ff_libfaad2"
-            VALUE "LegalCopyright", "© Nero AG, www.nero.com"
+            VALUE "LegalCopyright", "(C) Nero AG, www.nero.com"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "ff_libfaad2.dll"
             VALUE "ProductName", "FAAD2 DLL built for ffdshow"

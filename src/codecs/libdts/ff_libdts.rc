@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "libdts DLL built for ffdshow"
             VALUE "FileVersion", "0.0.5"
             VALUE "InternalName", "ff_libdts"
-            VALUE "LegalCopyright", "© 2004 Gildas Bazin <gbazin@videolan.org>"
+            VALUE "LegalCopyright", "(C) 2004 Gildas Bazin <gbazin@videolan.org>"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "ff_libdts.dll"
             VALUE "ProductName", "libdts DLL built for ffdshow"

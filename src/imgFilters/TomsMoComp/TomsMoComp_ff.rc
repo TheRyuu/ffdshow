@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "TomsMoComp for ffdshow"
             VALUE "FileVersion", "1.0.1.8"
             VALUE "InternalName", "TomsMoComp_ff"
-            VALUE "LegalCopyright", "© 2002 Tom Barry"
+            VALUE "LegalCopyright", "(C) 2002 Tom Barry"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "TomsMoComp_ff.dll"
             VALUE "ProductName", "TomsMoComp for ffdshow"
