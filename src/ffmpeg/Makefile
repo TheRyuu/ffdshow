@@ -127,6 +127,7 @@ SRCS_C=\
     libavcodec/motion_est.c \
     libavcodec/mpeg12.c \
     libavcodec/mpeg12data.c \
+    libavcodec/mpegvideo_parser.c \
     libavcodec/mpeg4audio.c \
     libavcodec/mpeg4video.c \
     libavcodec/mpeg4video_parser.c \

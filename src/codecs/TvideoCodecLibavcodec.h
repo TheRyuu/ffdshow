@@ -67,21 +67,24 @@ protected:
     static void draw_arrow(uint8_t *buf, int sx, int sy, int ex, int ey, stride_t stride,int mulx,int muly,int dstdx,int dstdy);
     unsigned char *ffbuf;
     unsigned int ffbuflen;
+    REFERENCE_TIME prior_rtStart,prior_rtStop;
     bool wasKey;
     virtual void handle_user_data(const uint8_t *buf,int buf_len);
     TccDecoder *ccDecoder;
     bool autoSkipingLoopFilter;
     enum AVDiscard initialSkipLoopFilter;
-    bool h264_on_MPEG2_system; // H.264 on MPEG2 trasport/program stream must have AU delimiter and start code.
     int got_picture;
     bool firstSeek; // firstSeek means start of palyback.
+    bool mpeg2_in_doubt;
     bool mpeg2_new_sequence;
     bool bReorderBFrame;
     REFERENCE_TIME getDuration();
+    int isReallyMPEG2(const unsigned char *src,size_t srcLen);
 protected:
     virtual LRESULT beginCompress(int cfgcomode,uint64_t csp,const Trect &r);
     virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
     virtual HRESULT flushDec(void);
+    AVCodecParserContext *parser;
 public:
     TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *IsinkD);
     TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *IsinkE);
@@ -116,22 +119,6 @@ public:
         return bReorderBFrame;
     };
     virtual void reorderBFrames(REFERENCE_TIME& rtStart, REFERENCE_TIME& rtStop);
-
-    class TcodedPictureBuffer
-    {
-    private:
-        Tbuffer priorBuf,outBuf,tmpBuf;
-        int priorSize,outSampleSize,used_bytes;
-        TvideoCodecLibavcodec* parent;
-        REFERENCE_TIME prior_rtStart,prior_rtStop,out_rtStart,out_rtStop;
-
-    public:
-        TcodedPictureBuffer(TvideoCodecLibavcodec* Iparent);
-        void init(void);
-        int append(const uint8_t *buf, int buf_size);
-        int send(int *got_picture_ptr);
-        void onSeek(void);
-    } codedPictureBuffer;
 
     class Th264RandomAccess
     {

@@ -330,7 +330,7 @@ void TffdshowVideoInputPin::init_VIH_and_VIH2_common_part(const RECT & rcSource,
 bool TffdshowVideoInputPin::init(const CMediaType &mt)
 {
     DPRINTF(_l("TffdshowVideoInputPin::init"));
-    bool dont_use_rtStop_from_upper_stream = false, truncated = false;
+    bool dont_use_rtStop_from_upper_stream = false;
     isInterlacedRawVideo=false;
     if (mt.formattype==FORMAT_VideoInfo) {
         VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
@@ -494,7 +494,6 @@ again:
             bool isH264;
             if (decodeMPEGsequenceHeader(biIn.bmiHeader.biCompression==FOURCC_MPG2,extradata.data,extradata.size,pictIn,&isH264) && isH264) {
                 biIn.bmiHeader.biCompression=FOURCC_H264;
-                truncated=true;
                 goto again;
             }
         }
@@ -522,7 +521,7 @@ again:
             video->containerSar=pictIn.rectFull.sar;
             if (!video->beginDecompress(pictIn,
                                         biIn.bmiHeader.biCompression,mt,
-                                        (dont_use_rtStop_from_upper_stream ? TvideoCodecDec::SOURCE_REORDER : 0) | (truncated ? TvideoCodecDec::SOURCE_TRUNCATED : 0))) {
+                                        (dont_use_rtStop_from_upper_stream ? TvideoCodecDec::SOURCE_REORDER : 0))) {
                 delete video;
                 codec=video=NULL;
                 return false;

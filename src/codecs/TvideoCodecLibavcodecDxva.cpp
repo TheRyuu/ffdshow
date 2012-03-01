@@ -872,7 +872,6 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
         inPosB = 0;
     }
 
-    avctx->parserRtStart=&rtStart; // needed for mpeg1/2
     avctx->reordered_opaque = rtStart;
     avctx->reordered_opaque2 = rtStop;
     avctx->reordered_opaque3 = srcLen0;

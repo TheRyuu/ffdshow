@@ -2471,7 +2471,6 @@ typedef struct AVCodecContext {
     int nal_length_size;
     int vorbis_header_size[3];
     int64_t granulepos;
-    int64_t *parserRtStart;
     void (*handle_user_data)(struct AVCodecContext *c,const uint8_t *buf,int buf_size);
     int h264_has_to_drop_first_non_ref;    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)
     int h264_using_dxva;

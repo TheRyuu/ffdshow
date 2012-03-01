@@ -101,7 +101,7 @@ public:
     virtual void forceOutputColorspace(const BITMAPINFOHEADER *hdr,int *ilace,TcspInfos &forcedCsps) {
         *ilace=0;   //cspInfos of forced output colorspace, empty when entering function
     }
-    enum {SOURCE_REORDER=1,SOURCE_TRUNCATED=2};
+    enum {SOURCE_REORDER=1};
     virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags)=0;
     virtual HRESULT decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)=0;
     virtual bool onDiscontinuity(void) {

@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 /*
- * Th264RandomAccess
+ * Th264RandomAccess, isReallyMPEG2
  * Copyright (c) 2008-2011 Haruhiko Yamagata
  */
 
@@ -46,7 +46,6 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *
     TvideoCodec(Ideci),
     TvideoCodecDec(Ideci,IsinkD),
     TvideoCodecEnc(Ideci,NULL),
-    codedPictureBuffer(this),
     h264RandomAccess(this),
     bReorderBFrame(true)
 {
@@ -57,7 +56,6 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
     TvideoCodec(Ideci),
     TvideoCodecDec(Ideci,NULL),
     TvideoCodecEnc(Ideci,IsinkE),
-    codedPictureBuffer(this),
     h264RandomAccess(this)
 {
     create();
@@ -87,10 +85,10 @@ void TvideoCodecLibavcodec::create(void)
     codecName[0]='\0';
     ccDecoder=NULL;
     autoSkipingLoopFilter= false;
-    h264_on_MPEG2_system = false;
     inPosB = 1;
     firstSeek = true;
     mpeg2_new_sequence = true;
+    parser = NULL;
 }
 
 TvideoCodecLibavcodec::~TvideoCodecLibavcodec()
@@ -115,6 +113,10 @@ void TvideoCodecLibavcodec::end(void)
         fflush(statsfile);
         fclose(statsfile);
         statsfile=NULL;
+    }
+    if (parser) {
+        libavcodec->av_parser_close(parser);
+        parser = NULL;
     }
     if (avctx) {
         if (ownmatrices) {
@@ -147,8 +149,9 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     palette_size = 0;
     old_rtStart = REFTIME_INVALID;
     old_rtStop = 0;
-    h264_on_MPEG2_system = false;
     rtStart = rtStop = REFTIME_INVALID;
+    prior_rtStart = prior_rtStop = REFTIME_INVALID;
+    mpeg2_in_doubt = codecId == CODEC_ID_MPEG2VIDEO;
 
 	int using_dxva = 0;
 
@@ -219,7 +222,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
     avctx->error_concealment=deci->getParam2(IDFF_errorConcealment);
     avctx->err_recognition=deci->getParam2(IDFF_errorRecognition);
-    if (sourceFlags&SOURCE_TRUNCATED || mpeg12_codec(codecId) || codecId==CODEC_ID_MJPEG) {
+    if (codecId==CODEC_ID_MJPEG) {
         avctx->flags|=CODEC_FLAG_TRUNCATED;
     }
     if (mpeg12_codec(codecId) && deci->getParam2(IDFF_fastMpeg2)) {
@@ -391,20 +394,20 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     extractfileext(deci->getSourceName(),sourceExt);
     sourceExt.ConvertToLowerCase();
 
-    if (codecId == CODEC_ID_H264
-            && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_CCV1)) {
+    if (mpeg12_codec(codecId)
+        || (codecId == CODEC_ID_H264
+            && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_CCV1))) {
         // avi and ogm files do not have access unit delimiter
         // Neuview Source is an AVI splitter that does not implement IFileSourceFilter.
-        if ( sourceExt != L"avi"
-                && sourceExt != L"ogg"
-                && sourceExt != L"ogm"
-                && sourceExt != L"ogv"
-                && sourceExt != L"mkv" // old MKVtoolnix use MEDIASUBTYPE_H264 and does not add access unit delimiter.
-                && !(deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VFW) // VFW: avi files
-                && !(sourceExt == L"" && connectedSplitter == TffdshowVideoInputPin::NeuviewSource)) {
-            h264_on_MPEG2_system = true;
-            codedPictureBuffer.init();
-        }
+        //if ( sourceExt != L"avi"
+        //        && sourceExt != L"ogg"
+        //        && sourceExt != L"ogm"
+        //        && sourceExt != L"ogv"
+        //        && sourceExt != L"mkv" // old MKVtoolnix use MEDIASUBTYPE_H264 and does not add access unit delimiter.
+        //        && !(deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VFW) // VFW: avi files
+        //        && !(sourceExt == L"" && connectedSplitter == TffdshowVideoInputPin::NeuviewSource)) {
+            parser = libavcodec->av_parser_init(codecId);
+        //}
     }
 
 
@@ -478,10 +481,68 @@ REFERENCE_TIME TvideoCodecLibavcodec::getDuration()
     return duration;
 }
 
+// Let's enjoy some hack. Some H.264 byte stream format might have slipped into ffdshow as MPEG-2.
+// In that case, they are labeled MPEG-2 because they are on MPEG-2 TS. Then the streams always have access unit delimiters.
+// For H.264 streams, MPEG-2 parser never parse a frame.
+// And this function detects H.264's access unit delimiters.
+// So if we call this function until MPEG-2 parser can parse a frame, we always successfully find H.264 without breaking MPEG-2.
+// return 0:H.264, 1:uncertain, 2:MPEG-2
+int TvideoCodecLibavcodec::isReallyMPEG2(const unsigned char *src,size_t srcLen)
+{
+    if (srcLen < 10)
+        return 1;
+    for (int i = 0 ; i < srcLen - 7 ; i++) {
+        if (src[i]==0 && src[i+1]==0 && src[i+2]==1) {
+            int h264nal = src[i+3] & 0x1f;
+            if (h264nal==0 || (h264nal >13 && h264nal != 19)) {
+                return 2;
+            }
+            // H.264 access unit delimiter have only one byte rbsp (i+4).
+            if (src[i+3]==9 && src[i+5]==0 && src[i+6]==0) {
+                i+=7;
+                for (;i < srcLen - 1 ; i++) {
+                    if (src[i])
+                        break;
+                }
+                if (src[i] == 1)
+                    return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
     HRESULT hr = S_OK;
     TffdshowVideoInputPin::TrateAndFlush *rateInfo = (TffdshowVideoInputPin::TrateAndFlush*)deciV->getRateInfo();
+
+    if (mpeg2_in_doubt) {
+        // If 5 byte access unit delimiter plus next start code is splitted into chunks, it would be slipped by.
+        // Don't care too much, let's wait for the next one.
+        int isMPEG2 = isReallyMPEG2(src, srcLen0);
+        if (codecId == CODEC_ID_MPEG2VIDEO && !isMPEG2) {
+            DPRINTF(L"Re-initializing libavcodec. Changing from CODEC_ID_MPEG2VIDEO to CODEC_ID_H264.");
+            end();
+            codecId = CODEC_ID_H264;
+            FOURCC fcc = FOURCC_H264;
+            TffPictBase pict;
+            CMediaType mt(&MEDIATYPE_Video);
+            mt.subtype = MEDIASUBTYPE_H264;
+            mt.bFixedSizeSamples = false;
+            mt.bTemporalCompression = true;
+            mt.lSampleSize = 0;
+            mt.formattype = FORMAT_None;
+            mt.pUnk = NULL;
+            mt.cbFormat = 0;
+            mt.pbFormat = NULL;
+            beginDecompress(pict, fcc, mt, 0);
+        }
+        if (isMPEG2 == 2) {
+            // We are sure it's MPEG-2.
+            mpeg2_in_doubt = false;
+        }
+    }
 
     bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
     if (codecId==CODEC_ID_FFV1) {
@@ -568,10 +629,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
         }
     }
 
-    if (src && h264_on_MPEG2_system) {
-        size = codedPictureBuffer.append(src, size);
-    }
-
     AVPacket avpkt;
     libavcodec->av_init_packet(&avpkt);
     if (palette_size) {
@@ -584,7 +641,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     while (!src || size>0) {
         int used_bytes;
 
-        avctx->parserRtStart=&rtStart; // needed for mpeg1/2
         avctx->reordered_opaque = rtStart;
         avctx->reordered_opaque2 = rtStop;
         avctx->reordered_opaque3 = size;
@@ -609,37 +665,54 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
             }
 
             if (src) {
-                if (codecId == CODEC_ID_H264) {
-                    if (h264_on_MPEG2_system) {
-                        used_bytes = codedPictureBuffer.send(&got_picture);
+                memcpy(ffbuf,src,size);
+                memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
+            }
+            if (parser) {
+                uint8_t *outBuf = NULL;
+                int out_size = 0;
+                used_bytes = libavcodec->av_parser_parse2(parser, avctx, &outBuf, &out_size, src ? ffbuf : NULL, size, AV_NOPTS_VALUE, AV_NOPTS_VALUE, 0);
+                if (prior_rtStart == REFTIME_INVALID) {
+                    prior_rtStart = rtStart;
+                    prior_rtStop = rtStop;
+                }
+                if (out_size > 0 || !src) {
+                    mpeg2_in_doubt = false;
+                    avpkt.data = out_size > 0 ? outBuf : NULL;
+                    avpkt.size = out_size;
+                    if (out_size > used_bytes) {
+                        avctx->reordered_opaque = prior_rtStart;
+                        avctx->reordered_opaque2 = prior_rtStop;
                     } else {
-                        memcpy(ffbuf,src,size);
-                        memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-                        if (h264RandomAccess.search(ffbuf, size)) {
-                            memcpy(ffbuf,src,size);
-                            memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-                            avpkt.data = ffbuf;
-                            avpkt.size = size;
-                            used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
-                            if (used_bytes < 0) {
-                                return S_OK;
-                            }
-                            h264RandomAccess.judgeUsability(&got_picture);
-                        } else {
-                            return S_OK;
-                        }
+                        avctx->reordered_opaque = rtStart;
+                        avctx->reordered_opaque2 = rtStop;
+                    }
+                    prior_rtStart = rtStart;
+                    prior_rtStop = rtStop;
+                    avctx->reordered_opaque3 = out_size;
+                    if (h264RandomAccess.search(avpkt.data, avpkt.size)) {
+                        libavcodec->avcodec_decode_video2(avctx, frame, &got_picture, &avpkt);
+                        h264RandomAccess.judgeUsability(&got_picture);
                     }
                 } else {
-                    memcpy(ffbuf,src,size);
-                    memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-                    avpkt.data = ffbuf;
-                    avpkt.size = size;
-                    used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
+                    got_picture = 0;
                 }
             } else {
-                avpkt.data = NULL;
-                avpkt.size = 0;
-                used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
+                avpkt.data = src ? ffbuf : NULL;
+                avpkt.size = size;
+                if (codecId == CODEC_ID_H264) {
+                    if (h264RandomAccess.search(avpkt.data, avpkt.size)) {
+                        used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
+                        if (used_bytes < 0) {
+                            return S_OK;
+                        }
+                        h264RandomAccess.judgeUsability(&got_picture);
+                    } else {
+                        return S_OK;
+                    }
+                } else {
+                    used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
+                }
             }
         }
 
@@ -764,15 +837,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 }
 #endif
 
-                if (h264_on_MPEG2_system) {
-                    if (old_rtStart >= frame->reordered_opaque && old_rtStart != REFTIME_INVALID) {
-                        pict.rtStart = pict.rtStop = old_rtStop;
-                    } else {
-                        pict.rtStart = frame->reordered_opaque;
-                        pict.rtStop = frame->reordered_opaque2;
-                    }
-                    pict.srcSize = (size_t)frame->reordered_opaque3;
-                } else if (mpeg12_codec(codecId)) {
+                if (mpeg12_codec(codecId)) {
                     if(frametype == FRAME_TYPE::I) {
                         pict.rtStart = frame->reordered_opaque;
                     } else {
@@ -815,6 +880,14 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     if (rateInfo->isDiscontinuity) {
                         telecineManager.onSeek();
                     }
+                } else if (parser) {
+                    if (old_rtStart >= frame->reordered_opaque && old_rtStart != REFTIME_INVALID) {
+                        pict.rtStart = pict.rtStop = old_rtStop;
+                    } else {
+                        pict.rtStart = frame->reordered_opaque;
+                        pict.rtStop = frame->reordered_opaque2;
+                    }
+                    pict.srcSize = (size_t)frame->reordered_opaque3;
                 } else if (dont_use_rtStop_from_upper_stream) {
                     if (old_rtStart >= frame->reordered_opaque && old_rtStart != REFTIME_INVALID) {
                         pict.rtStart = old_rtStop;
@@ -901,7 +974,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
             return S_OK;
         }
 
-        if (avctx->active_thread_type == FF_THREAD_FRAME) {
+        if (avctx->active_thread_type == FF_THREAD_FRAME && !parser) {
             return hr;
         }
 
@@ -928,7 +1001,6 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
     if (ccDecoder) {
         ccDecoder->onSeek();
     }
-    codedPictureBuffer.onSeek();
     h264RandomAccess.onSeek();
     telecineManager.onSeek();
     mpeg2_new_sequence = true;
@@ -943,6 +1015,11 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
         libavcodec->avcodec_flush_buffers(avctx);
         return true;
     }
+    if (parser) {
+        libavcodec->av_parser_close(parser);
+        parser = libavcodec->av_parser_init(codecId);
+    }
+    prior_rtStart = prior_rtStop = REFTIME_INVALID;
     return false;
 }
 
@@ -952,7 +1029,6 @@ bool TvideoCodecLibavcodec::onDiscontinuity(void)
     if (ccDecoder) {
         ccDecoder->onSeek();
     }
-    codedPictureBuffer.onSeek();
     h264RandomAccess.onSeek();
     return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }
@@ -1459,101 +1535,6 @@ void TvideoCodecLibavcodec::reorderBFrames(REFERENCE_TIME& rtStart, REFERENCE_TI
     }
 }
 
-TvideoCodecLibavcodec::TcodedPictureBuffer::TcodedPictureBuffer(TvideoCodecLibavcodec* Iparent):
-    parent(Iparent)
-{
-}
-
-void TvideoCodecLibavcodec::TcodedPictureBuffer::init(void)
-{
-    onSeek();
-    priorBuf.alloc(512 * 1024);
-    outBuf.alloc(512 * 1024);
-}
-
-void TvideoCodecLibavcodec::TcodedPictureBuffer::onSeek(void)
-{
-    used_bytes = outSampleSize = priorSize = 0;
-    prior_rtStart = prior_rtStop = REFTIME_INVALID;
-}
-
-/*
- * libavcodec has to receive whole access unit at the same time.
- * Here, we implement coded picture buffer (CPB).
- * This function parses access unit (AU) from the stream and buffers it.
- * We have to memorize the timestamp of the AU.
- */
-int TvideoCodecLibavcodec::TcodedPictureBuffer::append(const uint8_t *buf, int buf_size)
-{
-    used_bytes = outSampleSize = 0;
-    int startCodePos = 0;
-    for (; startCodePos < buf_size - 3 ; startCodePos++) {
-        // search NAL start code (00 00 01) + AU delimiter
-        if (buf[startCodePos] == 0 && buf[startCodePos+1] == 0 && buf[startCodePos+2] == 1 && (buf[startCodePos+3] & 0x1f) == 0x09) {
-            // send to libavcodec (priorBuf + current sample(just before the start code))
-            uint8_t *dstOut = (uint8_t *)outBuf.resize2(priorSize + startCodePos + FF_INPUT_BUFFER_PADDING_SIZE);
-            memcpy(dstOut, priorBuf, priorSize);
-            memcpy(dstOut + priorSize, buf, startCodePos);
-            outSampleSize = priorSize + startCodePos;
-
-            // copy the left of sample to priorBuf
-            uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size - startCodePos);
-            const uint8_t *src = buf + startCodePos;
-            priorSize = buf_size - startCodePos;
-            memcpy(dstPrior, src, priorSize);
-            if (priorSize > 3 && prior_rtStart != REFTIME_INVALID) {
-                out_rtStart = prior_rtStart;
-                out_rtStop  = prior_rtStop;
-            } else {
-                out_rtStart = parent->rtStart;
-                out_rtStop  = parent->rtStop;
-            }
-            prior_rtStart = parent->rtStart;
-            prior_rtStop  = parent->rtStop;
-            return outSampleSize;
-        }
-    }
-
-    // start code not found
-    uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size + priorSize);
-    memcpy(dstPrior + priorSize, buf, buf_size);
-    priorSize += buf_size;
-    prior_rtStart = parent->rtStart;
-    prior_rtStop = parent->rtStop;
-    return 0;
-}
-
-int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
-{
-    if (outSampleSize < 4) {
-        return -1;
-    }
-
-    int out_size = outSampleSize - used_bytes;
-    if (parent->h264RandomAccess.search((uint8_t *)outBuf + used_bytes, out_size) == 0) {
-        return -1;
-    }
-
-    parent->avctx->reordered_opaque = out_rtStart;
-    parent->avctx->reordered_opaque2 = out_rtStop;
-    parent->avctx->reordered_opaque3 = out_size;
-
-    AVPacket avpkt;
-    parent->libavcodec->av_init_packet(&avpkt);
-    avpkt.data = (uint8_t *)outBuf + used_bytes;
-    avpkt.size = out_size;
-    int used = parent->libavcodec->avcodec_decode_video2(parent->avctx, parent->frame, got_picture_ptr, &avpkt);
-
-    if (used < 0) {
-        return -1;
-    }
-
-    parent->h264RandomAccess.judgeUsability(got_picture_ptr);
-
-    used_bytes += used;
-    return used;
-}
-
 TvideoCodecLibavcodec::Th264RandomAccess::Th264RandomAccess(TvideoCodecLibavcodec *Iparent):
     parent(Iparent)
 {
@@ -1577,6 +1558,8 @@ void TvideoCodecLibavcodec::Th264RandomAccess::onSeek(void)
 int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
 {
     if (parent->codecId == CODEC_ID_H264 && recovery_mode == 1) {
+        if (!buf || !buf_size)
+            return 0;
         int is_recovery_point = parent->libavcodec->avcodec_h264_search_recovery_point(parent->avctx, buf, buf_size, &recovery_frame_cnt);
         if (is_recovery_point == 3) {
             // IDR
