@@ -1,4 +1,4 @@
-﻿#include "winresrc.h"
+#include "winresrc.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "Xvid DLL built for ffdshow"
             VALUE "FileVersion", "1.4-127"
             VALUE "InternalName", "xvidcore"
-            //VALUE "LegalCopyright", "©"
+            //VALUE "LegalCopyright", "(C)"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "xvidcore.dll"
             VALUE "ProductName", "Xvid DLL built for ffdshow"

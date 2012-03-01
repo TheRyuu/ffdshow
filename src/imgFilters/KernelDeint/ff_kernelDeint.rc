@@ -1,4 +1,4 @@
-﻿#include "winresrc.h"
+#include "winresrc.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -25,7 +25,7 @@ BEGIN
             VALUE "FileDescription", "KernelDeint for ffdshow"
             VALUE "FileVersion", "1.5.4"
             VALUE "InternalName", "ff_kernelDeint"
-            VALUE "LegalCopyright", "Based on the original KernelDeint plugin © 2003 Donald A. Graft. MMX optimizations + new motion mask code © 2004 Kurt B. Pruenner"
+            VALUE "LegalCopyright", "Based on the original KernelDeint plugin (C) 2003 Donald A. Graft. MMX optimizations + new motion mask code (C) 2004 Kurt B. Pruenner"
             VALUE "LegalTrademarks", "GNU GPL"
             VALUE "OriginalFilename", "ff_kernelDeint.dll"
             VALUE "ProductName", "KernelDeint for ffdshow"
