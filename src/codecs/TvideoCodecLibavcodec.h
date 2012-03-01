@@ -52,6 +52,7 @@ protected:
     bool theorart;
     bool codecinited,ownmatrices;
     REFERENCE_TIME rtStart,rtStop,avgTimePerFrame,segmentTimeStart;
+    REFERENCE_TIME old_rtStart,old_rtStop;
 
     struct {
         REFERENCE_TIME rtStart,rtStop;
@@ -61,7 +62,6 @@ protected:
 
     Textradata *extradata;
     bool sendextradata;
-    TffPict oldpict;
     unsigned int mb_width,mb_height,mb_count;
     static void line(unsigned char *dst,unsigned int _x0,unsigned int _y0,unsigned int _x1,unsigned int _y1,stride_t strideY);
     static void draw_arrow(uint8_t *buf, int sx, int sy, int ex, int ey, stride_t stride,int mulx,int muly,int dstdx,int dstdy);
