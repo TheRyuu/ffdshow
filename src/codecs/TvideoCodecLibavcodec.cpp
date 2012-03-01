@@ -882,8 +882,8 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     pict.rtStop = pict.rtStart + getDuration();
                 }
 
-                old_rtStart = rtStart;
-                old_rtStop = rtStop;
+                old_rtStart = pict.rtStart;
+                old_rtStop = pict.rtStop;
                 hr=sinkD->deliverDecodedSample(pict);
                 if (hr != S_OK
                         || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
