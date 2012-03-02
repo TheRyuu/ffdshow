@@ -12,9 +12,6 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{72d0b727-3294-44aa-9d82-62b45ffad724}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utility">
-      <UniqueIdentifier>{6b64424a-d463-4ba7-a819-668e8c0d4c3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{db3d63f1-bcc7-45a4-a77e-c82371e4a86b}</UniqueIdentifier>
     </Filter>
@@ -23,6 +20,9 @@
     </Filter>
     <Filter Include="Source Files\Allocators">
       <UniqueIdentifier>{f1fdd9a0-ea0d-4419-b2d6-4fa904080c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{d85caa20-ea42-474b-a316-3d0324321b2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -56,15 +56,6 @@
     <ClInclude Include="src\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\QuickSyncUtils.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\QsWorkerThread.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\QsThreadPool.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\base_allocator.h">
       <Filter>Header Files\Allocators</Filter>
     </ClInclude>
@@ -73,6 +64,15 @@
     </ClInclude>
     <ClInclude Include="src\sysmem_allocator.h">
       <Filter>Header Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\QsThreadPool.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\QuickSyncUtils.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\QsWorkerThread.h">
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

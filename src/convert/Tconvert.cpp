@@ -712,64 +712,21 @@ int Tconvert::convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_
                    vram_indirect);
 }
 
-void* sse_memcpy(void* d, const void* s, size_t _size)
-{
-    if (d == NULL || s == NULL) return NULL;
-
-    //if memory is not aligned, use memcpy
-    bool isAligned = (((size_t)(s) | (size_t)(d)) & 0xF) == 0;
-    if (!isAligned || _size < 64)
-    {
-        return memcpy(d, s, _size);
-    }
-
-    size_t reminder = _size & 63; // copy 64 bytes every loop
-
-    __m128i* pTrg = (__m128i*)d;
-    __m128i* pTrgEnd = pTrg + ((_size-reminder) >> 4);
-    __m128i* pSrc = (__m128i*)s;
-    while (pTrg < pTrgEnd)
-    {
-        _mm_stream_si128(&pTrg[0], pSrc[0]);
-        _mm_stream_si128(&pTrg[1], pSrc[1]);
-        _mm_stream_si128(&pTrg[2], pSrc[2]);
-        _mm_stream_si128(&pTrg[3], pSrc[3]);
-        pSrc += 4;
-        pTrg += 4;
-    }
-
-    if (reminder)
-    {
-        char* ps = (char*)s + _size - reminder;
-        char* pd = (char*)d + _size - reminder;
-        for (size_t i = 0; i < reminder; ++i)
-        {
-            pd[i] = ps[i];
-        }
-    }
-
-    return d;
-}
-
 void Tconvert::copyPlane(BYTE *dstp,stride_t dst_pitch,const BYTE *srcp,stride_t src_pitch,int row_size,int height,bool flip)
 {
-    // get a pointer to the relevant memcpy function
-    void* (*Memcpy)(void* d, const void* s, size_t) = (Tconfig::cpu_flags&FF_CPU_SSE2) ?
-        sse_memcpy : memcpy;
-
     if (dst_pitch == src_pitch && src_pitch == row_size && !flip) {
-        Memcpy(dstp, srcp, src_pitch * height);
+        memcpy(dstp, srcp, src_pitch * height);
     } else {
         if (!flip) {
             for (int y=height; y>0; --y) {
-                Memcpy(dstp, srcp, row_size);
+                memcpy(dstp, srcp, row_size);
                 dstp += dst_pitch;
                 srcp += src_pitch;
             }
         } else {
             dstp += dst_pitch * (height - 1);
             for (int y=height; y>0; --y) {
-                Memcpy(dstp, srcp, row_size);
+                memcpy(dstp, srcp, row_size);
                 dstp -= dst_pitch;
                 srcp += src_pitch;
             }

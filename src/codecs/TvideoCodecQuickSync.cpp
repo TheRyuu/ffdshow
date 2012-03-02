@@ -28,6 +28,7 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "dsutil.h"
+#include "TfakeImediaSample.h"
 #include "IntelQuickSyncDecoder/src/IQuickSyncDecoder.h"
 
 const char_t* TvideoCodecQuickSync::dllname=_l(QS_DEC_DLL_NAME);
@@ -48,6 +49,8 @@ HRESULT TvideoCodecQuickSync::DeliverSurfaceCallback(void* obj, QsFrameData* fra
     return ((TvideoCodecQuickSync*)obj)->DeliverSurface(frameData);
 }
 
+static CMemAllocator g_FakeAllocator("", NULL, NULL);
+
 TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *IsinkD, int codecID) :
     Tcodec(Ideci),
     TcodecDec(Ideci,IsinkD),
@@ -56,7 +59,8 @@ TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *Is
     createQuickSync(NULL),
     destroyQuickSync(NULL),
     m_QuickSync(NULL),
-    m_Dll(NULL)
+    m_Dll(NULL),
+    m_MediaSample(_l("Fake Media Sample"), &g_FakeAllocator, NULL, NULL, 0)
 {
     ok = false;
     m_Dll = new Tdll(dllname,config);
@@ -120,10 +124,24 @@ HRESULT TvideoCodecQuickSync::decompress(const unsigned char *src,size_t srcLen,
     if (!ok) return E_UNEXPECTED;
 
     CAutoLock lock(&m_csLock);
-    bool isSyncPoint = pIn->IsSyncPoint() == S_OK;
-    HRESULT hr = m_QuickSync->Decode(pIn);
 
-    if (pIn->IsPreroll() == S_OK)
+    IMediaSample* pMediaSample = pIn;
+    TfakeMediaSample* pFakeMediaSample = (E_NOTIMPL == pIn->GetActualDataLength()) ? static_cast<TfakeMediaSample*>(pIn) : NULL;
+    
+    // VFW flow
+    if (NULL != pFakeMediaSample)
+    {
+        m_MediaSample.SetDiscontinuity(pFakeMediaSample->IsDiscontinuity() == S_OK ? TRUE : FALSE);
+        m_MediaSample.SetSyncPoint(pFakeMediaSample->IsSyncPoint() == S_OK ? TRUE : FALSE);
+        m_MediaSample.SetPointer(const_cast<BYTE*>(src), srcLen);
+        m_MediaSample.SetActualDataLength(srcLen);
+        pMediaSample = &m_MediaSample;
+    }
+
+    bool isSyncPoint = pMediaSample->IsSyncPoint() == S_OK;
+    HRESULT hr = m_QuickSync->Decode(pMediaSample);
+
+    if (pMediaSample->IsPreroll() == S_OK)
     {
         return sinkD->deliverPreroll((isSyncPoint) ? FRAME_TYPE::I : FRAME_TYPE::P);
     }

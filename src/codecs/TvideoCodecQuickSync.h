@@ -39,6 +39,7 @@ protected:
     CCritSec            m_csLock;
     Tdll*               m_Dll;
     IQuickSyncDecoder*  m_QuickSync;
+    CMediaSample        m_MediaSample;
 };
 
 #endif
