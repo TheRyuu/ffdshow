@@ -25,7 +25,7 @@
 #include "ffdshow_mediaguids.h"
 #include "codecs/ogg headers/vorbisformat.h"
 #include "ffmpeg/libavcodec/avcodec.h"
-#include "reorder_ch.h"
+#include "ffmpeg/libavutil/audioconvert.h"
 
 TaudioCodecLibavcodec::TaudioCodecLibavcodec(IffdshowBase *deci, IdecAudioSink *Isink):
     Tcodec(deci),
@@ -251,6 +251,29 @@ void TaudioCodecLibavcodec::getInputDescr1(char_t *buf, size_t buflen) const
     buf[buflen-1] = '\0';
 }
 
+static DWORD get_lav_channel_layout(uint64_t layout)
+{
+  if (layout > _UI32_MAX) {
+    if (layout & AV_CH_WIDE_LEFT)
+      layout = (layout & ~AV_CH_WIDE_LEFT) | AV_CH_FRONT_LEFT_OF_CENTER;
+    if (layout & AV_CH_WIDE_RIGHT)
+      layout = (layout & ~AV_CH_WIDE_RIGHT) | AV_CH_FRONT_RIGHT_OF_CENTER;
+
+    if (layout & AV_CH_SURROUND_DIRECT_LEFT)
+      layout = (layout & ~AV_CH_SURROUND_DIRECT_LEFT) | AV_CH_SIDE_LEFT;
+    if (layout & AV_CH_SURROUND_DIRECT_RIGHT)
+      layout = (layout & ~AV_CH_SURROUND_DIRECT_RIGHT) | AV_CH_SIDE_RIGHT;
+  }
+
+  // correct libavcodec layouts for AC3 and DTS
+  if (layout == 0x60f) {
+    layout = 0x3f;
+  }
+
+  return (DWORD)layout;
+}
+
+
 HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 {
     int srcBufferLength = (int)src0.size();
@@ -364,8 +387,8 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 
         if (dstBufferLength > 0) {
             // Correct the output media type from what has been decoded
-            //DPRINTF(_l("libavcodec channels=%d channel layout=%x"), avctx->channels, avctx->channel_layout);
-            fmt.setChannels(avctx->channels, avctx->channel_layout);
+            //DPRINTF(_l("libavcodec channels=%d channel layout=%x,%x"), avctx->channels, avctx->channel_layout, get_lav_channel_layout(avctx->channel_layout));
+            fmt.setChannels(avctx->channels, get_lav_channel_layout(avctx->channel_layout));
             fmt.freq = avctx->sample_rate;
 
             switch (avctx->sample_fmt) {

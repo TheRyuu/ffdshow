@@ -25,7 +25,7 @@ private:
     static struct Tscmap {
         int nchannels;
         char ch[6];
-        int channelMask;
+        DWORD channelMask;
     } const scmaps[];
     int drc;
 protected:

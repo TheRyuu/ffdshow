@@ -16,7 +16,7 @@ CCritSec csMatrix;
 const TmixerMatrix::mixer_matrix_t *matrixPtr;
 int inmask,outmask;
 unsigned int oldnchannels;
-uint64_t oldchannelmask;
+DWORD oldchannelmask;
 int oldsf;
 TmixerSettings oldcfg;
 

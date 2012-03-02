@@ -129,8 +129,8 @@ HRESULT TaudioCodecLibFAAD::decode(TbyteBuffer &src)
             unsigned int ch=0;
             int mask=chmask[frameInfo.channel_position[i]];
             for (int j=0; j<32; j++)
-                if (fmt.channelmask&(1ULL<<j)) {
-                    if ((1ULL<<j)==mask) {
+                if (fmt.channelmask&(1<<j)) {
+                    if ((1<<j)==mask) {
                         chmap[i]=ch;
                         break;
                     }

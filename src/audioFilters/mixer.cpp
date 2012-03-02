@@ -38,8 +38,8 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
     TsampleFormat outfmt=infmt;
     cfg->setFormatOut(outfmt,infmt);
 
-    int in_ch      = infmt.makeChannelMask();
-    int out_ch     = outfmt.makeChannelMask();
+    DWORD in_ch      = infmt.makeChannelMask();
+    DWORD out_ch     = outfmt.makeChannelMask();
     int in_nfront  = infmt.nfront();
     int in_nrear   = infmt.nrear();
     int in_nside   = infmt.nside();

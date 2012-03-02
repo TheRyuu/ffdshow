@@ -98,8 +98,8 @@ private:
         *matrixPtr=&this->TmixerMatrix::matrix;
         static const int mspeakers[]= {SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,SPEAKER_BACK_CENTER,SPEAKER_SIDE_LEFT,SPEAKER_SIDE_RIGHT};
         memset(&matrix, 0, sizeof(mixer_matrix_t));
-        int inmask  = insf.makeChannelMask();
-        int outmask = outsf.makeChannelMask();
+        DWORD inmask  = insf.makeChannelMask();
+        DWORD outmask = outsf.makeChannelMask();
         *inmaskPtr  = inmask;
         *outmaskPtr = outmask;
 

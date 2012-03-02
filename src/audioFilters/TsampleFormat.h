@@ -111,13 +111,13 @@ public:
     int sf;
     unsigned int freq;
     unsigned int nchannels;
-    uint64_t channelmask;
+    DWORD channelmask;
     int alternateSF;
     int speakers[8];
     int dolby;
     bool pcm_be;
 
-    void setChannels(int Inchannels,uint64_t IchannelMask=0) {
+    void setChannels(int Inchannels,DWORD IchannelMask=0) {
         nchannels=std::min(8,Inchannels);
         channelmask=IchannelMask;
         if (channelmask==0) {
@@ -147,15 +147,15 @@ public:
             }
         return -1;
     }
-    int makeChannelMask(void) const {
+    DWORD makeChannelMask(void) const {
         int mask=0;
         for (unsigned int i=0; i<nchannels; i++) {
             mask|=speakers[i];
         }
         return mask;
     }
-    static const int standardChannelMasks[];
-    uint64_t makeChannelMask2(void) const {
+    static const DWORD standardChannelMasks[];
+    DWORD makeChannelMask2(void) const {
         if (channelmask) {
             return channelmask;
         } else {

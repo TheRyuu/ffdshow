@@ -15,7 +15,8 @@ public:
         int id;
         const char_t *name;
         int nameIndex;
-        unsigned int nchannels,channelmask;
+        unsigned int nchannels;
+        DWORD channelmask;
         int dolby;
     };
     static const TchConfig chConfigs[];

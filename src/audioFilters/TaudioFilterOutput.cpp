@@ -137,7 +137,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
         if (oldsf!=fmt) {
             done();
             oldsf=fmt;
-            int channelmask=fmt.makeChannelMask();
+            DWORD channelmask=fmt.makeChannelMask();
             struct Tac3channels {
                 int ac3mode;
                 int speakers[6];

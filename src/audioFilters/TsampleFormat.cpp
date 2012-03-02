@@ -48,7 +48,7 @@ const TalternateSampleFormat TsampleFormat::alternateSampleFormats[]= {
 
 
 
-const int TsampleFormat::standardChannelMasks[]= {
+const DWORD TsampleFormat::standardChannelMasks[]= {
     SPEAKER_FRONT_CENTER,
     SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT,
     SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER,
@@ -414,7 +414,7 @@ void TsampleFormat::fillCommonWAVEFORMATEX(WAVEFORMATEX *pWfe, WAVEFORMATEXTENSI
     pWfe->nAvgBytesPerSec=pWfe->nSamplesPerSec*pWfe->nBlockAlign;
 
     // FIXME: 24/32 bit only seems to work with WAVE_FORMAT_EXTENSIBLE
-    uint64_t dwChannelMask;
+    DWORD dwChannelMask;
     if (channelmask==0 && (sf==TsampleFormat::SF_PCM24 || sf==TsampleFormat::SF_PCM32 || nchannels>2)) {
         dwChannelMask=standardChannelMasks[nchannels-1];
     } else {
@@ -429,7 +429,7 @@ void TsampleFormat::fillCommonWAVEFORMATEX(WAVEFORMATEX *pWfe, WAVEFORMATEXTENSI
         if (dwChannelMask) {
             pWfe->wFormatTag=WAVE_FORMAT_EXTENSIBLE;
             if (pWfex!=NULL) {
-                pWfex->dwChannelMask=(DWORD)dwChannelMask;
+                pWfex->dwChannelMask=dwChannelMask;
                 pWfex->Samples.wValidBitsPerSample=pWfe->wBitsPerSample;
                 pWfex->SubFormat=sf==SF_FLOAT32?MEDIASUBTYPE_IEEE_FLOAT:MEDIASUBTYPE_PCM;
             }
@@ -437,7 +437,7 @@ void TsampleFormat::fillCommonWAVEFORMATEX(WAVEFORMATEX *pWfe, WAVEFORMATEXTENSI
             pWfe->cbSize=0;
         }
     } else if (pWfex!=NULL && pWfex->dwChannelMask==0) {
-        pWfex->dwChannelMask=(DWORD)dwChannelMask;
+        pWfex->dwChannelMask=dwChannelMask;
     }
 }
 

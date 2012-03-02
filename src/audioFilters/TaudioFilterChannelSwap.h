@@ -8,7 +8,7 @@ DECLARE_FILTER(TaudioFilterChannelSwap,public,TaudioFilter)
 private:
 TchannelSwapSettings oldcfg;
 TsampleFormat oldfmt;
-int newchannelmask;
+DWORD newchannelmask;
 unsigned int old_nchannels;
 struct Tspeaker {
     int i;

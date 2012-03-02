@@ -64,7 +64,7 @@ void TmixerPage::cfg2dlg(void)
     int out=cfgGet(IDFF_mixerOut);
     int nameIndex=TmixerSettings::chConfigs[out].nameIndex;
     if (nameIndex>=0) {
-        int lfe=TmixerSettings::chConfigs[out].channelmask&SPEAKER_LOW_FREQUENCY;
+        DWORD lfe=TmixerSettings::chConfigs[out].channelmask&SPEAKER_LOW_FREQUENCY;
         cbxSetDataCurSel(IDC_CBX_MIXER_OUT,lfe?nameIndex:out);
         setCheck(IDC_CHB_MIXER_LFE,lfe);
         enable(true,IDC_CHB_MIXER_LFE);
