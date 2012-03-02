@@ -86,6 +86,10 @@ bool TffdshowConverters2::csp_sup_ffdshow_converter2(uint64_t incsp, uint64_t ou
             if (outcsp == FF_CSP_P016 || outcsp == FF_CSP_P010)
                 return true;
             break;
+        case  FF_CSP_GBRP:
+            if (outcsp == FF_CSP_RGB32)
+                return true;
+            break;
         default:
             return false;
     }
@@ -164,8 +168,9 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
         convert_simd_AYUV<_mm, src_aligned, dst_aligned>(srcY, srcCb, srcCr, dstY, dx, dy, stride_Y, stride_dstY);
     else if (incsp == FF_CSP_444P10)
         convert_simd_Y416<_mm, src_aligned, dst_aligned>(srcY, srcCb, srcCr, dstY, dx, dy, stride_Y, stride_dstY);
-    else
-        return;
+    else if (incsp == FF_CSP_GBRP)
+        convert_simd_GBRPtoRGB<_mm, src_aligned, dst_aligned>(srcY, srcCb, srcCr, dstY, dx, dy, stride_Y, stride_dstY);
+    return;
 }
 
 template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void TffdshowConverters2::convert_simd(
@@ -527,6 +532,83 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
 
     _mm::empty();
 }
+
+ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2::convert_simd_GBRPtoRGB(
+    const uint8_t* srcG,
+    const uint8_t* srcB,
+    const uint8_t* srcR,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_src,
+    stride_t stride_dst)
+ {
+    int xCount = dx / _mm::size;
+    if (xCount <= 0)
+        return;
+
+    _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5,_mm6;
+    _mm::__m ffff;
+    pxor(ffff,ffff);
+    pcmpeqb(ffff,ffff);
+    for (int y = 0 ; y < dy ; y++) {
+        const uint8_t *g = srcG + y * stride_src;
+        const uint8_t *b = srcB + y * stride_src;
+        const uint8_t *r = srcR + y * stride_src;
+        uint8_t *dst1 = dst + y * stride_dst;
+        int x = xCount;
+        do {
+            if (src_aligned) {
+                movVqa(_mm0, r);
+                movVqa(_mm1, g);
+                movVqa(_mm2, b);
+            } else {
+                movVqu(_mm0, r);
+                movVqu(_mm1, g);
+                movVqu(_mm2, b);
+            }
+            _mm4 = _mm0;
+            _mm5 = _mm2;
+            punpcklbw(_mm0,ffff);    // 0xff,R
+            punpcklbw(_mm2,_mm1);    // G,B
+            punpckhbw(_mm4,ffff);    // 0xff,R
+            punpckhbw(_mm5,_mm1);    // G,B
+            _mm3 = _mm2;
+            _mm6 = _mm5;
+            punpckhwd(_mm2,_mm0);    // 0xff,RGB * 4 (dst+_mm::size)
+            punpcklwd(_mm3,_mm0);    // 0xff,RGB * 4 (dst)
+            punpckhwd(_mm5,_mm4);    // 0xff,RGB * 4 (dst+_mm::size)
+            punpcklwd(_mm6,_mm4);    // 0xff,RGB * 4 (dst)
+            if (dst_aligned) {
+                _mm::movntVq(dst1              , _mm3);
+                _mm::movntVq(dst1 + _mm::size  , _mm2);
+                _mm::movntVq(dst1 + _mm::size*2, _mm6);
+                _mm::movntVq(dst1 + _mm::size*3, _mm5);
+            } else {
+                movVqu(dst1              , _mm3);
+                movVqu(dst1 + _mm::size  , _mm2);
+                movVqu(dst1 + _mm::size*2, _mm6);
+                movVqu(dst1 + _mm::size*3, _mm5);
+            }
+            r += _mm::size;
+            g += _mm::size;
+            b += _mm::size;
+            dst1 += _mm::size * 4;
+        } while(--x);
+    }
+
+    if (xCount * (int)_mm::size < dx && dx > _mm::size) {
+        // handle non-mod 8 resolution.
+        int dxDone = dx - _mm::size;
+        srcG += dxDone;
+        srcB += dxDone;
+        srcR += dxDone;
+        dst  += dxDone * 4;
+        convert_simd_GBRPtoRGB<_mm, 0, 0>(srcG, srcB, srcR, dst, _mm::size, dy, stride_src, stride_dst);
+    }
+
+    _mm::empty();
+ }
 
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
     #pragma warning (pop)
