@@ -52,7 +52,8 @@ protected:
     bool theorart;
     bool codecinited,ownmatrices;
     REFERENCE_TIME rtStart,rtStop,avgTimePerFrame,segmentTimeStart;
-    REFERENCE_TIME old_rtStart,old_rtStop;
+    REFERENCE_TIME prior_in_rtStart,prior_in_rtStop;
+    REFERENCE_TIME prior_out_rtStart,prior_out_rtStop;
 
     struct {
         REFERENCE_TIME rtStart,rtStop;
@@ -67,7 +68,6 @@ protected:
     static void draw_arrow(uint8_t *buf, int sx, int sy, int ex, int ey, stride_t stride,int mulx,int muly,int dstdx,int dstdy);
     unsigned char *ffbuf;
     unsigned int ffbuflen;
-    REFERENCE_TIME prior_rtStart,prior_rtStop;
     bool wasKey;
     virtual void handle_user_data(const uint8_t *buf,int buf_len);
     TccDecoder *ccDecoder;

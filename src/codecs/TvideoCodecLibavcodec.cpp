@@ -147,10 +147,10 @@ void TvideoCodecLibavcodec::end(void)
 bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
 {
     palette_size = 0;
-    old_rtStart = REFTIME_INVALID;
-    old_rtStop = 0;
+    prior_out_rtStart = REFTIME_INVALID;
+    prior_out_rtStop = 0;
     rtStart = rtStop = REFTIME_INVALID;
-    prior_rtStart = prior_rtStop = REFTIME_INVALID;
+    prior_in_rtStart = prior_in_rtStop = REFTIME_INVALID;
     mpeg2_in_doubt = codecId == CODEC_ID_MPEG2VIDEO;
 
 	int using_dxva = 0;
@@ -672,23 +672,23 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 uint8_t *outBuf = NULL;
                 int out_size = 0;
                 used_bytes = libavcodec->av_parser_parse2(parser, avctx, &outBuf, &out_size, src ? ffbuf : NULL, size, AV_NOPTS_VALUE, AV_NOPTS_VALUE, 0);
-                if (prior_rtStart == REFTIME_INVALID) {
-                    prior_rtStart = rtStart;
-                    prior_rtStop = rtStop;
+                if (prior_in_rtStart == REFTIME_INVALID) {
+                    prior_in_rtStart = rtStart;
+                    prior_in_rtStop = rtStop;
                 }
                 if (out_size > 0 || !src) {
                     mpeg2_in_doubt = false;
                     avpkt.data = out_size > 0 ? outBuf : NULL;
                     avpkt.size = out_size;
                     if (out_size > used_bytes) {
-                        avctx->reordered_opaque = prior_rtStart;
-                        avctx->reordered_opaque2 = prior_rtStop;
+                        avctx->reordered_opaque = prior_in_rtStart;
+                        avctx->reordered_opaque2 = prior_in_rtStop;
                     } else {
                         avctx->reordered_opaque = rtStart;
                         avctx->reordered_opaque2 = rtStop;
                     }
-                    prior_rtStart = rtStart;
-                    prior_rtStop = rtStop;
+                    prior_in_rtStart = rtStart;
+                    prior_in_rtStop = rtStop;
                     avctx->reordered_opaque3 = out_size;
                     if (h264RandomAccess.search(avpkt.data, avpkt.size)) {
                         libavcodec->avcodec_decode_video2(avctx, frame, &got_picture, &avpkt);
@@ -833,7 +833,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     if(frametype == FRAME_TYPE::I) {
                         pict.rtStart = frame->reordered_opaque;
                     } else {
-                        pict.rtStart = old_rtStop;
+                        pict.rtStart = prior_out_rtStop;
                     }
 
                     // cope with a change in rate
@@ -854,11 +854,11 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                         // DPRINTF((ffstring(L"rateInfo->isDiscontinuity found. pict.rtStart ") + Trt2str(pict.rtStart) + L" rateInfo->rate.StartTime " + Trt2str(rateInfo->rate.StartTime)).c_str());
                         pict.rtStart = rateInfo->rate.StartTime + (pict.rtStart - rateInfo->rate.StartTime) * abs(rateInfo->rate.Rate) / 10000;
 
-                        // DPRINTF(_l("rateInfo->isDiscontinuity found. updating rtStart %s old_rtStop %s"),Trt2str(pict.rtStart).c_str(), Trt2str(old_rtStop).c_str());
+                        // DPRINTF(_l("rateInfo->isDiscontinuity found. updating rtStart %s prior_out_rtStop %s"),Trt2str(pict.rtStart).c_str(), Trt2str(prior_out_rtStop).c_str());
                         pict.discontinuity = rateInfo->isDiscontinuity;
                         rateInfo->isDiscontinuity = false;
                     } else {
-                        pict.rtStart = old_rtStop;
+                        pict.rtStart = prior_out_rtStop;
                     }
 
                     REFERENCE_TIME duration = getDuration();
@@ -873,23 +873,23 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                         telecineManager.onSeek();
                     }
                 } else if (parser) {
-                    if (old_rtStart >= frame->reordered_opaque && old_rtStart != REFTIME_INVALID) {
-                        pict.rtStart = pict.rtStop = old_rtStop;
+                    if (prior_out_rtStart >= frame->reordered_opaque && prior_out_rtStart != REFTIME_INVALID) {
+                        pict.rtStart = pict.rtStop = prior_out_rtStop;
                     } else {
                         pict.rtStart = frame->reordered_opaque;
                         pict.rtStop = frame->reordered_opaque2;
                     }
                     pict.srcSize = (size_t)frame->reordered_opaque3;
                 } else if (dont_use_rtStop_from_upper_stream) {
-                    if (old_rtStart >= frame->reordered_opaque && old_rtStart != REFTIME_INVALID) {
-                        pict.rtStart = old_rtStop;
+                    if (prior_out_rtStart >= frame->reordered_opaque && prior_out_rtStart != REFTIME_INVALID) {
+                        pict.rtStart = prior_out_rtStop;
                     } else {
                         pict.rtStart = frame->reordered_opaque;
                     }
                     pict.srcSize = (size_t)frame->reordered_opaque3; // FIXME this is not correct for MPEG-1/2 that use SOURCE_TRUNCATED. (Just for OSD, not that important bug)
 
                     if (pict.rtStart==REFTIME_INVALID) {
-                        pict.rtStart=old_rtStop;
+                        pict.rtStart=prior_out_rtStop;
                     }
 
                     if (avgTimePerFrame==-1) {
@@ -947,8 +947,8 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     pict.rtStop = pict.rtStart + getDuration();
                 }
 
-                old_rtStart = pict.rtStart;
-                old_rtStop = pict.rtStop;
+                prior_out_rtStart = pict.rtStart;
+                prior_out_rtStop = pict.rtStop;
                 hr=sinkD->deliverDecodedSample(pict);
                 if (hr != S_OK
                         || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
@@ -978,8 +978,8 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
 bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
-    old_rtStart = REFTIME_INVALID;
-    old_rtStop = 0;
+    prior_out_rtStart = REFTIME_INVALID;
+    prior_out_rtStop = 0;
     wasKey=false;
     segmentTimeStart=segmentStart;
     inPosB = 1;
@@ -1011,7 +1011,7 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
         libavcodec->av_parser_close(parser);
         parser = libavcodec->av_parser_init(codecId);
     }
-    prior_rtStart = prior_rtStop = REFTIME_INVALID;
+    prior_in_rtStart = prior_in_rtStop = REFTIME_INVALID;
     return false;
 }
 
