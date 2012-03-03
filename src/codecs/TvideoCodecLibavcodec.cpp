@@ -693,6 +693,8 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     if (h264RandomAccess.search(avpkt.data, avpkt.size)) {
                         libavcodec->avcodec_decode_video2(avctx, frame, &got_picture, &avpkt);
                         h264RandomAccess.judgeUsability(&got_picture);
+                    } else {
+                        got_picture = 0;
                     }
                 } else {
                     got_picture = 0;
@@ -708,6 +710,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                         }
                         h264RandomAccess.judgeUsability(&got_picture);
                     } else {
+                        got_picture = 0;
                         return S_OK;
                     }
                 } else {
