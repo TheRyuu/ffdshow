@@ -981,8 +981,11 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
 bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
+    rtStart = rtStop = REFTIME_INVALID;
+    prior_in_rtStart = prior_in_rtStop = REFTIME_INVALID;
     prior_out_rtStart = REFTIME_INVALID;
     prior_out_rtStop = 0;
+
     wasKey=false;
     segmentTimeStart=segmentStart;
     inPosB = 1;
@@ -1014,7 +1017,6 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
         libavcodec->av_parser_close(parser);
         parser = libavcodec->av_parser_init(codecId);
     }
-    prior_in_rtStart = prior_in_rtStop = REFTIME_INVALID;
     return false;
 }
 
