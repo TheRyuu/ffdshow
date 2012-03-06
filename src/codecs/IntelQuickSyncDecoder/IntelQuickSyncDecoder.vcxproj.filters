@@ -65,13 +65,7 @@
     <ClInclude Include="src\sysmem_allocator.h">
       <Filter>Header Files\Allocators</Filter>
     </ClInclude>
-    <ClInclude Include="src\QsThreadPool.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\QuickSyncUtils.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\QsWorkerThread.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
@@ -96,12 +90,6 @@
     </ClCompile>
     <ClCompile Include="src\TimeManager.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\QsThreadPool.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\QsWorkerThread.cpp">
-      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\QuickSyncUtils.cpp">
       <Filter>Source Files\Utility</Filter>

@@ -49,8 +49,6 @@ HRESULT TvideoCodecQuickSync::DeliverSurfaceCallback(void* obj, QsFrameData* fra
     return ((TvideoCodecQuickSync*)obj)->DeliverSurface(frameData);
 }
 
-static CMemAllocator g_FakeAllocator("", NULL, NULL);
-
 TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *IsinkD, int codecID) :
     Tcodec(Ideci),
     TcodecDec(Ideci,IsinkD),
@@ -60,7 +58,8 @@ TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *Is
     destroyQuickSync(NULL),
     m_QuickSync(NULL),
     m_Dll(NULL),
-    m_MediaSample(_l("Fake Media Sample"), &g_FakeAllocator, NULL, NULL, 0)
+    m_FakeAllocator("", NULL, NULL),
+    m_MediaSample(_l("Fake Media Sample"), &m_FakeAllocator, NULL, NULL, 0)
 {
     ok = false;
     m_Dll = new Tdll(dllname,config);

@@ -712,10 +712,40 @@ int Tconvert::convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_
                    vram_indirect);
 }
 
+#define MIN_BUFF_SIZE (1 << 18)
+typedef void* (*Tmemcpy)(void*, const void*, size_t);
+
+static void* mt_copy(void* d, const void* s, size_t size, Tmemcpy memcpyFunc)
+{
+    if (!d || !s) return NULL;
+
+    // Buffer is very small and not worth the effort
+    if (size < MIN_BUFF_SIZE)
+    {
+        return memcpyFunc(d, s, size);
+    }
+
+    size_t blockSize = (size / 2) & ~0xf; // Make size a multiple of 16 bytes
+    std::array<size_t, 3> offsets = { 0, blockSize, size };
+    std::array<size_t, 2> indexes = { 0, 1 };
+
+    Concurrency::parallel_for_each(indexes.begin(), indexes.end(), [d, s, offsets, memcpyFunc](size_t& i)
+    {
+        memcpyFunc((char*)d + offsets[i], (const char*)s + offsets[i], offsets[i + 1] - offsets[i]);
+    });
+
+    return d;
+}
+
+inline void* mt_memcpy(void* d, const void* s, size_t size)
+{
+    return mt_copy(d, s, size, memcpy);
+}
+
 void Tconvert::copyPlane(BYTE *dstp,stride_t dst_pitch,const BYTE *srcp,stride_t src_pitch,int row_size,int height,bool flip)
 {
     if (dst_pitch == src_pitch && src_pitch == row_size && !flip) {
-        memcpy(dstp, srcp, src_pitch * height);
+        mt_memcpy(dstp, srcp, src_pitch * height);
     } else {
         if (!flip) {
             for (int y=height; y>0; --y) {

@@ -159,8 +159,6 @@
     <ClInclude Include="src\base_allocator.h" />
     <ClInclude Include="src\CodecInfo.h" />
     <ClInclude Include="src\H264Nalu.h" />
-    <ClInclude Include="src\QsThreadPool.h" />
-    <ClInclude Include="src\QsWorkerThread.h" />
     <ClInclude Include="src\QuickSyncDecoder.h" />
     <ClInclude Include="src\d3d_allocator.h" />
     <ClInclude Include="src\IQuickSyncDecoder.h" />
@@ -175,8 +173,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\base_alllocator.cpp" />
-    <ClCompile Include="src\QsThreadPool.cpp" />
-    <ClCompile Include="src\QsWorkerThread.cpp" />
     <ClCompile Include="src\QuickSyncExports.cpp" />
     <ClCompile Include="src\H264Nalu.cpp" />
     <ClCompile Include="src\QuickSyncDecoder.cpp" />

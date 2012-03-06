@@ -50,6 +50,7 @@
  #include <utility>
  #include <limits>
  #include <deque>
+ #include <array>
 #include "tuple.h"
 // baseclasses
 #include <streams.h>
@@ -64,6 +65,7 @@
 #include <qnetwork.h>
 #include <d3d9.h>
 #include <vmr9.h>
+#include <ppl.h>
 #include "msacmdrv.h"
 
 // BOOST
