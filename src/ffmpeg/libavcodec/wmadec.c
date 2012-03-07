@@ -1,21 +1,21 @@
 /*
  * WMA compatible decoder
- * Copyright (c) 2002 The Libav Project
+ * Copyright (c) 2002 The FFmpeg Project
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -107,6 +107,11 @@ static int wma_decode_init(AVCodecContext * avctx)
             av_log(avctx, AV_LOG_WARNING, "Disabling use_variable_block_len, if this fails contact the ffmpeg developers and send us the file\n");
             s->use_variable_block_len= 0; // this fixes issue1503
         }
+    }
+
+    if(avctx->channels > MAX_CHANNELS){
+        av_log(avctx, AV_LOG_ERROR, "Invalid number of channels (%d)\n", avctx->channels);
+        return -1;
     }
 
     if(ff_wma_init(avctx, flags2)<0)
@@ -363,7 +368,7 @@ static int decode_exp_vlc(WMACodecContext *s, int ch)
         }
         /* NOTE: this offset is the same as MPEG4 AAC ! */
         last_exp += code - 60;
-        if ((unsigned)last_exp + 60 > FF_ARRAY_ELEMS(pow_tab)) {
+        if ((unsigned)last_exp + 60 >= FF_ARRAY_ELEMS(pow_tab)) {
             av_log(s->avctx, AV_LOG_ERROR, "Exponent out of range: %d\n",
                    last_exp);
             return -1;
@@ -835,7 +840,8 @@ static int wma_decode_superframe(AVCodecContext *avctx, void *data,
                buf_size, s->block_align);
         return AVERROR_INVALIDDATA;
     }
-    buf_size = s->block_align;
+    if(s->block_align)
+        buf_size = s->block_align;
 
     init_get_bits(&s->gb, buf, buf_size*8);
 
@@ -857,6 +863,12 @@ static int wma_decode_superframe(AVCodecContext *avctx, void *data,
 
     if (s->use_bit_reservoir) {
         bit_offset = get_bits(&s->gb, s->byte_offset_bits + 3);
+        if (bit_offset > get_bits_left(&s->gb)) {
+            av_log(avctx, AV_LOG_ERROR,
+                   "Invalid last frame bit offset %d > buf size %d (%d)\n",
+                   bit_offset, get_bits_left(&s->gb), buf_size);
+            goto fail;
+        }
 
         if (s->last_superframe_len > 0) {
             //        printf("skip=%d\n", s->last_bitoffset);
@@ -873,9 +885,10 @@ static int wma_decode_superframe(AVCodecContext *avctx, void *data,
             if (len > 0) {
                 *q++ = (get_bits)(&s->gb, len) << (8 - len);
             }
+            memset(q, 0, FF_INPUT_BUFFER_PADDING_SIZE);
 
             /* XXX: bit_offset bits into last frame */
-            init_get_bits(&s->gb, s->last_superframe, MAX_CODED_SUPERFRAME_SIZE*8);
+            init_get_bits(&s->gb, s->last_superframe, s->last_superframe_len * 8 + bit_offset);
             /* skip unused bits */
             if (s->last_bitoffset > 0)
                 skip_bits(&s->gb, s->last_bitoffset);
@@ -889,9 +902,9 @@ static int wma_decode_superframe(AVCodecContext *avctx, void *data,
 
         /* read each frame starting from bit_offset */
         pos = bit_offset + 4 + 4 + s->byte_offset_bits + 3;
-        if (pos >= MAX_CODED_SUPERFRAME_SIZE * 8)
+        if (pos >= MAX_CODED_SUPERFRAME_SIZE * 8 || pos > buf_size * 8)
             return AVERROR_INVALIDDATA;
-        init_get_bits(&s->gb, buf + (pos >> 3), (MAX_CODED_SUPERFRAME_SIZE - (pos >> 3))*8);
+        init_get_bits(&s->gb, buf + (pos >> 3), (buf_size - (pos >> 3))*8);
         len = pos & 7;
         if (len > 0)
             skip_bits(&s->gb, len);
@@ -926,7 +939,7 @@ static int wma_decode_superframe(AVCodecContext *avctx, void *data,
     *got_frame_ptr   = 1;
     *(AVFrame *)data = s->frame;
 
-    return s->block_align;
+    return buf_size;
  fail:
     /* when error, we reset the bit reservoir */
     s->last_superframe_len = 0;
