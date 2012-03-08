@@ -17,7 +17,7 @@
  */
 /*
  * Th264RandomAccess, isReallyMPEG2
- * Copyright (c) 2008-2011 Haruhiko Yamagata
+ * Copyright (c) 2008-2012 Haruhiko Yamagata
  */
 
 #include "stdafx.h"
@@ -1568,6 +1568,7 @@ int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
             return 1;
         } else if (is_recovery_point == 1) {
             // I frames are not ideal for recovery, but if we ignore them, better frames may not come forever. recovery_frame_cnt is not valid.
+            DPRINTF(L"Th264RandomAccess using I-frame as an entry point. This is non-compliant to the spec.");
             recovery_mode = 2;
             recovery_frame_cnt = 0;
             return 1;
