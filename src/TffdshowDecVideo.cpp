@@ -118,7 +118,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
     rollingAvg(0),
     use_rollingAvg(true),
     decodedPict(),
-    late(0)
+    late(0),
+    bytesCnt(0)
 {
     DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
