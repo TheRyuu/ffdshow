@@ -201,16 +201,11 @@ void TDXVADecoderVC1::SetExtraData (BYTE* pDataIn, UINT nSize)
     m_PictureParams.bBlockHeightMinus1               = 7;
     m_PictureParams.bBPPminus1                       = 7;
 
-    m_PictureParams.bMVprecisionAndChromaRelation    = 0;
     m_PictureParams.bChromaFormat                    = VC1_CHROMA_420;
 
     m_PictureParams.bPicScanFixed                    = 0;    // Use for status reporting sections 3.8.1 and 3.8.2
     m_PictureParams.bPicReadbackRequests             = 0;
 
-    m_PictureParams.bRcontrol                        = 0;
-    m_PictureParams.bPicExtrapolation                = 0;
-
-    m_PictureParams.bPicOBMC                         = 0;
     m_PictureParams.bPicBinPB                        = 0;    // TODO
     m_PictureParams.bMV_RPS                          = 0;    // TODO
 
