@@ -153,6 +153,7 @@ public:
     void alloc(unsigned int dx,unsigned int dy,uint64_t Icsp,Tbuffer &buf,int edge=0);
     void createEdge(unsigned int edge,Tbuffer &buf);
     void md5sum(uint8_t sum[16]) const;
+    void debugPrintTimestamps(const wchar_t * msg) const;
 };
 
 // called from TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge) and image filters that have to be compatible with it.

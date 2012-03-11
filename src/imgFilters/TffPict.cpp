@@ -690,3 +690,11 @@ void TffPict::md5sum(uint8_t sum[16]) const
         }
     md5.done(sum);
 }
+
+void TffPict::debugPrintTimestamps(const wchar_t * msg) const
+{
+        REFERENCE_TIME_to_hhmmssmmm start(rtStart);
+        REFERENCE_TIME_to_hhmmssmmm stop(rtStop);
+        DPRINTF(L"%s rtStart=%s rtStop=%s",msg, start.get_str(), stop.get_str());
+}
+
