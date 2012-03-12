@@ -33,7 +33,8 @@ void TffdshowConverters2::convert(
     const uint8_t* srcCb,
     const uint8_t* srcCr,
     uint8_t* dstY,
-    uint8_t* dstCbCr,
+    uint8_t* dstCb,
+    uint8_t* dstCr,
     int dx,
     int dy,
     stride_t stride_Y,
@@ -44,18 +45,22 @@ void TffdshowConverters2::convert(
     // clean up input args to helf alignment checking
     if (incsp == FF_CSP_NV12)
         srcCr = NULL;
-    if (incsp == FF_CSP_444P || incsp == FF_CSP_444P10)
-        dstCbCr = NULL;
+
+    if (outcsp == FF_CSP_P016 || outcsp == FF_CSP_P010 || outcsp == FF_CSP_NV12 || outcsp == FF_CSP_P210 || outcsp == FF_CSP_P216)
+        dstCr = NULL;
+
+    if (outcsp == FF_CSP_AYUV || outcsp == FF_CSP_Y416 || outcsp == FF_CSP_RGB32)
+        dstCb = dstCr = NULL;
 
 #ifndef WIN64
     if (Tconfig::cpu_flags&FF_CPU_SSE2)
 #endif
-        convert_check_src_align<Tsse2>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        convert_check_src_align<Tsse2>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCb, dstCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
 #ifndef WIN64
     else if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
-        convert_check_src_align<Tmmxext>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        convert_check_src_align<Tmmxext>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCb, dstCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else
-        convert_check_src_align<Tmmx>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        convert_check_src_align<Tmmx>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCb, dstCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
 #endif
 }
 
@@ -83,7 +88,7 @@ bool TffdshowConverters2::csp_sup_ffdshow_converter2(uint64_t incsp, uint64_t ou
                 return true;
             break;
         case FF_CSP_NV12:
-            if (outcsp == FF_CSP_P016 || outcsp == FF_CSP_P010)
+            if (outcsp == FF_CSP_P016 || outcsp == FF_CSP_P010 || outcsp == FF_CSP_420P)
                 return true;
             break;
         case  FF_CSP_GBRP:
@@ -103,7 +108,8 @@ template <class _mm> void TffdshowConverters2::convert_check_src_align(
     const uint8_t* srcCb,
     const uint8_t* srcCr,
     uint8_t* dstY,
-    uint8_t* dstCbCr,
+    uint8_t* dstCb,
+    uint8_t* dstCr,
     int dx,
     int dy,
     stride_t stride_Y,
@@ -112,9 +118,9 @@ template <class _mm> void TffdshowConverters2::convert_check_src_align(
     stride_t stride_dstCbCr)
 {
     if ((stride_Y & 0xf) || (stride_CbCr & 0xf) || (stride_t(srcY) & 0xf) || (stride_t(srcCb) & 0xf) || (stride_t(srcCr) & 0xf))
-        convert_check_dst_align<_mm, 0>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        convert_check_dst_align<_mm, 0>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCb, dstCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else
-        convert_check_dst_align<_mm, 1>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        convert_check_dst_align<_mm, 1>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCb, dstCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
 }
 
 template <class _mm, int src_aligned> void TffdshowConverters2::convert_check_dst_align(
@@ -124,7 +130,8 @@ template <class _mm, int src_aligned> void TffdshowConverters2::convert_check_ds
     const uint8_t* srcCb,
     const uint8_t* srcCr,
     uint8_t* dstY,
-    uint8_t* dstCbCr,
+    uint8_t* dstCb,
+    uint8_t* dstCr,
     int dx,
     int dy,
     stride_t stride_Y,
@@ -132,10 +139,10 @@ template <class _mm, int src_aligned> void TffdshowConverters2::convert_check_ds
     stride_t stride_dstY,
     stride_t stride_dstCbCr)
 {
-    if ((stride_dstY & 0xf) || (stride_dstCbCr & 0xf) || (stride_t(dstY) & 0xf) || (stride_t(dstCbCr) & 0xf))
-        convert_translate_incsp<_mm, src_aligned, 0>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+    if ((stride_dstY & 0xf) || (stride_dstCbCr & 0xf) || (stride_t(dstY) & 0xf) || (stride_t(dstCb) & 0xf) || (stride_t(dstCr) & 0xf))
+        convert_translate_incsp<_mm, src_aligned, 0>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCb, dstCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else
-        convert_translate_incsp<_mm, src_aligned, 1>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        convert_translate_incsp<_mm, src_aligned, 1>(incsp, outcsp, srcY, srcCb, srcCr, dstY, dstCb, dstCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
 }
 
 template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2::convert_translate_incsp(
@@ -145,7 +152,8 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
     const uint8_t* srcCb,
     const uint8_t* srcCr,
     uint8_t* dstY,
-    uint8_t* dstCbCr,
+    uint8_t* dstCb,
+    uint8_t* dstCr,
     int dx,
     int dy,
     stride_t stride_Y,
@@ -154,16 +162,19 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
     stride_t stride_dstCbCr)
 {
     if (incsp == FF_CSP_420P10)
-        convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_420P10>(srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_420P10>(srcY, srcCb, srcCr, dstY, dstCb, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else if (incsp == FF_CSP_420P) {
         if (outcsp == FF_CSP_NV12)
-            convert_YV12toNV12<_mm, src_aligned, dst_aligned>(srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+            convert_YV12toNV12<_mm, src_aligned, dst_aligned>(srcY, srcCb, srcCr, dstY, dstCb, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
         else
-            convert_simd<_mm, 1          , dst_aligned, FF_CSP_420P>  (srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
-    } else if (incsp == FF_CSP_NV12)
-        convert_simd<_mm, 1          , dst_aligned, FF_CSP_NV12>  (srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
-    else if (incsp == FF_CSP_422P10)
-        convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_422P10>(srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+            convert_simd<_mm, 1          , dst_aligned, FF_CSP_420P>  (srcY, srcCb, srcCr, dstY, dstCb, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+    } else if (incsp == FF_CSP_NV12) {
+        if (outcsp == FF_CSP_420P)
+            convert_NV12toYV12<_mm, src_aligned, dst_aligned>(srcY, srcCb, dstY, dstCb, dstCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        else
+            convert_simd<_mm, 1          , dst_aligned, FF_CSP_NV12>  (srcY, srcCb, srcCr, dstY, dstCb, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+    } else if (incsp == FF_CSP_422P10)
+        convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_422P10>(srcY, srcCb, srcCr, dstY, dstCb, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else if (incsp == FF_CSP_444P)
         convert_simd_AYUV<_mm, src_aligned, dst_aligned>(srcY, srcCb, srcCr, dstY, dx, dy, stride_Y, stride_dstY);
     else if (incsp == FF_CSP_444P10)
@@ -367,6 +378,103 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
         dstY    += dxDone;
         dstCbCr += dxDone;
         convert_YV12toNV12<_mm, 0, 0>(srcY, srcCb, srcCr, dstY, dstCbCr, _mm::size * 2, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+    }
+
+    _mm::empty();
+}
+
+template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2::convert_NV12toYV12(
+    const uint8_t* srcY,
+    const uint8_t* srcCbCr,
+    uint8_t* dstY,
+    uint8_t* dstCb,
+    uint8_t* dstCr,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dstY,
+    stride_t stride_dstCbCr)
+{
+    int xCount = dx / (_mm::size*2);
+    if (xCount <= 0)
+        return;
+
+    _mm::__m _mm0,_mm1,_mm2,_mm3,_mm_00ff;
+
+    // fill with 0xff
+    pxor(_mm_00ff,_mm_00ff);
+    pcmpeqb(_mm_00ff,_mm_00ff);
+    psllw(_mm_00ff, 8);
+    psrlw(_mm_00ff, 8);
+
+    for (int y = 0 ; y < dy ; y++) {
+        const uint8_t *src = srcY + y * stride_Y;
+        uint8_t *dst = dstY + y * stride_dstY;
+        int x = xCount;
+        do {
+            if (src_aligned) {
+                movVqa(_mm0, src);
+                movVqa(_mm1, src + _mm::size);
+            } else {
+                movVqu(_mm0, src);
+                movVqu(_mm1, src + _mm::size);
+            }
+            src += _mm::size * 2;
+            if (dst_aligned) {
+                _mm::movntVq(dst, _mm0);
+                _mm::movntVq(dst + _mm::size, _mm1);
+            } else {
+                movVqu(dst, _mm0);
+                movVqu(dst + _mm::size, _mm1);
+            }
+            dst += _mm::size * 2;
+        } while(--x);
+    }
+    int dyCbCr = dy/2;
+    for (int y = 0 ; y < dyCbCr ; y++) {
+        const uint8_t *srcCbCrLn = srcCbCr + y * stride_CbCr;
+        uint8_t *dstCbLn = dstCb + y * stride_dstCbCr;
+        uint8_t *dstCrLn = dstCr + y * stride_dstCbCr;
+        int x = xCount;
+        do {
+            if (src_aligned) {
+                movVqa(_mm0, srcCbCrLn);
+                movVqa(_mm1, srcCbCrLn + _mm::size);
+            } else {
+                movVqu(_mm0, srcCbCrLn);
+                movVqu(_mm1, srcCbCrLn + _mm::size);
+            }
+            _mm2 = _mm0;
+            _mm3 = _mm1;
+            srcCbCrLn += _mm::size * 2;
+            pand(_mm0, _mm_00ff);
+            pand(_mm1, _mm_00ff);
+            psrlw(_mm2,8);
+            psrlw(_mm3,8);
+            packuswb(_mm0, _mm1);
+            packuswb(_mm2, _mm3);
+
+            if (dst_aligned) {
+                _mm::movntVq(dstCbLn, _mm0);
+                _mm::movntVq(dstCrLn, _mm2);
+            } else {
+                movVqu(dstCbLn, _mm0);
+                movVqu(dstCrLn, _mm2);
+            }
+            dstCbLn += _mm::size;
+            dstCrLn += _mm::size;
+        } while(--x);
+    }
+
+    if (xCount * (int)_mm::size * 2 < dx && dx > _mm::size * 2) {
+        int dxDone = dx - _mm::size * 2;
+        srcY  += dxDone;
+        srcCbCr += dxDone;
+        dstY    += dxDone;
+        dstCb   += dxDone/2;
+        dstCr   += dxDone/2;
+        convert_NV12toYV12<_mm, 0, 0>(srcY, srcCbCr, dstY, dstCb, dstCr, _mm::size * 2, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     }
 
     _mm::empty();

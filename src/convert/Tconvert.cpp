@@ -373,21 +373,10 @@ int Tconvert::convert(uint64_t incsp0,
                     }
                     break;
                 case FF_CSP_RGB24:
-                    if (outcsp1==FF_CSP_NV12) { // RGB24 -> YV12 -> NV12
-                        mode=MODE_fallback;
-                        tmpcsp=FF_CSP_420P;
-                        tmpStride[1]=tmpStride[2]=(tmpStride[0]=(dx/16+2)*16)/2;
-                        tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy  );
-                        tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
-                        tmp[2]=(unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
-                        tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                        tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                        break;
-                    }
-                    if (outcsp1 == FF_CSP_UYVY || outcsp1 == FF_CSP_YVYU) { // RGB24 -> YUY2 -> UYVY/YVYU
-                        mode=MODE_fallback;
-                        tmpcsp=FF_CSP_YUY2;
-                        tmpStride[0]=2*(dx/16+2)*16;
+                    if (!(outcsp1 == FF_CSP_BGR32 || outcsp1 == FF_CSP_BGR24)) {
+                        mode = MODE_fallback;
+                        tmpcsp = FF_CSP_BGR32; // FF_CSP_RGB32 doesn't work (libswscale's limitation).
+                        tmpStride[0] = 4 * ffalign(dx, 16);
                         tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
                         tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                         tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
@@ -546,7 +535,7 @@ int Tconvert::convert(uint64_t incsp0,
             TffdshowConverters2::convert(
                 incsp0 & FF_CSPS_MASK, outcsp0 & FF_CSPS_MASK,
                 src[0], src[1], src[2],
-                dst[0], dst[1],
+                dst[0], dst[1], dst[2],
                 dx, dy,
                 srcStride[0], srcStride[1],
                 dstStride[0], dstStride[1]);

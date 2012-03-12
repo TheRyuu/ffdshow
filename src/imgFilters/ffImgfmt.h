@@ -233,6 +233,8 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
             return PIX_FMT_RGB24;
         case FF_CSP_RGB32:
             return PIX_FMT_RGB32;
+        case FF_CSP_BGR32:
+            return PIX_FMT_BGR32;
         case FF_CSP_RGB15:
             return PIX_FMT_RGB555;
         case FF_CSP_RGB16:
