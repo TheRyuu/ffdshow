@@ -2,46 +2,45 @@
 #define FFMPEG_CONFIG_H
 
 #if defined (__GNUC__)
-	#define HAVE_INLINE_ASM 1
-	#define HAVE_MMX 1
-	#define HAVE_MMX2 1
-	#define HAVE_SSE 1
-	#define HAVE_SSSE3 1
-	#define HAVE_AMD3DNOW 1
-	#define HAVE_AMD3DNOWEXT 1
+  #define HAVE_INLINE_ASM 1
+  #define HAVE_MMX 1
+  #define HAVE_MMX2 1
+  #define HAVE_SSE 1
+  #define HAVE_SSSE3 1
+  #define HAVE_AMD3DNOW 1
+  #define HAVE_AMD3DNOWEXT 1
 
-	#define ARCH_X86 1
+  #define ARCH_X86 1
 
-	#ifdef ARCH_X86_64
-	  #define ARCH_X86_32 0
-		#define ARCH_X86_64 1
-		#define HAVE_FAST_64BIT 1
-		#define HAVE_STRUCT_TIMESPEC 1
-	#else
-		#define ARCH_X86_32 1
-		#define ARCH_X86_64 0
-		#define HAVE_FAST_64BIT 0
-	#endif
+  #ifdef ARCH_X86_64
+    #define ARCH_X86_32 0
+    #define ARCH_X86_64 1
+    #define HAVE_FAST_64BIT 1
+    #define HAVE_STRUCT_TIMESPEC 1
+  #else
+    #define ARCH_X86_32 1
+    #define ARCH_X86_64 0
+    #define HAVE_FAST_64BIT 0
+  #endif
 
-	#define PTW32_STATIC_LIB 1
-	#define restrict restrict
+  #define PTW32_STATIC_LIB 1
+  #define restrict restrict
 #else
-//#elif defined (__INTEL_COMPILER) // Intellisense doesn't work. Just #else is preffered.
-    #define __ICC __INTEL_COMPILER
-    #define _ICC __INTEL_COMPILER
-	#define ARCH_X86 0
-	#define HAVE_INLINE_ASM 0
-	#define HAVE_MMX 0
-	#define HAVE_MMX2 0
-	#define HAVE_SSE 0
-	#define HAVE_SSSE3 0
-	#define HAVE_AMD3DNOW 0
-	#define HAVE_AMD3DNOWEXT 0
-    #define snprintf _snprintf // not secure. Only for testing.
-    #define __mingw_aligned_malloc _aligned_malloc
-    #define __mingw_aligned_realloc _aligned_realloc
-    #define __mingw_aligned_free _aligned_free
-    #include "libavutil/mathematics.h"
+  #define __ICC __INTEL_COMPILER
+  #define _ICC __INTEL_COMPILER
+  #define ARCH_X86 0
+  #define HAVE_INLINE_ASM 0
+  #define HAVE_MMX 0
+  #define HAVE_MMX2 0
+  #define HAVE_SSE 0
+  #define HAVE_SSSE3 0
+  #define HAVE_AMD3DNOW 0
+  #define HAVE_AMD3DNOWEXT 0
+  #define snprintf _snprintf // not secure. Only for testing.
+  #define __mingw_aligned_malloc _aligned_malloc
+  #define __mingw_aligned_realloc _aligned_realloc
+  #define __mingw_aligned_free _aligned_free
+  #include "libavutil/mathematics.h"
 #endif
 
 // Use DPRINTF instead of av_log. To be used for debug purpose because DPRINTF will be always called (the
@@ -58,7 +57,7 @@
 
 #if ARCH_X86_64
   #define EXTERN_PREFIX ""
-  #define EXTERN_ASM 
+  #define EXTERN_ASM
 #else
   #define EXTERN_PREFIX "_"
   #define EXTERN_ASM _
@@ -125,12 +124,12 @@
 #define HAVE_YASM 1
 
 #ifdef __GNUC__
-	#define HAVE_ATTRIBUTE_PACKED 1
-	#define HAVE_ATTRIBUTE_MAY_ALIAS 1
+  #define HAVE_ATTRIBUTE_PACKED 1
+  #define HAVE_ATTRIBUTE_MAY_ALIAS 1
 #else
-	#define HAVE_ATTRIBUTE_PACKED 0
-	#define HAVE_ATTRIBUTE_MAY_ALIAS 0
-	#define EMULATE_FAST_INT
+  #define HAVE_ATTRIBUTE_PACKED 0
+  #define HAVE_ATTRIBUTE_MAY_ALIAS 0
+  #define EMULATE_FAST_INT
 #endif
 
 #ifdef __GNUC__
@@ -152,7 +151,7 @@
   #define HAVE_LLRINT 0
   #define HAVE_LLRINTF 0
   #define HAVE_LOG2 1
-  #define HAVE_LOG2F 1  
+  #define HAVE_LOG2F 1
   #define HAVE_LRINT 0
   #define HAVE_LRINTF 0
   #define HAVE_ROUND 0
@@ -191,16 +190,16 @@
 #define CONFIG_SWSCALE_ALPHA 1
 #define CONFIG_POSTPROC 1
 
-/* 
+/*
 Note: when adding a new codec, you have to:
-1)	Add a
-		#define CONFIG_<codec suffix>_<ENCODER|DECODER|PARSER>
-		depending on the type of codec you are adding
-2)	Add a
-		REGISTER_<ENCODER|DECODER|PARSER> (<codec suffix>, <codec suffix lowercase>);
-		line to libavcodec/allcodecs.c
-3)	Define the codec into ffcodecs.h :
-		CODEC_OP(CODEC_ID_<codec suffix>, <unique id>, "<codec description">)
+1)  Add a
+    #define CONFIG_<codec suffix>_<ENCODER|DECODER|PARSER>
+    depending on the type of codec you are adding
+2)  Add a
+    REGISTER_<ENCODER|DECODER|PARSER> (<codec suffix>, <codec suffix lowercase>);
+    line to libavcodec/allcodecs.c
+3)  Define the codec into ffcodecs.h :
+    CODEC_OP(CODEC_ID_<codec suffix>, <unique id>, "<codec description">)
 */
 
 #define CONFIG_AASC_DECODER 1
@@ -379,5 +378,8 @@ Note: when adding a new codec, you have to:
 
 #define CONFIG_MPEG_XVMC_DECODER 0
 #define CONFIG_VC1_VDPAU_DECODER 0
+
+#define CONFIG_CUSTOM_FFDSHOW_H264 1
+#define CONFIG_CUSTOM_FFMPEG_H264 1
 
 #endif /* FFMPEG_CONFIG_H */
