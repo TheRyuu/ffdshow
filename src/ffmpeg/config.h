@@ -1,7 +1,7 @@
 #ifndef FFMPEG_CONFIG_H
 #define FFMPEG_CONFIG_H
 
-#ifdef __GNUC__
+#if defined (__GNUC__)
 	#define HAVE_INLINE_ASM 1
 	#define HAVE_MMX 1
 	#define HAVE_MMX2 1
@@ -26,8 +26,22 @@
 	#define PTW32_STATIC_LIB 1
 	#define restrict restrict
 #else
-	#define HAVE_MMX 0
+//#elif defined (__INTEL_COMPILER) // Intellisense doesn't work. Just #else is preffered.
+    #define __ICC __INTEL_COMPILER
+    #define _ICC __INTEL_COMPILER
 	#define ARCH_X86 0
+	#define HAVE_INLINE_ASM 0
+	#define HAVE_MMX 0
+	#define HAVE_MMX2 0
+	#define HAVE_SSE 0
+	#define HAVE_SSSE3 0
+	#define HAVE_AMD3DNOW 0
+	#define HAVE_AMD3DNOWEXT 0
+    #define snprintf _snprintf // not secure. Only for testing.
+    #define __mingw_aligned_malloc _aligned_malloc
+    #define __mingw_aligned_realloc _aligned_realloc
+    #define __mingw_aligned_free _aligned_free
+    #include "libavutil/mathematics.h"
 #endif
 
 // Use DPRINTF instead of av_log. To be used for debug purpose because DPRINTF will be always called (the
@@ -210,7 +224,13 @@ Note: when adding a new codec, you have to:
 #define CONFIG_H264_DECODER 1
 #define CONFIG_HUFFYUV_DECODER 1
 #define CONFIG_INDEO2_DECODER 1
+
+#if defined (__INTEL_COMPILER)
+#define CONFIG_INDEO3_DECODER 0
+#else
 #define CONFIG_INDEO3_DECODER 1
+#endif
+
 #define CONFIG_INDEO4_DECODER 1
 #define CONFIG_INDEO5_DECODER 1
 #define CONFIG_JPEGLS_DECODER 1
