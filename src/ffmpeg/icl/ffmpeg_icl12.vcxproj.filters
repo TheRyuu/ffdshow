@@ -43,6 +43,15 @@
     <Filter Include="zlib\Header Files">
       <UniqueIdentifier>{f22e2403-fb1f-40c6-aec2-de50a8614e96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libavcodec\x86">
+      <UniqueIdentifier>{16e54326-28db-4da7-bc4e-83720b5eebb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libavutil\x86">
+      <UniqueIdentifier>{cee8be89-2a56-4ae4-8117-f498e4d86e58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libswscale\x86">
+      <UniqueIdentifier>{bd0d55f9-3522-46e5-ae48-e062cdd025e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\DllEntry.c">
@@ -874,199 +883,199 @@
       <Filter>libavutil</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\adler32.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\compress.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\crc32.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\deflate.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\gzclose.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\gzlib.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\gzread.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\gzwrite.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\infback.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\inffast.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\inflate.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\inftrees.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\trees.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\uncompr.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zlib\zutil.c">
-      <Filter>Source Files</Filter>
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\ac3dsp_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\cavsdsp_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\dsputilenc_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\dsputil_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\dsputil_mmx_avg_template.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\dsputil_mmx_qns_template.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\dsputil_mmx_rnd_template.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\fdct_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\fft.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\fft_3dn.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\fft_3dn2.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\fft_sse.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\fmtconvert_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\h264dsp_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\h264_intrapred_init.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\h264_qpel_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\idct_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\idct_mmx_xvid.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\idct_sse2_xvid.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\mlpdsp.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\motion_est_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\mpegaudiodec_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\mpegvideo_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\mpegvideo_mmx_template.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\pngdsp-init.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\rv34dsp_init.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\rv40dsp_init.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\sbrdsp_init.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\simple_idct_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\vc1dsp_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\vp56dsp_init.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavcodec\x86\vp8dsp-init.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libavfilter\asrc_anullsrc.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavfilter</Filter>
     </ClCompile>
     <ClCompile Include="..\libavfilter\avfilter.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavfilter</Filter>
     </ClCompile>
     <ClCompile Include="..\libavfilter\avfiltergraph.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavfilter</Filter>
     </ClCompile>
     <ClCompile Include="..\libavfilter\defaults.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavfilter</Filter>
     </ClCompile>
     <ClCompile Include="..\libavfilter\formats.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavfilter</Filter>
     </ClCompile>
     <ClCompile Include="..\libavfilter\vf_gradfun.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavfilter</Filter>
     </ClCompile>
     <ClCompile Include="..\libavfilter\vf_yadif.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libavfilter\x86\gradfun.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libavfilter\x86\yadif.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libavfilter\x86\yadif_template.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavfilter</Filter>
     </ClCompile>
     <ClCompile Include="..\libavfilter\yadif_thread.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavfilter</Filter>
     </ClCompile>
     <ClCompile Include="..\libavutil\x86\cpu.c">
-      <Filter>Source Files</Filter>
+      <Filter>libavutil\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libswscale\x86\rgb2rgb.c">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libswscale\x86\rgb2rgb_template.c">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libswscale\x86\swscale_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libswscale\x86\swscale_template.c">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libswscale\x86\yuv2rgb_mmx.c">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
     </ClCompile>
     <ClCompile Include="..\libswscale\x86\yuv2rgb_template.c">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libavfilter\x86\yadif.c">
+      <Filter>libavfilter\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libavfilter\x86\gradfun.c">
+      <Filter>libavfilter\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libavfilter\x86\yadif_template.c">
+      <Filter>libavfilter\x86</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1808,37 +1817,37 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\crc32.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\deflate.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\gzguts.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\inffast.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\inffixed.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\inflate.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\inftrees.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\trees.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\zconf.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\zlib.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\zlib\zutil.h">
-      <Filter>Header Files</Filter>
+      <Filter>zlib\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\libavfilter\avfilter.h">
       <Filter>Header Files</Filter>
@@ -1864,97 +1873,97 @@
       <Filter>Source Files</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\ac3dsp.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\dct32_sse.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\dsputilenc_yasm.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\dsputil_yasm.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\fft_mmx.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\fmtconvert.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_chromamc.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_chromamc_10bit.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_deblock.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_deblock_10bit.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_idct.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_idct_10bit.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_intrapred.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_intrapred_10bit.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_qpel_10bit.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_weight.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\h264_weight_10bit.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\imdct36_sse.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\pngdsp.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\rv34dsp.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\rv40dsp.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\sbrdsp.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\vc1dsp_yasm.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\vp3dsp.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\vp56dsp.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavcodec\x86\vp8dsp.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavcodec\x86</Filter>
     </yasm>
     <yasm Include="..\libavutil\x86\x86inc.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavutil\x86</Filter>
     </yasm>
     <yasm Include="..\libavutil\x86\x86util.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libavutil\x86</Filter>
     </yasm>
     <yasm Include="..\libswscale\x86\input.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
     </yasm>
     <yasm Include="..\libswscale\x86\output.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
     </yasm>
     <yasm Include="..\libswscale\x86\scale.asm">
-      <Filter>Source Files</Filter>
+      <Filter>libswscale\x86</Filter>
     </yasm>
   </ItemGroup>
 </Project>

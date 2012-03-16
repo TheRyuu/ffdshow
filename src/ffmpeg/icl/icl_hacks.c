@@ -92,6 +92,7 @@ SwsFunc ff_yuv2rgb_init_altivec(struct SwsContext *c){}
 SwsFunc ff_yuv2rgb_get_func_ptr_bfin(SwsContext *c){}
 void ff_yuv2rgb_init_tables_altivec(SwsContext *c, const int inv_table[4],
     int brightness, int contrast, int saturation){}
+void ff_mpadsp_init_mmx(MPADSPContext *s){}
 
 // CONFIG_VC1_VDPAU_DECODER
 void ff_vdpau_add_data_chunk(MpegEncContext *s, const uint8_t *buf, int buf_size){}
