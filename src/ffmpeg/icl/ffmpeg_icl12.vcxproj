@@ -620,7 +620,7 @@
     <ClInclude Include="..\..\zlib\zconf.h" />
     <ClInclude Include="..\..\zlib\zlib.h" />
     <ClInclude Include="..\..\zlib\zutil.h" />
-    <ClInclude Include="config.h" />
+    <ClInclude Include="..\config.h" />
     <ClInclude Include="..\libavcodec\aac.h" />
     <ClInclude Include="..\libavcodec\aacadtsdec.h" />
     <ClInclude Include="..\libavcodec\aacdectab.h" />

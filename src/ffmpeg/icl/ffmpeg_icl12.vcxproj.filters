@@ -1075,7 +1075,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config.h">
+    <ClInclude Include="..\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\libavcodec\aac.h">
