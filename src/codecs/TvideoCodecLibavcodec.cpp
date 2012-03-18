@@ -221,7 +221,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     avctx->codec_tag=fcc;
     avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
     avctx->error_concealment=deci->getParam2(IDFF_errorConcealment);
-    avctx->err_recognition=deci->getParam2(IDFF_errorRecognition);
+    avctx->err_recognition = deci->getParam2(IDFF_errorRecognition) ? (1 << (deci->getParam2(IDFF_errorRecognition) - 1)) : 0;
     if (codecId==CODEC_ID_MJPEG) {
         avctx->flags|=CODEC_FLAG_TRUNCATED;
     }
