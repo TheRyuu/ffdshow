@@ -420,6 +420,13 @@ uint64_t csp_bestMatch(uint64_t inCSP, uint64_t wantedCSPS, int *rank, uint64_t 
             *rank = 200;
         return outPrimaryCSP|(inCSP&~FF_CSPS_MASK);
     }
+
+    // prefer YV12 to NV12 conversion for the final output. Currently rank is set only for the final output.
+    if (rank && (inCSP & FF_CSPS_MASK) == FF_CSP_420P && (wantedCSPS & FF_CSP_NV12)) {
+        *rank = 101;
+        return FF_CSP_NV12|(inCSP&~FF_CSPS_MASK);
+    }
+
     uint64_t outCSP=inCSP&wantedCSPS&FF_CSPS_MASK;
     if (outCSP) {
         if (rank) {
@@ -1182,8 +1189,8 @@ uint64_t csp_bestMatch(uint64_t inCSP, uint64_t wantedCSPS, int *rank, uint64_t 
                 FF_CSP_P216 ,
                 FF_CSP_444P10,
                 FF_CSP_Y416 ,
-                FF_CSP_420P ,
                 FF_CSP_NV12 ,
+                FF_CSP_420P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
