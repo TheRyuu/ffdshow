@@ -440,9 +440,9 @@ void TcodecsPageVideo::fillCodecs(void)
         static const int movies_mpeg2[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2, IDFF_MOVIE_QUICK_SYNC, 0};
         static const Tformat::Toption options_mpeg12[]= {{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,NULL,0}};
         if ((filterMode&IDFF_FILTERMODE_VFW)==0) {
-            formats.push_back(Tformat(_l("MPEG1")       ,IDFF_mpg1,movies_mpeg1,_l("MPEG1 codec"),options_mpeg12,LAVC_UNSTABLE));
+            formats.push_back(Tformat(_l("MPEG1")       ,IDFF_mpg1,movies_mpeg1,_l("MPEG1 codec"),options_mpeg12));
             static const Tformat::Toption options_mpeg2[]= {{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,_l("DVD decoding"),IDFF_supDVDdec,1},{0,NULL,0}};
-            formats.push_back(Tformat(_l("MPEG2")       ,IDFF_mpg2,movies_mpeg2,_l("MPEG2 codec"),options_mpeg2,LAVC_UNSTABLE));
+            formats.push_back(Tformat(_l("MPEG2")       ,IDFF_mpg2,movies_mpeg2,_l("MPEG2 codec"),options_mpeg2));
         }
         formats.push_back(Tformat(_l("MPEG in AVI")   ,IDFF_mpegAVI,movies_mpeg2,_l("MPEG, MPG1, MPG2, 1001, 1002"),options_mpeg12));
         formats.push_back(Tformat(_l("Other MPEG2")   ,IDFF_em2v,movies_mpeg2,_l("EM2V, MMES"),options_mpeg12));
