@@ -259,14 +259,8 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
         _l("videoDelayEnd"),0,
         IDFF_workaroundBugs     ,&TpresetVideo::workaroundBugs     ,1,1,_l(""),1,
         _l("workaroundBugs2"),FF_BUG_AUTODETECT,
-        IDFF_errorConcealment   ,&TpresetVideo::errorConcealment   ,0,3,_l(""),1,
-        _l("errorConcealment"),FF_EC_GUESS_MVS|FF_EC_DEBLOCK,
-        IDFF_errorRecognition    ,&TpresetVideo::errorRecognition  ,0,4,_l(""),1,
-        _l("errorRecognition"),1,
         IDFF_numLAVCdecThreads ,&TpresetVideo::lavcDecThreads      ,1,8,_l(""),1,
         _l("threadsnum"),TintOption::DEF_DYN,
-        IDFF_grayscale          ,&TpresetVideo::grayscale          ,0,0,_l(""),1,
-        _l("grayscale"),0,
         IDFF_multiThreadDec     ,&TpresetVideo::multiThread        ,0,0,_l(""),1,
         _l("multiThread"),0,
         IDFF_dontQueueInWMP     ,&TpresetVideo::dontQueueInWMP     ,0,0,_l(""),1,
@@ -319,9 +313,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
     static const TcreateParamList1 listIDCT(Tlibavcodec::idctNames);
     setParamList(IDFF_idct,&listIDCT);
     static const TcreateParamList1 listErrorConcealment(Tlibavcodec::errorConcealments);
-    setParamList(IDFF_errorConcealment,&listErrorConcealment);
     static const TcreateParamList1 listErrorRecognition(Tlibavcodec::errorRecognitions);
-    setParamList(IDFF_errorRecognition,&listErrorRecognition);
 
     static const char_t *aspectHelp=_l("Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example \"16/9<aspect AND aspect<2.35\" or \"aspect=1\".");
     static const char_t *fpsHelp=_l("Enter logical expression with 'fps' variable and comparison and arithmetic operators,\nfor example \"fps>30\".");
@@ -489,8 +481,6 @@ Tpreset& TpresetVideo::operator =(const Tpreset &src0)
             idct=src.idct;
             softTelecine=src.softTelecine;
             workaroundBugs=src.workaroundBugs;
-            errorRecognition=src.errorRecognition;
-            errorConcealment=src.errorConcealment;
             lavcDecThreads=src.lavcDecThreads;
             grayscale=src.grayscale;
             multiThread=src.multiThread;

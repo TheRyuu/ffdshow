@@ -45,7 +45,6 @@ protected:
     FILE *statsfile;
     int cfgcomode;
     int psnr;
-    int grayscale;
     bool isAdaptive;
     int threadcount;
     bool dont_use_rtStop_from_upper_stream; // and reordering of timpestams is justified.

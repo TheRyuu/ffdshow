@@ -47,7 +47,7 @@ void TdecoderOptionsPage::init(void)
     for (int i=0; workarounds[i].ff_bug; i++) {
         enable(islavc,workarounds[i].idc_chb);
     }
-    static const int idLavc[]= {IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RECOGNITION,IDC_CBX_ERROR_RECOGNITION,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_LBL_NUMTHREADS,0};
+    static const int idLavc[]= {IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_LBL_BUGS,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_LBL_NUMTHREADS,0};
     enable(islavc,idLavc);
     addHint(IDC_ED_NUMTHREADS,_l("For libavcodec H.264, MPEG-1/2, FFV1, and DV decoders"));
     addHint(IDC_CHB_SOFT_TELECINE,_l("Checked: If soft telecine is detected, frames are flagged as progressive.\n\nYou may want to unckeck if you have interlaced TV."));
@@ -57,15 +57,12 @@ void TdecoderOptionsPage::cfg2dlg(void)
 {
     setCheck(IDC_CHB_SOFT_TELECINE, cfgGet(IDFF_softTelecine));
     if (islavc) {
-        setCheck(IDC_CHB_GRAY,cfgGet(IDFF_grayscale));
         cbxSetCurSel(IDC_CBX_IDCT,cfgGet(IDFF_idct));
 
         int bugs=cfgGet(IDFF_workaroundBugs);
         for (int i=0; workarounds[i].ff_bug; i++) {
             setCheck(workarounds[i].idc_chb,bugs&workarounds[i].ff_bug);
         }
-        cbxSetCurSel(IDC_CBX_ERROR_RECOGNITION,cfgGet(IDFF_errorRecognition));
-        cbxSetCurSel(IDC_CBX_ERROR_CONCEALMENT,cfgGet(IDFF_errorConcealment));
         SetDlgItemInt(m_hwnd,IDC_ED_NUMTHREADS,cfgGet(IDFF_numLAVCdecThreads),FALSE);
         setCheck(IDC_CHB_H264_SKIP_ON_DELAY,cfgGet(IDFF_h264skipOnDelay));
         SetDlgItemInt(m_hwnd,IDC_ED_H264SKIP_ON_DELAY_TIME,cfgGet(IDFF_h264skipOnDelayTime),FALSE);
@@ -108,8 +105,6 @@ bool TdecoderOptionsPage::reset(bool testonly)
         deci->resetParam(IDFF_idct);
         deci->resetParam(IDFF_softTelecine);
         deci->resetParam(IDFF_workaroundBugs);
-        deci->resetParam(IDFF_errorConcealment);
-        deci->resetParam(IDFF_errorRecognition);
         deci->resetParam(IDFF_numLAVCdecThreads);
         deci->resetParam(IDFF_dropOnDelay);
         deci->resetParam(IDFF_dropOnDelayTime);
@@ -124,16 +119,11 @@ void TdecoderOptionsPage::translate(void)
     TconfPageBase::translate();
 
     cbxTranslate(IDC_CBX_IDCT,Tlibavcodec::idctNames);
-    cbxTranslate(IDC_CBX_ERROR_CONCEALMENT,Tlibavcodec::errorConcealments);
-    cbxTranslate(IDC_CBX_ERROR_RECOGNITION,Tlibavcodec::errorRecognitions);
 }
 
 void TdecoderOptionsPage::getTip(char_t *tipS,size_t len)
 {
     tsnprintf_s(tipS, len, _TRUNCATE, _l("IDCT: %s"),Tlibavcodec::idctNames[cfgGet(IDFF_idct)]);
-    if (cfgGet(IDFF_grayscale)) {
-        strncatf(tipS, len, _l("\nGrayscale"));
-    }
     int bugs=cfgGet(IDFF_workaroundBugs);
     if (bugs && bugs!=FF_BUG_AUTODETECT) {
         strncatf(tipS, len, _l("\nBugs workaround"));
@@ -157,7 +147,6 @@ TdecoderOptionsPage::TdecoderOptionsPage(TffdshowPageDec *Iparent):TconfPageDecV
     inPreset=1;
     helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/video:decoder_options");
     static const TbindCheckbox<TdecoderOptionsPage> chb[]= {
-        IDC_CHB_GRAY,IDFF_grayscale,NULL,
         IDC_CHB_DROP_ON_DELAY,IDFF_dropOnDelay,NULL,
         IDC_CHB_H264_SKIP_ON_DELAY,IDFF_h264skipOnDelay,NULL,
         IDC_CHB_SOFT_TELECINE,IDFF_softTelecine,NULL,
@@ -173,8 +162,6 @@ TdecoderOptionsPage::TdecoderOptionsPage(TffdshowPageDec *Iparent):TconfPageDecV
     bindEditInts(edInt);
     static const TbindCombobox<TdecoderOptionsPage> cbx[]= {
         IDC_CBX_IDCT,IDFF_idct,BINDCBX_SEL,NULL,
-        IDC_CBX_ERROR_RECOGNITION,IDFF_errorRecognition,BINDCBX_SEL,NULL,
-        IDC_CBX_ERROR_CONCEALMENT,IDFF_errorConcealment,BINDCBX_SEL,NULL,
         0
     };
     bindComboboxes(cbx);

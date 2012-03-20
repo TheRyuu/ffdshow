@@ -208,10 +208,6 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     inter_matrix=avctx->inter_matrix=(uint16_t*)calloc(sizeof(uint16_t),64);
     ownmatrices=true;
 
-    grayscale=deci->getParam2(IDFF_grayscale);
-    if (grayscale && codecId!=CODEC_ID_THEORA) {
-        avctx->flags|=CODEC_FLAG_GRAY;
-    }
 
     // Fix for new Haali custom media type and fourcc. ffmpeg does not understand it, we have to change it to FOURCC_AVC1
     if (fcc==FOURCC_CCV1) {
@@ -220,8 +216,10 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
 
     avctx->codec_tag=fcc;
     avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
-    avctx->error_concealment=deci->getParam2(IDFF_errorConcealment);
-    avctx->err_recognition = deci->getParam2(IDFF_errorRecognition) ? (1 << (deci->getParam2(IDFF_errorRecognition) - 1)) : 0;
+#if 0
+    avctx->error_concealment = FF_EC_GUESS_MVS|FF_EC_DEBLOCK;
+    avctx->err_recognition   = AV_EF_CRCCHECK|AV_EF_BITSTREAM|AV_EF_BUFFER|AV_EF_COMPLIANT|AV_EF_AGGRESSIVE;
+#endif
     if (codecId==CODEC_ID_MJPEG) {
         avctx->flags|=CODEC_FLAG_TRUNCATED;
     }
@@ -786,18 +784,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 }
 
                 uint64_t csp=csp_lavc2ffdshow(avctx->pix_fmt);
-
-                if (grayscale) {
-                    // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
-                    const TcspInfo* cspinfo=csp_getInfo(csp);
-                    for (unsigned int i=1; i<cspinfo->numPlanes; i++) {
-                        if (frame->data[i][0]!=cspinfo->black[i]
-                                || (codecId!=CODEC_ID_MPEG4 && codecId!=CODEC_ID_MPEG2VIDEO && codecId!=CODEC_ID_MPEG1VIDEO && codecId!=CODEC_ID_VC1 && codecId!=CODEC_ID_WMV3 && codecId!=CODEC_ID_SVQ3 && codecId!=CODEC_ID_HUFFYUV)
-                           ) {
-                            memset(frame->data[i],cspinfo->black[i],frame->linesize[i]*avctx->height>>cspinfo->shiftY[i]);
-                        }
-                    }
-                }
 
                 Trect r(0,0,avctx->width,avctx->height);
 

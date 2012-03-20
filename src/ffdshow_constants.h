@@ -38,8 +38,8 @@
 #define IDFF_AVIcolorspace        96
 //#define IDFF_subFlnmChanged       20
 #define IDFF_workaroundBugs       25
-#define IDFF_errorConcealment     70
-#define IDFF_errorRecognition      71
+//#define IDFF_errorConcealment     70 Deleted
+//#define IDFF_errorRecognition     71 Deleted
 #define IDFF_fastMpeg2            90
 #define IDFF_fastH264             91
 //#define IDFF_autodetect24P       3490
@@ -279,7 +279,7 @@
 #define IDFF_isVideoDelayEnd    1802
 #define IDFF_videoDelayEnd      1803
 #define IDFF_hwOverlayAspect    1351 //0 - VIDEOINFOHEADER, 1 - VIDEOINFOHEADER2, 2 - VIDEOINFOHEADER2, then VIDEOINFOHEADER
-#define IDFF_grayscale           602 //only grayscale decoding - faster
+// #define IDFF_grayscale          602 Deleted
 
 #define IDFF_filterSharpen         400
 #define IDFF_isSharpen             401 //is xshapen filter active?

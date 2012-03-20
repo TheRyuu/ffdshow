@@ -58,7 +58,7 @@ public:
     int videoDelay,isVideoDelayEnd,videoDelayEnd;
     int idct;
     int softTelecine;
-    int workaroundBugs,errorRecognition,errorConcealment;
+    int workaroundBugs;
     int lavcDecThreads;
     int grayscale;
     int multiThread;
