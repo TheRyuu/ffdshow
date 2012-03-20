@@ -32,7 +32,7 @@ public:
     int deinterlaceAlways;
     int swapfields;
     int cfgId;
-    static const int cfgIdDef=2;
+    static const int cfgIdDef=14; // yadif
     static const TmethodProps &getMethod(int cfgId);
     int tomsmocompSE,tomsmocompVF;
     char_t dscalerFlnm[MAX_PATH];
