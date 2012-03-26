@@ -72,6 +72,15 @@ TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *Is
         if (ok)
         {
             m_QuickSync->SetDeliverSurfaceCallback(this, DeliverSurfaceCallback);
+
+            // workaround for WMC so it doesn't fail.
+            if (0 == _tcscmp(Ideci->getExeflnm(), _l("ehshell.exe")))
+            {
+                CQsConfig cfg;
+                m_QuickSync->GetConfig(&cfg);
+                cfg.bEnableSwEmulation = true;
+                m_QuickSync->SetConfig(&cfg);
+            }
         }
         else
         {
@@ -132,8 +141,8 @@ HRESULT TvideoCodecQuickSync::decompress(const unsigned char *src,size_t srcLen,
     {
         m_MediaSample.SetDiscontinuity(pFakeMediaSample->IsDiscontinuity() == S_OK ? TRUE : FALSE);
         m_MediaSample.SetSyncPoint(pFakeMediaSample->IsSyncPoint() == S_OK ? TRUE : FALSE);
-        m_MediaSample.SetPointer(const_cast<BYTE*>(src), srcLen);
-        m_MediaSample.SetActualDataLength(srcLen);
+        m_MediaSample.SetPointer(const_cast<BYTE*>(src), (LONG)srcLen);
+        m_MediaSample.SetActualDataLength((LONG)srcLen);
         pMediaSample = &m_MediaSample;
     }
 
