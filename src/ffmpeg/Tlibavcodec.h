@@ -159,7 +159,7 @@ public:
  void    (*FFH264SetDxvaSliceLong) (struct AVCodecContext* pAVCtx, void* pSliceLong);
 
  // === VC1 functions
- HRESULT (*FFVC1UpdatePictureParam) (DXVA_PictureParameters* pPicParams, struct AVCodecContext* pAVCtx, int* nFieldType, int* nSliceType, BYTE* pBuffer, UINT nSize, UINT* nFrameSize, BOOL b_SecondField);
+ HRESULT (*FFVC1UpdatePictureParam) (DXVA_PictureParameters* pPicParams, struct AVCodecContext* pAVCtx, int* nFieldType, int* nSliceType, BYTE* pBuffer, UINT nSize, UINT* nFrameSize, BOOL b_SecondField, BOOL* b_repeat_pict);
  int     (*FFIsSkipped) (struct AVCodecContext* pAVCtx);
 
  // === Common functions

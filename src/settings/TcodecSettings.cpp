@@ -27,6 +27,7 @@
 #include "Tmuxer.h"
 #include "libavcodec/avcodec.h"
 #include "ffmpeg/libavcodec/dvdata.h"
+#include "ffmpeg/libavcodec/dvdata.c"
 
 const char_t* TcoSettings::huffYUVcsps[]= {
     _l("YUY2"),
@@ -200,7 +201,7 @@ const DVprofile* TcoSettings::getDVprofile(unsigned int dx,unsigned int dy,Pixel
         avctx.width=dx;
         avctx.height=dy;
         avctx.pix_fmt=lavc_pix_fmt;
-        return avpriv_dv_codec_profile(&avctx);
+        return avpriv_dv_codec_profile2(&avctx);
     } else {
         const DVprofile *profile=dv_profiles+dv_profile;
         return (profile->width==(int)dx && profile->height==(int)dy && profile->pix_fmt==lavc_pix_fmt)?profile:NULL;

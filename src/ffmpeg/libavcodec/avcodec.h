@@ -27,6 +27,7 @@
  */
 
 #include "../codecs/ffcodecs.h"
+#include "config.h"
 
 #include <errno.h>
 #include "libavutil/samplefmt.h"
@@ -3665,6 +3666,16 @@ const AVClass *avcodec_get_class(void);
  * with no corresponding avcodec_close()), 0 otherwise.
  */
 int avcodec_is_open(AVCodecContext *s);
+
+/**
+ * @return a non-zero number if codec is an encoder, zero otherwise
+ */
+int av_codec_is_encoder(AVCodec *codec);
+
+/**
+ * @return a non-zero number if codec is a decoder, zero otherwise
+ */
+int av_codec_is_decoder(AVCodec *codec);
 
 /**
  * ffdshow custom stuff

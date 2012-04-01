@@ -1274,10 +1274,13 @@ int ff_MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
             if (i < 0)
                 return i;
             s->last_picture_ptr = &s->picture[i];
-            if (ff_alloc_picture(s, s->last_picture_ptr, 0) < 0)
+            if (ff_alloc_picture(s, s->last_picture_ptr, 0) < 0) {
+                s->last_picture_ptr = NULL;
                 return -1;
+            }
             ff_thread_report_progress(&s->last_picture_ptr->f, INT_MAX, 0);
             ff_thread_report_progress(&s->last_picture_ptr->f, INT_MAX, 1);
+            s->last_picture_ptr->f.reference = 3;
         }
         if ((s->next_picture_ptr == NULL ||
              s->next_picture_ptr->f.data[0] == NULL) &&
@@ -1287,10 +1290,13 @@ int ff_MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
             if (i < 0)
                 return i;
             s->next_picture_ptr = &s->picture[i];
-            if (ff_alloc_picture(s, s->next_picture_ptr, 0) < 0)
+            if (ff_alloc_picture(s, s->next_picture_ptr, 0) < 0) {
+                s->next_picture_ptr = NULL;
                 return -1;
+            }
             ff_thread_report_progress(&s->next_picture_ptr->f, INT_MAX, 0);
             ff_thread_report_progress(&s->next_picture_ptr->f, INT_MAX, 1);
+            s->next_picture_ptr->f.reference = 3;
         }
     }
 
@@ -1411,8 +1417,7 @@ void ff_MPV_frame_end(MpegEncContext *s)
     s->avctx->coded_frame = &s->current_picture_ptr->f;
 
     if (s->codec_id != CODEC_ID_H264 && s->current_picture.f.reference) {
-        ff_thread_report_progress(&s->current_picture_ptr->f,
-                                  s->mb_height - 1, 0);
+        ff_thread_report_progress(&s->current_picture_ptr->f, INT_MAX, 0);
     }
 }
 
@@ -1513,8 +1518,8 @@ static av_always_inline void mpeg_motion_lowres(MpegEncContext *s,
         motion_y /= 2;
     }
 
-    if(field_based){
-        motion_y += (bottom_field - field_select)*((1 << lowres)-1);
+    if (field_based) {
+        motion_y += (bottom_field - field_select) * (1 << lowres - 1);
     }
 
     sx = motion_x & s_mask;

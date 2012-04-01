@@ -489,7 +489,7 @@ int TvideoCodecLibavcodec::isReallyMPEG2(const unsigned char *src,size_t srcLen)
 {
     if (srcLen < 10)
         return 1;
-    for (int i = 0 ; i < srcLen - 7 ; i++) {
+    for (size_t i = 0 ; i < srcLen - 7 ; i++) {
         if (src[i]==0 && src[i+1]==0 && src[i+2]==1) {
             int h264nal = src[i+3] & 0x1f;
             if (h264nal==0 || (h264nal >13 && h264nal != 19)) {

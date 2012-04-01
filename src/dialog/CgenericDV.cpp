@@ -19,6 +19,7 @@
 #include "stdafx.h"
 #include "CgenericDV.h"
 #include "libavcodec/dvdata.h"
+#include "libavcodec/dvdata.c"
 
 void TgenericDVpage::init(void)
 {

@@ -2485,7 +2485,6 @@ IDD_DCT                 TEXT                    "helpDCT.txt"
 IDD_WARPSHARP           TEXT                    "helpWarpsharp.txt"
 IDD_CREDITS             TEXT                    "helpCredits.txt"
 IDD_ONEPASS             TEXT                    "helpFF1.txt"
-IDD_GENERIC_THEO        TEXT                    "helpGeneric_THEO.txt"
 IDD_GENERIC_FFV1        TEXT                    "helpGeneric_FFV1.txt"
 IDD_OUT                 TEXT                    "helpOut.txt"
 IDD_ABOUTENC            TEXT                    "readmeEnc.txt"
@@ -2825,7 +2824,6 @@ END
 STRINGTABLE
 BEGIN
     IDD_GENERIC_RAW         "Generic"
-    IDD_GENERIC_THEO        "Generic"
     IDD_GRAPH               "Statistics"
     IDD_GENERIC_HUFFYUV     "Generic"
     IDD_IN                  "Input"

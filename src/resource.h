@@ -82,7 +82,6 @@
 #define IDD_FIRSTPASS                   206
 #define IDD_GENERIC_FFV1                207
 #define IDD_GENERIC_RAW                 209
-#define IDD_GENERIC_THEO                210
 #define IDD_GRAPH                       211
 #define IDD_GENERIC_HUFFYUV             212
 #define IDD_IN                          213

@@ -29,15 +29,8 @@
 
 #include "libavutil/rational.h"
 #include "avcodec.h"
-
-#ifndef FF_ARRAY_ELEMS
-#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
-#endif
-
-/* ffdshow custom code */
-enum  {
-  DV_PROFILE_AUTO=-1
-};
+#include "dsputil.h"
+#include "get_bits.h"
 
 typedef struct DVwork_chunk {
     uint16_t  buf_offset;
@@ -75,269 +68,19 @@ typedef struct DVprofile {
     const char *name; /* ffdshow custom code */
 } DVprofile;
 
-static DVwork_chunk work_chunks_dv25pal   [1*12*27];
-static DVwork_chunk work_chunks_dv25pal411[1*12*27];
-static DVwork_chunk work_chunks_dv25ntsc  [1*10*27];
-static DVwork_chunk work_chunks_dv50pal   [2*12*27];
-static DVwork_chunk work_chunks_dv50ntsc  [2*10*27];
-static DVwork_chunk work_chunks_dv100palp [2*12*27];
-static DVwork_chunk work_chunks_dv100ntscp[2*10*27];
-static DVwork_chunk work_chunks_dv100pali [4*12*27];
-static DVwork_chunk work_chunks_dv100ntsci[4*10*27];
+typedef struct DVVideoContext {
+    const DVprofile *sys;
+    AVFrame          picture;
+    AVCodecContext  *avctx;
+    uint8_t         *buf;
 
-static uint32_t dv_idct_factor_sd    [2*2*22*64];
-static uint32_t dv_idct_factor_hd1080[2*4*16*64];
-static uint32_t dv_idct_factor_hd720 [2*4*16*64];
+    uint8_t  dv_zigzag[2][64];
 
-static const uint8_t dv_audio_shuffle525[10][9] = {
-  {  0, 30, 60, 20, 50, 80, 10, 40, 70 }, /* 1st channel */
-  {  6, 36, 66, 26, 56, 86, 16, 46, 76 },
-  { 12, 42, 72,  2, 32, 62, 22, 52, 82 },
-  { 18, 48, 78,  8, 38, 68, 28, 58, 88 },
-  { 24, 54, 84, 14, 44, 74,  4, 34, 64 },
-
-  {  1, 31, 61, 21, 51, 81, 11, 41, 71 }, /* 2nd channel */
-  {  7, 37, 67, 27, 57, 87, 17, 47, 77 },
-  { 13, 43, 73,  3, 33, 63, 23, 53, 83 },
-  { 19, 49, 79,  9, 39, 69, 29, 59, 89 },
-  { 25, 55, 85, 15, 45, 75,  5, 35, 65 },
-};
-
-static const uint8_t dv_audio_shuffle625[12][9] = {
-  {   0,  36,  72,  26,  62,  98,  16,  52,  88}, /* 1st channel */
-  {   6,  42,  78,  32,  68, 104,  22,  58,  94},
-  {  12,  48,  84,   2,  38,  74,  28,  64, 100},
-  {  18,  54,  90,   8,  44,  80,  34,  70, 106},
-  {  24,  60,  96,  14,  50,  86,   4,  40,  76},
-  {  30,  66, 102,  20,  56,  92,  10,  46,  82},
-
-  {   1,  37,  73,  27,  63,  99,  17,  53,  89}, /* 2nd channel */
-  {   7,  43,  79,  33,  69, 105,  23,  59,  95},
-  {  13,  49,  85,   3,  39,  75,  29,  65, 101},
-  {  19,  55,  91,   9,  45,  81,  35,  71, 107},
-  {  25,  61,  97,  15,  51,  87,   5,  41,  77},
-  {  31,  67, 103,  21,  57,  93,  11,  47,  83},
-};
-
-/* macroblock bit budgets */
-static const uint8_t block_sizes_dv2550[8] = {
-    112, 112, 112, 112, 80, 80, 0, 0,
-};
-
-static const DVprofile dv_profiles[] = {
-    { /*.dsf = */0,
-      /*.video_stype = */0x0,
-      /*.frame_size = */120000,        /* IEC 61834, SMPTE-314M - 525/60 (NTSC) */
-      /*.difseg_size = */10,
-      /*.n_difchan = */1,
-      /*.time_base = */{ 1001, 30000 },
-      /*.ltc_divisor = */30,
-      /*.height = */480,
-      /*.width = */720,
-      /*.sar = */{{8, 9}, {32, 27}},
-      /*.work_chunks = */&work_chunks_dv25ntsc[0],
-      /*.idct_factor = */&dv_idct_factor_sd[0],
-      /*.pix_fmt = */PIX_FMT_YUV411P,
-      /*.bpm = */6,
-      /*.block_sizes = */block_sizes_dv2550,
-      /*.audio_stride = */90,
-      /*.audio_min_samples  = */{ 1580, 1452, 1053 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1600, 1602, 1602, 1602, 1602 }, /* per SMPTE-314M */
-      /*.audio_shuffle = */dv_audio_shuffle525,
-      "IEC 61834, SMPTE-314M - 525/60 (NTSC)",
-    },
-    { /*.dsf = */1,
-      /*.video_stype = */0x0,
-      /*.frame_size = */144000,        /* IEC 61834 - 625/50 (PAL) */
-      /*.difseg_size = */12,
-      /*.n_difchan = */1,
-      /*.time_base = */{ 1, 25 },
-      /*.ltc_divisor = */25,
-      /*.height = */576,
-      /*.width = */720,
-      /*.sar = */{{16, 15}, {64, 45}},
-      /*.work_chunks = */&work_chunks_dv25pal[0],
-      /*.idct_factor = */&dv_idct_factor_sd[0],
-      /*.pix_fmt = */PIX_FMT_YUV420P,
-      /*.bpm = */6,
-      /*.block_sizes = */block_sizes_dv2550,
-      /*.audio_stride = */108,
-      /*.audio_min_samples  = */{ 1896, 1742, 1264 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1920, 1920, 1920, 1920, 1920 },
-      /*.audio_shuffle = */dv_audio_shuffle625,
-      "IEC 61834 - 625/50 (PAL)",
-    },
-    { /*.dsf = */1,
-      /*.video_stype = */0x0,
-      /*.frame_size = */144000,        /* SMPTE-314M - 625/50 (PAL) */
-      /*.difseg_size = */12,
-      /*.n_difchan = */1,
-      /*.time_base = */{ 1, 25 },
-      /*.ltc_divisor = */25,
-      /*.height = */576,
-      /*.width = */720,
-      /*.sar = */{{16, 15}, {64, 45}},
-      /*.work_chunks = */&work_chunks_dv25pal411[0],
-      /*.idct_factor = */&dv_idct_factor_sd[0],
-      /*.pix_fmt = */PIX_FMT_YUV411P,
-      /*.bpm = */6,
-      /*.block_sizes = */block_sizes_dv2550,
-      /*.audio_stride = */108,
-      /*.audio_min_samples  = */{ 1896, 1742, 1264 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1920, 1920, 1920, 1920, 1920 },
-      /*.audio_shuffle = */dv_audio_shuffle625,
-      "SMPTE-314M - 625/50 (PAL)",
-    },
-    { /*.dsf = */0,
-      /*.video_stype = */0x4,
-      /*.frame_size = */240000,        /* SMPTE-314M - 525/60 (NTSC) 50 Mbps */
-      /*.difseg_size = */10,           /* also known as "DVCPRO50" */
-      /*.n_difchan = */2,
-      /*.time_base = */{ 1001, 30000 },
-      /*.ltc_divisor = */30,
-      /*.height = */480,
-      /*.width = */720,
-      /*.sar = */{{8, 9}, {32, 27}},
-      /*.work_chunks = */&work_chunks_dv50ntsc[0],
-      /*.idct_factor = */&dv_idct_factor_sd[0],
-      /*.pix_fmt = */PIX_FMT_YUV422P,
-      /*.bpm = */6,
-      /*.block_sizes = */block_sizes_dv2550,
-      /*.audio_stride = */90,
-      /*.audio_min_samples  = */{ 1580, 1452, 1053 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1600, 1602, 1602, 1602, 1602 }, /* per SMPTE-314M */
-      /*.audio_shuffle = */dv_audio_shuffle525,
-      "SMPTE-314M - 525/60 (NTSC) 50 Mbps",
-    },
-    { /*.dsf = */1,
-      /*.video_stype = */0x4,
-      /*.frame_size = */288000,        /* SMPTE-314M - 625/50 (PAL) 50 Mbps */
-      /*.difseg_size = */12,           /* also known as "DVCPRO50" */
-      /*.n_difchan = */2,
-      /*.time_base = */{ 1, 25 },
-      /*.ltc_divisor = */25,
-      /*.height = */576,
-      /*.width = */720,
-      /*.sar = */{{16, 15}, {64, 45}},
-      /*.work_chunks = */&work_chunks_dv50pal[0],
-      /*.idct_factor = */&dv_idct_factor_sd[0],
-      /*.pix_fmt = */PIX_FMT_YUV422P,
-      /*.bpm = */6,
-      /*.block_sizes = */block_sizes_dv2550,
-      /*.audio_stride = */108,
-      /*.audio_min_samples  = */{ 1896, 1742, 1264 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1920, 1920, 1920, 1920, 1920 },
-      /*.audio_shuffle = */dv_audio_shuffle625,
-      "SMPTE-314M - 625/50 (PAL) 50 Mbps",
-    },
-#if 0
-    { /*.dsf = */0,
-      /*.video_stype = */0x14,
-      /*.frame_size = */480000,        /* SMPTE-370M - 1080i60 100 Mbps */
-      /*.difseg_size = */10,           /* also known as "DVCPRO HD" */
-      /*.n_difchan = */4,
-      /*.time_base = */{ 1001, 30000 },
-      /*.ltc_divisor = */30,
-      /*.height = */1080,
-      /*.width = */1280,
-      /*.sar = */{{1, 1}, {3, 2}},
-      /*.work_chunks = */&work_chunks_dv100ntsci[0],
-      /*.idct_factor = */&dv_idct_factor_hd1080[0],
-      /*.pix_fmt = */PIX_FMT_YUV422P,
-      /*.bpm = */8,
-      /*.block_sizes = */block_sizes_dv100,
-      /*.audio_stride = */90,
-      /*.audio_min_samples  = */{ 1580, 1452, 1053 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1600, 1602, 1602, 1602, 1602 }, /* per SMPTE-314M */
-      /*.audio_shuffle = */dv_audio_shuffle525,
-      "SMPTE-370M - 1080i60 100 Mbps",
-    },
-    { /*.dsf = */1,
-      /*.video_stype = */0x14,
-      /*.frame_size = */576000,        /* SMPTE-370M - 1080i50 100 Mbps */
-      /*.difseg_size = */12,           /* also known as "DVCPRO HD" */
-      /*.n_difchan = */4,
-      /*.time_base = */{ 1, 25 },
-      /*.ltc_divisor = */25,
-      /*.height = */1080,
-      /*.width = */1440,
-      /*.sar = */{{1, 1}, {4, 3}},
-      /*.work_chunks = */&work_chunks_dv100pali[0],
-      /*.idct_factor = */&dv_idct_factor_hd1080[0],
-      /*.pix_fmt = */PIX_FMT_YUV422P,
-      /*.bpm = */8,
-      /*.block_sizes = */block_sizes_dv100,
-      /*.audio_stride = */108,
-      /*.audio_min_samples  = */{ 1896, 1742, 1264 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1920, 1920, 1920, 1920, 1920 },
-      /*.audio_shuffle = */dv_audio_shuffle625,
-      "SMPTE-370M - 1080i50 100 Mbps",
-    },
-    { /*.dsf = */0,
-      /*.video_stype = */0x18,
-      /*.frame_size = */240000,        /* SMPTE-370M - 720p60 100 Mbps */
-      /*.difseg_size = */10,           /* also known as "DVCPRO HD" */
-      /*.n_difchan = */2,
-      /*.time_base = */{ 1001, 60000 },
-      /*.ltc_divisor = */60,
-      /*.height = */720,
-      /*.width = */960,
-      /*.sar = */{{1, 1}, {4, 3}},
-      /*.work_chunks = */&work_chunks_dv100ntscp[0],
-      /*.idct_factor = */&dv_idct_factor_hd720[0],
-      /*.pix_fmt = */PIX_FMT_YUV422P,
-      /*.bpm = */8,
-      /*.block_sizes = */block_sizes_dv100,
-      /*.audio_stride = */90,
-      /*.audio_min_samples  = */{ 1580, 1452, 1053 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1600, 1602, 1602, 1602, 1602 }, /* per SMPTE-314M */
-      /*.audio_shuffle = */dv_audio_shuffle525,
-      "SMPTE-370M - 720p60 100 Mbps",
-    },
-    { /*.dsf = */1,
-      /*.video_stype = */0x18,
-      /*.frame_size = */288000,        /* SMPTE-370M - 720p50 100 Mbps */
-      /*.difseg_size = */12,           /* also known as "DVCPRO HD" */
-      /*.n_difchan = */2,
-      /*.time_base = */{ 1, 50 },
-      /*.ltc_divisor = */50,
-      /*.height = */720,
-      /*.width = */960,
-      /*.sar = */{{1, 1}, {4, 3}},
-      /*.work_chunks = */&work_chunks_dv100palp[0],
-      /*.idct_factor = */&dv_idct_factor_hd720[0],
-      /*.pix_fmt = */PIX_FMT_YUV422P,
-      /*.bpm = */8,
-      /*.block_sizes = */block_sizes_dv100,
-      /*.audio_stride = */90,
-      /*.audio_min_samples  = */{ 1896, 1742, 1264 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1920, 1920, 1920, 1920, 1920 },
-      /*.audio_shuffle = */dv_audio_shuffle625,
-      "SMPTE-370M - 720p50 100 Mbps",
-    },
-#endif
-    { /*.dsf = */1,
-      /*.video_stype = */0x1,
-      /*.frame_size = */144000,        /* IEC 61883-5 - 625/50 (PAL) */
-      /*.difseg_size = */12,
-      /*.n_difchan = */1,
-      /*.time_base = */{ 1, 25 },
-      /*.ltc_divisor = */25,
-      /*.height = */576,
-      /*.width = */720,
-      /*.sar = */{{16, 15}, {64, 45}},
-      /*.work_chunks = */&work_chunks_dv25pal[0],
-      /*.idct_factor = */&dv_idct_factor_sd[0],
-      /*.pix_fmt = */PIX_FMT_YUV420P,
-      /*.bpm = */6,
-      /*.block_sizes = */block_sizes_dv2550,
-      /*.audio_stride = */108,
-      /*.audio_min_samples  = */{ 1896, 1742, 1264 }, /* for 48, 44.1 and 32kHz */
-      /*.audio_samples_dist = */{ 1920, 1920, 1920, 1920, 1920 },
-      /*.audio_shuffle = */dv_audio_shuffle625,
-      "IEC 61883-5 - 625/50 (PAL)",
-    }
-};
+    void (*get_pixels)(DCTELEM *block, const uint8_t *pixels, int line_size);
+    void (*fdct[2])(DCTELEM *block);
+    void (*idct_put[2])(uint8_t *dest, int line_size, DCTELEM *block);
+    me_cmp_func ildct_cmp;
+} DVVideoContext;
 
 enum dv_section_type {
      dv_sect_header  = 0x1f,
@@ -380,44 +123,41 @@ enum dv_pack_type {
  */
 #define DV_MAX_BPM 8
 
-static const DVprofile* avpriv_dv_frame_profile(const DVprofile *sys,
-                                  const uint8_t* frame, unsigned buf_size)
+#define TEX_VLC_BITS 9
+
+extern RL_VLC_ELEM ff_dv_rl_vlc[1184];
+
+int ff_dv_init_dynamic_tables(const DVprofile *d);
+int ff_dvvideo_init(AVCodecContext *avctx);
+
+static inline int dv_work_pool_size(const DVprofile *d)
 {
-    int i, dsf, stype;
-
-    if (buf_size < 80 * 5 + 48 + 4)
-        return NULL;
-
-    dsf = (frame[3] & 0x80) >> 7;
-    stype = frame[80 * 5 + 48 + 3] & 0x1f;
-
-    /* 576i50 25Mbps 4:1:1 is a special case */
-    if (dsf == 1 && stype == 0 && frame[4] & 0x07 /* the APT field */) {
-        return &dv_profiles[2];
-    }
-
-    for (i = 0; i < FF_ARRAY_ELEMS(dv_profiles); i++)
-        if (dsf == dv_profiles[i].dsf && stype == dv_profiles[i].video_stype)
-            return &dv_profiles[i];
-
-    /* check if old sys matches and assumes corrupted input */
-    if (sys && buf_size == sys->frame_size)
-        return sys;
-
-    return NULL;
+    int size = d->n_difchan*d->difseg_size*27;
+    if (DV_PROFILE_IS_1080i50(d))
+        size -= 3*27;
+    if (DV_PROFILE_IS_720p50(d))
+        size -= 4*27;
+    return size;
 }
 
-static const DVprofile* avpriv_dv_codec_profile(AVCodecContext* codec)
+static inline void dv_calculate_mb_xy(DVVideoContext *s, DVwork_chunk *work_chunk, int m, int *mb_x, int *mb_y)
 {
-    int i;
+     *mb_x = work_chunk->mb_coordinates[m] & 0xff;
+     *mb_y = work_chunk->mb_coordinates[m] >> 8;
 
-    for (i=0; i<FF_ARRAY_ELEMS(dv_profiles); i++)
-       if (codec->height  == dv_profiles[i].height  &&
-           codec->pix_fmt == dv_profiles[i].pix_fmt &&
-           codec->width   == dv_profiles[i].width)
-               return &dv_profiles[i];
-
-    return NULL;
+     /* We work with 720p frames split in half. The odd half-frame (chan==2,3) is displaced :-( */
+     if (s->sys->height == 720 && !(s->buf[1]&0x0C)) {
+         *mb_y -= (*mb_y>17)?18:-72; /* shifting the Y coordinate down by 72/2 macro blocks */
+     }
 }
+
+/* ffdshow custom code */
+#ifndef FF_ARRAY_ELEMS
+#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
+#endif
+
+enum  {
+  DV_PROFILE_AUTO=-1
+};
 
 #endif /* AVCODEC_DVDATA_H */

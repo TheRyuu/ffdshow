@@ -1,7 +1,7 @@
 #ifndef FFMPEG_CONFIG_H
 #define FFMPEG_CONFIG_H
 
-#if defined (__GNUC__)
+#ifdef __GNUC__
   #define HAVE_INLINE_ASM 1
   #define HAVE_MMX 1
   #define HAVE_MMX2 1
@@ -24,7 +24,6 @@
   #endif
 
   #define PTW32_STATIC_LIB 1
-  #define restrict restrict
 #else
   #define __ICC __INTEL_COMPILER
   #define _ICC __INTEL_COMPILER
@@ -40,6 +39,7 @@
   #define __mingw_aligned_malloc _aligned_malloc
   #define __mingw_aligned_realloc _aligned_realloc
   #define __mingw_aligned_free _aligned_free
+  #define restrict
   #include "libavutil/mathematics.h"
 #endif
 
@@ -171,6 +171,7 @@
 #define CONFIG_H264CHROMA 1
 #define CONFIG_H264DSP 1
 #define CONFIG_H264PRED 1
+#define CONFIG_H264QPEL 1
 #define CONFIG_HARDCODED_TABLES 0
 #define CONFIG_HUFFMAN 1
 #define CONFIG_LIBAMR_NB 1

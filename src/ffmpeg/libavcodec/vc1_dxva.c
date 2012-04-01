@@ -152,7 +152,12 @@ int av_vc1_decode_frame(AVCodecContext *avctx, const uint8_t *buf, int buf_size,
 
     // do parse frame header
     v->pic_header_flag = 0;
-    ff_vc1_parse_frame_header_adv(v, &s->gb);
+
+    if (v->profile < PROFILE_ADVANCED) {
+			ff_vc1_parse_frame_header(v, &s->gb);
+    } else {
+			ff_vc1_parse_frame_header_adv(v, &s->gb);
+    }
 
     if (v->field_mode && buf_start_second_field) {
         s->picture_structure = PICT_BOTTOM_FIELD - v->tff;
@@ -169,6 +174,7 @@ end:
     return buf_size;
 
 err:
+    av_log(avctx, AV_LOG_ERROR, "Error in av_vc1_decode_frame()\n");
     av_free(buf2);
     for (i = 0; i < n_slices; i++)
         av_free(slices[i].buf);

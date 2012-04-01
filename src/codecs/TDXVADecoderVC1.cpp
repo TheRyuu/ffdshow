@@ -72,6 +72,8 @@ void TDXVADecoderVC1::Init()
         default :
             ASSERT(FALSE);
     }
+
+    m_bFrame_repeat_pict = FALSE;
 }
 
 // === Public functions
@@ -83,7 +85,7 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
     int                   nFieldType, nSliceType;
     UINT                  nFrameSize, nSize_Result;
 
-    m_pCodec->libavcodec->FFVC1UpdatePictureParam(&m_PictureParams, m_pCodec->avctx, &nFieldType, &nSliceType, pDataIn, nSize, &nFrameSize, FALSE);
+    m_pCodec->libavcodec->FFVC1UpdatePictureParam(&m_PictureParams, m_pCodec->avctx, &nFieldType, &nSliceType, pDataIn, nSize, &nFrameSize, FALSE, &m_bFrame_repeat_pict);
 
     if (m_pCodec->libavcodec->FFIsSkipped(m_pCodec->avctx)) {
         return S_OK;
@@ -141,7 +143,7 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
 
     // ***************
     if(nFrameSize) { // Decoding Second Field
-        m_pCodec->libavcodec->FFVC1UpdatePictureParam (&m_PictureParams, m_pCodec->avctx, NULL, NULL, pDataIn, nSize, NULL, TRUE);
+        m_pCodec->libavcodec->FFVC1UpdatePictureParam (&m_PictureParams, m_pCodec->avctx, NULL, NULL, pDataIn, nSize, NULL, TRUE, &m_bFrame_repeat_pict);
 
         CHECK_HR (BeginFrame(nSurfaceIndex, pSampleToDeliver));
 

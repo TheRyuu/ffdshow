@@ -47,7 +47,7 @@
 #include <limits.h>
 #include <float.h>
 
-//static int volatile entangled_thread_counter=0; /* ffdshow custom comment out */
+static int volatile entangled_thread_counter=0;
 static int (*ff_lockmgr_cb)(void **mutex, enum AVLockOp op);
 static void *codec_mutex;
 static void *avformat_mutex;
@@ -385,11 +385,6 @@ static int video_get_buffer(AVCodecContext *s, AVFrame *pic)
     buf = &avci->buffer[avci->buffer_count];
 
     if(buf->base[0] && (buf->width != w || buf->height != h || buf->pix_fmt != s->pix_fmt)){
-        if(s->active_thread_type&FF_THREAD_FRAME) {
-            av_log_missing_feature(s, "Width/height changing with frame threads is", 0);
-            return -1;
-        }
-
         for (i = 0; i < AV_NUM_DATA_POINTERS; i++) {
             av_freep(&buf->base[i]);
             buf->data[i]= NULL;
@@ -473,6 +468,10 @@ static int video_get_buffer(AVCodecContext *s, AVFrame *pic)
     }
     pic->extended_data = pic->data;
     avci->buffer_count++;
+    pic->width  = buf->width;
+    pic->height = buf->height;
+    pic->format = buf->pix_fmt;
+    pic->sample_aspect_ratio = s->sample_aspect_ratio;
 
     if(s->pkt) pic->pkt_pts= s->pkt->pts;
     else       pic->pkt_pts= AV_NOPTS_VALUE;
@@ -958,8 +957,15 @@ int attribute_align_arg avcodec_encode_audio2(AVCodecContext *avctx,
         if (fs_tmp)
             avctx->frame_size = fs_tmp;
     }
-    if (!ret)
+    if (!ret) {
+        if (!user_packet && avpkt->size) {
+            uint8_t *new_data = av_realloc(avpkt->data, avpkt->size);
+            if (new_data)
+                avpkt->data = new_data;
+        }
+
         avctx->frame_number++;
+    }
 
     if (ret < 0 || !*got_packet_ptr)
         av_free_packet(avpkt);
@@ -1132,7 +1138,7 @@ int attribute_align_arg avcodec_encode_video2(AVCodecContext *avctx,
         else if (!(avctx->codec->capabilities & CODEC_CAP_DELAY))
             avpkt->pts = avpkt->dts = frame->pts;
 
-        if (!user_packet && avpkt->data) {
+        if (!user_packet && avpkt->size) {
             uint8_t *new_data = av_realloc(avpkt->data, avpkt->size);
             if (new_data)
                 avpkt->data = new_data;

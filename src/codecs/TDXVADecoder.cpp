@@ -41,8 +41,7 @@
                                     while (FAILED(hr = x) && nTry<MAX_RETRY_ON_PENDING) \
                                     { \
                                         if (hr != E_PENDING) break; \
-                                        DPRINTF(_l("TDXVADecoder Pending loop %d\n"), nTry); \
-                                        Sleep(1); \
+                                        Sleep(3); \
                                         nTry++; \
                                     }
 
@@ -731,16 +730,14 @@ HRESULT TDXVADecoder::GetFreeSurfaceIndex(int& nSurfaceIndex, IMediaSample** ppS
             break;
         case ENGINE_DXVA2 :
             CComPtr<IMediaSample> pNewSample;
-            IFFDSDXVA2Sample    *pFFDSDXVA2Sample;
+            IFFDSDXVA2Sample *pFFDSDXVA2Sample;
             // TODO : test  IDirect3DDeviceManager9::TestDevice !!!
-            //DPRINTF(_l("TDXVADecoder::GetFreeSurfaceIndex ==> Try get buffer...\n"));
             if (SUCCEEDED (hr = GetDeliveryBuffer(rtStart, rtStop, &pNewSample))) {
                 if (SUCCEEDED(pNewSample->QueryInterface(IID_IFFDSDXVA2Sample, (void**)&pFFDSDXVA2Sample))) {
                     nSurfaceIndex      = pFFDSDXVA2Sample ? pFFDSDXVA2Sample->GetDXSurfaceId() : 0;
                     *ppSampleToDeliver = pNewSample.Detach();
                     pFFDSDXVA2Sample->Release();
                 }
-                //DPRINTF(_l("TDXVADecoder::GetFreeSurfaceIndex %d\n"), nSurfaceIndex);
             }
             break;
     }
