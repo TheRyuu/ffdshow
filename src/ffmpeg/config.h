@@ -379,6 +379,7 @@ Note: when adding a new codec, you have to:
 
 #define CONFIG_MPEG_XVMC_DECODER 0
 #define CONFIG_VC1_VDPAU_DECODER 0
+#define CONFIG_H264_VDPAU_DECODER 0
 
 #define CONFIG_CUSTOM_FFDSHOW_H264 1
 #define CONFIG_CUSTOM_FFMPEG_H264 1

@@ -563,7 +563,6 @@ retry:
     if (s->codec_id == CODEC_ID_MPEG4 && s->xvid_build>=0 && avctx->idct_algo == FF_IDCT_AUTO && (av_get_cpu_flags() & AV_CPU_FLAG_MMX)) {
         avctx->idct_algo= FF_IDCT_XVIDMMX;
         ff_dct_common_init(s);
-        s->picture_number=0;
     }
 #endif
 
@@ -579,6 +578,8 @@ retry:
 
         if (HAVE_THREADS && (s->avctx->active_thread_type&FF_THREAD_FRAME)) {
             av_log_missing_feature(s->avctx, "Width/height/bit depth/chroma idc changing with threads is", 0);
+            s->width = avctx->coded_width;
+            s->height= avctx->coded_height;
             return -1;   // width / height changed during parallelized decoding
         }
 

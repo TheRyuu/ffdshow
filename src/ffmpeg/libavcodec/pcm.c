@@ -33,10 +33,10 @@
 
 typedef struct PCMDecode {
     AVFrame frame;
-    short table[256];
+    short   table[256];
 } PCMDecode;
 
-static av_cold int pcm_decode_init(AVCodecContext * avctx)
+static av_cold int pcm_decode_init(AVCodecContext *avctx)
 {
     PCMDecode *s = avctx->priv_data;
     int i;
@@ -46,13 +46,13 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
         return AVERROR(EINVAL);
     }
 
-    switch(avctx->codec->id) {
+    switch (avctx->codec->id) {
     case CODEC_ID_PCM_ALAW:
-        for(i=0;i<256;i++)
+        for (i = 0; i < 256; i++)
             s->table[i] = alaw2linear(i);
         break;
     case CODEC_ID_PCM_MULAW:
-        for(i=0;i<256;i++)
+        for (i = 0; i < 256; i++)
             s->table[i] = ulaw2linear(i);
         break;
     default:
@@ -72,32 +72,32 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
 
 /**
  * Read PCM samples macro
- * @param size Data size of native machine format
+ * @param size   Data size of native machine format
  * @param endian bytestream_get_xxx() endian suffix
- * @param src Source pointer (variable name)
- * @param dst Destination pointer (variable name)
- * @param n Total number of samples (variable name)
- * @param shift Bitshift (bits)
+ * @param src    Source pointer (variable name)
+ * @param dst    Destination pointer (variable name)
+ * @param n      Total number of samples (variable name)
+ * @param shift  Bitshift (bits)
  * @param offset Sample value offset
  */
-#define DECODE(size, endian, src, dst, n, shift, offset) \
-    for(;n>0;n--) { \
-        uint##size##_t v = bytestream_get_##endian(&src); \
-        AV_WN##size##A(dst, (v - offset) << shift); \
-        dst += size / 8; \
+#define DECODE(size, endian, src, dst, n, shift, offset)                \
+    for (; n > 0; n--) {                                                \
+        uint ## size ## _t v = bytestream_get_ ## endian(&src);         \
+        AV_WN ## size ## A(dst, (v - offset) << shift);                 \
+        dst += size / 8;                                                \
     }
 
 static int pcm_decode_frame(AVCodecContext *avctx, void *data,
                             int *got_frame_ptr, AVPacket *avpkt)
 {
     const uint8_t *src = avpkt->data;
-    int buf_size = avpkt->size;
-    PCMDecode *s = avctx->priv_data;
+    int buf_size       = avpkt->size;
+    PCMDecode *s       = avctx->priv_data;
     int sample_size, c, n, ret, samples_per_block;
     uint8_t *samples;
     int32_t *dst_int32_t;
 
-    sample_size = av_get_bits_per_sample(avctx->codec_id)/8;
+    sample_size = av_get_bits_per_sample(avctx->codec_id) / 8;
 
     samples_per_block = 1;
 
@@ -108,15 +108,15 @@ static int pcm_decode_frame(AVCodecContext *avctx, void *data,
 
     n = avctx->channels * sample_size;
 
-    if(n && buf_size % n){
+    if (n && buf_size % n) {
         if (buf_size < n) {
             av_log(avctx, AV_LOG_ERROR, "invalid PCM packet\n");
             return -1;
-        }else
+        } else
             buf_size -= buf_size % n;
     }
 
-    n = buf_size/sample_size;
+    n = buf_size / sample_size;
 
     /* get output buffer */
     s->frame.nb_samples = n * samples_per_block / avctx->channels;
@@ -126,10 +126,10 @@ static int pcm_decode_frame(AVCodecContext *avctx, void *data,
     }
     samples = s->frame.data[0];
 
-    switch(avctx->codec->id) {
+    switch (avctx->codec->id) {
     case CODEC_ID_PCM_ALAW:
     case CODEC_ID_PCM_MULAW:
-        for(;n>0;n--) {
+        for (; n > 0; n--) {
             AV_WN16A(samples, s->table[*src++]);
             samples += 2;
         }
@@ -145,20 +145,21 @@ static int pcm_decode_frame(AVCodecContext *avctx, void *data,
 }
 
 #if CONFIG_DECODERS
-#define PCM_DECODER(id_,sample_fmt_,name_,long_name_)         \
-AVCodec ff_ ## name_ ## _decoder = {            \
-    .name           = #name_,                   \
-    .type           = AVMEDIA_TYPE_AUDIO,       \
-    .id             = id_,                      \
-    .priv_data_size = sizeof(PCMDecode),        \
-    .init           = pcm_decode_init,          \
-    .decode         = pcm_decode_frame,         \
-    .capabilities   = CODEC_CAP_DR1,            \
-    .sample_fmts = (const enum AVSampleFormat[]){sample_fmt_,AV_SAMPLE_FMT_NONE}, \
-    .long_name = NULL_IF_CONFIG_SMALL(long_name_), \
+#define PCM_DECODER(id_, sample_fmt_, name_, long_name_)                    \
+AVCodec ff_ ## name_ ## _decoder = {                                        \
+    .name           = #name_,                                               \
+    .type           = AVMEDIA_TYPE_AUDIO,                                   \
+    .id             = id_,                                                  \
+    .priv_data_size = sizeof(PCMDecode),                                    \
+    .init           = pcm_decode_init,                                      \
+    .decode         = pcm_decode_frame,                                     \
+    .capabilities   = CODEC_CAP_DR1,                                        \
+    .sample_fmts    = (const enum AVSampleFormat[]){ sample_fmt_,           \
+                                                     AV_SAMPLE_FMT_NONE },  \
+    .long_name      = NULL_IF_CONFIG_SMALL(long_name_),                     \
 }
 #else
-#define PCM_DECODER(id,sample_fmt_,name,long_name_)
+#define PCM_DECODER(id, sample_fmt_, name, long_name_)
 #endif
 
 PCM_DECODER(CODEC_ID_PCM_ALAW,  AV_SAMPLE_FMT_S16, pcm_alaw,  "PCM A-law");
