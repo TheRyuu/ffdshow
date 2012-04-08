@@ -1,5 +1,5 @@
 /*
- * $Id: DXVADecoderH264.cpp 4257 2012-04-05 00:53:53Z Aleksoid $
+ * $Id: DXVADecoderH264.cpp 4276 2012-04-07 08:48:47Z Aleksoid $
  *
  * (C) 2006-2011 see AUTHORS
  *
@@ -87,13 +87,16 @@ void TDXVADecoderH264::Init()
 void TDXVADecoderH264::CopyBitstream(BYTE* pDXVABuffer,	BYTE*	pBuffer, UINT& nSize)
 {
 	CH264Nalu	Nalu;
-	int	nDummy;
-	int	nSlices	=	0;
-	int	nDxvaNalLength;
+	int			nDummy;
+	int			nSlices		= 0;
+	UINT		m_nSize		= nSize;
+	int			slice_step	= 1;
+	int			nDxvaNalLength;
 
-	Nalu.SetBuffer (pBuffer, nSize,	m_nNALLength);
-	nSize	=	0;
-
+	Nalu.SetBuffer (pBuffer, nSize, m_nNALLength);
+	
+slice_again:
+	nSize = 0;
 	while (Nalu.ReadNext()) {
 		switch (Nalu.GetType()) {
 			case NALU_TYPE_SLICE:
@@ -125,6 +128,12 @@ void TDXVADecoderH264::CopyBitstream(BYTE* pDXVABuffer,	BYTE*	pBuffer, UINT& nSi
 		}
 	}
 
+	if (!nSlices && slice_step == 1) {
+		slice_step++;
+		Nalu.SetBuffer (pBuffer, m_nSize, 0);
+		goto slice_again;
+	}
+
 	// Complete with zero padding (buffer size should be a multiple of 128)
 	nDummy  = 128 - (nSize %128);
 
@@ -138,7 +147,6 @@ void TDXVADecoderH264::Flush()
 	ClearRefFramesList();
 	m_DXVAPicParams.UsedForReferenceFlags	= 0;
 	m_nOutPOC								= INT_MIN;
-	m_nPrevOutPOC							= 0;
 	m_rtLastFrameDisplayed		=	0;
 
 	__super::Flush();
@@ -158,19 +166,17 @@ HRESULT	TDXVADecoderH264::DecodeFrame(BYTE*	pDataIn, UINT	nSize, REFERENCE_TIME	
 	UINT						nNalOffset		= 0;
 	CComPtr<IMediaSample>		pSampleToDeliver;
 	//CComQIPtr<IMPCDXVA2Sample>	pDXVA2Sample;
+	int							slice_step		= 1;
 
 	if (m_pCodec->libavcodec->FFH264DecodeBuffer(m_pCodec->avctx,	pDataIn, nSize,	&nFramePOC,	&nOutPOC,	&rtOutStart) ==	-1)	{
 		return S_FALSE;
 	}
 
-	if (nOutPOC == m_nPrevOutPOC && m_nOutPOC != INT_MIN) {
-		DPRINTF (_l("\nCDXVADecoderH264::DecodeFrame() : The same nOutPOC = %d\n"), nOutPOC);
-		Flush();
-		m_bFlushed = false;
-		return S_FALSE;
-	}
+	DPRINTF(_l("CDXVADecoderH264::DecodeFrame() : nFramePOC = %d, nOutPOC = %d[%d], rtOutStart = %I64d\n"), nFramePOC, nOutPOC, m_nOutPOC, rtOutStart);
 
 	Nalu.SetBuffer (pDataIn, nSize, m_nNALLength);
+
+slice_again:
 	while (Nalu.ReadNext()) {
 		switch (Nalu.GetType()) {
 			case NALU_TYPE_SLICE:
@@ -193,11 +199,18 @@ HRESULT	TDXVADecoderH264::DecodeFrame(BYTE*	pDataIn, UINT	nSize, REFERENCE_TIME	
 				break;
 		}
 	}
-	if (nSlices == 0) {
+
+	if (!nSlices) {
+		if(slice_step == 1) {
+			slice_step++;
+			Nalu.SetBuffer (pDataIn, nSize, 0);
+			goto slice_again;
+		}
+
 		return S_FALSE;
 	}
 
-	m_nMaxWaiting	=	std::min (std::max ((int)m_DXVAPicParams.num_ref_frames, 3), 8);
+	m_nMaxWaiting = std::min (std::max ((int)m_DXVAPicParams.num_ref_frames, 3), 8);
 
 	// If parsing fail (probably no PPS/SPS), continue anyway it may arrived later (happen on truncated streams)
 	if (FAILED (m_pCodec->libavcodec->FFH264BuildPicParams (&m_DXVAPicParams,	&m_DXVAScalingMatrix,	&nFieldType, &nSliceType,	m_pCodec->avctx, m_pCodec->getPCIVendor()))) {
@@ -256,8 +269,6 @@ HRESULT	TDXVADecoderH264::DecodeFrame(BYTE*	pDataIn, UINT	nSize, REFERENCE_TIME	
 		m_rtOutStart	= rtOutStart;
 	}
 
-	m_nPrevOutPOC = nOutPOC;
-
 	m_bFlushed = false;
 	return hr;
 }
@@ -295,7 +306,6 @@ void TDXVADecoderH264::SetExtraData	(BYTE* pDataIn,	UINT nSize)
 	m_pCodec->libavcodec->FFH264SetDxvaSliceLong (pAVCtx,	m_pSliceLong);
 }
 
-
 void TDXVADecoderH264::ClearRefFramesList()
 {
 	for (int i=0; i<m_nPicEntryNumber; i++) {
@@ -305,7 +315,6 @@ void TDXVADecoderH264::ClearRefFramesList()
 		}
 	}
 }
-
 
 HRESULT	TDXVADecoderH264::DisplayStatus()
 {
