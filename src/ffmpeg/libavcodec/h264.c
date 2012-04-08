@@ -47,6 +47,8 @@
 // #undef NDEBUG
 #include <assert.h>
 
+const uint16_t ff_h264_mb_sizes[4] = { 256, 384, 512, 768 };
+
 static const uint8_t rem6[QP_MAX_NUM + 1] = {
     0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2,
     3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5,
@@ -760,9 +762,7 @@ static av_always_inline void prefetch_motion(H264Context *h, int list,
             s->dsp.prefetch(src[1] + off, s->linesize, 4);
             s->dsp.prefetch(src[2] + off, s->linesize, 4);
         } else {
-            off = ((mx >> 1) << pixel_shift) +
-                  ((my >> 1) + (s->mb_x & 7)) * s->uvlinesize +
-                  (64 << pixel_shift);
+            off= (((mx>>1)+64)<<pixel_shift) + ((my>>1) + (s->mb_x&7))*s->uvlinesize;
             s->dsp.prefetch(src[1] + off, src[2] - src[1], 2);
         }
     }
@@ -1302,7 +1302,8 @@ static int decode_update_thread_context(AVCodecContext *dst,
     int inited = s->context_initialized, err;
     int i;
 
-    if (dst == src) return 0;
+    if (dst == src)
+        return 0;
 
     err = ff_mpeg_update_thread_context(dst, src);
     if (err)
@@ -2104,12 +2105,11 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple,
 
     if (!simple && IS_INTRA_PCM(mb_type)) {
         if (pixel_shift) {
-            static const uint16_t mb_sizes[4] = { 256, 384, 512, 768 };
             const int bit_depth = h->sps.bit_depth_luma;
             int j;
             GetBitContext gb;
             init_get_bits(&gb, (uint8_t *)h->mb,
-                          mb_sizes[h->sps.chroma_format_idc] * bit_depth);
+                          ff_h264_mb_sizes[h->sps.chroma_format_idc] * bit_depth);
 
             for (i = 0; i < 16; i++) {
                 uint16_t *tmp_y = (uint16_t *)(dest_y + i * linesize);

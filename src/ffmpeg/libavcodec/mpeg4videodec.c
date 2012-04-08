@@ -1291,7 +1291,7 @@ static int mpeg4_decode_mb(MpegEncContext *s,
                 s->last_mv[i][1][1]= 0;
             }
 
-            ff_thread_await_progress((AVFrame*)s->next_picture_ptr, s->mb_y, 0);
+            ff_thread_await_progress(&s->next_picture_ptr->f, s->mb_y, 0);
         }
 
         /* if we skipped it in the future P Frame than skip it now too */
@@ -1478,7 +1478,7 @@ end:
 
             if(s->pict_type==AV_PICTURE_TYPE_B){
                 const int delta= s->mb_x + 1 == s->mb_width ? 2 : 1;
-                ff_thread_await_progress((AVFrame*)s->next_picture_ptr,
+                ff_thread_await_progress(&s->next_picture_ptr->f,
                                         (s->mb_x + delta >= s->mb_width) ? FFMIN(s->mb_y+1, s->mb_height-1) : s->mb_y, 0);
                 if (s->next_picture.f.mbskip_table[xy + delta])
                     return SLICE_OK;
@@ -1652,6 +1652,9 @@ static int decode_vol_header(MpegEncContext *s, GetBitContext *gb){
             s->quant_precision = get_bits(gb, 4); /* quant_precision */
             if(get_bits(gb, 4)!=8) av_log(s->avctx, AV_LOG_ERROR, "N-bit not supported\n"); /* bits_per_pixel */
             if(s->quant_precision!=5) av_log(s->avctx, AV_LOG_ERROR, "quant precision %d\n", s->quant_precision);
+            if(s->quant_precision<3 || s->quant_precision>9) {
+                s->quant_precision = 5;
+            }
         } else {
             s->quant_precision = 5;
         }
@@ -2057,6 +2060,7 @@ static int decode_vop_header(MpegEncContext *s, GetBitContext *gb){
              s->f_code = get_bits(gb, 3);       /* fcode_for */
              if(s->f_code==0){
                  av_log(s->avctx, AV_LOG_ERROR, "Error, header damaged or not MPEG4 header (f_code=0)\n");
+                 s->f_code=1;
                  return -1; // makes no sense to continue, as the MV decoding will break very quickly
              }
          }else
@@ -2064,6 +2068,11 @@ static int decode_vop_header(MpegEncContext *s, GetBitContext *gb){
 
          if (s->pict_type == AV_PICTURE_TYPE_B) {
              s->b_code = get_bits(gb, 3);
+             if(s->b_code==0){
+                 av_log(s->avctx, AV_LOG_ERROR, "Error, header damaged or not MPEG4 header (b_code=0)\n");
+                 s->b_code=1;
+                 return -1; // makes no sense to continue, as the MV decoding will break very quickly
+             }
          }else
              s->b_code=1;
 
@@ -2290,19 +2299,21 @@ static const AVClass mpeg4_vdpau_class = {
 };
 
 AVCodec ff_mpeg4_decoder = {
-    .name           = "mpeg4",
-    .type           = AVMEDIA_TYPE_VIDEO,
-    .id             = CODEC_ID_MPEG4,
-    .priv_data_size = sizeof(MpegEncContext),
-    .init           = decode_init,
-    .close          = ff_h263_decode_end,
-    .decode         = ff_h263_decode_frame,
-    .capabilities   = CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY | CODEC_CAP_FRAME_THREADS,
-    .flush= ff_mpeg_flush,
-    .max_lowres= 3,
-    .long_name= NULL_IF_CONFIG_SMALL("MPEG-4 part 2"),
-    .pix_fmts= ff_hwaccel_pixfmt_list_420,
-    .profiles = NULL_IF_CONFIG_SMALL(mpeg4_video_profiles),
-    .update_thread_context= ONLY_IF_THREADS_ENABLED(ff_mpeg_update_thread_context),
+    .name                  = "mpeg4",
+    .type                  = AVMEDIA_TYPE_VIDEO,
+    .id                    = CODEC_ID_MPEG4,
+    .priv_data_size        = sizeof(MpegEncContext),
+    .init                  = decode_init,
+    .close                 = ff_h263_decode_end,
+    .decode                = ff_h263_decode_frame,
+    .capabilities          = CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 |
+                             CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY |
+                             CODEC_CAP_FRAME_THREADS,
+    .flush                 = ff_mpeg_flush,
+    .max_lowres            = 3,
+    .long_name             = NULL_IF_CONFIG_SMALL("MPEG-4 part 2"),
+    .pix_fmts              = ff_hwaccel_pixfmt_list_420,
+    .profiles              = NULL_IF_CONFIG_SMALL(mpeg4_video_profiles),
+    .update_thread_context = ONLY_IF_THREADS_ENABLED(ff_mpeg_update_thread_context),
     .priv_class = &mpeg4_class,
 };
