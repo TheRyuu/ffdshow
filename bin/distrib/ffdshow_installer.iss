@@ -11,7 +11,7 @@
 #define dummy Exec("update_version.bat","","",1,SW_HIDE)
 
 #define VERSION_MAJOR 1
-#define VERSION_MINOR 1
+#define VERSION_MINOR 2
 #include "..\..\src\svn_version.h"
 
 
