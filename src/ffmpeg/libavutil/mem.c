@@ -66,7 +66,7 @@ void *av_malloc(size_t size)
     void *ptr = NULL;
 
     /* let's disallow possible ambiguous cases */
-    if(size > (INT_MAX-32) )
+    if (size > (INT_MAX-32) || !size)
         return NULL;
 
     ptr = __mingw_aligned_malloc(size,32);

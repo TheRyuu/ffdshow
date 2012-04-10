@@ -2016,12 +2016,10 @@ static int vcr2_init_sequence(AVCodecContext *avctx)
     s->chroma_format         = 1;
     if (s->codec_tag == AV_RL32("BW10")) {
         s->codec_id              = s->avctx->codec_id = CODEC_ID_MPEG1VIDEO;
-        avctx->sub_id            = 1; /* indicates MPEG-1 */
     } else {
         exchange_uv(s); // common init reset pblocks, so we swap them here
         s->swap_uv = 1; // in case of xvmc we need to swap uv for each MB
         s->codec_id              = s->avctx->codec_id = CODEC_ID_MPEG2VIDEO;
-        avctx->sub_id            = 2; /* indicates MPEG-2 */
     }
     s1->save_width           = s->width;
     s1->save_height          = s->height;
