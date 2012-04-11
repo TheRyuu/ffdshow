@@ -454,7 +454,6 @@ Source: "{#= bindir}\ff_acm.acm";                 DestDir: "{sys}";             
 #endif
 
 Source: "..\languages\*.*";                       DestDir: "{app}\languages";               Components: ffdshow;                    Flags: ignoreversion
-Source: "..\custom matrices\*.*";                 DestDir: "{app}\custom matrices";         Components: ffdshow\vfw;                Flags: ignoreversion
 Source: "..\openIE.js";                           DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "license\gnu_license.txt";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "license\Boost_Software_License_1.0.txt"; DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
