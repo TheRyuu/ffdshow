@@ -21,8 +21,8 @@ SRCS_C=\
     libavcodec/ac3enc_fixed.c \
     libavcodec/ac3tab.c \
     libavcodec/acelp_filters.c \
-    libavcodec/acelp_vectors.c \
     libavcodec/acelp_pitch_delay.c \
+    libavcodec/acelp_vectors.c \
     libavcodec/adpcm.c \
     libavcodec/adpcm_data.c \
     libavcodec/allcodecs.c \
@@ -47,8 +47,8 @@ SRCS_C=\
     libavcodec/cscd.c \
     libavcodec/cyuv.c \
     libavcodec/dca.c \
-    libavcodec/dcadsp.c \
     libavcodec/dca_parser.c \
+    libavcodec/dcadsp.c \
     libavcodec/dct.c \
     libavcodec/dct32_fixed.c \
     libavcodec/dct32_float.c \
@@ -56,8 +56,8 @@ SRCS_C=\
     libavcodec/dv.c \
     libavcodec/dvdata.c \
     libavcodec/dvdec.c \
-    libavcodec/eac3dec.c \
     libavcodec/eac3_data.c \
+    libavcodec/eac3dec.c \
     libavcodec/error_resilience.c \
     libavcodec/faandct.c \
     libavcodec/faanidct.c \
@@ -129,12 +129,12 @@ SRCS_C=\
     libavcodec/motion_est.c \
     libavcodec/mpeg12.c \
     libavcodec/mpeg12data.c \
-    libavcodec/mpegvideo_parser.c \
     libavcodec/mpeg4audio.c \
     libavcodec/mpeg4video.c \
     libavcodec/mpeg4video_parser.c \
     libavcodec/mpeg4videodec.c \
     libavcodec/mpegaudio.c \
+    libavcodec/mpegaudio_parser.c \
     libavcodec/mpegaudiodata.c \
     libavcodec/mpegaudiodec.c \
     libavcodec/mpegaudiodec_float.c \
@@ -142,9 +142,9 @@ SRCS_C=\
     libavcodec/mpegaudiodsp.c \
     libavcodec/mpegaudiodsp_fixed.c \
     libavcodec/mpegaudiodsp_float.c \
-    libavcodec/mpegaudio_parser.c \
     libavcodec/mpegvideo.c \
     libavcodec/mpegvideo_enc.c \
+    libavcodec/mpegvideo_parser.c \
     libavcodec/msgsmdec.c \
     libavcodec/msmpeg4.c \
     libavcodec/msmpeg4data.c \
@@ -214,8 +214,8 @@ SRCS_C=\
     libavcodec/vp8.c \
     libavcodec/vp8dsp.c \
     libavcodec/wavpack.c \
-    libavcodec/wma_common.c \
     libavcodec/wma.c \
+    libavcodec/wma_common.c \
     libavcodec/wmadec.c \
     libavcodec/wmv2.c \
     libavcodec/wmv2dec.c \
@@ -294,11 +294,12 @@ SRCS_C=\
     libswscale/rgb2rgb.c \
     libswscale/swscale.c \
     libswscale/swscale_unscaled.c \
+    libswscale/sww32thread.c \
     libswscale/utils.c \
     libswscale/yuv2rgb.c \
-    libswscale/sww32thread.c \
-    libswscale/x86/swscale_mmx.c \
+    \
     libswscale/x86/rgb2rgb.c \
+    libswscale/x86/swscale_mmx.c \
     libswscale/x86/yuv2rgb_mmx.c \
     \
     libpostproc/postprocess.c \

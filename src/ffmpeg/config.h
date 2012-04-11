@@ -3,12 +3,13 @@
 
 #ifdef __GNUC__
   #define HAVE_INLINE_ASM 1
+  #define HAVE_AMD3DNOW 1
+  #define HAVE_AMD3DNOWEXT 1
+  #define HAVE_AVX 1
   #define HAVE_MMX 1
   #define HAVE_MMX2 1
   #define HAVE_SSE 1
   #define HAVE_SSSE3 1
-  #define HAVE_AMD3DNOW 1
-  #define HAVE_AMD3DNOWEXT 1
 
   #define ARCH_X86 1
 
@@ -29,12 +30,13 @@
   #define _ICC __INTEL_COMPILER
   #define ARCH_X86 0
   #define HAVE_INLINE_ASM 0
+  #define HAVE_AMD3DNOW 0
+  #define HAVE_AMD3DNOWEXT 0
+  #define HAVE_AVX 0
   #define HAVE_MMX 0
   #define HAVE_MMX2 0
   #define HAVE_SSE 0
   #define HAVE_SSSE3 0
-  #define HAVE_AMD3DNOW 0
-  #define HAVE_AMD3DNOWEXT 0
   #define snprintf _snprintf // not secure. Only for testing.
   #define __mingw_aligned_malloc _aligned_malloc
   #define __mingw_aligned_realloc _aligned_realloc
@@ -87,7 +89,6 @@
 #define HAVE_ARMV6 0
 #define HAVE_ARMV6T2 0
 #define HAVE_ARMVFP 0
-#define HAVE_AVX 0
 #define HAVE_IWMMXT 0
 #define HAVE_MMI 0
 #define HAVE_NEON 0
