@@ -115,6 +115,7 @@
 #if is64bit
   #define ff_sys = '{sys}'
   #define include_plugin_dscaler = False
+  #define include_makeavis = False
 #else
   #define ff_sys = '{syswow64}'
 #endif
@@ -277,18 +278,18 @@ Name: "ffdshow";                    Description: "{cm:comp_ffdshowds}";    Types
 Name: "ffdshow\dxva";               Description: "{cm:comp_dxvaDecoder}"
 Name: "ffdshow\vfw";                Description: "{cm:comp_vfwInterface}"; Types: Normal
 #if include_makeavis
-Name: "ffdshow\makeavis";           Description: "{cm:comp_makeAvis}";         Flags: dontinheritcheck
+Name: "ffdshow\makeavis";           Description: "{cm:comp_makeAvis}";     Flags: dontinheritcheck
 #endif
 #if include_plugin_avisynth | include_plugin_virtualdub | include_plugin_dscaler
-Name: "ffdshow\plugins";            Description: "{cm:comp_appPlugins}";       Flags: dontinheritcheck
+Name: "ffdshow\plugins";            Description: "{cm:comp_appPlugins}";   Flags: dontinheritcheck
   #if include_plugin_avisynth
-Name: "ffdshow\plugins\avisynth";   Description: "AviSynth"
+Name: "ffdshow\plugins\avisynth";   Description: "AviSynth";
   #endif
   #if include_plugin_virtualdub
-Name: "ffdshow\plugins\virtualdub"; Description: "VirtualDub"
+Name: "ffdshow\plugins\virtualdub"; Description: "VirtualDub";
   #endif
   #if include_plugin_dscaler
-Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
+Name: "ffdshow\plugins\dscaler";    Description: "DScaler";
   #endif
 #endif
 
