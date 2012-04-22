@@ -308,10 +308,10 @@ Name: "video\flv";               Description: "FLV1, FLV4";                     
 Name: "video\vp6";               Description: "VP6";                              Components: ffdshow
 Name: "video\h263";              Description: "H.263(+)";                         Components: ffdshow
 Name: "video\mpeg1";             Description: "MPEG-1";                           Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "video\mpeg1\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
-Name: "video\mpeg1\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+;Name: "video\mpeg1\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
+;Name: "video\mpeg1\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "video\mpeg2";             Description: "MPEG-2";                           Components: ffdshow; Flags: unchecked
-Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
+;Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
 Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 #if include_quicksync
 Name: "video\mpeg2\quicksync";   Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 0,6;
@@ -420,7 +420,7 @@ Source: "{#= bindir}\xvidcore.dll";               DestDir: "{app}";             
 #endif
 Source: "{#= bindir}\ff_kernelDeint.dll";         DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion; Check: Is_SSE_Supported;
 Source: "{#= bindir}\TomsMoComp_ff.dll";          DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\libmpeg2_ff.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete
+;Source: "{#= bindir}\libmpeg2_ff.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete
 
 #ifdef PREF_CLSID_ICL
 Source: "{#= bindir}\ffdshow_icl.ax";             DestDir: "{app}"; DestName: "ffdshow.ax"; Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
