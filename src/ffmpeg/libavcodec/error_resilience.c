@@ -33,6 +33,7 @@
 #include "h264.h"
 #include "rectangle.h"
 #include "thread.h"
+#include "avassert.h"
 
 /*
  * H264 redefines mb_intra so it is not mistakely used (its uninitialized in h264)
@@ -53,19 +54,24 @@ static void decode_mb(MpegEncContext *s, int ref)
         H264Context *h = (void*)s;
         h->mb_xy = s->mb_x + s->mb_y * s->mb_stride;
         memset(h->non_zero_count_cache, 0, sizeof(h->non_zero_count_cache));
-        assert(ref >= 0);
+        av_assert1(ref >= 0);
         /* FIXME: It is possible albeit uncommon that slice references
          * differ between slices. We take the easy approach and ignore
          * it for now. If this turns out to have any relevance in
          * practice then correct remapping should be added. */
         if (ref >= h->ref_count[0])
             ref = 0;
+        if (!h->ref_list[0][ref].f.data[0]) {
+            av_log(s->avctx, AV_LOG_DEBUG, "Reference not available for error concealing\n");
+            ref = 0;
+        }
         fill_rectangle(&s->current_picture.f.ref_index[0][4 * h->mb_xy],
                        2, 2, 2, ref, 1);
         fill_rectangle(&h->ref_cache[0][scan8[0]], 4, 4, 8, ref, 1);
         fill_rectangle(h->mv_cache[0][scan8[0]], 4, 4, 8,
                        pack16to32(s->mv[0][0][0], s->mv[0][0][1]), 4);
-        assert(!FRAME_MBAFF);
+        h->mb_mbaff =
+        h->mb_field_decoding_flag = 0;
         ff_h264_hl_decode_mb(h);
     } else {
         assert(ref == 0);
@@ -81,7 +87,7 @@ static void set_mv_strides(MpegEncContext *s, int *mv_step, int *stride)
 {
     if (s->codec_id == CODEC_ID_H264) {
         H264Context *h = (void*)s;
-        assert(s->quarter_sample);
+        av_assert0(s->quarter_sample);
         *mv_step = 4;
         *stride  = h->b_stride;
     } else {
@@ -174,7 +180,7 @@ static void guess_dc(MpegEncContext *s, int16_t *dc, int w,
 {
     int b_x, b_y;
     int16_t  (*col )[4] = av_malloc(stride*h*sizeof( int16_t)*4);
-    uint16_t (*dist)[4] = av_malloc(stride*h*sizeof(uint16_t)*4);
+    uint32_t (*dist)[4] = av_malloc(stride*h*sizeof(uint32_t)*4);
 
     for(b_y=0; b_y<h; b_y++){
         int color= 1024;
@@ -248,7 +254,7 @@ static void guess_dc(MpegEncContext *s, int16_t *dc, int w,
             weight_sum = 0;
             guess      = 0;
             for (j = 0; j < 4; j++) {
-                int64_t weight  = 256 * 256 * 256 * 16 / dist[b_x + b_y*stride][j];
+                int64_t weight  = 256 * 256 * 256 * 16 / FFMAX(dist[b_x + b_y*stride][j], 1);
                 guess          += weight*(int64_t)col[b_x + b_y*stride][j];
                 weight_sum     += weight;
             }
@@ -493,8 +499,8 @@ static void guess_mv(MpegEncContext *s)
 
                     if (fixed[mb_xy] == MV_FROZEN)
                         continue;
-                    assert(!IS_INTRA(s->current_picture.f.mb_type[mb_xy]));
-                    assert(s->last_picture_ptr && s->last_picture_ptr->f.data[0]);
+                    av_assert1(!IS_INTRA(s->current_picture.f.mb_type[mb_xy]));
+                    av_assert1(s->last_picture_ptr && s->last_picture_ptr->f.data[0]);
 
                     j = 0;
                     if (mb_x > 0             && fixed[mb_xy - 1]         == MV_FROZEN)
@@ -789,11 +795,9 @@ static int is_intra_more_likely(MpegEncContext *s)
                     ff_thread_await_progress(&s->last_picture_ptr->f,
                                              mb_y, 0);
                 }
-                is_intra_likely += s->dsp.sad[0](NULL, last_mb_ptr, mb_ptr,
-                                                 s->linesize, 16);
-                is_intra_likely -= s->dsp.sad[0](NULL, last_mb_ptr,
-                                                 last_mb_ptr + s->linesize * 16,
-                                                 s->linesize, 16);
+                is_intra_likely += s->dsp.sad[0](NULL, last_mb_ptr, mb_ptr                    , s->linesize, 16);
+                // FIXME need await_progress() here
+                is_intra_likely -= s->dsp.sad[0](NULL, last_mb_ptr, last_mb_ptr+s->linesize*16, s->linesize, 16);
             } else {
                 if (IS_INTRA(s->current_picture.f.mb_type[mb_xy]))
                    is_intra_likely++;

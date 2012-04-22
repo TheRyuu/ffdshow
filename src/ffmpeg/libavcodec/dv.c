@@ -294,8 +294,6 @@ av_cold int ff_dvvideo_init(AVCodecContext *avctx)
             ff_dv_rl_vlc[i].run   = run;
         }
         ff_free_vlc(&dv_vlc);
-
-        dv_vlc_map_tableinit();
     }
 
     /* Generic DSP setup */
@@ -313,13 +311,7 @@ av_cold int ff_dvvideo_init(AVCodecContext *avctx)
     /* 248DCT setup */
     s->fdct[1]     = dsp.fdct248;
     s->idct_put[1] = ff_simple_idct248_put;  // FIXME: need to add it to DSP
-    if (avctx->lowres){
-        for (i = 0; i < 64; i++){
-            int j = ff_zigzag248_direct[i];
-            s->dv_zigzag[1][i] = dsp.idct_permutation[(j & 7) + (j & 8) * 4 + (j & 48) / 2];
-        }
-    }else
-        memcpy(s->dv_zigzag[1], ff_zigzag248_direct, 64);
+    memcpy(s->dv_zigzag[1], ff_zigzag248_direct, 64);
 
     avctx->coded_frame = &s->picture;
     s->avctx = avctx;
@@ -337,6 +329,8 @@ static av_cold int dvvideo_init_encoder(AVCodecContext *avctx)
         ff_dv_print_profiles(avctx, AV_LOG_ERROR);
         return AVERROR(EINVAL);
     }
+
+    dv_vlc_map_tableinit();
 
     return ff_dvvideo_init(avctx);
 }

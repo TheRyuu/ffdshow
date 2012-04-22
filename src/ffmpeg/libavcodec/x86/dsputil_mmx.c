@@ -3112,13 +3112,6 @@ void ff_dsputil_init_mmx(DSPContext *c, AVCodecContext *avctx)
 {
     int mm_flags = av_get_cpu_flags();
 
-    if (avctx->dsp_mask) {
-        if (avctx->dsp_mask & AV_CPU_FLAG_FORCE)
-            mm_flags |=   avctx->dsp_mask & 0xffff;
-        else
-            mm_flags &= ~(avctx->dsp_mask & 0xffff);
-    }
-
 #if 0
     av_log(avctx, AV_LOG_INFO, "libavcodec: CPU flags:");
     if (mm_flags & AV_CPU_FLAG_MMX)
@@ -3137,7 +3130,7 @@ void ff_dsputil_init_mmx(DSPContext *c, AVCodecContext *avctx)
     if (mm_flags & AV_CPU_FLAG_MMX) {
         const int idct_algo = avctx->idct_algo;
 
-        if (avctx->lowres == 0 && avctx->bits_per_raw_sample <= 8) {
+        if (avctx->bits_per_raw_sample <= 8) {
             if (idct_algo == FF_IDCT_AUTO || idct_algo == FF_IDCT_SIMPLEMMX) {
                 c->idct_put              = ff_simple_idct_put_mmx;
                 c->idct_add              = ff_simple_idct_add_mmx;

@@ -81,6 +81,8 @@ public:
  void* (*av_log_get_callback)(void);
  int (*av_log_get_level)(void);
  void (*av_log_set_level)(int);
+ 
+ void (*av_set_cpu_flags_mask)(int mask);
 
  int (*avcodec_default_get_buffer)(AVCodecContext *s, AVFrame *pic);
  void (*avcodec_default_release_buffer)(AVCodecContext *s, AVFrame *pic);
