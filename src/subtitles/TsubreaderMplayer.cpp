@@ -22,7 +22,6 @@
 TsubtitleParser::TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):
     TsubtitleParserBase(Iformat,Ifps),
     ffcfg(Iffcfg),
-    textfix(Icfg,Iffcfg),
     subreader(Isubreader),
     textformat(Iffcfg->getHtmlColors()),
     lineID(0)
@@ -63,7 +62,6 @@ Tsubtitle* TsubtitleParser::store(TsubtitleText &sub)
     // multiple text chunks with different fade effects in each subtitle.
     sub.fixFade(textformat.get_lineProps());
 
-    sub.fix(textfix);
     subreader->push_back(new TsubtitleText(sub));
     return subreader->back();
 }

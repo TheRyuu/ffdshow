@@ -328,9 +328,6 @@ int ff_h264_decode_seq_parameter_set(H264Context *h){
     sps->profile_idc= profile_idc;
     sps->constraint_set_flags = constraint_set_flags;
     sps->level_idc= level_idc;
-#if CONFIG_CUSTOM_FFDSHOW_H264
-    sps->full_range = VIDEO_FULL_RANGE_INVALID;
-#endif
 
     memset(sps->scaling_matrix4, 16, sizeof(sps->scaling_matrix4));
     memset(sps->scaling_matrix8, 16, sizeof(sps->scaling_matrix8));

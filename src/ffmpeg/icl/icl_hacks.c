@@ -181,3 +181,9 @@ AVCodec ff_mp1_decoder;
 AVCodec ff_ljpeg_encoder;
 AVCodec ff_indeo3_decoder;
 AVCodec ff_huffyuv_encoder;
+
+// SPP deblocking
+void ff_simple_idct_mmx(int16_t *block)
+{
+    // Not implemented.
+}

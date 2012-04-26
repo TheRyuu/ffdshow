@@ -11,7 +11,7 @@ protected:
 public:
     TpostprocSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
     int method,nicFirst;
-    int qual;
+    int qual,sppQual;
     int autoq;
     int isCustom,custom;
     int deblockAvcodecAccurate;

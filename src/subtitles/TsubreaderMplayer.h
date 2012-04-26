@@ -33,7 +33,6 @@ protected:
     Tsubreader *subreader;
     TsubtitlesSettings cfg;
     const Tconfig *ffcfg;
-    TtextFix textfix;
 
     TsubtitleFormat textformat;
     TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader);

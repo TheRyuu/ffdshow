@@ -143,7 +143,7 @@ public:
                      /*pp_mode*/void *mode, /*pp_context*/void *ppContext, int pict_type);
  /*pp_context*/void *(*pp_get_context)(int width, int height, int flags);
  void (*pp_free_context)(/*pp_context*/void *ppContext);
-
+ void (*ff_simple_idct_mmx)(int16_t *block);
 
  // DXVA imports
  int (*av_h264_decode_frame)(struct AVCodecContext* avctx, uint8_t *buf, int buf_size);

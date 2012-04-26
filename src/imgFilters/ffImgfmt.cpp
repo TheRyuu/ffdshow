@@ -390,13 +390,10 @@ char_t* csp_getName2(const TcspInfo *cspInfo,uint64_t csp,char_t *buf,size_t len
     tsnprintf_s(buf,
                 len,
                 _TRUNCATE,
-                _l("%s%s%s%s%s%s"),
+                _l("%s%s%s"),
                 colorspaceName,
                 csp & FF_CSP_FLAGS_VFLIP ? _l(", flipped vertically") : _l(""),
-                csp & FF_CSP_FLAGS_INTERLACED ? _l(", interlaced") : _l(""),
-                /*csp & FF_CSP_FLAGS_YUV_ADJ ? _l(", adj") : */_l(""), // These 3 flags are irrelevant to the end user, can raise questions about them
-                /*csp & FF_CSP_FLAGS_YUV_ORDER ? _l(", VU") : */_l(""),
-                /*csp & FF_CSP_FLAGS_YUV_JPEG ? _l(", JPEG") : */_l(""));
+                csp & FF_CSP_FLAGS_INTERLACED ? _l(", interlaced") : _l(""));
     return buf;
 }
 

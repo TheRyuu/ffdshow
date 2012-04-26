@@ -201,12 +201,6 @@ enum AVAudioServiceType {
     AV_AUDIO_SERVICE_TYPE_NB                   , ///< Not part of ABI
 };
 
-typedef enum {
-    VIDEO_FULL_RANGE_TV         = 0,
-    VIDEO_FULL_RANGE_PC         = 1,
-    VIDEO_FULL_RANGE_INVALID    = 2
-} VideoFullRangeType;
-
 /**
  * @ingroup lavc_encoding
  */

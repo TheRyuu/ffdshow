@@ -71,13 +71,6 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
         init();
     }
 
-    if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_VOBSUB) {
-        int newlang=deci->getParam2(IDFF_subCurLang);
-        if (subs->langid!=newlang) {
-            subs->setLang(newlang);
-        }
-    }
-
     if (oldsub) {
         if(time >= oldsub->start && time < oldsub->stop) {
             return oldsub; // OK!

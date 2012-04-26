@@ -103,8 +103,11 @@ void TffPict::common_init(void)
     edge=0;
     discontinuity = false;
     film = repeat_first_field = false;
-    video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
+    video_full_range_flag = AVCOL_RANGE_UNSPECIFIED;
     YCbCr_RGB_matrix_coefficients = AVCOL_SPC_UNSPECIFIED;
+    chroma_sample_location = AVCHROMA_LOC_UNSPECIFIED;
+    color_primaries = AVCOL_PRI_UNSPECIFIED;
+    color_trc = AVCOL_TRC_UNSPECIFIED;
 }
 void TffPict::init(void)
 {
@@ -178,11 +181,7 @@ void TffPict::setDiscontinuity(IMediaSample *pIn)
 
 void TffPict::setFullRange(AVColorRange color_range)
 {
-    if (color_range == AVCOL_RANGE_JPEG) {
-        video_full_range_flag = VIDEO_FULL_RANGE_PC;
-    } else {
-        video_full_range_flag = VIDEO_FULL_RANGE_TV;
-    }
+    video_full_range_flag = color_range;
 }
 
 void TffPict::readLibavcodec(uint64_t Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)

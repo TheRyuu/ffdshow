@@ -20,7 +20,6 @@
 #include <shlwapi.h>
 #include "TsubtitlesFile.h"
 #include "TsubreaderMplayer.h"
-#include "TsubreaderVobsub.h"
 #include "TsubreaderPGS.h"
 #include "TsubtitlesSettings.h"
 #include "IffdshowBase.h"
@@ -43,7 +42,7 @@ const char_t* TsubtitlesFile::exts[]= {
     _l("sup"),
     NULL
 };
-const char_t* TsubtitlesFile::mask=_l("Subtitles (*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.idx;*.sup)\0*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.usf;*.idx;*.sup\0All files (*.*)\0*.*\0");
+const char_t* TsubtitlesFile::mask=_l("Subtitles (*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.sup)\0*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.usf;*.sup\0All files (*.*)\0*.*\0");
 
 bool TsubtitlesFile::extMatch(const char_t *flnm)
 {
@@ -310,16 +309,7 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
     sub_format=Tsubreader::sub_autodetect(fs,ffcfg);
     if (sub_format!=Tsubreader::SUB_INVALID && checkOnly!=2) {
         fs.rewind();
-        if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_VOBSUB) {
-            if (cfg->vobsub) {
-                subs=new TsubreaderVobsub(fs,subFlnm,deci);
-                int deflang=subs->findlang(cfg->deflang);
-                if (deflang==0) {
-                    deflang=subs->findlang(cfg->deflang2);
-                }
-                subs->setLang(deflang);
-            }
-        } else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_PGS) {
+        if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_PGS) {
             if (!cfg->pgs) {
                 DPRINTF(_l("TsubtitlesFile::init Blu-Ray subtitles detected but disabled by user"));
                 return false;

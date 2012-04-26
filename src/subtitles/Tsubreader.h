@@ -41,7 +41,6 @@ public:
         SUB_SUBRIP09  =12,
 
         // bitmap
-        SUB_VOBSUB    =14,
         SUB_DVD       =15,
         SUB_CVD       =16,
         SUB_SVCD      =17,

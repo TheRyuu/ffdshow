@@ -90,12 +90,6 @@ void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &pare
     }
 }
 
-void TsubtitleLine::fix(TtextFix &fix)
-{
-    foreach (TsubtitleWord &word, *this)
-        word.fix(fix);
-}
-
 bool TsubtitleLine::checkTrailingSpaceRight(const_iterator w) const
 {
     while (++w != end()) {
@@ -162,18 +156,6 @@ void TsubtitleText::format(TsubtitleFormat &format)
     if ((sfmt==Tsubreader::SUB_MPL2)||(sfmt==Tsubreader::SUB_VPLAYER))
         foreach (TsubtitleLine &line, *this)
             format.processMPL2(line);
-}
-
-void TsubtitleText::fix(TtextFix &fix)
-{
-    foreach (TsubtitleLine &line, *this)
-        line.fix(fix);
-    if (stop == REFTIME_INVALID) {
-        size_t len = 0;
-        foreach (TsubtitleLine &line, *this)
-            len += line.strlen();
-        stop = start + len * 900000;
-    }
 }
 
 void TsubtitleText::print(

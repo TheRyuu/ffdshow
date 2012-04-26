@@ -59,6 +59,7 @@ EXPORTS
   pp_postprocess
   pp_get_context
   pp_free_context
+  ff_simple_idct_mmx
 
   FFH264DecodeBuffer
   FFH264BuildPicParams

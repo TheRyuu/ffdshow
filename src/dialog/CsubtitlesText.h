@@ -6,7 +6,7 @@
 class TsubtitlesTextPage :public TconfPageDecVideo
 {
 private:
-    void linespacing2dlg(),min2dlg(),fix2dlg(),split2dlg();
+    void linespacing2dlg(),min2dlg(),split2dlg();
     void memory2dlg();
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

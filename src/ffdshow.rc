@@ -447,7 +447,6 @@ BEGIN
     EDITTEXT        IDC_ED_SUB_SPEED2,215,214,37,12,ES_AUTOHSCROLL,WS_EX_RIGHT
     EDITTEXT        IDC_ED_SUB_SEARCH_EXT,122,158,108,12,ES_AUTOHSCROLL
     RTEXT           "Extensions priority",IDC_TXT_SERCH_ORDER,55,160,62,8
-    CONTROL         "VobSub subtitles",IDC_CHB_VOBSUB,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,24,114,9
     CONTROL         "Blu-ray subtitles",IDC_CHB_BLURAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,24,82,9
     GROUPBOX        "",IDC_GRP_TEXT_SUBTITLES,8,115,251,92
     CONTROL         "Text subtitles",IDC_CHB_SUBTEXT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,40,102,10
@@ -1977,23 +1976,7 @@ BEGIN
     LTEXT           "Duration:",IDC_LBL_SUB_MINDURATION,123,67,38,8
     EDITTEXT        IDC_ED_SUB_MINDURATION,162,65,57,12,ES_AUTOHSCROLL
     LTEXT           "ms",IDC_LBL_SUB_MINDURATION2,224,67,17,8
-    LTEXT           "Real-time corrections:",IDC_LBL_SUBFIX,7,111,161,8
-    CONTROL         "Replace double ' by a ""  AND """" by """,IDC_CHB_SUBFIX_AP,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,125,145,10
-    CONTROL         "Try to correct I and l",IDC_CHB_SUBFIX_IL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,140,107,10
-    COMBOBOX        IDC_CBX_SUBFIX_IL,123,139,134,94,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Try to correct punctuation (?. -> ? ; !. -> ! etc.)",IDC_CHB_SUBFIX_PUNCTUATION,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,155,200,10
-    CONTROL         "Try to correct orthography",IDC_CHB_SUBFIX_ORTOGRAPHY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,170,107,10
-    COMBOBOX        IDC_CBX_SUBFIX_ORTOGRAPHY,123,169,134,14,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Try to correct capital letters",IDC_CHB_SUBFIX_CAPITAL,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,185,137,10
-    CONTROL         "Remove unwanted space between numbers",IDC_CHB_SUBFIX_NUMBERS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,200,190,10
     GROUPBOX        "Text subtitles",IDC_GRP_SUBTITLESTEXT,0,0,267,231
-    CONTROL         "Remove subtitles for hearing impaired",IDC_CHB_SUBFIX_HEARING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,215,162,10
     COMBOBOX        IDC_CBX_SUB_WORDWRAP,123,11,135,13,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Image buffer:",IDC_LBL_SUB_MEMORY,7,88,46,8
     EDITTEXT        IDC_ED_SUB_MEMORY,63,86,40,14,ES_AUTOHSCROLL

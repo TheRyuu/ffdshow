@@ -16,10 +16,10 @@ public:
 
     int outPrimaryCsp;
     int yv12,yuy2,uyvy,nv12,rgb32,rgb24,p010,p016,p210,p216,ayuv,y416;
-    int get_cspOptionsBlackCutoff(int video_full_range_flag) const;
-    int get_cspOptionsWhiteCutoff(int video_full_range_flag) const;
-    int get_cspOptionsChromaCutoff(int video_full_range_flag) const;
-    int brightness2luma(int brightness, int video_full_range_flag) const;
+    int get_cspOptionsBlackCutoff(enum AVColorRange video_full_range_flag) const;
+    int get_cspOptionsWhiteCutoff(enum AVColorRange video_full_range_flag) const;
+    int get_cspOptionsChromaCutoff(enum AVColorRange video_full_range_flag) const;
+    int brightness2luma(int brightness, enum AVColorRange video_full_range_flag) const;
     // int luma2brightness(int luma) const;
     static int get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff);
     static const char_t *dvNorms[];

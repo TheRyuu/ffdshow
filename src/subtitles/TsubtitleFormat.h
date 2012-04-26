@@ -7,36 +7,6 @@
 
 struct TsubtitlesSettings;
 struct Tconfig;
-class TtextFixBase
-{
-public:
-    static strings getDicts(const Tconfig *cfg);
-    enum {
-        fixAP=1,
-        fixPunctuation=2,
-        fixNumbers=4,
-        fixCapital=8,
-        fixCapital2=16,
-        fixIl=32,
-        fixOrtography=64,
-        fixHearingImpaired=128
-    };
-};
-
-class TtextFix : public TtextFixBase
-{
-private:
-    TsubtitlesSettings cfg;
-    bool EndOfPrevSentence,inHearing;
-    strings odict;
-    static inline bool in(wchar_t x,const wchar_t *s) {
-        return strchr(s,x)!=NULL;
-    }
-public:
-    TtextFix(const TsubtitlesSettings *Icfg,const Tconfig *ffcfg);
-    bool process(ffstring &text,ffstring &fixed);
-};
-
 struct TsubtitleLine;
 class ThtmlColors;
 class TsubtitleFormat

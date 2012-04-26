@@ -100,10 +100,6 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
             format=SUB_SSA|SUB_USESTIME;
             break;
         }
-        if (!memcmp(line, L"# VobSub index file", 19*2)) {
-            format=SUB_VOBSUB|SUB_USESTIME;
-            break;
-        }
         if (swscanf (line, L"%d,%d,\"%c", &i, &i, (wchar_t *) &i) == 3) {
             format=SUB_DUNNOWHAT;
             break;

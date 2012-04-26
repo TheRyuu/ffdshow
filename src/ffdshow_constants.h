@@ -168,6 +168,7 @@
 #define IDFF_postprocMethod         114 //0 - mplayer, 1 - nic, 2 - mplayer+nic, 3 - none, 4 - spp
 #define IDFF_postprocMethodNicFirst 117
 #define IDFF_ppqual                 101 //postprocessing quality set by user (active when not autoq)
+#define IDFF_sppqual                3576
 #define IDFF_autoq                  102 //is automatic postprocessing control enabled?
 #define IDFF_ppIsCustom             103 //custom postprocessing settings are enabled
 #define IDFF_ppcustom               104 //custom postprocessing settings
@@ -490,7 +491,7 @@
 #define IDFF_subStereoscopicPar      834 // stereoscopic parallax <-10%,10%> of picture width
 #define IDFF_subDefLang              836
 #define IDFF_subDefLang2             852
-#define IDFF_subVobsub               835
+//#define IDFF_subVobsub             835  // Deleted
 #define IDFF_subVobsubAA             837
 #define IDFF_subVobsubAAswgauss      851
 #define IDFF_subVobsubChangePosition 849
@@ -511,9 +512,9 @@
 #define IDFF_subShowEmbedded         857 //id of displayed embedded subtitle, 0 if none
 //#define IDFF_subFoundEmbedded        859
 #define IDFF_subForceEmbedded        3573
-#define IDFF_subFix                  846
-#define IDFF_subFixLang              847
-#define IDFF_subFixDict              848
+//#define IDFF_subFix                846  // Deleted
+//#define IDFF_subFixLang            847  // Deleted
+//#define IDFF_subFixDict            848  // Deleted
 #define IDFF_subOpacity              853
 #define IDFF_subSplitBorder          855
 #define IDFF_subCC                   860
@@ -1379,6 +1380,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3576
+//next:3577
 
 #endif

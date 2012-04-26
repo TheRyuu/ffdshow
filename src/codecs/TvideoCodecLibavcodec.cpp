@@ -811,6 +811,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
                 pict.setFullRange(avctx->color_range);
                 pict.YCbCr_RGB_matrix_coefficients = avctx->colorspace;
+                pict.chroma_sample_location = avctx->chroma_sample_location;
+                pict.color_primaries = avctx->color_primaries;
+                pict.color_trc = avctx->color_trc;
 
 #ifdef OSD_H264POC
                 if (codecId == CODEC_ID_H264) {
@@ -1546,10 +1549,12 @@ int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
         int is_recovery_point = parent->libavcodec->avcodec_h264_search_recovery_point(parent->avctx, buf, buf_size, &recovery_frame_cnt);
         if (is_recovery_point == 3) {
             // IDR
+            DPRINTF(L"Th264RandomAccess IDR");
             recovery_mode = 0;
             return 1;
         } else if (is_recovery_point == 2) {
             // GDR, recovery_frame_cnt is valid.
+            DPRINTF(L"Th264RandomAccess GDR recovery_frame_cnt=%d",recovery_frame_cnt);
             recovery_mode = 2;
             return 1;
         } else if (is_recovery_point == 1) {

@@ -3,7 +3,6 @@
 #include "TsubtitlesTextpin.h"
 
 struct TsubtitlesSettings;
-struct TsubtitleVobsub;
 class TsubtitleParserBase;
 class Tspudec;
 struct Tstream;

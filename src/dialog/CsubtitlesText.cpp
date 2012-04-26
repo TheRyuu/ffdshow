@@ -25,11 +25,6 @@
 void TsubtitlesTextPage::init()
 {
     tbrSetRange(IDC_TBR_SUB_LINESPACING,0,200,10);
-    strings dicts=TtextFixBase::getDicts(config);
-    for (strings::const_iterator d=dicts.begin(); d!=dicts.end(); d++) {
-        cbxAdd(IDC_CBX_SUBFIX_ORTOGRAPHY,d->c_str());
-    }
-    cbxSetDroppedWidth(IDC_CBX_SUBFIX_IL,250);
     cbxSetDroppedWidth(IDC_CBX_SUB_WORDWRAP,250);
 }
 
@@ -38,7 +33,6 @@ void TsubtitlesTextPage::cfg2dlg()
     split2dlg();
     linespacing2dlg();
     min2dlg();
-    fix2dlg();
     memory2dlg();
     addHint(IDC_ED_SUB_MEMORY,L"ffdshow rasterize the font in the background and store the images in this buffer.\nIf the memory capacity is small, 10MB may help.");
 }
@@ -91,26 +85,6 @@ void TsubtitlesTextPage::min2dlg()
     }
 }
 
-void TsubtitlesTextPage::fix2dlg()
-{
-    int fix=cfgGet(IDFF_subFix);
-    setCheck(IDC_CHB_SUBFIX_AP,fix&TtextFixBase::fixAP);
-    setCheck(IDC_CHB_SUBFIX_IL,fix&TtextFixBase::fixIl);
-    cbxSetCurSel(IDC_CBX_SUBFIX_IL,cfgGet(IDFF_subFixLang));
-    enable(fix&TtextFixBase::fixIl,IDC_CBX_SUBFIX_IL);
-    setCheck(IDC_CHB_SUBFIX_PUNCTUATION,fix&TtextFixBase::fixPunctuation);
-    setCheck(IDC_CHB_SUBFIX_ORTOGRAPHY,fix&TtextFixBase::fixOrtography);
-    int ii=cbxFindItem(IDC_CBX_SUBFIX_ORTOGRAPHY,cfgGetStr(IDFF_subFixDict),true);
-    if (ii==-1) {
-        ii=0;
-    }
-    cbxSetCurSel(IDC_CBX_SUBFIX_ORTOGRAPHY,ii);
-    enable(fix&TtextFixBase::fixOrtography,IDC_CBX_SUBFIX_ORTOGRAPHY);
-    setCheck(IDC_CHB_SUBFIX_CAPITAL,fix&TtextFixBase::fixCapital);
-    setCheck(IDC_CHB_SUBFIX_NUMBERS,fix&TtextFixBase::fixNumbers);
-    setCheck(IDC_CHB_SUBFIX_HEARING,fix&TtextFixBase::fixHearingImpaired);
-}
-
 INT_PTR TsubtitlesTextPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg) {
@@ -133,39 +107,6 @@ INT_PTR TsubtitlesTextPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                         return TRUE;
                     }
                     break;
-                case IDC_CHB_SUBFIX_AP:
-                case IDC_CHB_SUBFIX_IL:
-                case IDC_CHB_SUBFIX_PUNCTUATION:
-                case IDC_CHB_SUBFIX_ORTOGRAPHY:
-                case IDC_CHB_SUBFIX_CAPITAL:
-                case IDC_CHB_SUBFIX_NUMBERS:
-                case IDC_CHB_SUBFIX_HEARING: {
-                    int fix=0;
-                    if (getCheck(IDC_CHB_SUBFIX_AP         )) {
-                        fix|=TtextFixBase::fixAP;
-                    }
-                    if (getCheck(IDC_CHB_SUBFIX_IL         )) {
-                        fix|=TtextFixBase::fixIl;
-                    }
-                    if (getCheck(IDC_CHB_SUBFIX_PUNCTUATION)) {
-                        fix|=TtextFixBase::fixPunctuation;
-                    }
-                    if (getCheck(IDC_CHB_SUBFIX_ORTOGRAPHY )) {
-                        fix|=TtextFixBase::fixOrtography;
-                    }
-                    if (getCheck(IDC_CHB_SUBFIX_CAPITAL    )) {
-                        fix|=TtextFixBase::fixCapital;
-                    }
-                    if (getCheck(IDC_CHB_SUBFIX_NUMBERS    )) {
-                        fix|=TtextFixBase::fixNumbers;
-                    }
-                    if (getCheck(IDC_CHB_SUBFIX_HEARING    )) {
-                        fix|=TtextFixBase::fixHearingImpaired;
-                    }
-                    cfgSet(IDFF_subFix,fix);
-                    fix2dlg();
-                    break;
-                }
             }
             break;
         case WM_CTLCOLOREDIT: {
@@ -195,7 +136,6 @@ void TsubtitlesTextPage::translate()
     TconfPageBase::translate();
 
     cbxTranslate(IDC_CBX_SUB_MINDURATION,TsubtitlesSettings::durations);
-    cbxTranslate(IDC_CBX_SUBFIX_IL,TsubtitlesSettings::fixIls);
     cbxTranslate(IDC_CBX_SUB_WORDWRAP,TsubtitlesSettings::wordWraps);
 }
 
@@ -216,8 +156,6 @@ TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDF
     bindHtracks(htbr);
     static const TbindCombobox<TsubtitlesTextPage> cbx[]= {
         IDC_CBX_SUB_MINDURATION,IDFF_subMinDurationType,BINDCBX_SEL,&TsubtitlesTextPage::min2dlg,
-        IDC_CBX_SUBFIX_IL,IDFF_subFixLang,BINDCBX_SEL,NULL,
-        IDC_CBX_SUBFIX_ORTOGRAPHY,IDFF_subFixDict,BINDCBX_TEXT,NULL,
         IDC_CBX_SUB_WORDWRAP,IDFF_subWordWrap,BINDCBX_SEL,&TsubtitlesTextPage::split2dlg,
         0
     };

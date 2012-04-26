@@ -126,6 +126,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(pp_postprocess, "pp_postprocess");
  dll->loadFunction(pp_get_context, "pp_get_context");
  dll->loadFunction(pp_free_context, "pp_free_context");
+ dll->loadFunction(ff_simple_idct_mmx, "ff_simple_idct_mmx");
 
  //DXVA methods
  dll->loadFunction(av_h264_decode_frame,"av_h264_decode_frame");

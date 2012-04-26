@@ -40,9 +40,6 @@ public:
         return getText().c_str();
     }
 
-    void fix(TtextFix &fix) {
-        useFixed=fix.process(text,fixed);
-    }
     size_t size() const {
         return getText().size();
     }
@@ -91,7 +88,6 @@ public:
     }
     size_t strlen(void) const;
     void format(TsubtitleFormat &format,int sfmt,TsubtitleText &parent);
-    void fix(TtextFix &fix);
     bool checkTrailingSpaceRight(const_iterator w) const;
 };
 
@@ -194,8 +190,6 @@ public:
     template<class Tval> void propagateProps(Tval TSubtitleProps::*offset,Tval val) {
         propagateProps(this->begin(),offset,val,this->end());
     }
-
-    void fix(TtextFix &fix);
 
     virtual void print(
         REFERENCE_TIME time,

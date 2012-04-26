@@ -171,7 +171,7 @@ int Tconvert::convert(uint64_t incsp0,
                       uint64_t outcsp0,uint8_t* dst0[],
                       stride_t dstStride0[],
                       const Tpalette *srcpal,
-                      int video_full_range_flag,
+                      enum AVColorRange &video_full_range_flag,
                       enum AVColorSpace YCbCr_RGB_matrix_coefficients,
                       bool vram_indirect)
 {
@@ -529,6 +529,10 @@ int Tconvert::convert(uint64_t incsp0,
             setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
             ffdshow_converters->init(incsp1,outcsp1,(ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel,m_dithering,m_isMPEG1);
             ffdshow_converters->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
+            if (cspOptionsRGB_BlackLevel == 0 && cspOptionsRGB_WhiteLevel == 255)
+                video_full_range_flag = AVCOL_RANGE_JPEG;
+            else
+                video_full_range_flag = AVCOL_RANGE_MPEG;
             break;
         }
         case MODE_ffdshow_converters2: {
@@ -687,7 +691,7 @@ int Tconvert::convert(uint64_t incsp0,
     }
     return ret;
 }
-int Tconvert::convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect)
+int Tconvert::convert(TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect)
 {
     return convert(pict.csp | ( (!pict.film && (pict.fieldtype & FIELD_TYPE::MASK_INT)) ? FF_CSP_FLAGS_INTERLACED : 0),
                    pict.data,
@@ -831,6 +835,7 @@ STDMETHODIMP TffColorspaceConvert::convertPalette(unsigned int dx,unsigned int d
         c=new Tconvert(libavcodec,false,dx,dy,TrgbPrimaries(),0,0, false);
     }
     Tpalette p(pal,numcolors);
-    c->convert(incsp,src,srcStride,outcsp,dst,dstStride,&p);
+    enum AVColorRange range = AVCOL_RANGE_UNSPECIFIED; // dumy
+    c->convert(incsp,src,srcStride,outcsp,dst,dstStride,&p,range);
     return S_OK;
 }

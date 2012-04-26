@@ -589,16 +589,6 @@ const char_t* TsubtitlesSettings::durations[]= {
     NULL
 };
 
-const char_t* TsubtitlesSettings::fixIls[]= {
-    _l("English (may work with other languages)"),
-    _l("French"),
-    _l("Deutsch"),
-    _l("Czech"),
-    _l("Italian"),
-    _l("Polish"),
-    NULL
-};
-
 const char_t* TsubtitlesSettings::wordWraps[]= {
     _l("Smart wrapping, lines are evenly broken"),
     _l("End-of-line word wrapping"),
@@ -657,8 +647,6 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
         _l("subDefLang"), 0,
         IDFF_subDefLang2            ,&TsubtitlesSettings::deflang2                ,1,1,_l(""),1,
         _l("subDefLang2"), 0,
-        IDFF_subVobsub              ,&TsubtitlesSettings::vobsub                  ,0,0,_l(""),1,
-        _l("subVobsub"), 1,
         IDFF_subVobsubAA            ,&TsubtitlesSettings::vobsubAA                ,0,4,_l(""),1,
         _l("subVobsubAA"), 4,
         IDFF_subVobsubAAswgauss     ,&TsubtitlesSettings::vobsubAAswgauss         ,1,2000,_l(""),1,
@@ -680,10 +668,6 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
         IDFF_subMinDurationChar     ,&TsubtitlesSettings::minDurationChar         ,0,3600000,_l(""),1,
         _l("subMinDurationChar"), 30,
 
-        IDFF_subFix                 ,&TsubtitlesSettings::fix                     ,1,1,_l(""),1,
-        _l("subFix"),0,
-        IDFF_subFixLang             ,&TsubtitlesSettings::fixLang                 ,0,5,_l(""),1,
-        _l("subFixLang"),0,
         IDFF_subOpacity             ,&TsubtitlesSettings::opacity                 ,0,256,_l(""),1,
         _l("subOpacity"),256,
         IDFF_subSplitBorder         ,&TsubtitlesSettings::textMargin              ,0,4096,_l(""),1,
@@ -716,8 +700,6 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
         _l("subFlnm"),_l(""),
         IDFF_subTempFilename        ,(TstrVal)&TsubtitlesSettings::tempflnm       ,MAX_PATH,0 ,_l(""),1,
         NULL,_l(""),
-        IDFF_subFixDict             ,(TstrVal)&TsubtitlesSettings::fixDict        ,60      ,0 ,_l(""),1,
-        _l("subFixDict"),_l(""),
         0
     };
     addOptions(sopts);
@@ -732,8 +714,6 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
     setParamList(IDFF_subAlign,&listAlign);
     static const TcreateParamList1 listDurations(durations);
     setParamList(IDFF_subMinDurationType,&listDurations);
-    static const TcreateParamList1 listIls(fixIls);
-    setParamList(IDFF_subFixLang,&listIls);
     static const TcreateParamList1 listWordWraps(wordWraps);
     setParamList(IDFF_subWordWrap,&listWordWraps);
 }
@@ -787,10 +767,7 @@ void TsubtitlesSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
             setOnChange(IDFF_subMinDurationSub,sub,&TimgFilterSubtitles::onSubFlnmChange);
             setOnChange(IDFF_subMinDurationLine,sub,&TimgFilterSubtitles::onSubFlnmChange);
             setOnChange(IDFF_subMinDurationChar,sub,&TimgFilterSubtitles::onSubFlnmChange);
-            setOnChange(IDFF_subFix,sub,&TimgFilterSubtitles::onSubFlnmChange);
-            setOnChange(IDFF_subFixLang,sub,&TimgFilterSubtitles::onSubFlnmChange);
             setOnChange(IDFF_subFilename,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
-            setOnChange(IDFF_subFixDict,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
             setOnChange(IDFF_subTempFilename,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
             setOnChange(IDFF_subWordWrap,sub,&TimgFilterSubtitles::onSubFlnmChange);
         }

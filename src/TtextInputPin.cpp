@@ -51,7 +51,7 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
 {
     /* Return S_OK (accept the subtitles connection) if embedded subtitles are enabled (IDFF_subTextpin)
        and if the given subtitles format is enabled
-       (IDFF_subText for text, IDFF_subVobsub for VobSub subs, IDFF_subSSA for SSA subs, IDFF_subPGS for Blu-ray subs)
+       (IDFF_subText for text, IDFF_subSSA for SSA subs, IDFF_subPGS for Blu-ray subs)
     */
     if (filter->getParam2(IDFF_subTextpin) == 0 && mtIn->majortype!=MEDIATYPE_DVD_ENCRYPTED_PACK) {
         return VFW_E_TYPE_NOT_ACCEPTED;
@@ -65,8 +65,6 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
                 return S_OK;    // Blu-ray subtitles
             } else if (mtIn->subtype==MEDIASUBTYPE_HDMV_PGS && (filter->getParam2(IDFF_subPGS) == 1)) {
                 return S_OK;    // Blu-ray subtitles
-            } else if (mtIn->subtype==MEDIASUBTYPE_VOBSUB && (filter->getParam2(IDFF_subVobsub) == 1)) {
-                return S_OK;    // VobSub subtitles
             } else if (mtIn->subtype==MEDIASUBTYPE_USF) {
                 return S_OK;    // USF subtitles
             } else {
@@ -129,8 +127,6 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
         }
         if (mtIn->subtype==MEDIASUBTYPE_UTF8) {
             type=Tsubreader::SUB_SUBVIEWER|Tsubreader::SUB_ENC_UTF8;
-        } else if (mtIn->subtype==MEDIASUBTYPE_VOBSUB) {
-            type=Tsubreader::SUB_VOBSUB;
         } else if (mtIn->subtype==MEDIASUBTYPE_HDMV_PGS || (mtIn->subtype == MEDIASUBTYPE_NULL && mtIn->formattype == FORMAT_SubtitleInfo)) {
             type=Tsubreader::SUB_PGS;
         } else if (mtIn->subtype==MEDIASUBTYPE_SSA || mtIn->subtype==MEDIASUBTYPE_ASS || mtIn->subtype==MEDIASUBTYPE_ASS2) {

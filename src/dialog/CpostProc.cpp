@@ -31,6 +31,9 @@ void TpostProcPage::init(void)
     tbrSetRange(IDC_TBR_DEBLOCKSTRENGTH,0,512,32);
     tbrSetRange(IDC_TBR_POSTPROC_NIC_XTHRES,0,255,16);
     tbrSetRange(IDC_TBR_POSTPROC_NIC_YTHRES,0,255,16);
+#if !defined(__INTEL_COMPILER) && defined(WIN64)
+    addHint(IDC_CHB_POSTPROC_SPP,L"Please use ICL build. MSVC x64 build of SPP deblocking is very slow.");
+#endif
 }
 
 void TpostProcPage::cfg2dlg(void)
@@ -40,10 +43,15 @@ void TpostProcPage::cfg2dlg(void)
 
 void TpostProcPage::postProc2dlg(void)
 {
-    tbrSet(IDC_TBR_PPQUAL,cfgGet(IDFF_ppqual));
     setCheck(IDC_CHB_AUTOQ,cfgGet(IDFF_autoq));
 
     int method=deci->getParam2(IDFF_postprocMethod);
+    int ppqual = 3;
+    if (method != 4)
+        ppqual = cfgGet(IDFF_ppqual);
+    else
+        ppqual = cfgGet(IDFF_sppqual);
+    tbrSet(IDC_TBR_PPQUAL,ppqual);
     int isAvcodec=0,isNic=0,isSPP=0,isFSPP=0;
     switch (method) {
         case 0:
@@ -122,11 +130,12 @@ void TpostProcPage::nic2dlg_1(void)
 void TpostProcPage::setPPchbs(void)
 {
     unsigned int ppmode;
-    static const int idPPcustom[]= {IDC_CHB_DEBLOCKV_LUM,IDC_CHB_DEBLOCKH_LUM,IDC_CHB_DEBLOCKV_CHROM,IDC_CHB_DEBLOCKH_CHROM,IDC_CHB_DERING_LUM,IDC_CHB_DERING_CHROM,0};
+    static const int idPPcustom[]= {IDC_LBL_PP_CUSTOM_DEBLOCK_H,IDC_LBL_PP_CUSTOM_DEBLOCK_V,IDC_LBL_PP_CUSTOM_DERING,IDC_LBL_PP_CUSTOM_LUMA,IDC_LBL_PP_CUSTOM_CHROMA,IDC_CHB_DEBLOCKV_LUM,IDC_CHB_DEBLOCKH_LUM,IDC_CHB_DEBLOCKV_CHROM,IDC_CHB_DEBLOCKH_CHROM,IDC_CHB_DERING_LUM,IDC_CHB_DERING_CHROM,0};
     static const int idPPpresets[]= {IDC_TBR_PPQUAL,IDC_CHB_AUTOQ,0};
     int method=cfgGet(IDFF_postprocMethod);
     int isSPP=method==4 || method==5;
-    enable(!isSPP,IDC_RBT_PPCUSTOM);
+    int canCustom = method>=0 && method<=2;
+    enable(canCustom,IDC_RBT_PPCUSTOM);
     if (isSPP) {
         cfgSet(IDFF_ppIsCustom,0);
     }
@@ -140,6 +149,7 @@ void TpostProcPage::setPPchbs(void)
         enable(method!=5,IDC_RBT_PPPRESETS);
         deciV->getPPmode(&ppmode);
     }
+    ppmode *= canCustom ? 1 : 0;
     setCheck(IDC_CHB_DEBLOCKV_LUM  ,ppmode&(LUM_V_DEBLOCK|V_A_DEBLOCK));
     setCheck(IDC_CHB_DEBLOCKH_LUM  ,ppmode&(LUM_H_DEBLOCK|H_A_DEBLOCK));
     setCheck(IDC_CHB_DEBLOCKV_CHROM,ppmode&(CHROM_V_DEBLOCK|(V_A_DEBLOCK<<4)));
@@ -161,7 +171,10 @@ INT_PTR TpostProcPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             switch (getId(HWND(lParam))) {
                 case IDC_TBR_PPQUAL: {
                     int ppqual=tbrGet(IDC_TBR_PPQUAL);
-                    cfgSet(IDFF_ppqual,ppqual);
+                    if (cfgGet(IDFF_postprocMethod) != 4)
+                        cfgSet(IDFF_ppqual,ppqual);
+                    else
+                        cfgSet(IDFF_sppqual,ppqual);
                     cfgSet(IDFF_currentq,ppqual);
                     setPPchbs();
                     return TRUE;
@@ -195,6 +208,11 @@ INT_PTR TpostProcPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                     setCheck(IDC_CHB_POSTPROC_FSPP,0);
                 case IDC_CHB_POSTPROC_FSPP: {
                     int isAvcodec=getCheck(IDC_CHB_POSTPROC_MPLAYER),isNic=getCheck(IDC_CHB_POSTPROC_NIC),isSPP=getCheck(IDC_CHB_POSTPROC_SPP),isFSPP=getCheck(IDC_CHB_POSTPROC_FSPP);
+                    if (!isAvcodec && !isNic && !isSPP && !isFSPP) {
+                        // At least one mode has to be checked.
+                        setCheck(LOWORD(wParam), 1);
+                        isAvcodec=getCheck(IDC_CHB_POSTPROC_MPLAYER),isNic=getCheck(IDC_CHB_POSTPROC_NIC),isSPP=getCheck(IDC_CHB_POSTPROC_SPP),isFSPP=getCheck(IDC_CHB_POSTPROC_FSPP);
+                    }
                     if      ( isFSPP) {
                         cfgSet(IDFF_postprocMethod,5);
                     } else if ( isSPP ) {

@@ -4,7 +4,6 @@
 #include "TsubtitleText.h"
 
 struct TsubtitlesSettings;
-struct TsubtitleVobsub;
 class Tspudec;
 class TsubtitlesTextpin :public Tsubtitles
 {

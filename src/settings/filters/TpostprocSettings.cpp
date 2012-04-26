@@ -56,6 +56,8 @@ TpostprocSettings::TpostprocSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
         _l("postprocMethodNicFirst"),0,
         IDFF_ppqual                ,&TpostprocSettings::qual                  ,0,6,_l(""),1,
         _l("ppqual"),6,
+        IDFF_sppqual               ,&TpostprocSettings::sppQual               ,0,6,_l(""),1,
+        _l("sppqual"),3,
         IDFF_autoq                 ,&TpostprocSettings::autoq                 ,0,0,_l(""),1,
         _l("autoq"),0,
         IDFF_ppIsCustom            ,&TpostprocSettings::isCustom              ,0,0,_l(""),1,
@@ -128,7 +130,7 @@ const int* TpostprocSettings::getResets(unsigned int pageId)
     static const int idResets[]= {
         IDFF_postprocMethod,IDFF_postprocMethodNicFirst,
         IDFF_ppIsCustom,IDFF_ppcustom,
-        IDFF_ppqual,IDFF_autoq,
+        IDFF_ppqual,IDFF_sppqual,IDFF_autoq,
         IDFF_deblockAvcodecAccurate,
         IDFF_deblockStrength,
         IDFF_levelFixLum,/*IDFF_levelFixChrom,*/IDFF_fullYrange,

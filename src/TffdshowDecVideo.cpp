@@ -401,7 +401,7 @@ HRESULT TffdshowDecVideo::pict2mediaType(bool isVIH2, CMediaType *mtOut, TffPict
         vih2->rcTarget=vih2->rcSource;
         vih2->AvgTimePerFrame=inpin->avgTimePerFrame;
         vih2->bmiHeader=bih;
-        //vih2->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift) | (DXVA_VideoTransferMatrix_BT601 << DXVA_VideoTransferMatrixShift);
+        vih2->dwControlFlags = 0;//get_dwControlFlags();
         hwDeinterlace=presetSettings->output->hwDeinterlace;
 
         if (hwDeinterlace) {
@@ -409,6 +409,99 @@ HRESULT TffdshowDecVideo::pict2mediaType(bool isVIH2, CMediaType *mtOut, TffPict
         }
     }
     return S_OK;
+}
+
+DWORD TffdshowDecVideo::get_dwControlFlags(const TffPict &pict)
+{
+    DWORD dwControlFlags = AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT;
+    DXVA_ExtendedFormat& flags = (DXVA_ExtendedFormat&)dwControlFlags;
+    switch (pict.YCbCr_RGB_matrix_coefficients) {
+    case AVCOL_SPC_BT709:
+        flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_BT709;
+        break;
+    case AVCOL_SPC_BT470BG:
+    case AVCOL_SPC_SMPTE170M:
+        flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_BT601;
+        break;
+    case AVCOL_SPC_SMPTE240M:
+        flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_SMPTE240M;
+        break;
+    default:
+        flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_Unknown;
+    };
+
+    if (pict.video_full_range_flag == AVCOL_RANGE_JPEG)
+        flags.NominalRange = DXVA_NominalRange_0_255;
+    else if (pict.video_full_range_flag == AVCOL_RANGE_MPEG)
+        flags.NominalRange = DXVA_NominalRange_16_235;
+    else
+        flags.NominalRange = DXVA_NominalRange_Unknown;
+
+    if ((pict.csp & (FF_CSPS_MASK_420_YUV|FF_CSPS_MASK_422_YUV)) && pict.chroma_sample_location != AVCHROMA_LOC_UNSPECIFIED) {
+        if (pict.film || (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME))
+            flags.VideoChromaSubsampling = DXVA_VideoChromaSubsampling_ProgressiveChroma;
+
+        if (pict.chroma_sample_location == AVCHROMA_LOC_LEFT)
+            flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_MPEG2;
+        else if (pict.chroma_sample_location == AVCHROMA_LOC_CENTER)
+            flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_MPEG1;
+        else if (pict.chroma_sample_location == AVCHROMA_LOC_TOPLEFT)
+            flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_Horizontally_Cosited | DXVA_VideoChromaSubsampling_Vertically_Cosited;
+        else if (pict.chroma_sample_location == AVCHROMA_LOC_TOP)
+            flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_Vertically_AlignedChromaPlanes | DXVA_VideoChromaSubsampling_Vertically_Cosited;
+        else if (pict.chroma_sample_location == AVCHROMA_LOC_BOTTOMLEFT)
+            flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_Horizontally_Cosited;
+
+        if (pict.csp & FF_CSPS_MASK_422_YUV)
+            flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_Vertically_Cosited | DXVA_VideoChromaSubsampling_Vertically_AlignedChromaPlanes;
+    }
+
+    switch (pict.color_primaries) {
+    case AVCOL_PRI_BT709:
+        flags.VideoPrimaries = DXVA_VideoPrimaries_BT709;
+        break;
+    case AVCOL_PRI_BT470M:
+        flags.VideoPrimaries = DXVA_VideoPrimaries_BT470_2_SysM;
+        break;
+    case AVCOL_PRI_BT470BG:
+        flags.VideoPrimaries = DXVA_VideoPrimaries_BT470_2_SysBG;
+        break;
+    case AVCOL_PRI_SMPTE170M:
+        flags.VideoPrimaries = DXVA_VideoPrimaries_SMPTE170M;
+        break;
+    case AVCOL_PRI_SMPTE240M:
+        flags.VideoPrimaries = DXVA_VideoPrimaries_SMPTE240M;
+        break;
+    case AVCOL_PRI_UNSPECIFIED:
+    case AVCOL_PRI_FILM:
+    case AVCOL_PRI_NB:
+    default:
+        flags.VideoPrimaries = DXVA_VideoPrimaries_Unknown;
+        break;
+    };
+
+    switch (pict.color_trc) {
+    case AVCOL_TRC_BT709:
+    case 6: // H.264 ITU-R Rec. BT.601-6 525 or 625 or ITU-R Rec. BT.1358 525 or 625 or ITU-R Rec. BT.1700 NTSC or Society of Motion Picture and Television or Engineers 170M (2004)
+        flags.VideoTransferFunction = DXVA_VideoTransFunc_22_709;
+        break;
+    case AVCOL_TRC_GAMMA22:
+        flags.VideoTransferFunction = DXVA_VideoTransFunc_22;
+        break;
+    case AVCOL_TRC_GAMMA28:
+        flags.VideoTransferFunction = DXVA_VideoTransFunc_28;
+        break;
+    case AVCOL_TRC_SMPTE240M:
+        flags.VideoTransferFunction = DXVA_VideoTransFunc_22_240M;
+        break;
+    case AVCOL_TRC_UNSPECIFIED:
+    case AVCOL_TRC_NB:
+    default:
+        flags.VideoTransferFunction = DXVA_VideoTransFunc_Unknown;
+        break;
+    };
+
+    return dwControlFlags;
 }
 
 HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
@@ -1478,6 +1571,7 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
         AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
         if (omt.formattype==FORMAT_VideoInfo2) {
             VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
+            vih->dwControlFlags = get_dwControlFlags(pict);
             BITMAPINFOHEADER *bmi=&vih->bmiHeader;
             setVIH2aspect(vih, pict.rectFull, 0);
             SetRect(&vih->rcTarget, 0, 0, 0, 0);
@@ -1487,6 +1581,16 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
             pOut->SetMediaType(&omt);
             comptrQ<IMediaEventSink> pMES=graph;
             NotifyEvent(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(pict.rectFull.dx, pict.rectFull.dy), 0);
+        }
+    } else {
+        AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
+        if (omt.formattype==FORMAT_VideoInfo2) {
+            VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
+            DWORD dwControlFlags = get_dwControlFlags(pict);
+            if (vih->dwControlFlags != dwControlFlags) {
+                vih->dwControlFlags = dwControlFlags;
+                pOut->SetMediaType(&omt);
+            }
         }
     }
 

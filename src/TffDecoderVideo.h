@@ -1027,6 +1027,7 @@ protected:
     bool IsOldVMR9RenderlessAndRGB(void);
     bool IsVMR9Renderless(IPin *downstream_input_pin);
     HRESULT pict2mediaType(bool isVIH2, CMediaType *mtOut, TffPictBase &pictOut, const TcspInfo *cspInfo, bool use_workaround);
+    DWORD get_dwControlFlags(const TffPict &pict);
     virtual HRESULT setOutputMediaType(const CMediaType &mt);
     struct {
         uint64_t dstColorspace;

@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "TsubtitlesTextpin.h"
 #include "TsubtitlesTextpinText.h"
-#include "TsubtitlesTextpinVobSub.h"
 #include "TsubtitlesTextpinDVD.h"
 #include "TsubtitlesTextpinUSF.h"
 #include "TsubtitlesTextpinPGS.h"
@@ -41,8 +40,6 @@ TsubtitlesTextpin* TsubtitlesTextpin::create(int type,const unsigned char *extra
     switch (type) {
         case Tsubreader::SUB_PGS:
             return new TsubtitlesTextpinPGS(type,Ideci);
-        case Tsubreader::SUB_VOBSUB:
-            return new TsubtitlesTextpinVobsub(type,Ideci,extradata,extradatalen);
         case Tsubreader::SUB_DVD:
         case Tsubreader::SUB_CVD:
         case Tsubreader::SUB_SVCD:

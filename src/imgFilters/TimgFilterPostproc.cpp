@@ -36,8 +36,12 @@ TimgFilterPostprocBase::TimgFilterPostprocBase(IffdshowBase *Ideci,Tfilters *Ipa
     h264(Ih264),testh264(true),oldh264mode(-1),
     wasIP(false),
     oldDeblockStrength(UINT_MAX),
-    quants((int8_t*)aligned_calloc(quantsDx,quantsDy))
+    quants((int8_t*)aligned_calloc(quantsDx,quantsDy)),
+    timer(L"postprocessing cost:"),
+    cpu_usage_history_pos(0)
 {
+    for (int i = 0 ; i < max_cpu_usage_history ; i++)
+        cpu_usage_history[i] = 49;
 }
 TimgFilterPostprocBase::~TimgFilterPostprocBase()
 {
@@ -81,10 +85,15 @@ int TimgFilterPostprocBase::prepare(const TpostprocSettings *cfg,int maxquant,in
         return 0;
     }
     currentq=0;
-    if (!cfg->isCustom && cfg->autoq && cfg->qual) {
+    int qual = cfg->method == 4 ? cfg->sppQual : cfg->qual;
+    if (!cfg->isCustom && cfg->autoq && qual) {
         currentq=deci->getParam2(IDFF_currentq);
 #if 1
         int cpuusage=deci->getCpuUsageForPP();
+        cpu_usage_history[cpu_usage_history_pos++ & (max_cpu_usage_history - 1)] = cpuusage;
+        int average_cpu_usage = 0;
+        for (int i = 0 ; i < max_cpu_usage_history ; i++)
+            average_cpu_usage += cpu_usage_history[i];
 #else
         int64_t late;
         deciV->getLate(&late);
@@ -95,18 +104,23 @@ int TimgFilterPostprocBase::prepare(const TpostprocSettings *cfg,int maxquant,in
             if (currentq>0) {
                 currentq--;
             }
-        } else {
-            if (currentq<cfg->qual) {
+        } else if (currentq < qual) {
+            if (currentq == 0) {
                 currentq++;
+            } else if (cpu_usage_history_pos > max_cpu_usage_history
+                   && ((cfg->method != 4 && average_cpu_usage/currentq*(currentq+1) <= 90*max_cpu_usage_history) || (cfg->method == 4 && average_cpu_usage < 50*max_cpu_usage_history))) {
+                    currentq++;
+                    cpu_usage_history_pos = 0;
             }
         }
+        //DPRINTF(L"cpuusage %d average_cpu_usage %d cpu_usage_history_pos %d currentq %d",cpuusage, average_cpu_usage/max_cpu_usage_history, cpu_usage_history_pos, currentq);
         deci->putParam(IDFF_currentq,currentq);
     } else {
-        deci->putParam(IDFF_currentq,currentq=cfg->qual);
+        deci->putParam(IDFF_currentq,currentq = qual);
     }
     //DPRINTF("currentq: %i",currentq);
     int ppmode=Tlibavcodec::getPPmode(cfg,currentq);
-    if (!ppmode) {
+    if (!ppmode && cfg->method != 4) {
         return ppmode;
     }
     unsigned int deblockStrength=cfg->deblockStrength;
@@ -197,6 +211,7 @@ HRESULT TimgFilterPostprocAvcodec::process(TfilterQueue::iterator it,TffPict &pi
             cspChanged|=getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,tempPict1);
             unsigned char *tempPict2[4];
             cspChanged|=getNext(csp1,pict,cfg->full,tempPict2);
+            TautoPerformanceCounter autoTimer(&timer);
             if (cspChanged) {
                 done();
             }
@@ -250,15 +265,870 @@ HRESULT TimgFilterPostprocAvcodec::process(TfilterQueue::iterator it,TffPict &pi
 //============================== TimgFilterPostprocSpp ===============================
 #include "csimd.h"
 
-extern "C" void simple_idct_mmx_P(short*);
-void TimgFilterPostprocSpp::ff_fdct_mmx2(int16_t *block)
-{
-    static const int BITS_FRW_ACC=3; //; 2 or 3 for accuracy
-    static const int SHIFT_FRW_COL=BITS_FRW_ACC;
-    static const int SHIFT_FRW_ROW=(BITS_FRW_ACC + 17 - 3);
-    static const int RND_FRW_ROW=(1 << (SHIFT_FRW_ROW-1));
+#if !USE_LIBAVCODEC_SIMPLE_IDCT
+__align16(uint64_t, wm1010)= 0xFFFF0000FFFF0000ULL;
+__align16(uint64_t, d40000)= 0x0000000000040000ULL;
 
-    static __align8(const int16_t,tab_frw_01234567[]) = {  // forward_dct coeff table
+void TimgFilterPostprocSpp::simple_idct(int16_t *block)
+{
+#define C0 23170 //cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5
+#define C1 22725 //cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5
+#define C2 21407 //cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5
+#define C3 19266 //cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5
+#define C4 16383 //cos(i*M_PI/16)*sqrt(2)*(1<<14) - 0.5
+#define C5 12873 //cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5
+#define C6 8867  //cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5
+#define C7 4520  //cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5
+
+#define ROW_SHIFT 11
+#define COL_SHIFT 20 // 6
+
+__align16(static const int16_t, coeffs)[]= {
+        1<<(ROW_SHIFT-1), 0, 1<<(ROW_SHIFT-1), 0,
+//        1<<(COL_SHIFT-1), 0, 1<<(COL_SHIFT-1), 0,
+//        0, 1<<(COL_SHIFT-1-16), 0, 1<<(COL_SHIFT-1-16),
+        1<<(ROW_SHIFT-1), 1, 1<<(ROW_SHIFT-1), 0,
+        // the 1 = ((1<<(COL_SHIFT-1))/C4)<<ROW_SHIFT :)
+//        0, 0, 0, 0,
+//        0, 0, 0, 0,
+
+ C4,  C4,  C4,  C4,
+ C4, -C4,  C4, -C4,
+
+ C2,  C6,  C2,  C6,
+ C6, -C2,  C6, -C2,
+
+ C1,  C3,  C1,  C3,
+ C5,  C7,  C5,  C7,
+
+ C3, -C7,  C3, -C7,
+-C1, -C5, -C1, -C5,
+
+ C5, -C1,  C5, -C1,
+ C7,  C3,  C7,  C3,
+
+ C7, -C5,  C7, -C5,
+ C3, -C1,  C3, -C1
+};
+
+    __align16(DCTELEM, temp[64]);
+    __m64 _mm0,_mm1,_mm2,_mm3,_mm4,_mm5,_mm6,_mm7;
+    int eax;
+#define DC_COND_IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0, src0); /* R4     R0      r4      r0 */\
+    movq(_mm1, src4); /* R6     R2      r6      r2 */\
+    movq(_mm2, src1); /* R3     R1      r3      r1 */\
+    movq(_mm3, src5); /* R7     R5      r7      r5 */\
+    movq(_mm4, wm1010);\
+    pand(_mm4, _mm0);\
+    por(_mm4, _mm1);\
+    por(_mm4, _mm2);\
+    por(_mm4, _mm3);\
+    packssdw(_mm4,_mm4);\
+    movd(eax, _mm4);\
+    if (eax == 0)\
+        goto DC_COND_1;\
+    movq(_mm4, coeffs + 8);     /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0);        /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12);    /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5);        /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm5, coeffs + 16);    /* C6     C2      C6      C2 */\
+    pmaddwd(_mm5, _mm1);        /* C6R6+C2R2      C6r6+C2r2 */\
+    movq(_mm6, coeffs + 20);    /* -C2    C6      -C2     C6 */\
+    pmaddwd(_mm1, _mm6);        /* -C2R6+C6R2     -C2r6+C6r2 */\
+    movq(_mm7, coeffs + 24);    /* C3     C1      C3      C1 */\
+    pmaddwd(_mm7, _mm2);        /* C3R3+C1R1      C3r3+C1r1 */\
+    paddd(_mm4, coeffs + 4);\
+    movq(_mm6, _mm4);           /* C4R4+C4R0      C4r4+C4r0 */\
+    paddd(_mm4, _mm5);          /* A0             a0 */\
+    psubd(_mm6, _mm5);          /* A3             a3 */\
+    movq(_mm5, coeffs + 28);    /* C7     C5      C7      C5 */\
+    pmaddwd(_mm5, _mm3);        /* C7R7+C5R5      C7r7+C5r5 */\
+    paddd(_mm0, coeffs + 4);\
+    paddd(_mm1, _mm0);          /* A1             a1 */\
+    paddd(_mm0, _mm0);\
+    psubd(_mm0, _mm1);          /* A2             a2 */\
+    pmaddwd(_mm2, coeffs + 32); /* -C7R3+C3R1     -C7r3+C3r1 */\
+    paddd(_mm7, _mm5);          /* B0             b0 */\
+    movq(_mm5, coeffs + 36);    /* -C5    -C1     -C5     -C1 */\
+    pmaddwd(_mm5, _mm3);        /* -C5R7-C1R5     -C5r7-C1r5 */\
+    paddd(_mm7, _mm4);          /* A0+B0          a0+b0 */\
+    paddd(_mm4, _mm4);          /* 2A0            2a0 */\
+    psubd(_mm4, _mm7);          /* A0-B0          a0-b0 */\
+    paddd(_mm5, _mm2);          /* B1             b1 */\
+    psrad(_mm7, shift);\
+    psrad(_mm4, shift);\
+    movq(_mm2, _mm1);           /* A1             a1 */\
+    paddd(_mm1, _mm5);          /* A1+B1          a1+b1 */\
+    psubd(_mm2, _mm5);          /* A1-B1          a1-b1 */\
+    psrad(_mm1, shift);\
+    psrad(_mm2, shift);\
+    packssdw(_mm7, _mm1);       /* A1+B1  a1+b1   A0+B0   a0+b0 */\
+    packssdw(_mm2, _mm4);       /* A0-B0  a0-b0   A1-B1   a1-b1 */\
+    movq(dst, _mm7);\
+    movq(_mm1,  src1);          /* R3     R1      r3      r1 */\
+    movq(_mm4, coeffs + 40);    /* -C1    C5      -C1     C5 */\
+    movq(dst + 12, _mm2);\
+    pmaddwd(_mm4, _mm1);        /* -C1R3+C5R1     -C1r3+C5r1 */\
+    movq(_mm7, coeffs + 44);    /* C3     C7      C3      C7 */\
+    pmaddwd(_mm1, coeffs + 48); /* -C5R3+C7R1     -C5r3+C7r1 */\
+    pmaddwd(_mm7, _mm3);        /* C3R7+C7R5      C3r7+C7r5 */\
+    movq(_mm2, _mm0);           /* A2             a2 */\
+    pmaddwd(_mm3, coeffs + 52); /* -C1R7+C3R5     -C1r7+C3r5 */\
+    paddd(_mm4, _mm7);          /* B2             b2 */\
+    paddd(_mm2, _mm4);          /* A2+B2          a2+b2 */\
+    psubd(_mm0, _mm4);          /* a2-B2          a2-b2 */\
+    psrad(_mm2, shift);\
+    psrad(_mm0, shift);\
+    movq(_mm4, _mm6);           /* A3             a3 */\
+    paddd(_mm3, _mm1);          /* B3             b3 */\
+    paddd(_mm6, _mm3);          /* A3+B3          a3+b3 */\
+    psubd(_mm4, _mm3);          /* a3-B3          a3-b3 */\
+    psrad(_mm6, shift);\
+    packssdw(_mm2, _mm6);       /* A3+B3  a3+b3   A2+B2   a2+b2 */\
+    movq(dst + 4, _mm2);\
+    psrad(_mm4, shift);\
+    packssdw(_mm4, _mm0);       /* A2-B2  a2-b2   A3-B3   a3-b3 */\
+    movq(dst + 8, _mm4);\
+    goto DC_COND_2;\
+DC_COND_1:\
+    pslld(_mm0, 16);\
+    paddd(_mm0, d40000);\
+    psrad(_mm0, 13);\
+    packssdw(_mm0, _mm0);\
+    movq(dst, _mm0);\
+    movq(dst + 4, _mm0);\
+    movq(dst + 8, _mm0);\
+    movq(dst + 12, _mm0);\
+DC_COND_2:
+
+#define Z_COND_IDCT(src0, src4, src1, src5, dst, shift, bt) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm1,  src4); /* R6     R2      r6      r2 */\
+    movq(_mm2,  src1); /* R3     R1      r3      r1 */\
+    movq(_mm3,  src5); /* R7     R5      r7      r5 */\
+    movq(_mm4, _mm0);\
+    por(_mm4, _mm1);\
+    por(_mm4, _mm2);\
+    por(_mm4, _mm3);\
+    packssdw(_mm4,_mm4);\
+    movd(eax, _mm4);\
+    if  (eax == 0)\
+        goto  bt;\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm5, coeffs + 16); /* C6     C2      C6      C2 */\
+    pmaddwd(_mm5, _mm1); /* C6R6+C2R2      C6r6+C2r2 */\
+    movq(_mm6, coeffs + 20); /* -C2    C6      -C2     C6 */\
+    pmaddwd(_mm1, _mm6); /* -C2R6+C6R2     -C2r6+C6r2 */\
+    movq(_mm7, coeffs + 24); /* C3     C1      C3      C1 */\
+    pmaddwd(_mm7, _mm2); /* C3R3+C1R1      C3r3+C1r1 */\
+    paddd(_mm4, coeffs);\
+    movq(_mm6, _mm4); /* C4R4+C4R0      C4r4+C4r0 */\
+    paddd(_mm4,_mm5); /* A0             a0 */\
+    psubd(_mm6, _mm5);; /* A3             a3 */\
+    movq(_mm5, coeffs + 28); /* C7     C5      C7      C5 */\
+    pmaddwd(_mm5, _mm3); /* C7R7+C5R5      C7r7+C5r5 */\
+    paddd(_mm0, coeffs);\
+    paddd(_mm1, _mm0); /* A1             a1 */\
+    paddd(_mm0, _mm0); \
+    psubd(_mm0, _mm1); /* A2             a2 */\
+    pmaddwd(_mm2, coeffs + 32); /* -C7R3+C3R1     -C7r3+C3r1 */\
+    paddd(_mm7, _mm5); /* B0             b0 */\
+    movq(_mm5, coeffs + 36); /* -C5    -C1     -C5     -C1 */\
+    pmaddwd(_mm5, _mm3); /* -C5R7-C1R5     -C5r7-C1r5 */\
+    paddd(_mm7, _mm4); /* A0+B0          a0+b0 */\
+    paddd(_mm4, _mm4); /* 2A0            2a0 */\
+    psubd(_mm4, _mm7); /* A0-B0          a0-b0 */\
+    paddd(_mm5, _mm2); /* B1             b1 */\
+    psrad(_mm7, shift);\
+    psrad(_mm4, shift);\
+    movq(_mm2, _mm1); /* A1             a1 */\
+    paddd(_mm1, _mm5); /* A1+B1          a1+b1 */\
+    psubd(_mm2, _mm5); /* A1-B1          a1-b1 */\
+    psrad(_mm1, shift);\
+    psrad(_mm2, shift);\
+    packssdw(_mm7, _mm1); /* A1+B1  a1+b1   A0+B0   a0+b0 */\
+    packssdw(_mm2, _mm4); /* A0-B0  a0-b0   A1-B1   a1-b1 */\
+    movq(dst, _mm7);\
+    movq(_mm1,  src1); /* R3     R1      r3      r1 */\
+    movq(_mm4, coeffs + 40); /* -C1    C5      -C1     C5 */\
+    movq(dst + 12, _mm2);\
+    pmaddwd(_mm4, _mm1); /* -C1R3+C5R1     -C1r3+C5r1 */\
+    movq(_mm7, coeffs + 44); /* C3     C7      C3      C7 */\
+    pmaddwd(_mm1, coeffs + 48); /* -C5R3+C7R1     -C5r3+C7r1 */\
+    pmaddwd(_mm7, _mm3); /* C3R7+C7R5      C3r7+C7r5 */\
+    movq(_mm2, _mm0); /* A2             a2 */\
+    pmaddwd(_mm3, coeffs + 52); /* -C1R7+C3R5     -C1r7+C3r5 */\
+    paddd(_mm4, _mm7); /* B2             b2 */\
+    paddd(_mm2, _mm4); /* A2+B2          a2+b2 */\
+    psubd(_mm0, _mm4); /* a2-B2          a2-b2 */\
+    psrad(_mm2, shift);\
+    psrad(_mm0, shift);\
+    movq(_mm4, _mm6); /* A3             a3 */\
+    paddd(_mm3, _mm1); /* B3             b3 */\
+    paddd(_mm6, _mm3); /* A3+B3          a3+b3 */\
+    psubd(_mm4, _mm3); /* a3-B3          a3-b3 */\
+    psrad(_mm6, shift);\
+    packssdw(_mm2, _mm6); /* A3+B3  a3+b3   A2+B2   a2+b2 */\
+    movq(dst + 4, _mm2);\
+    psrad(_mm4, shift);\
+    packssdw(_mm4, _mm0); /* A2-B2  a2-b2   A3-B3   a3-b3 */\
+    movq(dst + 8, _mm4);\
+
+    //IDCT(           src0,       src4,       src1,       src5,       dst, shift)
+    DC_COND_IDCT(block    ,  block + 4, block +  8, block + 12,      temp,    11)
+    Z_COND_IDCT(block + 16, block + 20, block + 24, block + 28, temp + 16,    11, label_4)
+    Z_COND_IDCT(block + 32, block + 36, block + 40, block + 44, temp + 32,    11, label_2)
+    Z_COND_IDCT(block + 48, block + 52, block + 56, block + 60, temp + 48,    11, label_1)
+
+#undef IDCT
+#define IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm1,  src4); /* R6     R2      r6      r2 */\
+    movq(_mm2,  src1); /* R3     R1      r3      r1 */\
+    movq(_mm3,  src5); /* R7     R5      r7      r5 */\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm5, coeffs + 16); /* C6     C2      C6      C2 */\
+    pmaddwd(_mm5, _mm1); /* C6R6+C2R2      C6r6+C2r2 */\
+    movq(_mm6, coeffs + 20); /* -C2    C6      -C2     C6 */\
+    pmaddwd(_mm1, _mm6); /* -C2R6+C6R2     -C2r6+C6r2 */\
+    movq(_mm6, _mm4); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm7, coeffs + 24); /* C3     C1      C3      C1 */\
+    pmaddwd(_mm7, _mm2); /* C3R3+C1R1      C3r3+C1r1 */\
+    paddd(_mm4, _mm5); /* A0             a0 */\
+    psubd(_mm6, _mm5); /* A3             a3 */\
+    movq(_mm5, _mm0); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    paddd(_mm0, _mm1); /* A1             a1 */\
+    psubd(_mm5, _mm1); /* A2             a2 */\
+    movq(_mm1, coeffs + 28); /* C7     C5      C7      C5 */\
+    pmaddwd(_mm1, _mm3); /* C7R7+C5R5      C7r7+C5r5 */\
+    pmaddwd(_mm2, coeffs + 32); /* -C7R3+C3R1     -C7r3+C3r1 */\
+    paddd(_mm7, _mm1); /* B0             b0 */\
+    movq(_mm1, coeffs + 36); /* -C5    -C1     -C5     -C1 */\
+    pmaddwd(_mm1, _mm3); /* -C5R7-C1R5     -C5r7-C1r5 */\
+    paddd(_mm7, _mm4); /* A0+B0          a0+b0 */\
+    paddd(_mm4, _mm4); /* 2A0            2a0 */\
+    psubd(_mm4, _mm7); /* A0-B0          a0-b0 */\
+    paddd(_mm1, _mm2); /* B1             b1 */\
+    psrad(_mm7,  shift);\
+    psrad(_mm4,  shift);\
+    movq(_mm2, _mm0); /* A1             a1 */\
+    paddd(_mm0, _mm1); /* A1+B1          a1+b1 */\
+    psubd(_mm2, _mm1); /* A1-B1          a1-b1 */\
+    psrad(_mm0,  shift);\
+    psrad(_mm2,  shift);\
+    packssdw(_mm7, _mm7); /* A0+B0  a0+b0 */\
+    movd(dst, _mm7);\
+    packssdw(_mm0, _mm0); /* A1+B1  a1+b1 */\
+    movd(dst + 8, _mm0);\
+    packssdw(_mm2, _mm2); /* A1-B1  a1-b1 */\
+    movd(dst + 48, _mm2);\
+    packssdw(_mm4, _mm4); /* A0-B0  a0-b0 */\
+    movd(dst + 56, _mm4);\
+    movq(_mm0,  src1); /* R3     R1      r3      r1 */\
+    movq(_mm4, coeffs + 40); /* -C1    C5      -C1     C5 */\
+    pmaddwd(_mm4, _mm0); /* -C1R3+C5R1     -C1r3+C5r1 */\
+    movq(_mm7, coeffs + 44); /* C3     C7      C3      C7 */\
+    pmaddwd(_mm0, coeffs + 48); /* -C5R3+C7R1     -C5r3+C7r1 */\
+    pmaddwd(_mm7, _mm3); /* C3R7+C7R5      C3r7+C7r5 */\
+    movq(_mm2, _mm5); /* A2             a2 */\
+    pmaddwd(_mm3, coeffs + 52); /* -C1R7+C3R5     -C1r7+C3r5 */\
+    paddd(_mm4, _mm7); /* B2             b2 */\
+    paddd(_mm2, _mm4); /* A2+B2          a2+b2 */\
+    psubd(_mm5, _mm4); /* a2-B2          a2-b2 */\
+    psrad(_mm2,  shift);\
+    psrad(_mm5,  shift);\
+    movq(_mm4, _mm6); /* A3             a3 */\
+    paddd(_mm3, _mm0); /* B3             b3 */\
+    paddd(_mm6, _mm3); /* A3+B3          a3+b3 */\
+    psubd(_mm4, _mm3); /* a3-B3          a3-b3 */\
+    psrad(_mm6,  shift);\
+    psrad(_mm4,  shift);\
+    packssdw(_mm2, _mm2); /* A2+B2  a2+b2 */\
+    packssdw(_mm6, _mm6); /* A3+B3  a3+b3 */\
+    movd(dst + 16, _mm2);\
+    packssdw(_mm4, _mm4); /* A3-B3  a3-b3 */\
+    packssdw(_mm5, _mm5); /* A2-B2  a2-b2 */\
+    movd(dst + 24, _mm6);\
+    movd(dst + 32, _mm4);\
+    movd(dst + 40, _mm5);
+
+//IDCT(   src0,      src4,      src1,      src5,        dst, shift)
+IDCT(temp     , temp + 32, temp + 16, temp + 48,  block    ,    20)
+IDCT(temp +  4, temp + 36, temp + 20, temp + 52,  block + 2,    20)
+IDCT(temp +  8, temp + 40, temp + 24, temp + 56,  block + 4,    20)
+IDCT(temp + 12, temp + 44, temp + 28, temp + 60,  block + 6,    20)
+    goto label_9;
+
+label_4:
+Z_COND_IDCT(block + 32, block + 36, block + 40, block + 44, temp + 32, 11, label_6)
+Z_COND_IDCT(block + 48, block + 52, block + 56, block + 60, temp + 48, 11, label_5)
+
+#undef IDCT
+#define IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm1,  src4); /* R6     R2      r6      r2 */\
+    movq(_mm3,  src5); /* R7     R5      r7      r5 */\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm5, coeffs + 16); /* C6     C2      C6      C2 */\
+    pmaddwd(_mm5, _mm1); /* C6R6+C2R2      C6r6+C2r2 */\
+    movq(_mm6, coeffs + 20); /* -C2    C6      -C2     C6 */\
+    pmaddwd(_mm1, _mm6); /* -C2R6+C6R2     -C2r6+C6r2 */\
+    movq(_mm6, _mm4); /* C4R4+C4R0      C4r4+C4r0 */\
+    paddd(_mm4, _mm5); /* A0             a0 */\
+    psubd(_mm6, _mm5); /* A3             a3 */\
+    movq(_mm5, _mm0); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    paddd(_mm0, _mm1); /* A1             a1 */\
+    psubd(_mm5, _mm1); /* A2             a2 */\
+    movq(_mm1, coeffs + 28); /* C7     C5      C7      C5 */\
+    pmaddwd(_mm1, _mm3); /* C7R7+C5R5      C7r7+C5r5 */\
+    movq(_mm7, coeffs + 36); /* -C5    -C1     -C5     -C1 */\
+    pmaddwd(_mm7, _mm3); /* -C5R7-C1R5     -C5r7-C1r5 */\
+    paddd(_mm1, _mm4); /* A0+B0          a0+b0 */\
+    paddd(_mm4, _mm4); /* 2A0            2a0 */\
+    psubd(_mm4, _mm1); /* A0-B0          a0-b0 */\
+    psrad(_mm1,  shift);\
+    psrad(_mm4,  shift);\
+    movq(_mm2, _mm0); /* A1             a1 */\
+    paddd(_mm0, _mm7); /* A1+B1          a1+b1 */\
+    psubd(_mm2, _mm7); /* A1-B1          a1-b1 */\
+    psrad(_mm0,  shift);\
+    psrad(_mm2,  shift);\
+    packssdw(_mm1, _mm1); /* A0+B0  a0+b0 */\
+    movd(dst, _mm1);\
+    packssdw(_mm0, _mm0); /* A1+B1  a1+b1 */\
+    movd(dst + 8, _mm0);\
+    packssdw(_mm2, _mm2); /* A1-B1  a1-b1 */\
+    movd(dst + 48, _mm2);\
+    packssdw(_mm4, _mm4); /* A0-B0  a0-b0 */\
+    movd(dst + 56, _mm4);\
+    movq(_mm1, coeffs + 44); /* C3     C7      C3      C7 */\
+    pmaddwd(_mm1, _mm3); /* C3R7+C7R5      C3r7+C7r5 */\
+    movq(_mm2, _mm5); /* A2             a2 */\
+    pmaddwd(_mm3, coeffs + 52); /* -C1R7+C3R5     -C1r7+C3r5 */\
+    paddd(_mm2, _mm1); /* A2+B2          a2+b2 */\
+    psubd(_mm5, _mm1); /* a2-B2          a2-b2 */\
+    psrad(_mm2,  shift);\
+    psrad(_mm5,  shift);\
+    movq(_mm1, _mm6); /* A3             a3 */\
+    paddd(_mm6, _mm3); /* A3+B3          a3+b3 */\
+    psubd(_mm1, _mm3); /* a3-B3          a3-b3 */\
+    psrad(_mm6,  shift);\
+    psrad(_mm1,  shift);\
+    packssdw(_mm2, _mm2); /* A2+B2  a2+b2 */\
+    packssdw(_mm6, _mm6); /* A3+B3  a3+b3 */\
+    movd(dst + 16, _mm2);\
+    packssdw(_mm1, _mm1); /* A3-B3  a3-b3 */\
+    packssdw(_mm5, _mm5); /* A2-B2  a2-b2 */\
+    movd(dst + 24, _mm6);\
+    movd(dst + 32, _mm1);\
+    movd(dst + 40, _mm5);
+
+//IDCT(   src0,      src4,      src1,      src5,       dst, shift)
+IDCT(temp     , temp + 32, temp + 16, temp + 48, block    ,    20)
+IDCT(temp +  4, temp + 36, temp + 20, temp + 52, block + 2,    20)
+IDCT(temp +  8, temp + 40, temp + 24, temp + 56, block + 4,    20)
+IDCT(temp + 12, temp + 44, temp + 28, temp + 60, block + 6,    20)
+        goto label_9;
+
+label_6:
+Z_COND_IDCT(block + 48, block + 52, block + 56, block + 60, temp + 48, 11, label_7)
+
+#undef IDCT
+#define IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm3,  src5); /* R7     R5      r7      r5 */\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm6, _mm4); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, _mm0); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm1, coeffs + 28); /* C7     C5      C7      C5 */\
+    pmaddwd(_mm1, _mm3); /* C7R7+C5R5      C7r7+C5r5 */\
+    movq(_mm7, coeffs + 36); /* -C5    -C1     -C5     -C1 */\
+    pmaddwd(_mm7, _mm3); /* -C5R7-C1R5     -C5r7-C1r5 */\
+    paddd(_mm1, _mm4); /* A0+B0          a0+b0 */\
+    paddd(_mm4, _mm4); /* 2A0            2a0 */\
+    psubd(_mm4, _mm1); /* A0-B0          a0-b0 */\
+    psrad(_mm1,  shift);\
+    psrad(_mm4,  shift);\
+    movq(_mm2, _mm0); /* A1             a1 */\
+    paddd(_mm0, _mm7); /* A1+B1          a1+b1 */\
+    psubd(_mm2, _mm7); /* A1-B1          a1-b1 */\
+    psrad(_mm0,  shift);\
+    psrad(_mm2,  shift);\
+    packssdw(_mm1, _mm1); /* A0+B0  a0+b0 */\
+    movd(dst, _mm1);\
+    packssdw(_mm0, _mm0); /* A1+B1  a1+b1 */\
+    movd(dst + 8, _mm0);\
+    packssdw(_mm2, _mm2); /* A1-B1  a1-b1 */\
+    movd(dst + 48, _mm2);\
+    packssdw(_mm4, _mm4); /* A0-B0  a0-b0 */\
+    movd(dst + 56, _mm4);\
+    movq(_mm1, coeffs + 44); /* C3     C7      C3      C7 */\
+    pmaddwd(_mm1, _mm3); /* C3R7+C7R5      C3r7+C7r5 */\
+    movq(_mm2, _mm5); /* A2             a2 */\
+    pmaddwd(_mm3, coeffs + 52); /* -C1R7+C3R5     -C1r7+C3r5 */\
+    paddd(_mm2, _mm1); /* A2+B2          a2+b2 */\
+    psubd(_mm5, _mm1); /* a2-B2          a2-b2 */\
+    psrad(_mm2,  shift);\
+    psrad(_mm5,  shift);\
+    movq(_mm1, _mm6); /* A3             a3 */\
+    paddd(_mm6, _mm3); /* A3+B3          a3+b3 */\
+    psubd(_mm1, _mm3); /* a3-B3          a3-b3 */\
+    psrad(_mm6,  shift);\
+    psrad(_mm1,  shift);\
+    packssdw(_mm2, _mm2); /* A2+B2  a2+b2 */\
+    packssdw(_mm6, _mm6); /* A3+B3  a3+b3 */\
+    movd(dst + 16, _mm2);\
+    packssdw(_mm1, _mm1); /* A3-B3  a3-b3 */\
+    packssdw(_mm5, _mm5); /* A2-B2  a2-b2 */\
+    movd(dst + 24, _mm6);\
+    movd(dst + 32, _mm1);\
+    movd(dst + 40, _mm5);
+
+
+//IDCT(   src0,      src4,      src1,      src5,       dst, shift)
+IDCT(temp     , temp + 32, temp + 16, temp + 48, block    ,    20)
+IDCT(temp +  4, temp + 36, temp + 20, temp + 52, block + 2,    20)
+IDCT(temp +  8, temp + 40, temp + 24, temp + 56, block + 4,    20)
+IDCT(temp + 12, temp + 44, temp + 28, temp + 60, block + 6,    20)
+        goto label_9;
+
+label_2:
+Z_COND_IDCT(block + 48,block + 52, block + 56, block + 60, temp + 48, 11, label_3)
+
+#undef IDCT
+#define IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm2,  src1); /* R3     R1      r3      r1 */\
+    movq(_mm3,  src5); /* R7     R5      r7      r5 */\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm6, _mm4); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm7, coeffs + 24); /* C3     C1      C3      C1 */\
+    pmaddwd(_mm7, _mm2); /* C3R3+C1R1      C3r3+C1r1 */\
+    movq(_mm5, _mm0); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm1, coeffs + 28); /* C7     C5      C7      C5 */\
+    pmaddwd(_mm1, _mm3); /* C7R7+C5R5      C7r7+C5r5 */\
+    pmaddwd(_mm2, coeffs + 32); /* -C7R3+C3R1     -C7r3+C3r1 */\
+    paddd(_mm7, _mm1); /* B0             b0 */\
+    movq(_mm1, coeffs + 36); /* -C5    -C1     -C5     -C1 */\
+    pmaddwd(_mm1, _mm3); /* -C5R7-C1R5     -C5r7-C1r5 */\
+    paddd(_mm7, _mm4); /* A0+B0          a0+b0 */\
+    paddd(_mm4, _mm4); /* 2A0            2a0 */\
+    psubd(_mm4, _mm7); /* A0-B0          a0-b0 */\
+    paddd(_mm1, _mm2); /* B1             b1 */\
+    psrad(_mm7,  shift);\
+    psrad(_mm4,  shift);\
+    movq(_mm2, _mm0); /* A1             a1 */\
+    paddd(_mm0, _mm1); /* A1+B1          a1+b1 */\
+    psubd(_mm2, _mm1); /* A1-B1          a1-b1 */\
+    psrad(_mm0,  shift);\
+    psrad(_mm2,  shift);\
+    packssdw(_mm7, _mm7); /* A0+B0  a0+b0 */\
+    movd(dst, _mm7);\
+    packssdw(_mm0, _mm0); /* A1+B1  a1+b1 */\
+    movd(dst + 8, _mm0);\
+    packssdw(_mm2, _mm2); /* A1-B1  a1-b1 */\
+    movd(dst + 48, _mm2);\
+    packssdw(_mm4, _mm4); /* A0-B0  a0-b0 */\
+    movd(dst + 56, _mm4);\
+    movq(_mm0,  src1); /* R3     R1      r3      r1 */\
+    movq(_mm4, coeffs + 40); /* -C1    C5      -C1     C5 */\
+    pmaddwd(_mm4, _mm0); /* -C1R3+C5R1     -C1r3+C5r1 */\
+    movq(_mm7, coeffs + 44); /* C3     C7      C3      C7 */\
+    pmaddwd(_mm0, coeffs + 48); /* -C5R3+C7R1     -C5r3+C7r1 */\
+    pmaddwd(_mm7, _mm3); /* C3R7+C7R5      C3r7+C7r5 */\
+    movq(_mm2, _mm5); /* A2             a2 */\
+    pmaddwd(_mm3, coeffs + 52); /* -C1R7+C3R5     -C1r7+C3r5 */\
+    paddd(_mm4, _mm7); /* B2             b2 */\
+    paddd(_mm2, _mm4); /* A2+B2          a2+b2 */\
+    psubd(_mm5, _mm4); /* a2-B2          a2-b2 */\
+    psrad(_mm2,  shift);\
+    psrad(_mm5,  shift);\
+    movq(_mm4, _mm6); /* A3             a3 */\
+    paddd(_mm3, _mm0); /* B3             b3 */\
+    paddd(_mm6, _mm3); /* A3+B3          a3+b3 */\
+    psubd(_mm4, _mm3); /* a3-B3          a3-b3 */\
+    psrad(_mm6,  shift);\
+    psrad(_mm4,  shift);\
+    packssdw(_mm2, _mm2); /* A2+B2  a2+b2 */\
+    packssdw(_mm6, _mm6); /* A3+B3  a3+b3 */\
+    movd(dst + 16, _mm2);\
+    packssdw(_mm4, _mm4); /* A3-B3  a3-b3 */\
+    packssdw(_mm5, _mm5); /* A2-B2  a2-b2 */\
+    movd(dst + 24, _mm6);\
+    movd(dst + 32, _mm4);\
+    movd(dst + 40, _mm5);
+
+//IDCT(   src0,      src4,      src1,      src5,       dst, shift)
+IDCT(temp     , temp + 32, temp + 16, temp + 48, block    ,    20)
+IDCT(temp +  4, temp + 36, temp + 20, temp + 52, block + 2,    20)
+IDCT(temp +  8, temp + 40, temp + 24, temp + 56, block + 4,    20)
+IDCT(temp + 12, temp + 44, temp + 28, temp + 60, block + 6,    20)
+   goto label_9;
+
+label_3:
+#undef IDCT
+#define IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm2,  src1); /* R3     R1      r3      r1 */\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm6, _mm4); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm7, coeffs + 24); /* C3     C1      C3      C1 */\
+    pmaddwd(_mm7, _mm2); /* C3R3+C1R1      C3r3+C1r1 */\
+    movq(_mm5, _mm0); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm3, coeffs + 32);\
+    pmaddwd(_mm3, _mm2); /* -C7R3+C3R1     -C7r3+C3r1 */\
+    paddd(_mm7, _mm4); /* A0+B0          a0+b0 */\
+    paddd(_mm4, _mm4); /* 2A0            2a0 */\
+    psubd(_mm4, _mm7); /* A0-B0          a0-b0 */\
+    psrad(_mm7, shift);\
+    psrad(_mm4, shift);\
+    movq(_mm1, _mm0); /* A1             a1 */\
+    paddd(_mm0, _mm3); /* A1+B1          a1+b1 */\
+    psubd(_mm1, _mm3); /* A1-B1          a1-b1 */\
+    psrad(_mm0, shift);\
+    psrad(_mm1, shift);\
+    packssdw(_mm7, _mm7); /* A0+B0  a0+b0 */\
+    movd(dst, _mm7);\
+    packssdw(_mm0, _mm0); /* A1+B1  a1+b1 */\
+    movd(dst + 8, _mm0);\
+    packssdw(_mm1, _mm1); /* A1-B1  a1-b1 */\
+    movd(dst + 48, _mm1);\
+    packssdw(_mm4, _mm4); /* A0-B0  a0-b0 */\
+    movd(dst + 56, _mm4);\
+    movq(_mm4, coeffs + 40); /* -C1    C5      -C1     C5 */\
+    pmaddwd(_mm4, _mm2); /* -C1R3+C5R1     -C1r3+C5r1 */\
+    pmaddwd(_mm2, coeffs + 48); /* -C5R3+C7R1     -C5r3+C7r1 */\
+    movq(_mm1, _mm5); /* A2             a2 */\
+    paddd(_mm1, _mm4); /* A2+B2          a2+b2 */\
+    psubd(_mm5, _mm4); /* a2-B2          a2-b2 */\
+    psrad(_mm1, shift);\
+    psrad(_mm5, shift);\
+    movq(_mm4, _mm6); /* A3             a3 */\
+    paddd(_mm6, _mm2); /* A3+B3          a3+b3 */\
+    psubd(_mm4, _mm2); /* a3-B3          a3-b3 */\
+    psrad(_mm6, shift);\
+    psrad(_mm4, shift);\
+    packssdw(_mm1, _mm1); /* A2+B2  a2+b2 */\
+    packssdw(_mm6, _mm6); /* A3+B3  a3+b3 */\
+    movd(dst + 16, _mm1);\
+    packssdw(_mm4, _mm4); /* A3-B3  a3-b3 */\
+    packssdw(_mm5, _mm5); /* A2-B2  a2-b2 */\
+    movd(dst + 24, _mm6);\
+    movd(dst + 32, _mm4);\
+    movd(dst + 40, _mm5);
+
+
+//IDCT(   src0,      src4,      src1,      src5,      dst, shift)
+IDCT(temp     , temp + 32, temp + 16, temp + 48, block    ,    20)
+IDCT(temp +  4, temp + 36, temp + 20, temp + 52, block + 2,    20)
+IDCT(temp +  8, temp + 40, temp + 24, temp + 56, block + 4,    20)
+IDCT(temp + 12, temp + 44, temp + 28, temp + 60, block + 6,    20)
+    goto label_9;
+
+label_5:
+#undef IDCT
+#define IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm1,  src4); /* R6     R2      r6      r2 */\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm5, coeffs + 16); /* C6     C2      C6      C2 */\
+    pmaddwd(_mm5, _mm1); /* C6R6+C2R2      C6r6+C2r2 */\
+    movq(_mm6, coeffs + 20); /* -C2    C6      -C2     C6 */\
+    pmaddwd(_mm1, _mm6); /* -C2R6+C6R2     -C2r6+C6r2 */\
+    movq(_mm6, _mm4); /* C4R4+C4R0      C4r4+C4r0 */\
+    paddd(_mm4, _mm5); /* A0             a0 */\
+    psubd(_mm6, _mm5); /* A3             a3 */\
+    movq(_mm5, _mm0); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    paddd(_mm0, _mm1); /* A1             a1 */\
+    psubd(_mm5, _mm1); /* A2             a2 */\
+    movq(_mm2, src0 + 4); /* R4     R0      r4      r0 */\
+    movq(_mm3, src4 + 4); /* R6     R2      r6      r2 */\
+    movq(_mm1, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm1, _mm2); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm7, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm2, _mm7); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm7, coeffs + 16); /* C6     C2      C6      C2 */\
+    pmaddwd(_mm7, _mm3); /* C6R6+C2R2      C6r6+C2r2 */\
+    pmaddwd(_mm3, coeffs + 20); /* -C2R6+C6R2     -C2r6+C6r2 */\
+    paddd(_mm7, _mm1); /* A0             a0 */\
+    paddd(_mm1, _mm1); /* 2C0            2c0 */\
+    psubd(_mm1, _mm7); /* A3             a3 */\
+    paddd(_mm3, _mm2); /* A1             a1 */\
+    paddd(_mm2, _mm2); /* 2C1            2c1 */\
+    psubd(_mm2, _mm3); /* A2             a2 */\
+    psrad(_mm4, shift);\
+    psrad(_mm7, shift);\
+    psrad(_mm3, shift);\
+    packssdw(_mm4, _mm7); /* A0     a0 */\
+    movq(dst, _mm4);\
+    psrad(_mm0, shift);\
+    packssdw(_mm0, _mm3); /* A1     a1 */\
+    movq(dst + 8, _mm0);\
+    movq(dst + 48, _mm0);\
+    movq(dst + 56, _mm4);\
+    psrad(_mm5, shift);\
+    psrad(_mm6, shift);\
+    psrad(_mm2, shift);\
+    packssdw(_mm5, _mm2); /* A2-B2  a2-b2 */\
+    movq(dst + 16, _mm5);\
+    psrad(_mm1, shift);\
+    packssdw(_mm6, _mm1); /* A3+B3  a3+b3 */\
+    movq(dst + 24, _mm6);\
+    movq(dst + 32, _mm6);\
+    movq(dst + 40, _mm5);
+
+
+//IDCT(  src0,      src4,      src1,      src5,      dst, shift)
+IDCT(temp    , temp + 32, temp + 16, temp + 48, block   ,    20)
+//IDCT(   8(%1), 72(%1), 40(%1), 104(%1),  4(%0), 20)
+IDCT(temp + 8, temp + 40, temp + 24, temp + 56, block + 4,   20)
+//IDCT(  24(%1), 88(%1), 56(%1), 120(%1), 12(%0), 20)
+        goto label_9;
+
+
+label_1:
+#undef IDCT
+#define IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm1,  src4); /* R6     R2      r6      r2 */\
+    movq(_mm2,  src1); /* R3     R1      r3      r1 */\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm5, coeffs + 16); /* C6     C2      C6      C2 */\
+    pmaddwd(_mm5, _mm1); /* C6R6+C2R2      C6r6+C2r2 */\
+    movq(_mm6, coeffs + 20); /* -C2    C6      -C2     C6 */\
+    pmaddwd(_mm1, _mm6); /* -C2R6+C6R2     -C2r6+C6r2 */\
+    movq(_mm6, _mm4); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm7, coeffs + 24); /* C3     C1      C3      C1 */\
+    pmaddwd(_mm7, _mm2); /* C3R3+C1R1      C3r3+C1r1 */\
+    paddd(_mm4, _mm5); /* A0             a0 */\
+    psubd(_mm6, _mm5); /* A3             a3 */\
+    movq(_mm5, _mm0); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    paddd(_mm0, _mm1); /* A1             a1 */\
+    psubd(_mm5, _mm1); /* A2             a2 */\
+    movq(_mm1, coeffs + 32);\
+    pmaddwd(_mm1, _mm2); /* -C7R3+C3R1     -C7r3+C3r1 */\
+    paddd(_mm7, _mm4); /* A0+B0          a0+b0 */\
+    paddd(_mm4, _mm4); /* 2A0            2a0 */\
+    psubd(_mm4, _mm7); /* A0-B0          a0-b0 */\
+    psrad(_mm7, shift);\
+    psrad(_mm4, shift);\
+    movq(_mm3, _mm0); /* A1             a1 */\
+    paddd(_mm0, _mm1); /* A1+B1          a1+b1 */\
+    psubd(_mm3, _mm1); /* A1-B1          a1-b1 */\
+    psrad(_mm0, shift);\
+    psrad(_mm3, shift);\
+    packssdw(_mm7, _mm7); /* A0+B0  a0+b0 */\
+    movd(dst, _mm7);\
+    packssdw(_mm0, _mm0); /* A1+B1  a1+b1 */\
+    movd(dst + 8, _mm0);\
+    packssdw(_mm3, _mm3); /* A1-B1  a1-b1 */\
+    movd(dst + 48, _mm3);\
+    packssdw(_mm4, _mm4); /* A0-B0  a0-b0 */\
+    movd(dst + 56, _mm4);\
+    movq(_mm4, coeffs + 40); /* -C1    C5      -C1     C5 */\
+    pmaddwd(_mm4, _mm2); /* -C1R3+C5R1     -C1r3+C5r1 */\
+    pmaddwd(_mm2, coeffs + 48); /* -C5R3+C7R1     -C5r3+C7r1 */\
+    movq(_mm3, _mm5); /* A2             a2 */\
+    paddd(_mm3, _mm4); /* A2+B2          a2+b2 */\
+    psubd(_mm5, _mm4); /* a2-B2          a2-b2 */\
+    psrad(_mm3, shift);\
+    psrad(_mm5, shift);\
+    movq(_mm4, _mm6); /* A3             a3 */\
+    paddd(_mm6, _mm2); /* A3+B3          a3+b3 */\
+    psubd(_mm4, _mm2); /* a3-B3          a3-b3 */\
+    psrad(_mm6, shift);\
+    packssdw(_mm3, _mm3); /* A2+B2  a2+b2 */\
+    movd(dst + 16, _mm3);\
+    psrad(_mm4, shift);\
+    packssdw(_mm6, _mm6); /* A3+B3  a3+b3 */\
+    movd(dst + 24, _mm6);\
+    packssdw(_mm4, _mm4); /* A3-B3  a3-b3 */\
+    packssdw(_mm5, _mm5); /* A2-B2  a2-b2 */\
+    movd(dst + 32, _mm4);\
+    movd(dst + 40, _mm5);
+
+
+//IDCT(   src0,      src4,      src1,      src5,      dst, shift)
+IDCT(temp     , temp + 32, temp + 16, temp + 48, block    ,    20)
+IDCT(temp +  4, temp + 36, temp + 20, temp + 52, block + 2,    20)
+IDCT(temp +  8, temp + 40, temp + 24, temp + 56, block + 4,    20)
+IDCT(temp + 12, temp + 44, temp + 28, temp + 60, block + 6,    20)
+    goto label_9;
+
+label_7:
+#undef IDCT
+#define IDCT(src0, src4, src1, src5, dst, shift) \
+    movq(_mm0,  src0); /* R4     R0      r4      r0 */\
+    movq(_mm4, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm4, _mm0); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm5, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm0, _mm5); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    psrad(_mm4, shift);\
+    psrad(_mm0, shift);\
+    movq(_mm2, src0 + 4); /* R4     R0      r4      r0 */\
+    movq(_mm1, coeffs + 8); /* C4     C4      C4      C4 */\
+    pmaddwd(_mm1, _mm2); /* C4R4+C4R0      C4r4+C4r0 */\
+    movq(_mm7, coeffs + 12); /* -C4    C4      -C4     C4 */\
+    pmaddwd(_mm2, _mm7); /* -C4R4+C4R0     -C4r4+C4r0 */\
+    movq(_mm7, coeffs + 16); /* C6     C2      C6      C2 */\
+    psrad(_mm1, shift);\
+    packssdw(_mm4, _mm1); /* A0     a0 */\
+    movq(dst, _mm4);\
+    psrad(_mm2, shift);\
+    packssdw(_mm0, _mm2); /* A1     a1 */\
+    movq(dst + 8, _mm0);\
+    movq(dst + 48, _mm0);\
+    movq(dst + 56, _mm4);\
+    movq(dst + 16, _mm0);\
+    movq(dst + 24, _mm4);\
+    movq(dst + 32, _mm4);\
+    movq(dst + 40, _mm0);
+
+//IDCT(  src0,      src4,      src1,       src5,      dst, shift)
+IDCT(temp    , temp + 32, temp + 16,  temp + 48, block   ,    20)
+//IDCT(   8(%1), 72(%1), 40(%1), 104(%1),  4(%0), 20)
+IDCT(temp + 8, temp + 40, temp + 24, temp + 56, block + 4,    20)
+//IDCT(  24(%1), 88(%1), 56(%1), 120(%1), 12(%0), 20)
+
+/*
+Input
+ 00 40 04 44 20 60 24 64
+ 10 30 14 34 50 70 54 74
+ 01 41 03 43 21 61 23 63
+ 11 31 13 33 51 71 53 73
+ 02 42 06 46 22 62 26 66
+ 12 32 16 36 52 72 56 76
+ 05 45 07 47 25 65 27 67
+ 15 35 17 37 55 75 57 77
+
+Temp
+ 00 04 10 14 20 24 30 34
+ 40 44 50 54 60 64 70 74
+ 01 03 11 13 21 23 31 33
+ 41 43 51 53 61 63 71 73
+ 02 06 12 16 22 26 32 36
+ 42 46 52 56 62 66 72 76
+ 05 07 15 17 25 27 35 37
+ 45 47 55 57 65 67 75 77
+*/
+
+label_9:;
+}
+#endif
+
+__align16(const int32_t,TimgFilterPostprocSpp::fdct_r_row[4])= {RND_FRW_ROW, RND_FRW_ROW , RND_FRW_ROW, RND_FRW_ROW};
+
+template<> __forceinline void TimgFilterPostprocSpp::fdct_row<Tmmx>(const int16_t *in, int16_t *out, const int16_t *table) {
+    __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
+    csimd::movd((in + 6), mm1);
+    csimd::punpcklwd((in + 4), mm1);
+    csimd::movq(mm1, mm2);
+    csimd::psrlq(0x20, mm1);
+    csimd::movq((in + 0), mm0);
+    csimd::punpcklwd(mm2, mm1);
+    csimd::movq(mm0, mm5);
+    csimd::paddsw(mm1, mm0);
+    csimd::psubsw(mm1, mm5);
+    csimd::movq(mm0, mm2);
+    csimd::punpckldq(mm5, mm0);
+    csimd::punpckhdq(mm5, mm2);
+    csimd::movq((table + 0), mm1);
+    csimd::movq((table + 4), mm3);
+    csimd::movq((table + 8), mm4);
+    csimd::movq((table + 12), mm5);
+    csimd::movq((table + 16), mm6);
+    csimd::movq((table + 20), mm7);
+    csimd::pmaddwd(mm0, mm1);
+    csimd::pmaddwd(mm2, mm3);
+    csimd::pmaddwd(mm0, mm4);
+    csimd::pmaddwd(mm2, mm5);
+    csimd::pmaddwd(mm0, mm6);
+    csimd::pmaddwd(mm2, mm7);
+    csimd::pmaddwd((table + 24), mm0);
+    csimd::pmaddwd((table + 28), mm2);
+    csimd::paddd(mm1, mm3);
+    csimd::paddd(mm4, mm5);
+    csimd::paddd(mm6, mm7);
+    csimd::paddd(mm0, mm2);
+    csimd::movq(fdct_r_row, mm0);
+    csimd::paddd(mm0, mm3);
+    csimd::paddd(mm0, mm5);
+    csimd::paddd(mm0, mm7);
+    csimd::paddd(mm0, mm2);
+    csimd::psrad(SHIFT_FRW_ROW, mm3);
+    csimd::psrad(SHIFT_FRW_ROW, mm5);
+    csimd::psrad(SHIFT_FRW_ROW, mm7);
+    csimd::psrad(SHIFT_FRW_ROW, mm2);
+    csimd::packssdw(mm5, mm3);
+    csimd::packssdw(mm2, mm7);
+    csimd::movq(mm3, (out + 0));
+    csimd::movq(mm7, (out + 4));
+}
+
+template<> __forceinline void TimgFilterPostprocSpp::fdct_row<Tsse2>(const int16_t *in, int16_t *out, const int16_t *table) {
+    __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
+    xmm1 = _mm_cvtsi32_si128(*(int *)(in + 6));
+    xmm0 = _mm_cvtsi32_si128(*(int *)(in + 4));
+    xmm1 = _mm_unpacklo_epi16(xmm1, xmm0);
+    xmm2 = xmm1;
+    xmm1 = _mm_srli_epi64(xmm1, 0x20);
+    xmm0 = _mm_loadl_epi64((const __m128i *)(in + 0));
+    xmm1 = _mm_unpacklo_epi16(xmm1, xmm2);
+    xmm5 = xmm0;
+    xmm0 = _mm_adds_epi16(xmm0, xmm1);
+    xmm5 = _mm_subs_epi16(xmm5, xmm1);
+    xmm0 = _mm_unpacklo_epi32(xmm0, xmm5);                 // mm2/mm0
+    xmm1 = _mm_load_si128((const __m128i *)(table +  0));  // mm3/mm1
+    xmm4 = _mm_load_si128((const __m128i *)(table +  8));  // mm5/mm4
+    xmm6 = _mm_load_si128((const __m128i *)(table + 16));  // mm7/mm6
+    xmm7 = _mm_load_si128((const __m128i *)(table + 24));
+    xmm1 = _mm_madd_epi16(xmm1, xmm0);
+    xmm4 = _mm_madd_epi16(xmm4, xmm0);
+    xmm6 = _mm_madd_epi16(xmm6, xmm0);
+    xmm0 = _mm_madd_epi16(xmm0, xmm7);
+    xmm1 = _mm_shuffle_epi32(xmm1,0xd8);
+    xmm4 = _mm_shuffle_epi32(xmm4,0xd8);
+    xmm6 = _mm_shuffle_epi32(xmm6,0xd8);
+    xmm0 = _mm_shuffle_epi32(xmm0,0xd8);
+    xmm1 = _mm_hadd_epi32(xmm1, xmm4);
+    xmm6 = _mm_hadd_epi32(xmm6, xmm0);
+    xmm2 = _mm_load_si128((const __m128i *)fdct_r_row);
+    xmm1 = _mm_add_epi32(xmm1, xmm2);
+    xmm6 = _mm_add_epi32(xmm6, xmm2);
+    xmm1 = _mm_srai_epi32(xmm1, SHIFT_FRW_ROW);
+    xmm6 = _mm_srai_epi32(xmm6, SHIFT_FRW_ROW);
+    xmm1 = _mm_packs_epi32(xmm1, xmm6);
+    _mm_store_si128((__m128i *)out, xmm1);
+}
+
+template <class _mm> void TimgFilterPostprocSpp::ff_fdct_simd(int16_t *block)
+{
+    static __align16(const int16_t,tab_frw_01234567[]) = {  // forward_dct coeff table
         16384,   16384,   22725,   19266,
         16384,   16384,   12873,    4520,
         21407,    8867,   19266,   -4520,
@@ -340,7 +1210,6 @@ void TimgFilterPostprocSpp::ff_fdct_mmx2(int16_t *block)
     static  __align8(const int16_t,ocos_4_16[4]) = {
         23170, 23170, 23170, 23170,    //cos * (2<<15) + 0.5
     };
-    static __align8(const int32_t,fdct_r_row[2])= {RND_FRW_ROW, RND_FRW_ROW };
 
     struct Tcol {
         static __forceinline void fdct_col(const int16_t *in, int16_t *out, int offset) {
@@ -470,56 +1339,8 @@ void TimgFilterPostprocSpp::ff_fdct_mmx2(int16_t *block)
         }
       };
     */
-    struct TrowMMX {
-        static __forceinline void fdct_row(const int16_t *in, int16_t *out, const int16_t *table) {
-            __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
-            csimd::movd((in + 6), mm1);
-            csimd::punpcklwd((in + 4), mm1);
-            csimd::movq(mm1, mm2);
-            csimd::psrlq(0x20, mm1);
-            csimd::movq((in + 0), mm0);
-            csimd::punpcklwd(mm2, mm1);
-            csimd::movq(mm0, mm5);
-            csimd::paddsw(mm1, mm0);
-            csimd::psubsw(mm1, mm5);
-            csimd::movq(mm0, mm2);
-            csimd::punpckldq(mm5, mm0);
-            csimd::punpckhdq(mm5, mm2);
-            csimd::movq((table + 0), mm1);
-            csimd::movq((table + 4), mm3);
-            csimd::movq((table + 8), mm4);
-            csimd::movq((table + 12), mm5);
-            csimd::movq((table + 16), mm6);
-            csimd::movq((table + 20), mm7);
-            csimd::pmaddwd(mm0, mm1);
-            csimd::pmaddwd(mm2, mm3);
-            csimd::pmaddwd(mm0, mm4);
-            csimd::pmaddwd(mm2, mm5);
-            csimd::pmaddwd(mm0, mm6);
-            csimd::pmaddwd(mm2, mm7);
-            csimd::pmaddwd((table + 24), mm0);
-            csimd::pmaddwd((table + 28), mm2);
-            csimd::paddd(mm1, mm3);
-            csimd::paddd(mm4, mm5);
-            csimd::paddd(mm6, mm7);
-            csimd::paddd(mm0, mm2);
-            csimd::movq(fdct_r_row, mm0);
-            csimd::paddd(mm0, mm3);
-            csimd::paddd(mm0, mm5);
-            csimd::paddd(mm0, mm7);
-            csimd::paddd(mm0, mm2);
-            csimd::psrad(SHIFT_FRW_ROW, mm3);
-            csimd::psrad(SHIFT_FRW_ROW, mm5);
-            csimd::psrad(SHIFT_FRW_ROW, mm7);
-            csimd::psrad(SHIFT_FRW_ROW, mm2);
-            csimd::packssdw(mm5, mm3);
-            csimd::packssdw(mm2, mm7);
-            csimd::movq(mm3, (out + 0));
-            csimd::movq(mm7, (out + 4));
-        }
-    };
 
-    __align8(int64_t,align_tmp[16]);
+    __align16(int64_t,align_tmp[16]);
     int16_t * const block_tmp= (int16_t*)align_tmp;
     int16_t *block1, *out;
     const int16_t *table;
@@ -533,7 +1354,7 @@ void TimgFilterPostprocSpp::ff_fdct_mmx2(int16_t *block)
     table = tab_frw_01234567;
     out = block;
     for(i=8; i>0; i--) {
-        TrowMMX::fdct_row(block1, out, table);
+        fdct_row<_mm>(block1, out, table);
         block1 += 8;
         table += 32;
         out += 8;
@@ -542,20 +1363,39 @@ void TimgFilterPostprocSpp::ff_fdct_mmx2(int16_t *block)
 
 TimgFilterPostprocSpp::TimgFilterPostprocSpp(IffdshowBase *Ideci,Tfilters *Iparent):
     TimgFilterPostprocBase(Ideci,Iparent,false),
-    temp(NULL),src(NULL),
-    old_sppMode(-1)
+    old_sppMode(-1),
+    old_dx(0),
+    old_dy(0),
+    libavcodec(NULL),
+    CPUCount(1)
 {
+    deci->getLibavcodec(&libavcodec);
+    if (libavcodec)
+        CPUCount = std::min(MAX_THREADS, libavcodec->GetCPUCount());
+    for (size_t i = 0 ; i < CPUCount ; i++) {
+        src[i]  = NULL;
+        temp[i] = NULL;
+    }
 }
+
+TimgFilterPostprocSpp::~TimgFilterPostprocSpp()
+{
+    if (libavcodec)
+        libavcodec->Release();
+}
+
 void TimgFilterPostprocSpp::done(void)
 {
-    if (temp) {
-        aligned_free(temp);
+    for (size_t i = 0 ; i < CPUCount ; i++) {
+        if (temp[i]) {
+            aligned_free(temp[i]);
+        }
+        temp[i]=NULL;
+        if (src[i]) {
+            aligned_free(src[i]);
+        }
+        src[i]=NULL;
     }
-    temp=NULL;
-    if (src) {
-        aligned_free(src);
-    }
-    src=NULL;
 }
 void TimgFilterPostprocSpp::onSizeChange(void)
 {
@@ -713,7 +1553,8 @@ void TimgFilterPostprocSpp::softthresh_mmx(DCTELEM dst0[64], const DCTELEM src0[
     requant_core_soft(96+dst,104+dst,112+dst,120+dst,80+src,88+src,112+src,120+src,mm4,mm5);
     dst0[0]=DCTELEM((src0[0]+4)>>3);
 }
-__forceinline void TimgFilterPostprocSpp::requant_core_hard(unsigned char *dst0,unsigned char *dst1,unsigned char *dst2,unsigned char *dst3,const unsigned char *src0,const unsigned char *src1,const unsigned char *src2,const unsigned char *src3,const __m64 &mm4,const __m64 &mm5,const __m64 &mm6)
+
+__forceinline void TimgFilterPostprocSpp::requant_core_hard_mmx(unsigned char *dst0,unsigned char *dst1,unsigned char *dst2,unsigned char *dst3,const unsigned char *src0,const unsigned char *src1,const unsigned char *src2,const unsigned char *src3,const __m64 &mm4,const __m64 &mm5,const __m64 &mm6)
 {
     __m64 mm0,mm1,mm2,mm3;
     movq( mm0,src0);
@@ -783,10 +1624,75 @@ void TimgFilterPostprocSpp::hardthresh_mmx(DCTELEM dst0[64], const DCTELEM src0[
     packssdw( mm6,mm6);
     const unsigned char *src=(const unsigned char*)src0;
     unsigned char *dst=(unsigned char*)dst0;
-    requant_core_hard(   dst,  8+dst, 16+dst, 24+dst,   src, 8+src, 64+src, 72+src,mm4,mm5,mm6);
-    requant_core_hard(32+dst, 40+dst, 48+dst, 56+dst,16+src,24+src, 48+src, 56+src,mm4,mm5,mm6);
-    requant_core_hard(64+dst, 72+dst, 80+dst, 88+dst,32+src,40+src, 96+src,104+src,mm4,mm5,mm6);
-    requant_core_hard(96+dst,104+dst,112+dst,120+dst,80+src,88+src,112+src,120+src,mm4,mm5,mm6);
+    requant_core_hard_mmx(   dst,  8+dst, 16+dst, 24+dst,   src, 8+src, 64+src, 72+src,mm4,mm5,mm6);
+    requant_core_hard_mmx(32+dst, 40+dst, 48+dst, 56+dst,16+src,24+src, 48+src, 56+src,mm4,mm5,mm6);
+    requant_core_hard_mmx(64+dst, 72+dst, 80+dst, 88+dst,32+src,40+src, 96+src,104+src,mm4,mm5,mm6);
+    requant_core_hard_mmx(96+dst,104+dst,112+dst,120+dst,80+src,88+src,112+src,120+src,mm4,mm5,mm6);
+
+    dst0[0]=DCTELEM((src0[0]+4)>>3);
+}
+
+__forceinline void TimgFilterPostprocSpp::requant_core_hard_sse2(unsigned char *dst0, unsigned char *dst2, const unsigned char *src0, const unsigned char *src2, const __m128i &xmm4, const __m128i &xmm5, const __m128i &xmm6)
+{
+    __m128i xmm0,xmm2;
+    xmm0 = _mm_load_si128((const __m128i *)src0);
+    xmm2 = _mm_load_si128((const __m128i *)src2);
+
+    xmm0 = _mm_sub_epi16(xmm0, xmm4);
+    xmm2 = _mm_sub_epi16(xmm2, xmm4);
+
+    xmm0 = _mm_adds_epu16(xmm0,xmm5);
+    xmm2 = _mm_adds_epu16(xmm2,xmm5);
+
+    xmm0 = _mm_add_epi16(xmm0,xmm6);
+    xmm2 = _mm_add_epi16(xmm2,xmm6);
+
+    xmm0 = _mm_subs_epu16(xmm0,xmm6);
+    xmm2 = _mm_subs_epu16(xmm2,xmm6);
+
+    xmm0 = _mm_srai_epi16(xmm0,3);
+    xmm2 = _mm_srai_epi16(xmm2,3);
+    __m128i xmm7 = xmm0;
+    xmm0 = _mm_unpacklo_epi16(xmm0, xmm2);
+    xmm7 = _mm_unpackhi_epi16(xmm7, xmm2);
+    __m128i xmm1 = xmm0;
+    xmm0 = _mm_unpacklo_epi16(xmm0, xmm7);
+    xmm1 = _mm_unpackhi_epi16(xmm1, xmm7);
+    __m128i xmm3 = xmm0;
+    xmm0 = _mm_unpacklo_epi64(xmm0, xmm1);
+    xmm3 = _mm_unpackhi_epi16(xmm3, xmm1);
+    xmm3 = _mm_shuffle_epi32(xmm3,0xd8);
+
+    _mm_store_si128((__m128i*)dst0,xmm0);
+    _mm_store_si128((__m128i*)dst2,xmm3);
+}
+
+void TimgFilterPostprocSpp::hardthresh_sse2(DCTELEM dst0[64], const DCTELEM src0[64], int qp)
+{
+    int bias= 0; //FIXME
+    unsigned int threshold1;
+
+    threshold1= qp*((1<<4) - bias) - 1;
+
+    __m128i xmm4,xmm5,xmm6;
+    xmm4 = _mm_cvtsi32_si128(threshold1+1);
+    xmm5 = _mm_cvtsi32_si128(threshold1+5);
+    xmm6 = _mm_cvtsi32_si128(threshold1-4);
+    xmm4 = _mm_packs_epi32(xmm4,xmm4);
+    xmm5 = _mm_packs_epi32(xmm5,xmm5);
+    xmm6 = _mm_packs_epi32(xmm6,xmm6);
+    xmm4 = _mm_packs_epi32(xmm4,xmm4);
+    xmm5 = _mm_packs_epi32(xmm5,xmm5);
+    xmm6 = _mm_packs_epi32(xmm6,xmm6);
+    xmm4 = _mm_packs_epi32(xmm4,xmm4);
+    xmm5 = _mm_packs_epi32(xmm5,xmm5);
+    xmm6 = _mm_packs_epi32(xmm6,xmm6);
+    const unsigned char *src=(const unsigned char*)src0;
+    unsigned char *dst=(unsigned char*)dst0;
+    requant_core_hard_sse2(   dst,  16+dst,    src,  64+src, xmm4, xmm5, xmm6);
+    requant_core_hard_sse2(32+dst,  48+dst, 16+src,  48+src, xmm4, xmm5, xmm6);
+    requant_core_hard_sse2(64+dst,  80+dst, 32+src,  96+src, xmm4, xmm5, xmm6);
+    requant_core_hard_sse2(96+dst, 112+dst, 80+src, 112+src, xmm4, xmm5, xmm6);
 
     dst0[0]=DCTELEM((src0[0]+4)>>3);
 }
@@ -815,7 +1721,7 @@ const uint8_t TimgFilterPostprocSpp::offset[127][2]= {
     {1,2}, {5,6}, {1,6}, {5,2}, {3,0}, {7,4}, {3,4}, {7,0},
 };
 
-inline void TimgFilterPostprocSpp::add_block(int16_t *dst, int stride, DCTELEM block[64])
+template<> void TimgFilterPostprocSpp::add_block<Tmmx>(int16_t *dst, int stride, DCTELEM block[64])
 {
     for (int y=0; y<8; y++) {
         paddw(*(__m64*)&dst[0+y*stride],*(__m64*)&block[0+y*8]);
@@ -823,7 +1729,17 @@ inline void TimgFilterPostprocSpp::add_block(int16_t *dst, int stride, DCTELEM b
     }
 }
 
-inline void TimgFilterPostprocSpp::get_pixels(DCTELEM *block, const uint8_t *pixels, int line_size)
+template<> __forceinline void TimgFilterPostprocSpp::add_block<Tsse2>(int16_t *dst, int stride, DCTELEM block[64])
+{
+    for (int y=0; y<8; y++) {
+        __m128i xmm0,xmm1;
+        xmm0 = _mm_loadu_si128((__m128i*)&dst[y * stride]);
+        xmm0 = _mm_add_epi16(xmm0, *(__m128i*)&block[0+y*8]);
+        _mm_storeu_si128((__m128i*)&dst[0+y*stride], xmm0);
+    }
+}
+
+template<> void TimgFilterPostprocSpp::get_pixels<Tmmx>(DCTELEM *block, const uint8_t *pixels, int line_size)
 {
     __m64 mm7=_mm_setzero_si64(),mm0,mm2,mm1,mm3;
     for (int REG_a=-64; REG_a; pixels+=2*line_size,REG_a+=16) {
@@ -842,29 +1758,88 @@ inline void TimgFilterPostprocSpp::get_pixels(DCTELEM *block, const uint8_t *pix
     }
 }
 
-void TimgFilterPostprocSpp::filter(uint8_t *dst, const uint8_t *src0, int dst_stride, int src_stride, unsigned int width, unsigned int height, const int8_t *qp_store, int qp_stride, bool is_luma)
+template<> __forceinline void TimgFilterPostprocSpp::get_pixels<Tsse2>(DCTELEM *block, const uint8_t *pixels, int line_size)
 {
+    __m128i xmm7=_mm_setzero_si128(),xmm0,xmm2;
+    for (int REG_a=-64; REG_a; pixels+=2*line_size,REG_a+=16) {
+        xmm0 = _mm_loadl_epi64((const __m128i*)(pixels));
+        xmm2 = _mm_loadl_epi64((const __m128i*)(pixels + line_size));
+        xmm0 = _mm_unpacklo_epi8(xmm0,xmm7);
+        xmm2 = _mm_unpacklo_epi8(xmm2,xmm7);
+        _mm_store_si128((__m128i*)(block +     64 + REG_a),xmm0);
+        _mm_store_si128((__m128i*)(block + 8 + 64 + REG_a),xmm2);
+    }
+}
+
+void TimgFilterPostprocSpp::filter(
+    uint8_t *dst,
+    const uint8_t *src0,
+    int dst_stride,
+    int src_stride,
+    unsigned int width,
+    unsigned int height,
+    const int8_t *qp_store,
+    int qp_stride,
+    bool is_luma,
+    size_t thread_number,
+    size_t thread_count)
+{
+    // filter_simd<Tsse2> uses SSSE3. It probably requires 45nm or less CPU to be faster than MMX version.
+    if (Tconfig::cpu_flags&FF_CPU_SSSE3)
+        filter_simd<Tsse2>(dst, src0, dst_stride, src_stride, width, height, qp_store, qp_stride, is_luma, thread_number, thread_count);
+    else
+        filter_simd<Tmmx> (dst, src0, dst_stride, src_stride, width, height, qp_store, qp_stride, is_luma, thread_number, thread_count);
+}
+
+template <class _mm> __forceinline void TimgFilterPostprocSpp::filter_simd(
+    uint8_t *dst,
+    const uint8_t *src0,
+    int dst_stride,
+    int src_stride,
+    unsigned int width,
+    unsigned int height,
+    const int8_t *qp_store,
+    int qp_stride,
+    bool is_luma,
+    size_t thread_number,
+    size_t thread_count)
+{
+    uint8_t* src  = this->src[thread_number];
+    int16_t* temp = this->temp[thread_number];
+    unsigned int start = (height/(thread_count*8) * thread_number)*8;
+    bool last_thread = thread_number + 1 == thread_count;
+    unsigned int end;
+    if (last_thread)
+        end = height;
+    else
+        end   = (height/(thread_count*8) * (thread_number+1))*8;
+
     const int count=1<<currentq;
     const int stride=is_luma?temp_stride:ffalign(width+16, 16);
-    uint64_t block_align1[32*2],*block_align=(uint64_t*)(((intptr_t)block_align1+16)&(~15));
-    DCTELEM *block =(DCTELEM *)block_align;
-    DCTELEM *block2=(DCTELEM *)(block_align+16);
+    __align16(DCTELEM, block[64]);
+    __align16(DCTELEM, block2[64]);
     unsigned int y;
-    for (y=0; y<height; y++) {
-        int index=8+8*stride+y*stride;
+
+    for (y = unsigned int(std::max(0, int(start)-8)); y < std::min(height, end+8) ; y++) {
+        int index=8+8*stride+(y-start)*stride;
         memcpy(src+index,src0+y*src_stride,width);
         for(unsigned int x=0; x<8; x++) {
             src[index      -x-1]=src[index+      x  ];
             src[index+width+x  ]=src[index+width-x-1];
         }
     }
-    for (y=0; y<8; y++) {
-        memcpy(src+(       7-y)*stride,src+(       y+8)*stride,stride);
-        memcpy(src+(height+8+y)*stride,src+(height-y+7)*stride,stride);
+    if (thread_number == 0) {
+        for (y=0; y<8; y++)
+            memcpy(src+(       7-y)*stride,src+(       y+8)*stride,stride);
     }
+    if (last_thread) {
+        for (y=0; y<8; y++)
+            memcpy(src+(height-start+8+y)*stride,src+(height-start-y+7)*stride,stride);
+    }
+
     //FIXME (try edge emu)
-    for (y=0; y<height+8; y+=8) {
-        memset(temp+(8+y)*stride,0,8*stride*sizeof(int16_t));
+    for (y = start ; y < end + 8 ; y += 8) {
+        memset(temp+(8+y-start)*stride,0,8*stride*sizeof(int16_t));
         for (unsigned int x=0; x<width+8; x+=8) {
             const int qps=3+is_luma;
             int qp;
@@ -873,19 +1848,21 @@ void TimgFilterPostprocSpp::filter(uint8_t *dst, const uint8_t *src0, int dst_st
             //if(p->mpeg2) qp>>=1;
             for (int i=0; i<count; i++) {
                 const int x1=x+offset[i+count-1][0];
-                const int y1=y+offset[i+count-1][1];
+                const int y1=y+offset[i+count-1][1]-start;
                 const int index= x1 + y1*stride;
-                get_pixels(block,src+index,stride);
-                ff_fdct_mmx2(block);
-                //dsp->fdct(block);
+                get_pixels<_mm>(block,src+index,stride);
+                ff_fdct_simd<_mm>(block);
                 requantize(block2,block,qp);
-                simple_idct_mmx_P(block2);
-                //dsp->idct(block2);
-                add_block(temp+index,stride,block2);
+#if USE_LIBAVCODEC_SIMPLE_IDCT
+                libavcodec->ff_simple_idct_mmx(block2);
+#else
+                simple_idct(block2);
+#endif
+                add_block<_mm>(temp+index,stride,block2);
             }
         }
-        if (y) {
-            store_slice(dst+(y-8)*dst_stride,temp+8+y*stride,dst_stride,stride,width,std::min(8U,height+8-y),6-currentq);
+        if (y != start) {
+            store_slice(dst+(y-8)*dst_stride,temp+8+(y-start)*stride,dst_stride,stride,width,std::min(8U,height+8-y),6-currentq);
         }
     }
 }
@@ -893,7 +1870,7 @@ void TimgFilterPostprocSpp::filter(uint8_t *dst, const uint8_t *src0, int dst_st
 bool TimgFilterPostprocSpp::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
     const TpostprocSettings *cfg=(const TpostprocSettings*)cfg0;
-    if (super::is(pict,cfg) && cfg->qual) {
+    if (super::is(pict,cfg)) {
         Trect r=pict.getRect(cfg->full,cfg->half);
         return pictRect.dx>=16 && pictRect.dy>=16;
     } else {
@@ -904,8 +1881,8 @@ bool TimgFilterPostprocSpp::is(const TffPictBase &pict,const TfilterSettingsVide
 HRESULT TimgFilterPostprocSpp::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
     const TpostprocSettings *cfg=(const TpostprocSettings*)cfg0;
-#ifndef WIN64
-    if (prepare(cfg,31,pict.frametype) && currentq) {
+    prepare(cfg,31,pict.frametype);
+    if (libavcodec) {
         init(pict,cfg->full,cfg->half);
         if (pictRect.dx>=16 && pictRect.dy>=16) {
             bool cspChanged=false;
@@ -913,15 +1890,23 @@ HRESULT TimgFilterPostprocSpp::process(TfilterQueue::iterator it,TffPict &pict,c
             cspChanged|=getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,tempPict1);
             unsigned char *tempPict2[4];
             cspChanged|=getNext(csp1,pict,cfg->full,tempPict2);
-            if (cspChanged || old_sppMode!=cfg->sppMode) {
+            TautoPerformanceCounter autoTimer(&timer);
+            if (cspChanged || old_sppMode!=cfg->sppMode || old_dx != dx1[0] || old_dy != dy1[0]) {
                 old_sppMode=cfg->sppMode;
+                old_dx=dx1[0];
+                old_dy=dy1[0];
                 done();
             }
 
-            if (!temp) {
+            size_t thread_count = dy1[0] >= CPUCount*8 ? CPUCount : 1;
+            if (!temp[0]) {
                 switch (cfg->sppMode) {
                     case 0:
-                        requantize=hardthresh_mmx;
+                        if (Tconfig::cpu_flags&FF_CPU_SSE2)
+                            requantize=hardthresh_sse2;
+                        else
+                            requantize=hardthresh_mmx;
+                        //requantize=hardthresh_mmx;
                         break;
                     case 1:
                         requantize=softthresh_mmx;
@@ -934,16 +1919,21 @@ HRESULT TimgFilterPostprocSpp::process(TfilterQueue::iterator it,TffPict &pict,c
                 } else {
                     store_slice=store_slice_c;
                 }
-
-                unsigned int h=ffalign(dy1[0]+16, 16);
+                unsigned int extra = dy1[0] - dy1[0]/(thread_count*8)*8*thread_count;
+                unsigned int h = dy1[0]/(thread_count*8)*8 + extra + 16;
+                h = ffalign(h, 8);
                 temp_stride=ffalign(dx1[0]+16, 16);
-                temp=(int16_t*)aligned_malloc(temp_stride*h*sizeof(int16_t));
-                src=(uint8_t*)aligned_malloc(temp_stride*h*sizeof(uint8_t));
+                for (size_t i = 0 ; i < CPUCount ; i++) {
+                    temp[i] = (int16_t*)aligned_malloc(temp_stride*h*sizeof(int16_t));
+                    src[i]  = (uint8_t*)aligned_malloc(temp_stride*h*sizeof(uint8_t));
+                }
             }
-
-            for (unsigned int i=0; i<pict.cspInfo.numPlanes; i++) {
-                filter(tempPict2[i],tempPict1[i],stride2[i],stride1[i],dx1[i],dy1[i],quants,quantsDx,i==0);
-            }
+            // multithreaded by h.yamagata
+            Concurrency::parallel_for(size_t(0), size_t(thread_count), [&](size_t thread_number){
+                for (unsigned int i=0; i<pict.cspInfo.numPlanes; i++) {
+                    filter(tempPict2[i],tempPict1[i],stride2[i],stride1[i],dx1[i],dy1[i],quants,quantsDx,i==0,thread_number,thread_count);
+                }
+            });
             if (Tconfig::cpu_flags&FF_CPU_MMX) {
                 _mm_empty();
             }
@@ -952,7 +1942,6 @@ HRESULT TimgFilterPostprocSpp::process(TfilterQueue::iterator it,TffPict &pict,c
             }
         }
     }
-#endif
     return parent->processSample(++it,pict);
 }
 
@@ -982,6 +1971,7 @@ HRESULT TimgFilterPostprocNic::process(TfilterQueue::iterator it,TffPict &pict,c
         if (pictRect.dx>=16 && pictRect.dy>=16) {
             unsigned char *tempPict[4];
             getCurNext(/*FF_CSPS_MASK_YUV_PLANAR*/FF_CSP_420P,pict,cfg->full,COPYMODE_DEF,tempPict);
+            TautoPerformanceCounter autoTimer(&timer);
             nic_postprocess(tempPict,stride2,
                             pict.cspInfo.shiftX[1],pict.cspInfo.shiftY[1],
                             dx1[0],dy1[0],
@@ -2503,6 +3493,7 @@ HRESULT TimgFilterPostprocFspp::process(TfilterQueue::iterator it,TffPict &pict,
             cspChanged|=getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,tempPict1);
             unsigned char *tempPict2[4];
             cspChanged|=getNext(csp1,pict,cfg->full,tempPict2);
+            TautoPerformanceCounter autoTimer(&timer);
             if (cspChanged) {
                 done();
             }
