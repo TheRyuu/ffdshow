@@ -107,7 +107,6 @@ public:
 struct TglobalSettingsDecVideo :public TglobalSettingsDec {
 private:
     int forceInCSP;
-    int needCodecFix;
     void fixNewCodecs(void);
     static const char_t *fourccs[];
     static const CodecID c_mpeg4[IDFF_MOVIE_MAX+1],c_mpeg1[IDFF_MOVIE_MAX+1],c_mpeg2[IDFF_MOVIE_MAX+1],c_wvc1[IDFF_MOVIE_MAX+1],c_wmv3[IDFF_MOVIE_MAX+1],c_wmv2[IDFF_MOVIE_MAX+1],c_wmv1[IDFF_MOVIE_MAX+1],c_h264[IDFF_MOVIE_MAX+1];

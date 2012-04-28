@@ -534,22 +534,21 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
     _reg_op_codec(IDFF_vixl,t,t2,_l("vixl"),vixl,0);
     _reg_op_codec(IDFF_aasc,t,t2,_l("aasc"),aasc,0);
     _reg_op_codec(IDFF_fps1,t,t2,_l("fps1"),fps1,0);
-    _reg_op_codec(0,t,t2,_l("needCodecFix"),needCodecFix,1);
 }
 
 void TglobalSettingsDecVideo::fixNewCodecs(void)
 {
     if (mpg1==2) {
-        mpg1=IDFF_MOVIE_LIBMPEG2;
+        mpg1=IDFF_MOVIE_LAVC;
     }
     if (mpg2==2) {
-        mpg2=IDFF_MOVIE_LIBMPEG2;
+        mpg2=IDFF_MOVIE_LAVC;
     }
     if (em2v==2) {
-        em2v=IDFF_MOVIE_LIBMPEG2;
+        em2v=IDFF_MOVIE_LAVC;
     }
     if (mpegAVI==2) {
-        mpegAVI=IDFF_MOVIE_LIBMPEG2;
+        mpegAVI=IDFF_MOVIE_LAVC;
     }
     if (dx50==21) {
         dx50=IDFF_MOVIE_LAVC;
@@ -584,14 +583,7 @@ void TglobalSettingsDecVideo::load(void)
     TregOpRegRead tregMode(HKEY_CURRENT_USER,(ffstring(FFDSHOW_REG_PARENT _l("\\")) + filterMode2regkey(filtermode)).c_str());
     tregMode._REG_OP_S(IDFF_defaultPreset, L"activePreset", defaultPreset, countof(defaultPreset), FFPRESET_DEFAULT);
 
-#if 1
     fixNewCodecs();
-#else
-    if (needCodecFix) {
-        fixNewCodecs();
-        needCodecFix=0;
-    }
-#endif
 
     fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
     fixMissing(div3,IDFF_MOVIE_LAVC);
