@@ -1881,8 +1881,7 @@ bool TimgFilterPostprocSpp::is(const TffPictBase &pict,const TfilterSettingsVide
 HRESULT TimgFilterPostprocSpp::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
     const TpostprocSettings *cfg=(const TpostprocSettings*)cfg0;
-    prepare(cfg,31,pict.frametype);
-    if (libavcodec) {
+    if (prepare(cfg,31,pict.frametype) && libavcodec) {
         init(pict,cfg->full,cfg->half);
         if (pictRect.dx>=16 && pictRect.dy>=16) {
             bool cspChanged=false;
