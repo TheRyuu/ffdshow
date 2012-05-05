@@ -430,12 +430,29 @@ retry:
         ret = ff_h263_decode_picture_header(s);
     }
 
+    if (ret < 0 || ret==FRAME_SKIPPED) {
+        if (   s->width  != avctx->coded_width
+            || s->height != avctx->coded_height) {
+                av_log(s->avctx, AV_LOG_WARNING, "Reverting picture dimensions change due to header decoding failure\n");
+                s->width = avctx->coded_width;
+                s->height= avctx->coded_height;
+        }
+    }
     if(ret==FRAME_SKIPPED) return get_consumed_bytes(s, buf_size);
 
     /* skip if the header was thrashed */
     if (ret < 0){
         av_log(s->avctx, AV_LOG_ERROR, "header damaged\n");
         return -1;
+    } else if ((s->width  != avctx->coded_width  ||
+                s->height != avctx->coded_height ||
+                (s->width  + 15) >> 4 != s->mb_width ||
+                (s->height + 15) >> 4 != s->mb_height) &&
+               (HAVE_THREADS && (s->avctx->active_thread_type & FF_THREAD_FRAME))) {
+        av_log_missing_feature(s->avctx, "Width/height/bit depth/chroma idc changing with threads is", 0);
+        s->width = avctx->coded_width;
+        s->height= avctx->coded_height;
+        return AVERROR_PATCHWELCOME;   // width / height changed during parallelized decoding
     }
 
     avctx->has_b_frames= !s->low_delay;
@@ -575,13 +592,6 @@ retry:
         || s->height != avctx->coded_height) {
         /* H.263 could change picture size any time */
         ParseContext pc= s->parse_context; //FIXME move these demuxng hack to avformat
-
-        if (HAVE_THREADS && (s->avctx->active_thread_type&FF_THREAD_FRAME)) {
-            av_log_missing_feature(s->avctx, "Width/height/bit depth/chroma idc changing with threads is", 0);
-            s->width = avctx->coded_width;
-            s->height= avctx->coded_height;
-            return -1;   // width / height changed during parallelized decoding
-        }
 
         s->parse_context.buffer=0;
         ff_MPV_common_end(s);

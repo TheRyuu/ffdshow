@@ -129,10 +129,13 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
         case NAL_IDR_SLICE:
         case NAL_SLICE:
         case NAL_DPA:
+        {
+            int first_mb_in_slice;
+            unsigned int slice_type;
             // decode part of slice header and find I frame
             init_get_bits(&s->gb, ptr, bit_length);
-            int first_mb_in_slice = get_ue_golomb(&s->gb);
-            unsigned int slice_type= get_ue_golomb(&s->gb);
+            first_mb_in_slice = get_ue_golomb(&s->gb);
+            slice_type = get_ue_golomb(&s->gb);
             if (!is_I_slice(slice_type))
                 goto end;
 
@@ -150,6 +153,7 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
                 }
             }
             break;
+        }
         case NAL_DPB:
         case NAL_DPC:
         case NAL_END_SEQUENCE:

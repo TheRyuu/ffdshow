@@ -2997,7 +2997,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0)
                 if (s->avctx->colorspace == AVCOL_SPC_RGB) {
                    s->avctx->pix_fmt = PIX_FMT_GBR24P;
                    av_log(h->s.avctx, AV_LOG_DEBUG, "Detected GBR colorspace.\n");
-                } else if (s->avctx->colorspace == AVCOL_SPC_YCGCO) {
+                } else if (s->avctx->colorspace == AVCOL_SPC_YCOCG) {
                     av_log(h->s.avctx, AV_LOG_WARNING, "Detected unsupported YCgCo colorspace.\n");
                 }
             } else if (CHROMA422) {
@@ -3414,7 +3414,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0)
     // ffdshow custom code
     h->slice_qp_delta = get_se_golomb(&s->gb);
     tmp = h->pps.init_qp + h->slice_qp_delta;
-    if (tmp>51+6*(h->sps.bit_depth_luma-8)) {
+    if (tmp > 51 + 6 * (h->sps.bit_depth_luma - 8)) {
         av_log(s->avctx, AV_LOG_ERROR, "QP %u out of range\n", tmp);
         return -1;
     }
