@@ -301,26 +301,43 @@ void TglobalSettingsDec::save(void)
     TglobalSettingsBase::save();
 }
 
+// fall back to primary decoder when other decoder libs are not found
 void TglobalSettingsDec::fixMissing(int &codecId,int movie1,int movie2,int movie3)
 {
-    fixMissing(codecId,movie1,movie2);
-    fixMissing(codecId,movie2,movie3);
-    fixMissing(codecId,movie1,movie3);
+    if (codecId==movie2) {
+        if (!config->isDecoder[movie2]) {
+            codecId = config->isDecoder[movie1] ? movie1 : IDFF_MOVIE_NONE;
+        }
+    } else if (codecId==movie3) {
+        if (!config->isDecoder[movie3]) {
+            codecId = config->isDecoder[movie1] ? movie1 : IDFF_MOVIE_NONE;
+        }
+    } else if (codecId==movie1) {
+        if (!config->isDecoder[movie1]) {
+            codecId = IDFF_MOVIE_NONE;
+        }
+    } else {
+        codecId = IDFF_MOVIE_NONE;
+    }
 }
 void TglobalSettingsDec::fixMissing(int &codecId,int movie1,int movie2)
 {
-    if (!config->isDecoder[movie1] && !config->isDecoder[movie2]) {
-        codecId=IDFF_MOVIE_NONE;
-    } else if (codecId==movie1 && !config->isDecoder[movie1]) {
-        codecId=movie2;
-    } else if (codecId==movie2 && !config->isDecoder[movie2]) {
-        codecId=movie1;
+    if (codecId==movie2) {
+        if (!config->isDecoder[movie2]) {
+            codecId = config->isDecoder[movie1] ? movie1 : IDFF_MOVIE_NONE;
+        }
+    } else if (codecId==movie1) {
+        if (!config->isDecoder[movie1]) {
+            codecId = IDFF_MOVIE_NONE;
+        }
+    } else {
+        codecId = IDFF_MOVIE_NONE;
     }
 }
-void TglobalSettingsDec::fixMissing(int &codecId,int movie)
+void TglobalSettingsDec::fixMissing(int &codecId,int movie1)
 {
-    if (!config->isDecoder[movie]) {
-        codecId=0;
+    if (!config->isDecoder[movie1]) {
+        codecId=IDFF_MOVIE_NONE;
     }
 }
 int TglobalSettingsDec::getDefault(int id)
@@ -1196,12 +1213,12 @@ void TglobalSettingsDecAudio::load(void)
     fixMissing(wma1      ,IDFF_MOVIE_LAVC);
     fixMissing(wma2      ,IDFF_MOVIE_LAVC);
     fixMissing(amr       ,IDFF_MOVIE_LAVC);
-    fixMissing(ac3       ,IDFF_MOVIE_LIBA52,IDFF_MOVIE_LAVC);
+    fixMissing(ac3       ,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBA52);
     fixMissing(eac3      ,IDFF_MOVIE_LAVC);
-    fixMissing(dts       ,IDFF_MOVIE_LIBDTS,IDFF_MOVIE_LAVC);
-    fixMissing(mp2       ,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
-    fixMissing(mp3       ,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
-    fixMissing(aac       ,IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_LAVC);
+    fixMissing(dts       ,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBDTS);
+    fixMissing(mp2       ,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMAD);
+    fixMissing(mp3       ,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMAD);
+    fixMissing(aac       ,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBFAAD);
     fixMissing(avis      ,IDFF_MOVIE_AVIS);
     fixMissing(iadpcm    ,IDFF_MOVIE_LAVC);
     fixMissing(msadpcm   ,IDFF_MOVIE_LAVC);

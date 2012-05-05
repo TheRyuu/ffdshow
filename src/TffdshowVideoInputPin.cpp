@@ -442,7 +442,7 @@ again:
                     codec=video=NULL;
                     switch (codecId) {
                     case CODEC_ID_H264_QUICK_SYNC:  codecId = CODEC_ID_H264;     break;
-                    case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_LIBMPEG2; break;
+                    case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_MPEG2VIDEO; break;
                     case CODEC_ID_VC1_QUICK_SYNC:   codecId = CODEC_ID_WMV9_LIB; break;
                     default:
                         ASSERT(FALSE); // this shouldn't happen!
