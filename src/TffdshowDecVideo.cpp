@@ -1571,7 +1571,9 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
         AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
         if (omt.formattype==FORMAT_VideoInfo2) {
             VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
+/* FIXME: only do this for renderers that support it. Working: madVR, Broken: Overlay and Haali
             vih->dwControlFlags = get_dwControlFlags(pict);
+*/
             BITMAPINFOHEADER *bmi=&vih->bmiHeader;
             setVIH2aspect(vih, pict.rectFull, 0);
             SetRect(&vih->rcTarget, 0, 0, 0, 0);
@@ -1583,6 +1585,7 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
             NotifyEvent(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(pict.rectFull.dx, pict.rectFull.dy), 0);
         }
     } else {
+/* FIXME: only do this for renderers that support it. Working: madVR, Broken: Overlay and Haali
         AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
         if (omt.formattype==FORMAT_VideoInfo2) {
             VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
@@ -1592,6 +1595,7 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
                 pOut->SetMediaType(&omt);
             }
         }
+*/
     }
 
     int sync=(pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I?TRUE:FALSE;
