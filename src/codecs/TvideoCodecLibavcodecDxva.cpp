@@ -20,7 +20,6 @@
 
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "ffmpeg/Tlibavcodec.h"
-#include "ffmpeg/libavcodec/dvdata.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "IffdshowEnc.h"

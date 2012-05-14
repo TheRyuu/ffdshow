@@ -27,46 +27,10 @@
 #ifndef AVCODEC_DVDATA_H
 #define AVCODEC_DVDATA_H
 
-#include "libavutil/rational.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "get_bits.h"
-
-typedef struct DVwork_chunk {
-    uint16_t  buf_offset;
-    uint16_t  mb_coordinates[5];
-} DVwork_chunk;
-
-/*
- * DVprofile is used to express the differences between various
- * DV flavors. For now it's primarily used for differentiating
- * 525/60 and 625/50, but the plans are to use it for various
- * DV specs as well (e.g. SMPTE314M vs. IEC 61834).
- */
-typedef struct DVprofile {
-    int              dsf;                   /* value of the dsf in the DV header */
-    int              video_stype;           /* stype for VAUX source pack */
-    int              frame_size;            /* total size of one frame in bytes */
-    int              difseg_size;           /* number of DIF segments per DIF channel */
-    int              n_difchan;             /* number of DIF channels per frame */
-    AVRational       time_base;             /* 1/framerate */
-    int              ltc_divisor;           /* FPS from the LTS standpoint */
-    int              height;                /* picture height in pixels */
-    int              width;                 /* picture width in pixels */
-    AVRational       sar[2];                /* sample aspect ratios for 4:3 and 16:9 */
-    DVwork_chunk    *work_chunks;           /* each thread gets its own chunk of frame to work on */
-    uint32_t        *idct_factor;           /* set of iDCT factor tables */
-    enum PixelFormat pix_fmt;               /* picture pixel format */
-    int              bpm;                   /* blocks per macroblock */
-    const uint8_t   *block_sizes;           /* AC block sizes, in bits */
-    int              audio_stride;          /* size of audio_shuffle table */
-    int              audio_min_samples[3];  /* min amount of audio samples */
-                                            /* for 48kHz, 44.1kHz and 32kHz */
-    int              audio_samples_dist[5]; /* how many samples are supposed to be */
-                                            /* in each frame in a 5 frames window */
-    const uint8_t  (*audio_shuffle)[9];     /* PCM shuffling table */
-    const char *name; /* ffdshow custom code */
-} DVprofile;
+#include "dv_profile.h"
 
 typedef struct DVVideoContext {
     const DVprofile *sys;
@@ -160,14 +124,5 @@ static inline void dv_calculate_mb_xy(DVVideoContext *s, DVwork_chunk *work_chun
          *mb_y -= (*mb_y>17)?18:-72; /* shifting the Y coordinate down by 72/2 macro blocks */
      }
 }
-
-/* ffdshow custom code */
-#ifndef FF_ARRAY_ELEMS
-#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
-#endif
-
-enum  {
-  DV_PROFILE_AUTO=-1
-};
 
 #endif /* AVCODEC_DVDATA_H */

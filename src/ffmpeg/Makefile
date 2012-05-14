@@ -55,6 +55,7 @@ SRCS_C=\
     libavcodec/dct32_float.c \
     libavcodec/dsputil.c \
     libavcodec/dv.c \
+    libavcodec/dv_profile.c \
     libavcodec/dvdata.c \
     libavcodec/dvdec.c \
     libavcodec/eac3_data.c \

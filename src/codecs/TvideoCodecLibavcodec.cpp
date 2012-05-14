@@ -24,7 +24,6 @@
 
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "ffmpeg/Tlibavcodec.h"
-#include "ffmpeg/libavcodec/dvdata.h"
 #include "ffmpeg/libavutil/intreadwrite.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"

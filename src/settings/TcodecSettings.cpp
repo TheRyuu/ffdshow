@@ -26,8 +26,7 @@
 #include "ffImgfmt.h"
 #include "Tmuxer.h"
 #include "libavcodec/avcodec.h"
-#include "ffmpeg/libavcodec/dvdata.h"
-#include "ffmpeg/libavcodec/dvdata.c"
+#include "ffmpeg/libavcodec/dv_profile.c"
 
 const char_t* TcoSettings::huffYUVcsps[]= {
     _l("YUY2"),
