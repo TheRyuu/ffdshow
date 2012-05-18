@@ -274,7 +274,6 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
 };
 
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideoRaw::inputMediaTypes[]= {
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL   },
     // explicitly register for raw video types for easier enumeration
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },
@@ -289,7 +288,6 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideoRaw::inputMediaTypes[]= {
 };
 
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideoSubtitles::inputMediaTypes[]= {
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL   },
     // explicitly register for raw video types for easier enumeration
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },

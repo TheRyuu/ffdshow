@@ -509,6 +509,16 @@ void TcodecsPageVideo::fillCodecs(void)
         {_l("all supported")   ,FOURCC_MASK_ALL},
         {_l("all YUV")         ,FOURCC_MASK_YUV},
         {_l("all RGB")         ,FOURCC_MASK_RGB},
+        {_l("YV12")            ,FOURCC_YV12},
+        {_l("YUY2")            ,FOURCC_YUY2},
+        {_l("YVYU")            ,FOURCC_YVYU},
+        {_l("UYVY")            ,FOURCC_UYVY},
+        {_l("VYUY")            ,FOURCC_VYUY},
+        {_l("IYUV")            ,FOURCC_IYUV},
+        {_l("RGB32")           ,FOURCC_RGB3},
+        {_l("RGB24")           ,FOURCC_RGB2},
+        {_l("RGB555")          ,FOURCC_RGB5},
+        {_l("RGB565")          ,FOURCC_RGB6},
         NULL,0
     };
 
@@ -517,9 +527,6 @@ void TcodecsPageVideo::fillCodecs(void)
 
     for (int i=0; rawincsps[i].name; i++) {
         raw.decoders.push_back(Tformat::Tdecoder::init(rawincsps[i].name,rawincsps[i].fcc));
-    }
-    for (int i=0; cspFccs[i].name; i++) {
-        raw.decoders.push_back(Tformat::Tdecoder::init(cspFccs[i].name,cspFccs[i].fcc));
     }
     formats.push_back(raw);
 }

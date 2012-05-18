@@ -813,8 +813,8 @@ void TglobalSettingsDecVideo::save(void)
  FF_FOURCC1_OP(AASC,aasc & rawmask & dxvamask,CODEC_ID_AASC) \
  FF_FOURCC1_OP(FPS1,fps1 & rawmask & dxvamask,CODEC_ID_FRAPS) \
  /* uncompressed video */ \
- FF_FOURCC1_OP(YUY2,(rawv==1 || rawv==2 || rawv==FOURCC_YUY2)& dxvamask,CODEC_ID_YUY2) \
  FF_FOURCC1_OP(YV12,(rawv==1 || rawv==2 || rawv==FOURCC_YV12)& dxvamask,CODEC_ID_YV12) \
+ FF_FOURCC1_OP(YUY2,(rawv==1 || rawv==2 || rawv==FOURCC_YUY2)& dxvamask,CODEC_ID_YUY2) \
  FF_FOURCC1_OP(YVYU,(rawv==1 || rawv==2 || rawv==FOURCC_YVYU)& dxvamask,CODEC_ID_YVYU) \
  FF_FOURCC1_OP(UYVY,(rawv==1 || rawv==2 || rawv==FOURCC_UYVY)& dxvamask,CODEC_ID_UYVY) \
  FF_FOURCC1_OP(VYUY,(rawv==1 || rawv==2 || rawv==FOURCC_VYUY)& dxvamask,CODEC_ID_VYUY) \
@@ -826,14 +826,13 @@ void TglobalSettingsDecVideo::save(void)
  FF_FOURCC1_OP(RGB6,(rawv==1 || rawv==3 || rawv==FOURCC_RGB6)& dxvamask,CODEC_ID_RGB6) \
  FF_FOURCC1_OP(CLJR,(rawv==1            || rawv==FOURCC_CLJR)& dxvamask,CODEC_ID_CLJR) \
  FF_FOURCC1_OP(Y800,(rawv==1 || rawv==2 || rawv==FOURCC_Y800)& dxvamask,CODEC_ID_Y800) \
- FF_FOURCC1_OP(444P,(rawv==1 || rawv==2 || rawv==FOURCC_444P)& dxvamask,CODEC_ID_444P) \
- FF_FOURCC1_OP(YV24,(rawv==1 || rawv==2 || rawv==FOURCC_YV24)& dxvamask,CODEC_ID_444P) \
- FF_FOURCC1_OP(422P,(rawv==1 || rawv==2 || rawv==FOURCC_422P)& dxvamask,CODEC_ID_422P) \
- FF_FOURCC1_OP(YV16,(rawv==1 || rawv==2 || rawv==FOURCC_YV16)& dxvamask,CODEC_ID_YV16) \
+ FF_FOURCC1_OP(410P,(rawv==1 || rawv==2 || rawv==FOURCC_410P)& dxvamask,CODEC_ID_410P) \
  FF_FOURCC1_OP(411P,(rawv==1 || rawv==2 || rawv==FOURCC_411P)& dxvamask,CODEC_ID_411P) \
  FF_FOURCC1_OP(Y41B,(rawv==1 || rawv==2 || rawv==FOURCC_Y41B)& dxvamask,CODEC_ID_411P) \
- FF_FOURCC1_OP(410P,(rawv==1 || rawv==2 || rawv==FOURCC_410P)& dxvamask,CODEC_ID_410P) \
- FF_FOURCC1_OP(NV12,(rawv==1 || rawv==2 || rawv==FOURCC_NV12)& dxvamask,CODEC_ID_NV12) \
+ FF_FOURCC1_OP(422P,(rawv==1 || rawv==2 || rawv==FOURCC_422P)& dxvamask,CODEC_ID_422P) \
+ FF_FOURCC1_OP(444P,(rawv==1 || rawv==2 || rawv==FOURCC_444P)& dxvamask,CODEC_ID_444P) \
+ FF_FOURCC1_OP(YV24,(rawv==1 || rawv==2 || rawv==FOURCC_YV24)& dxvamask,CODEC_ID_444P) \
+ FF_FOURCC1_OP(YV16,(rawv==1 || rawv==2 || rawv==FOURCC_YV16)& dxvamask,CODEC_ID_YV16) \
  /* exotic */ \
  FF_FOURCC_OP (MP4S,mp4v & rawmask & dxvamask,c_mpeg4) \
  FF_FOURCC_OP (SEDG,mp4v & rawmask & dxvamask,c_mpeg4) \
