@@ -176,6 +176,7 @@
     <ClCompile Include="rs.cpp" />
     <ClCompile Include="savepos.cpp" />
     <ClCompile Include="scantree.cpp" />
+    <ClCompile Include="secpassword.cpp" />
     <ClCompile Include="smallfn.cpp" />
     <ClCompile Include="strfn.cpp" />
     <ClCompile Include="strlist.cpp" />
