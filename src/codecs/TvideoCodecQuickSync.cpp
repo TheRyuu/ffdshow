@@ -120,8 +120,16 @@ bool TvideoCodecQuickSync::beginDecompress(TffPictBase &pict,FOURCC infcc,const 
     CAutoLock lock(&m_csLock);
     CQsConfig cfg;
     m_QuickSync->GetConfig(&cfg);
-    HRESULT hr = m_QuickSync->InitDecoder(&mt, infcc);
+    
+    // force ffdshow defaults/options
+    cfg.vpp = 0; // disable video post processing for now.
+
+    //TODO: setup decoder/VPP options using gloal settings.
+
     m_QuickSync->SetConfig(&cfg);
+
+    // Init decoder
+    HRESULT hr = m_QuickSync->InitDecoder(&mt, infcc);
 
     pict.csp = FF_CSP_NV12;
     return hr == S_OK;

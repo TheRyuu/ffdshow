@@ -195,13 +195,13 @@ STDMETHODIMP TffdshowDecVideo::getAVIfps(unsigned int *fps1000)
                     rollingAvg = (3.0 * 1e7) / (double)(decoded_rtStarts[pos_current_even] - decoded_rtStarts[pos_oldest]);
                 }
                 else {
-                    static const double alpha = 0.92;
+                    static const double alpha = 0.85;
                     int pos_prev = (pos_current_even + 3) & 3;
                     double delta = (double)(decoded_rtStarts[pos_current_even] - decoded_rtStarts[pos_prev]);
                     if (delta > 0) {
                         delta = 1e7 / delta;
                         // perform 1st order IIR filter on the frame rate
-                        rollingAvg = rollingAvg * alpha + delta * (1 - alpha);
+                        rollingAvg = rollingAvg * alpha + delta * (1.0 - alpha);
                     }
                     // bad time stamps - revert to older method
                     else

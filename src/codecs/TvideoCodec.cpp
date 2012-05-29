@@ -224,7 +224,9 @@ void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat
         group[pos].fieldtype = top_field_first ? FIELD_TYPE::INT_TFF : FIELD_TYPE::INT_BFF;
     }
 
-    group[pos].repeat_pict = repeat_pict;
+    // egur - repeat_pict may be equal to 2 or 3 for H264 frame doubling/tripling feature.
+    //        this is not telecined content - just simple progressive frame.
+    group[pos].repeat_pict = (repeat_pict == 1) ? 1 : 0;
     film = false;
 
     if (segment_count >= 2) {
