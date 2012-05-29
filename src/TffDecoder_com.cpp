@@ -212,7 +212,7 @@ STDMETHODIMP TffdshowDecVideo::getAVIfps(unsigned int *fps1000)
                 }
 
                 if (rollingAvg > 0) {
-                    unsigned int fps1000_tmp = (unsigned int)(rollingAvg * 1000);
+                    unsigned int fps1000_tmp = (unsigned int)(0.5 + rollingAvg * 1000.0);
                     if (ff_abs((int)fps1000_tmp - (int)*fps1000) > 300) { // Some splitters (matroska, flv) round the timestamps to milli-seconds. Thus there is some error in this calculation. Container's average duration may be more reliable in this case.
                         *fps1000 = fps1000_tmp;
                     }
