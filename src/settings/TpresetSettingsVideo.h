@@ -33,6 +33,8 @@ struct TgrabSettings;
 struct ToutputVideoSettings;
 struct TresizeAspectSettings;
 struct TdeinterlaceSettings;
+struct TQSSettings;
+
 struct TpresetVideo :public Tpreset {
 private:
     int needOutcspsFix,needGlobalFix;
@@ -73,6 +75,11 @@ public:
     int dec_dxva_vc1;
     int dec_dxva_compatibilityMode;
     int dec_dxva_postProcessingMode;
+
+    // QuickSync params:
+    int qs_enable_ts_corr, qs_enable_mt, qs_field_order, qs_enable_sw_emulation, qs_force_field_order,
+        qs_enable_dvd_decode, qs_enable_di, qs_force_di, qs_enable_full_rate, qs_detail,             
+        qs_denoise;
 
     TpostprocSettings *postproc;
     TsubtitlesSettings *subtitles;

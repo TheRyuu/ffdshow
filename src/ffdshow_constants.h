@@ -1380,6 +1380,18 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3577
+#define IDFF_QS_ENABLE_TS_CORR      3582
+#define IDFF_QS_ENABLE_MT           3583
+#define IDFF_QS_FIELD_ORDER         3584
+#define IDFF_QS_ENABLE_SW_EMULATION 3585
+#define IDFF_QS_FORCE_FIELD_ORDER   3586
+#define IDFF_QS_ENABLE_DVD_DECODE   3587
+#define IDFF_QS_ENABLE_DI           3588
+#define IDFF_QS_FORCE_DI            3589
+#define IDFF_QS_ENABLE_FULL_RATE    3590
+#define IDFF_QS_DETAIL              3591
+#define IDFF_QS_DENOISE             3592
+
+//next:3593
 
 #endif

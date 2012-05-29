@@ -1358,6 +1358,9 @@
     <ClCompile Include="src\TPerformanceCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\dialog\QSdecoderOptions.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <yasm Include="src\cpuid.asm">
@@ -2663,6 +2666,9 @@
     </ClInclude>
     <ClInclude Include="src\TPerformanceCounter.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\QSdecoderOptions.h">
+      <Filter>dialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -296,6 +296,19 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
 
         IDFF_bordersBrightness  ,&TpresetVideo::bordersBrightness  ,0,255,_l(""),1,
         _l("bordersBrightness"),0,
+
+        // Intel QuickSync Decoder options
+        IDFF_QS_ENABLE_TS_CORR      ,&TpresetVideo::qs_enable_ts_corr     , 0,  1, _l(""), 1, _l("qsEnableTimeStampCorrection"), 1,
+        IDFF_QS_ENABLE_MT           ,&TpresetVideo::qs_enable_mt          , 0,  1, _l(""), 1, _l("qsEnableMT")                 , 1,
+        IDFF_QS_FIELD_ORDER         ,&TpresetVideo::qs_field_order        , 0,  2, _l(""), 1, _l("qsFieldOrder")               , 0,
+        IDFF_QS_ENABLE_SW_EMULATION ,&TpresetVideo::qs_enable_sw_emulation, 0,  1, _l(""), 1, _l("qsEnableSwEmulation")        , 0,
+        IDFF_QS_FORCE_FIELD_ORDER   ,&TpresetVideo::qs_force_field_order  , 0,  1, _l(""), 1, _l("qsForceFieldOrder")          , 0,
+        IDFF_QS_ENABLE_DVD_DECODE   ,&TpresetVideo::qs_enable_dvd_decode  , 0,  1, _l(""), 1, _l("qsEnableDvdDecode")          , 0,
+        IDFF_QS_ENABLE_DI           ,&TpresetVideo::qs_enable_di          , 0,  1, _l(""), 1, _l("qsEnableDeinterlacing")      , 0,
+        IDFF_QS_FORCE_DI            ,&TpresetVideo::qs_force_di           , 0,  1, _l(""), 1, _l("qsForceDeinterlacing")       , 0,
+        IDFF_QS_ENABLE_FULL_RATE    ,&TpresetVideo::qs_enable_full_rate   , 0,  1, _l(""), 1, _l("qsEnableFullRateDI")         , 1,
+        IDFF_QS_DETAIL              ,&TpresetVideo::qs_detail             , 0, 64, _l(""), 1, _l("qsDetailStrength")           , 0,
+        IDFF_QS_DENOISE             ,&TpresetVideo::qs_denoise            , 0, 64, _l(""), 1, _l("qsDenoiseStrength")          , 0,
         0
     };
     // Be careful : any  setting added above must also be added into the following method :
@@ -501,6 +514,19 @@ Tpreset& TpresetVideo::operator =(const Tpreset &src0)
 
             isDyInterlaced=src.isDyInterlaced;
             dyInterlaced=src.dyInterlaced;
+
+            // QuickSync params:
+            qs_enable_ts_corr     =src.qs_enable_ts_corr;
+            qs_enable_mt          =src.qs_enable_mt;
+            qs_field_order        =src.qs_field_order;
+            qs_enable_sw_emulation=src.qs_enable_sw_emulation;
+            qs_force_field_order  =src.qs_force_field_order;
+            qs_enable_dvd_decode  =src.qs_enable_dvd_decode;
+            qs_enable_di          =src.qs_enable_di;          
+            qs_force_di           =src.qs_force_di;           
+            qs_enable_full_rate   =src.qs_enable_full_rate;   
+            qs_detail             =src.qs_detail;             
+            qs_denoise            =src.qs_denoise;
         } catch (const std::bad_cast&) {
             DPRINTF(_l("In TpresetVideo::operator =, dynamic_cast failed. This must be a bug."));
             ASSERT(0);

@@ -35,7 +35,6 @@ protected:
     // C function pointers (factory functions)
     IQuickSyncDecoder* (__stdcall *createQuickSync)();
     void (__stdcall *destroyQuickSync)(IQuickSyncDecoder*);
-
     CCritSec            m_csLock;
     Tdll*               m_Dll;
     IQuickSyncDecoder*  m_QuickSync;

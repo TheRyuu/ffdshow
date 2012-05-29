@@ -512,9 +512,12 @@
 #define IDC_GRP_CSP_OUT                 1284
 #define IDC_GRP_INFO                    1284
 #define IDC_LBL_SUB_SPEED2              1284
+#define IDC_GRP_LIBAVCODEC2             1284
+#define IDC_GRP_QS_DECODER_OPTIONS      1284
 #define IDC_LBL_NEW_SIZE                1285
 #define IDC_GRP_DEBUG                   1285
 #define IDC_LBL_RESIZE_METHOD_LUMA      1285
+#define IDC_GRP_QS_DECODER_OPTIONS2     1285
 #define IDC_LBL_NEW_ASPECT              1286
 #define IDC_LBL_RESIZE_METHOD_CHROMA    1286
 #define IDC_LBL_RESIZE_IFX              1287
@@ -1905,6 +1908,7 @@
 #define IDC_CHB_AUDIO_DECODER_DRC       2245
 #define IDD_DXVAOPTIONS                 2245
 #define IDC_TBR_DECODER_DRC_LEVEL       2246
+#define IDD_INTEL_QS_DECODEROPTIONS     2246
 #define IDC_LBL_DECODER_DRC_LEVEL       2247
 #define IDC_CHB_SOFT_TELECINE           2248
 #define IDC_RBT_YCbCr_input_levels_auto 2249
@@ -1981,6 +1985,19 @@
 #define IDC_CHB_OUT_Y416                40040
 #define IDC_LBL_OUT_PRIMARY_CSP         40041
 #define IDC_CHB_LEVELS_RGB              40042
+#define IDC_QS_ENABLE_TS_CORR           40043
+#define IDC_QS_ENABLE_MT                40044
+#define IDC_QS_FIELD_ORDER              40045
+#define IDC_QS_ENABLE_SW_EMULATION      40046
+#define IDC_QS_FORCE_FIELD_ORDER        40047
+#define IDC_QS_ENABLE_DVD_DECODE        40048
+#define IDC_QS_ENABLE_DI                40049
+#define IDC_QS_FORCE_DI                 40050
+#define IDC_QS_ENABLE_FULL_RATE         40052
+#define IDC_QS_DETAIL                   40053
+#define IDC_QS_DETAIL_LBL               40054
+#define IDC_QS_DENOISE                  40055
+#define IDC_QS_DENOISE_LBL              40056
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -1989,9 +2006,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        304
+#define _APS_NEXT_RESOURCE_VALUE        305
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40043
+#define _APS_NEXT_CONTROL_VALUE         40057
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

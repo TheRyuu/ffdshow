@@ -20,7 +20,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-#pragma code_page(1252)
+#pragma code_page(1255)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -2423,6 +2423,36 @@ BEGIN
     COMBOBOX        IDC_CBX_DXVA_POST_PROCESSING_MODE,88,71,127,91,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
+IDD_INTEL_QS_DECODEROPTIONS DIALOGEX 0, 0, 267, 230
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Intel® QuickSync Decoder options",IDC_GRP_QS_DECODER_OPTIONS,2,0,263,81
+    CONTROL         "Enable time stamp correction",IDC_QS_ENABLE_TS_CORR,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,17,108,10
+    CONTROL         "Enable multithreading",IDC_QS_ENABLE_MT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,32,85,10
+    CONTROL         "Enable SW emulation",IDC_QS_ENABLE_SW_EMULATION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,32,83,10
+    CONTROL         "Force field order (affects deinterlacing)",IDC_QS_FORCE_FIELD_ORDER,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,47,141,10
+    COMBOBOX        IDC_QS_FIELD_ORDER,5,63,88,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Enable DVD decoding (testing only)",IDC_QS_ENABLE_DVD_DECODE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,17,128,10
+    GROUPBOX        "Video processing options",IDC_GRP_QS_DECODER_OPTIONS2,2,82,263,91
+    CONTROL         "Enable deinterlacing (auto)",IDC_QS_ENABLE_DI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,98,102,10
+    CONTROL         "Force deinterlacing on all frames",IDC_QS_FORCE_DI,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,98,119,10
+    CONTROL         "Enable full rate DI (50p/60p)",IDC_QS_ENABLE_FULL_RATE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,113,107,10
+    CONTROL         "",IDC_QS_DETAIL,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,136,250,11
+    CONTROL         "",IDC_QS_DENOISE,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,157,250,11
+    LTEXT           "Sharpness",IDC_QS_DETAIL_LBL,8,126,108,10
+    LTEXT           "Noise reduction",IDC_QS_DENOISE_LBL,8,148,108,10
+    CTEXT           "Note: all changes will take effect the next time a clip is opened",IDC_STATIC,8,178,247,8
+    CTEXT           "Intel QuickSync Decoder by Eric Gur",IDC_STATIC,8,199,247,8
+    CTEXT           "Copyright 2012 Intel® Corp. BSD license",IDC_STATIC,7,210,247,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2539,6 +2569,10 @@ BEGIN
         TOPMARGIN, 1
     END
 
+    IDD_DECODEROPTIONS, DIALOG
+    BEGIN
+    END
+
     IDD_COMPATIBILITY, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -2550,6 +2584,10 @@ BEGIN
     IDD_NOISE, DIALOG
     BEGIN
         VERTGUIDE, 262
+    END
+
+    IDD_SHARPEN, DIALOG
+    BEGIN
     END
 
     IDD_SUBTITLES, DIALOG
@@ -2575,6 +2613,10 @@ BEGIN
         VERTGUIDE, 117
     END
 
+    IDD_DSCALER, DIALOG
+    BEGIN
+    END
+
     IDD_CODECS, DIALOG
     BEGIN
         VERTGUIDE, 5
@@ -2590,33 +2632,13 @@ BEGIN
         BOTTOMMARGIN, 97
     END
 
+    IDD_GENERIC, DIALOG
+    BEGIN
+    END
+
     IDD_IN, DIALOG
     BEGIN
         VERTGUIDE, 132
-    END
-
-    IDD_MASKING, DIALOG
-    BEGIN
-        VERTGUIDE, 4
-        VERTGUIDE, 131
-        VERTGUIDE, 201
-    END
-
-    IDD_ME, DIALOG
-    BEGIN
-        VERTGUIDE, 4
-        VERTGUIDE, 16
-    END
-
-    IDD_ONEPASS, DIALOG
-    BEGIN
-        VERTGUIDE, 138
-        VERTGUIDE, 201
-    END
-
-    IDD_QUANT_TABLES, DIALOG
-    BEGIN
-        VERTGUIDE, 99
     END
 
     IDD_OUTCSPS, DIALOG
@@ -2626,6 +2648,10 @@ BEGIN
     IDD_DEINTERLACE_KERNEL, DIALOG
     BEGIN
         BOTTOMMARGIN, 57
+    END
+
+    IDD_DEINTERLACE_YADIF, DIALOG
+    BEGIN
     END
 
     IDD_OUTSFS, DIALOG
@@ -2665,6 +2691,10 @@ BEGIN
         RIGHTMARGIN, 317
     END
 
+    IDD_FLIP, DIALOG
+    BEGIN
+    END
+
     IDD_PRESET_AUTOLOAD_ITEMS, DIALOG
     BEGIN
         BOTTOMMARGIN, 48
@@ -2693,6 +2723,10 @@ BEGIN
     BEGIN
         LEFTMARGIN, 4
         BOTTOMMARGIN, 228
+    END
+
+    IDD_INTEL_QS_DECODEROPTIONS, DIALOG
+    BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2761,6 +2795,7 @@ STRINGTABLE
 BEGIN
     IDD_AUDIODECODEROPTIONS "Decoder options"
     IDD_DXVAOPTIONS         "Hardware acceleration (DXVA)"
+    IDD_INTEL_QS_DECODEROPTIONS "Intel® QuickSync"
 END
 
 STRINGTABLE

@@ -122,9 +122,23 @@ bool TvideoCodecQuickSync::beginDecompress(TffPictBase &pict,FOURCC infcc,const 
     m_QuickSync->GetConfig(&cfg);
     
     // force ffdshow defaults/options
-    cfg.vpp = 0; // disable video post processing for now.
+    cfg.bTimeStampCorrection          = deci->getParam2(IDFF_QS_ENABLE_TS_CORR) != 0;
+    cfg.bEnableMultithreading         = deci->getParam2(IDFF_QS_ENABLE_MT) != 0;
+    cfg.eFieldOrder                   = deci->getParam2(IDFF_QS_FIELD_ORDER);
+    cfg.bEnableSwEmulation            = deci->getParam2(IDFF_QS_ENABLE_SW_EMULATION) != 0;
+    cfg.bForceFieldOrder              = deci->getParam2(IDFF_QS_FORCE_FIELD_ORDER) != 0; 
+    cfg.bEnableDvdDecoding            = deci->getParam2(IDFF_QS_ENABLE_DVD_DECODE) != 0; 
+    cfg.bVppEnableDeinterlacing       = deci->getParam2(IDFF_QS_ENABLE_DI) != 0;
+    cfg.bVppEnableForcedDeinterlacing = deci->getParam2(IDFF_QS_FORCE_DI) != 0;
+    cfg.bVppEnableFullRateDI          = deci->getParam2(IDFF_QS_ENABLE_FULL_RATE) != 0;
+    cfg.nVppDetailStrength            = deci->getParam2(IDFF_QS_DETAIL);
+    cfg.nVppDenoiseStrength           = deci->getParam2(IDFF_QS_DENOISE);
 
-    //TODO: setup decoder/VPP options using gloal settings.
+    if (cfg.bVppEnableForcedDeinterlacing)
+        cfg.bVppEnableDeinterlacing = true;
+
+    // Auto enable VPP
+    cfg.bEnableVideoProcessing = (cfg.nVppDenoiseStrength || cfg.nVppDetailStrength || cfg.bVppEnableDeinterlacing);
 
     m_QuickSync->SetConfig(&cfg);
 
@@ -309,3 +323,4 @@ bool TvideoCodecQuickSync::check(Tconfig* config)
     static bool checkResult = Tdll::check(dllname, config); //no need to do this more than once
     return checkResult;
 }
+

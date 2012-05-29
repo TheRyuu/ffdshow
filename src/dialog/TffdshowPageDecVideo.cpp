@@ -29,6 +29,7 @@
 #include "Cpresets.h"
 #include "Cfont.h"
 #include "CdecoderOptions.h"
+#include "QSdecoderOptions.h"
 #include "Cqueue.h"
 #include "Cabout.h"
 #include "Ckeys.h"
@@ -161,6 +162,7 @@ void TffdshowPageDecVideo::onActivate(void)
             addTI(&tvis,new TDXVAOptionsPage(this));
         } else if ((filterMode&IDFF_FILTERMODE_VIDEOSUBTITLES)==0 && (filterMode&IDFF_FILTERMODE_VIDEODXVA)==0) { // No decoder options for DXVA & subtitles filter
             addTI(&tvis,new TdecoderOptionsPage(this));
+            addTI(&tvis,new TQSdecoderOptionsPage(this));
         }
         if ((filterMode&IDFF_FILTERMODE_VIDEODXVA)==0) { // No queue & output options for DXVA
             addTI(&tvis,new TqueuePage(this));
