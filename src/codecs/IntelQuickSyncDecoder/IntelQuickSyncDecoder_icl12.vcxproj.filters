@@ -71,6 +71,9 @@
     <ClInclude Include="src\QuickSyncUtils.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\QuickSyncVPP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\QuickSyncExports.cpp">
@@ -96,6 +99,9 @@
     </ClCompile>
     <ClCompile Include="src\QuickSyncUtils.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QuickSyncVPP.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\base_alllocator.cpp">
       <Filter>Source Files\Allocators</Filter>
