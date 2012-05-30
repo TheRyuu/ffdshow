@@ -2448,9 +2448,9 @@ BEGIN
     CONTROL         "",IDC_QS_DENOISE,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,157,250,11
     LTEXT           "Sharpness",IDC_QS_DETAIL_LBL,8,126,108,10
     LTEXT           "Noise reduction",IDC_QS_DENOISE_LBL,8,148,108,10
-    CTEXT           "Note: all changes will take effect the next time a clip is opened",IDC_STATIC,8,178,247,8
-    CTEXT           "Intel QuickSync Decoder by Eric Gur",IDC_STATIC,8,199,247,8
-    CTEXT           "Copyright 2012 Intel® Corp. BSD license",IDC_STATIC,7,210,247,8
+    LTEXT           "Note: all changes will take effect the next time a clip is opened.\nEnabling video processing turns deinterlacer on for interlaced video as detail/denoise work on progressive frames only.",IDC_STATIC,8,175,247,24
+    CTEXT           "Intel QuickSync Decoder by Eric Gur",IDC_STATIC,8,205,247,8
+    CTEXT           "Copyright 2012 Intel® Corp. BSD license",IDC_STATIC,7,216,247,8
 END
 
 
