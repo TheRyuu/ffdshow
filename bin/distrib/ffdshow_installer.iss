@@ -1,7 +1,7 @@
 ; Requires Inno Setup Unicode: http://www.jrsoftware.org/isdl.php
 ; (Make sure you choose to install Inno Setup Preprocessor)
-#if VER < 0x05040200
-  #error Update your Inno Setup version
+#if VER < EncodeVer(5,5,0)
+  #error Update your Inno Setup version (5.5.0 or newer)
 #endif
 #ifndef UNICODE
   #error Use the Unicode Inno Setup
@@ -145,7 +145,7 @@ DefaultDirName                  = {code:GetDefaultInstallDir|}
 DirExistsWarning                = no
 DisableDirPage                  = auto
 DisableProgramGroupPage         = auto
-MinVersion                      = 0,5.01SP2
+MinVersion                      = 5.01SP2
 OutputBaseFilename              = ffdshow_rev{#= SVN_REVISION}_{#= BUILD_YEAR}{#= BUILD_MONTH}{#= BUILD_DAY}{#= filename_suffix}
 OutputDir                       = {#= outputdir}
 PrivilegesRequired              = admin
@@ -158,7 +158,6 @@ ShowLanguageDialog              = yes
 ShowLanguageDialog              = no
 #endif
 ShowTasksTreeLines              = yes
-ShowUndisplayableLanguages      = no
 UninstallDisplayIcon            = {app}\ffdshow.ax,9
 UsePreviousTasks                = yes
 VersionInfoCompany              = ffdshow
@@ -299,7 +298,7 @@ Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";    
 Name: "video\h264";              Description: "H.264 / AVC";                      Components: ffdshow
 Name: "video\h264\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 #if include_quicksync
-Name: "video\h264\quicksync";    Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 0,6;
+Name: "video\h264\quicksync";    Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 6.0;
 #endif
 Name: "video\divx";              Description: "DivX";                             Components: ffdshow
 Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
@@ -314,7 +313,7 @@ Name: "video\mpeg2";             Description: "MPEG-2";                         
 ;Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
 Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 #if include_quicksync
-Name: "video\mpeg2\quicksync";   Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 0,6;
+Name: "video\mpeg2\quicksync";   Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 6.0;
 #endif
 Name: "video\huffyuv";           Description: "Huffyuv";                          Components: ffdshow
 Name: "video\qt";                Description: "SVQ1, SVQ3, RPZA, QT RLE";         Components: ffdshow
@@ -322,7 +321,7 @@ Name: "video\vc1";               Description: "VC-1";                           
 Name: "video\vc1\wmv9";          Description: "wmv9";                             Components: ffdshow; Flags: unchecked exclusive
 Name: "video\vc1\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 #if include_quicksync
-Name: "video\vc1\quicksync";     Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 0,6;
+Name: "video\vc1\quicksync";     Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 6.0;
 #endif
 Name: "video\wmv1";              Description: "WMV1";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\wmv2";              Description: "WMV2";                             Components: ffdshow; Flags: unchecked dontinheritcheck
@@ -427,15 +426,15 @@ Source: "{#= bindir}\ffdshow_icl.ax";             DestDir: "{app}"; DestName: "f
 #else
 Source: "{#= bindir}\ffdshow.ax";                 DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
 #endif
-Source: "..\manifest\ffdshow.ax.manifest";        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
+Source: "..\manifest\ffdshow.ax.manifest";        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 6.0;
 
 Source: "{#= bindir}\ff_wmv9.dll";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 #if include_quicksync
-Source: "{#= bindir}\IntelQuickSyncDecoder.dll";  DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion; Check: IsQSCapableIntelCPU; MinVersion: 0,6;
+Source: "{#= bindir}\IntelQuickSyncDecoder.dll";  DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion; Check: IsQSCapableIntelCPU; MinVersion: 6.0;
 #endif
 
 Source: "{#= bindir}\ff_vfw.dll";                 DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
-Source: "..\manifest\ff_vfw.dll.manifest";        DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
+Source: "..\manifest\ff_vfw.dll.manifest";        DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 6.0;
 
 #if include_plugin_avisynth
 Source: "..\ffavisynth.avsi";                     DestDir: "{code:GetAviSynthPluginDir}";   Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
@@ -450,7 +449,7 @@ Source: "{#= bindir}\FLT_ffdshow.dll";            DestDir: "{code:GetDScalerDir|
 
 #if include_makeavis
 Source: "{#= bindir}\makeAVIS.exe";               DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
-Source: "..\manifest\makeAVIS.exe.manifest";      DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
+Source: "..\manifest\makeAVIS.exe.manifest";      DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 6.0;
 Source: "{#= bindir}\ff_acm.acm";                 DestDir: "{sys}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 
