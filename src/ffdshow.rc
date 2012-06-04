@@ -2428,29 +2428,30 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Intel® QuickSync Decoder options",IDC_GRP_QS_DECODER_OPTIONS,2,0,263,81
+    GROUPBOX        "Intel® QuickSync Decoder",IDC_GRP_QS_DECODER_OPTIONS,2,0,263,57
     CONTROL         "Enable time stamp correction",IDC_QS_ENABLE_TS_CORR,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,17,108,10
-    CONTROL         "Enable multithreading",IDC_QS_ENABLE_MT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,32,85,10
-    CONTROL         "Enable SW emulation",IDC_QS_ENABLE_SW_EMULATION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,32,83,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,11,108,10
+    CONTROL         "Enable multithreading",IDC_QS_ENABLE_MT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,26,85,10
+    CONTROL         "Enable SW emulation",IDC_QS_ENABLE_SW_EMULATION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,26,83,10
     CONTROL         "Force field order (affects deinterlacing)",IDC_QS_FORCE_FIELD_ORDER,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,47,141,10
-    COMBOBOX        IDC_QS_FIELD_ORDER,5,63,88,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,41,141,10
+    COMBOBOX        IDC_QS_FIELD_ORDER,150,40,88,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Enable DVD decoding (testing only)",IDC_QS_ENABLE_DVD_DECODE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,17,128,10
-    GROUPBOX        "Video processing options",IDC_GRP_QS_DECODER_OPTIONS2,2,82,263,91
-    CONTROL         "Enable deinterlacing (auto)",IDC_QS_ENABLE_DI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,98,102,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,11,128,10
+    GROUPBOX        "Deinterlacing",IDC_GRP_QS_DECODER_OPTIONS2,2,57,263,38
+    CONTROL         "Enable deinterlacing (auto)",IDC_QS_ENABLE_DI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,67,102,10
     CONTROL         "Force deinterlacing on all frames",IDC_QS_FORCE_DI,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,98,119,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,129,67,119,10
     CONTROL         "Enable full rate DI (50p/60p)",IDC_QS_ENABLE_FULL_RATE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,113,107,10
-    CONTROL         "",IDC_QS_DETAIL,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,136,250,11
-    CONTROL         "",IDC_QS_DENOISE,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,157,250,11
-    LTEXT           "Sharpness",IDC_QS_DETAIL_LBL,8,126,108,10
-    LTEXT           "Noise reduction",IDC_QS_DENOISE_LBL,8,148,108,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,82,107,10
+    CONTROL         "",IDC_QS_DETAIL,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,116,250,11
+    CONTROL         "",IDC_QS_DENOISE,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,137,250,11
+    LTEXT           "Sharpness",IDC_QS_DETAIL_LBL,8,106,108,10
+    LTEXT           "Noise reduction",IDC_QS_DENOISE_LBL,8,128,108,10
     LTEXT           "Note: all changes will take effect the next time a clip is opened.\nEnabling video processing turns deinterlacer on for interlaced video as detail/denoise work on progressive frames only.",IDC_STATIC,8,175,247,24
     CTEXT           "Intel QuickSync Decoder by Eric Gur",IDC_STATIC,8,205,247,8
     CTEXT           "Copyright 2012 Intel® Corp. BSD license",IDC_STATIC,7,216,247,8
+    GROUPBOX        "Image Enhancement",IDC_GRP_QS_DECODER_OPTIONS3,2,96,263,53
 END
 
 

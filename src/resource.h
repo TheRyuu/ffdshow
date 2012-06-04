@@ -520,6 +520,7 @@
 #define IDC_GRP_QS_DECODER_OPTIONS2     1285
 #define IDC_LBL_NEW_ASPECT              1286
 #define IDC_LBL_RESIZE_METHOD_CHROMA    1286
+#define IDC_GRP_QS_DECODER_OPTIONS3     1286
 #define IDC_LBL_RESIZE_IFX              1287
 #define IDC_LBL_RESIZE_IFY              1288
 #define IDC_GRP_ASPECT_RATIO            1289
