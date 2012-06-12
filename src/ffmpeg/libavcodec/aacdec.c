@@ -79,7 +79,7 @@
            Parametric Stereo.
  */
 
-
+#include "libavutil/float_dsp.h"
 #include "avcodec.h"
 #include "internal.h"
 #include "get_bits.h"
@@ -478,6 +478,8 @@ static ChannelElement *get_che(AACContext *ac, int type, int elem_id)
         int layout_map_tags;
         push_output_configuration(ac);
 
+        av_log(ac->avctx, AV_LOG_DEBUG, "mono with CPE\n");
+
         if (set_default_channel_config(ac->avctx, layout_map, &layout_map_tags,
                                        2) < 0)
             return NULL;
@@ -486,12 +488,15 @@ static ChannelElement *get_che(AACContext *ac, int type, int elem_id)
             return NULL;
 
         ac->oc[1].m4ac.chan_config = 2;
+        ac->oc[1].m4ac.ps = 0;
     }
     // And vice-versa
-    if (!ac->tags_mapped && type == TYPE_SCE && ac->oc[1].m4ac.chan_config == 2 && 0) {
+    if (!ac->tags_mapped && type == TYPE_SCE && ac->oc[1].m4ac.chan_config == 2) {
         uint8_t layout_map[MAX_ELEM_ID*4][3];
         int layout_map_tags;
         push_output_configuration(ac);
+
+        av_log(ac->avctx, AV_LOG_DEBUG, "stereo with SCE\n");
 
         if (set_default_channel_config(ac->avctx, layout_map, &layout_map_tags,
                                        1) < 0)
@@ -501,6 +506,8 @@ static ChannelElement *get_che(AACContext *ac, int type, int elem_id)
             return NULL;
 
         ac->oc[1].m4ac.chan_config = 1;
+        if (ac->oc[1].m4ac.sbr)
+            ac->oc[1].m4ac.ps = -1;
     }
     // For indexed channel configurations map the channels solely based on position.
     switch (ac->oc[1].m4ac.chan_config) {
@@ -833,6 +840,14 @@ static av_cold int aac_decode_init(AVCodecContext *avctx)
 
     ac->avctx = avctx;
     ac->oc[1].m4ac.sample_rate = avctx->sample_rate;
+    
+    if (avctx->request_sample_fmt == AV_SAMPLE_FMT_FLT) {
+        avctx->sample_fmt = AV_SAMPLE_FMT_FLT;
+        output_scale_factor = 1.0 / 32768.0;
+    } else {
+        avctx->sample_fmt = AV_SAMPLE_FMT_S16;
+        output_scale_factor = 1.0;
+    }
 
     if (avctx->extradata_size > 0) {
         if (decode_audio_specific_config(ac, ac->avctx, &ac->oc[1].m4ac,
@@ -869,14 +884,6 @@ static av_cold int aac_decode_init(AVCodecContext *avctx)
         }
     }
 
-    if (avctx->request_sample_fmt == AV_SAMPLE_FMT_FLT) {
-        avctx->sample_fmt = AV_SAMPLE_FMT_FLT;
-        output_scale_factor = 1.0; // / 32768.0;
-    } else {
-        avctx->sample_fmt = AV_SAMPLE_FMT_S16;
-        output_scale_factor = 1.0;
-    }
-
     AAC_INIT_VLC_STATIC( 0, 304);
     AAC_INIT_VLC_STATIC( 1, 270);
     AAC_INIT_VLC_STATIC( 2, 550);
@@ -893,6 +900,7 @@ static av_cold int aac_decode_init(AVCodecContext *avctx)
 
     ff_dsputil_init(&ac->dsp, avctx);
     ff_fmt_convert_init(&ac->fmt_conv, avctx);
+    avpriv_float_dsp_init(&ac->fdsp, avctx->flags & CODEC_FLAG_BITEXACT);
 
     ac->random_state = 0x1f2e3d4c;
 
@@ -2061,10 +2069,10 @@ static void windowing_and_mdct_ltp(AACContext *ac, float *out,
     const float *swindow_prev = ics->use_kb_window[1] ? ff_aac_kbd_short_128 : ff_sine_128;
 
     if (ics->window_sequence[0] != LONG_STOP_SEQUENCE) {
-        ac->dsp.vector_fmul(in, in, lwindow_prev, 1024);
+        ac->fdsp.vector_fmul(in, in, lwindow_prev, 1024);
     } else {
         memset(in, 0, 448 * sizeof(float));
-        ac->dsp.vector_fmul(in + 448, in + 448, swindow_prev, 128);
+        ac->fdsp.vector_fmul(in + 448, in + 448, swindow_prev, 128);
     }
     if (ics->window_sequence[0] != LONG_START_SEQUENCE) {
         ac->dsp.vector_fmul_reverse(in + 1024, in + 1024, lwindow, 1024);
@@ -2384,22 +2392,6 @@ static int parse_adts_frame_header(AACContext *ac, GetBitContext *gb)
     return size;
 }
 
-/* ffdshow custom code */ 	 
-void float_interleave(float *dst, const float **src, long len, int channels) 	 
-{ 	 
-   int i,j,c; 	 
-   if(channels==2){ 	 
-       for(i=0; i<len; i++){ 	 
-           dst[2*i]   = src[0][i] / 32768.0f; 	 
-           dst[2*i+1] = src[1][i] / 32768.0f; 	 
-       } 	 
-   }else{ 	 
-       for(c=0; c<channels; c++) 	 
-           for(i=0, j=c; i<len; i++, j+=channels) 	 
-               dst[j] = src[c][i] / 32768.0f; 	 
-   } 	 
-}
-
 static int aac_decode_frame_int(AVCodecContext *avctx, void *data,
                                 int *got_frame_ptr, GetBitContext *gb)
 {
@@ -2530,7 +2522,7 @@ static int aac_decode_frame_int(AVCodecContext *avctx, void *data,
         }
 
         if (avctx->sample_fmt == AV_SAMPLE_FMT_FLT)
-            /*ac->fmt_conv.*/float_interleave((float *)ac->frame.data[0],
+            ac->fmt_conv.float_interleave((float *)ac->frame.data[0],
                                           (const float **)ac->output_data,
                                           samples, avctx->channels);
         else
@@ -2892,6 +2884,7 @@ AVCodec ff_aac_decoder = {
     },
     .capabilities    = CODEC_CAP_CHANNEL_CONF | CODEC_CAP_DR1,
     .channel_layouts = aac_channel_layout,
+    .flush = flush,
 };
 
 /*

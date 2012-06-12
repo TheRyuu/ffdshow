@@ -218,6 +218,7 @@ const char_t *getCodecName(CodecID codecId)
      case  CODEC_ID_AAC_LATM          : return _l("aac latm");
      case  CODEC_ID_THP               : return _l("thp");
      case  CODEC_ID_AMR_WB            : return _l("amr wb");
+     case  CODEC_ID_IAC               : return _l("iac");
 
      /* Raw formats */
      case  CODEC_ID_RAW               : return _l("raw");
