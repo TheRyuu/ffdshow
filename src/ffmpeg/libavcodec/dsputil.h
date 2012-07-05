@@ -417,17 +417,6 @@ typedef struct DSPContext {
     void (*vector_fmul_scalar)(float *dst, const float *src, float mul,
                                int len);
     /**
-     * Multiply a vector of floats by a scalar float and add to
-     * destination vector.  Source and destination vectors must
-     * overlap exactly or not at all.
-     * @param dst result vector, 16-byte aligned
-     * @param src input vector, 16-byte aligned
-     * @param mul scalar value
-     * @param len length of vector, multiple of 4
-     */
-    void (*vector_fmac_scalar)(float *dst, const float *src, float mul,
-                               int len);
-    /**
      * Calculate the scalar product of two vectors of floats.
      * @param v1  first vector, 16-byte aligned
      * @param v2  second vector, 16-byte aligned
@@ -559,9 +548,9 @@ typedef struct DSPContext {
      * @param src  source array
      *             constraints: 16-byte aligned
      * @param min  minimum value
-     *             constraints: must in the the range [-(1<<24), 1<<24]
+     *             constraints: must be in the range [-(1 << 24), 1 << 24]
      * @param max  maximum value
-     *             constraints: must in the the range [-(1<<24), 1<<24]
+     *             constraints: must be in the range [-(1 << 24), 1 << 24]
      * @param len  number of elements in the array
      *             constraints: multiple of 32 greater than zero
      */

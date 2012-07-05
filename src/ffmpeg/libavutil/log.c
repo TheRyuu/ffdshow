@@ -24,6 +24,11 @@
  * logging functions
  */
 
+#include "config.h"
+
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include <stdlib.h>
 #include "avstring.h"
 #include "avutil.h"

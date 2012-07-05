@@ -788,6 +788,11 @@ av_cold int ff_MPV_common_init(MpegEncContext *s)
                 FF_ALLOCZ_OR_GOTO(s->avctx, s->dct_offset,
                                   2 * 64 * sizeof(uint16_t), fail);
             }
+
+            FF_ALLOC_OR_GOTO(s->avctx, s->cplx_tab,
+                             mb_array_size * sizeof(float), fail);
+            FF_ALLOC_OR_GOTO(s->avctx, s->bits_tab,
+                             mb_array_size * sizeof(float), fail);
         }
     }
 
@@ -799,6 +804,8 @@ av_cold int ff_MPV_common_init(MpegEncContext *s)
     }
 
     if (s->width && s->height) {
+        FF_ALLOC_OR_GOTO(s->avctx, s->er_temp_buffer,
+                         mb_array_size * sizeof(uint8_t), fail);
         FF_ALLOCZ_OR_GOTO(s->avctx, s->error_status_table,
                           mb_array_size * sizeof(uint8_t), fail);
 
@@ -964,6 +971,7 @@ void ff_MPV_common_end(MpegEncContext *s)
     av_freep(&s->avctx->stats_out);
     av_freep(&s->ac_stats);
     av_freep(&s->error_status_table);
+    av_freep(&s->er_temp_buffer);
     av_freep(&s->mb_index2xy);
     av_freep(&s->lambda_table);
     av_freep(&s->q_intra_matrix);
@@ -973,6 +981,8 @@ void ff_MPV_common_end(MpegEncContext *s)
     av_freep(&s->input_picture);
     av_freep(&s->reordered_input_picture);
     av_freep(&s->dct_offset);
+    av_freep(&s->cplx_tab);
+    av_freep(&s->bits_tab);
 
     if (s->picture && !s->avctx->internal->is_copy) {
         for (i = 0; i < s->picture_count; i++) {
@@ -1426,7 +1436,7 @@ void ff_MPV_frame_end(MpegEncContext *s)
  */
 void ff_print_debug_info(MpegEncContext *s, AVFrame *pict)
 {
-    if (!pict || !pict->mb_type)
+    if (s->avctx->hwaccel || !pict || !pict->mb_type)
         return;
 
     if (s->avctx->debug_mv && pict->motion_val) {

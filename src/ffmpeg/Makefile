@@ -70,6 +70,7 @@ SRCS_C=\
     libavcodec/flac.c \
     libavcodec/flacdata.c \
     libavcodec/flacdec.c \
+    libavcodec/flacdsp.c \
     libavcodec/flvdec.c \
     libavcodec/fmtconvert.c \
     libavcodec/fraps.c \
@@ -234,7 +235,6 @@ SRCS_C=\
     libavcodec/x86/fft.c \
     libavcodec/x86/fft_3dn.c \
     libavcodec/x86/fft_3dn2.c \
-    libavcodec/x86/fft_sse.c \
     libavcodec/x86/fmtconvert_mmx.c \
     libavcodec/x86/h264_intrapred_init.c \
     libavcodec/x86/h264dsp_mmx.c \

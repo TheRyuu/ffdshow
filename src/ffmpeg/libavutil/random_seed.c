@@ -18,10 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "config.h"
+
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#include <fcntl.h>
 #include <math.h>
 #include <time.h>
 #include "timer.h"
 #include "random_seed.h"
+
+static int read_random(uint32_t *dst, const char *file)
+{
+#if HAVE_UNISTD_H
+    int fd = open(file, O_RDONLY);
+    int err = -1;
+
+    if (fd == -1)
+        return -1;
+    err = read(fd, dst, sizeof(*dst));
+    close(fd);
+
+    return err;
+#else
+    return -1;
+#endif
+}
 
 static uint32_t get_generic_seed(void)
 {
@@ -57,5 +80,11 @@ static uint32_t get_generic_seed(void)
 
 uint32_t av_get_random_seed(void)
 {
+    uint32_t seed;
+
+    if (read_random(&seed, "/dev/urandom") == sizeof(seed))
+        return seed;
+    if (read_random(&seed, "/dev/random")  == sizeof(seed))
+        return seed;
     return get_generic_seed();
 }

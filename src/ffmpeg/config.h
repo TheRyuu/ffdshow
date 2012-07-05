@@ -1,7 +1,13 @@
 #ifndef FFMPEG_CONFIG_H
 #define FFMPEG_CONFIG_H
 
+#define LIBAV_CONFIGURATION "ffdshow custom"
+#define LIBAV_LICENSE "GPL version 2 or later"
+#define CC_TYPE "gcc"
+#define CC_VERSION __VERSION__
+
 #ifdef __GNUC__
+  #define ARCH_X86 1
   #define HAVE_INLINE_ASM 1
   #define HAVE_AMD3DNOW 1
   #define HAVE_AMD3DNOWEXT 1
@@ -10,24 +16,14 @@
   #define HAVE_MMX2 1
   #define HAVE_SSE 1
   #define HAVE_SSSE3 1
-
-  #define ARCH_X86 1
-
   #ifdef ARCH_X86_64
     #define ARCH_X86_32 0
     #define ARCH_X86_64 1
-    #define HAVE_FAST_64BIT 1
-    #define HAVE_STRUCT_TIMESPEC 1
   #else
     #define ARCH_X86_32 1
     #define ARCH_X86_64 0
-    #define HAVE_FAST_64BIT 0
   #endif
-
-  #define PTW32_STATIC_LIB 1
 #else
-  #define __ICC __INTEL_COMPILER
-  #define _ICC __INTEL_COMPILER
   #define ARCH_X86 0
   #define HAVE_INLINE_ASM 0
   #define HAVE_AMD3DNOW 0
@@ -37,32 +33,34 @@
   #define HAVE_MMX2 0
   #define HAVE_SSE 0
   #define HAVE_SSSE3 0
+  #define __ICC __INTEL_COMPILER
+  #define _ICC __INTEL_COMPILER
   #define snprintf _snprintf // not secure. Only for testing.
   #define __mingw_aligned_malloc _aligned_malloc
   #define __mingw_aligned_realloc _aligned_realloc
   #define __mingw_aligned_free _aligned_free
-  #define restrict
-  #include "libavutil/mathematics.h"
 #endif
 
 // Use DPRINTF instead of av_log. To be used for debug purpose because DPRINTF will be always called (the
 // registry switch is not read)
 #define USE_DPRINTF 0
 
-#define LIBAV_CONFIGURATION "ffdshow custom"
-#define LIBAV_LICENSE "GPL version 2 or later"
-
-#define CC_TYPE "gcc"
-#define CC_VERSION __VERSION__
-
-#define ASMALIGN(ZEROBITS) ".p2align " #ZEROBITS "\n\t"
+//#define ASMALIGN(ZEROBITS) ".p2align " #ZEROBITS "\n\t"
 
 #if ARCH_X86_64
   #define EXTERN_PREFIX ""
   #define EXTERN_ASM
+  #define HAVE_GETADDRINFO 1
+  #define HAVE_FAST_64BIT 1
+  #define HAVE_XMM_CLOBBERS 1
+  #define CONFIG_PIC 1
 #else
   #define EXTERN_PREFIX "_"
   #define EXTERN_ASM _
+  #define HAVE_GETADDRINFO 0
+  #define HAVE_FAST_64BIT 0
+  #define HAVE_XMM_CLOBBERS 0
+  #define CONFIG_PIC 0
 #endif
 
 #define ARCH_ALPHA 0
@@ -93,80 +91,83 @@
 #define HAVE_MMI 0
 #define HAVE_NEON 0
 #define HAVE_PPC4XX 0
+#define HAVE_VFPV3 0
 #define HAVE_VIS 0
+#define HAVE_MIPSFPU 0
+#define HAVE_MIPS32R2 0
+#define HAVE_MIPSDSPR1 0
+#define HAVE_MIPSDSPR2 0
 
-#define HAVE_ALIGNED_STACK 0
-#define HAVE_ALTIVEC_H 0
 #define HAVE_BIGENDIAN 0
-#define HAVE_BSWAP 1
+#define HAVE_FAST_UNALIGNED 1
+#define HAVE_PTHREADS 0
+#define HAVE_W32THREADS 1
+#define HAVE_OS2THREADS 0
+#define HAVE_ALIGNED_MALLOC 1
+#define HAVE_ALIGNED_STACK 1
+#define HAVE_ALTIVEC_H 0
 #define HAVE_CMOV 1
+#define HAVE_DCBZL 0
 #define HAVE_EBP_AVAILABLE 1
 #define HAVE_EBX_AVAILABLE 1
-#define HAVE_FAST_CLZ 0
+#define HAVE_EXP2 1
+#define HAVE_EXP2F 1
+#define HAVE_FAST_CLZ 1
 #define HAVE_FAST_CMOV 1
-#define HAVE_FAST_UNALIGNED 1
-#define HAVE_GETSYSTEMINFO 1
+#define HAVE_GETADDRINFO 0
+#define HAVE_GETHRTIME 0
+#define HAVE_GETPROCESSAFFINITYMASK 1
+#define HAVE_GETPROCESSMEMORYINFO 1
+#define HAVE_GETPROCESSTIMES 1
+#define HAVE_GETSYSTEMTIMEASFILETIME 1
 #define HAVE_ISATTY 0
 #define HAVE_LOCAL_ALIGNED_16 1
 #define HAVE_LOCAL_ALIGNED_8 1
+#define HAVE_LOG2 1
+#define HAVE_LOG2F 1
 #define HAVE_MALLOC_H 1
-#define HAVE_MEMALIGN 1
-#define HAVE_PTHREADS 0
+#define HAVE_MEMALIGN 0
+#define HAVE_POSIX_MEMALIGN 0
+#define HAVE_ROUNDF 1
 #define HAVE_SCHED_GETAFFINITY 0
-#define HAVE_SYMVER 1
-#define HAVE_SYMVER_GNU_ASM 0
-#define HAVE_SYMVER_ASM_LABEL 1
-#define HAVE_SYSCTL 0
-#define HAVE_TEN_OPERANDS 1
 #define HAVE_THREADS 1
+#define HAVE_TRUNC 1
+#define HAVE_TRUNCF 1
 #define HAVE_VIRTUALALLOC 1
-#define HAVE_W32THREADS 1
-#define HAVE_XMM_CLOBBERS 1
+#define HAVE_WINDOWS_H 1
+#define HAVE_WINSOCK2_H 1
 #define HAVE_YASM 1
 
 #ifdef __GNUC__
   #define HAVE_ATTRIBUTE_PACKED 1
   #define HAVE_ATTRIBUTE_MAY_ALIAS 1
+  #define HAVE_CBRTF 1
+  #define HAVE_ISINF 1
+	#define HAVE_ISNAN 1
+  #define HAVE_LLRINT 1
+  #define HAVE_LLRINTF 1
+  #define HAVE_LRINT 1
+  #define HAVE_LRINTF 1
+  #define HAVE_ROUND 1
 #else
+  #define HAVE_CBRTF 0
+  #define HAVE_ISINF 0
+  #define HAVE_ISNAN 0
+  #define HAVE_LLRINT 0
+  #define HAVE_LLRINTF 0
+  #define HAVE_LRINT 0
+  #define HAVE_LRINTF 0
+  #define HAVE_ROUND 0
+  #define rint(x) (int)(x+0.5)
   #define HAVE_ATTRIBUTE_PACKED 0
   #define HAVE_ATTRIBUTE_MAY_ALIAS 0
   #define EMULATE_FAST_INT
 #endif
 
-#ifdef __GNUC__
-  #define HAVE_EXP2 1
-  #define HAVE_EXP2F 1
-  #define HAVE_LLRINT 1
-  #define HAVE_LLRINTF 1
-  #define HAVE_LOG2 1
-  #define HAVE_LOG2F 1
-  #define HAVE_LRINT 1
-  #define HAVE_LRINTF 1
-  #define HAVE_ROUND 1
-  #define HAVE_ROUNDF 1
-  #define HAVE_TRUNC 1
-  #define HAVE_TRUNCF 1
-#else
-  #define HAVE_EXP2 1
-  #define HAVE_EXP2F 1
-  #define HAVE_LLRINT 0
-  #define HAVE_LLRINTF 0
-  #define HAVE_LOG2 1
-  #define HAVE_LOG2F 1
-  #define HAVE_LRINT 0
-  #define HAVE_LRINTF 0
-  #define HAVE_ROUND 0
-  #define HAVE_ROUNDF 1
-  #define HAVE_TRUNC 1
-  #define HAVE_TRUNCF 1
-  #define rint(x) (int)(x+0.5)
-  #define cbrtf(x) pow((float)x, (float)1.0/3)
-#endif
-
-#define CONFIG_AC3ENC_FLOAT 0
-#define CONFIG_AUDIO_FLOAT 1
+#define CONFIG_AC3DSP 1
 #define CONFIG_DCT 1
 #define CONFIG_DWT 0
+#define CONFIG_FFT 1
 #define CONFIG_GPL 1
 #define CONFIG_GRAY 1
 #define CONFIG_H264CHROMA 1
@@ -180,7 +181,7 @@
 #define CONFIG_LPC 0
 #define CONFIG_MDCT 1
 #define CONFIG_MLIB 0
-#define CONFIG_MPEGAUDIO_HP 1
+#define CONFIG_MPEGAUDIODSP 1
 #define CONFIG_RDFT 1
 #define CONFIG_RUNTIME_CPUDETECT 1
 #define CONFIG_SMALL 0
