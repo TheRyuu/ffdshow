@@ -256,26 +256,15 @@
 %define ABSB ABSB_MMX
 %define ABSB2 ABSB2_MMX
 
-%macro SPLATB_LOAD 3
-%if cpuflag(ssse3)
-    movd      %1, [%2-3]
-    pshufb    %1, %3
-%else
+%macro SPLATB_MMX 3
     movd      %1, [%2-3] ;to avoid crossing a cacheline
     punpcklbw %1, %1
     SPLATW    %1, %1, 3
-%endif
 %endmacro
 
-%macro SPLATB_REG 3
-%if cpuflag(ssse3)
-    movd      %1, %2d
+%macro SPLATB_SSSE3 3
+    movd      %1, [%2-3]
     pshufb    %1, %3
-%else
-    movd      %1, %2d
-    punpcklbw %1, %1
-    SPLATW    %1, %1, 0
-%endif
 %endmacro
 
 %macro PALIGNR_MMX 4-5 ; [dst,] src1, src2, imm, tmp
@@ -305,14 +294,6 @@
 %else
     palignr %1, %2, %3
 %endif
-%endmacro
-
-%macro PSHUFLW 1+
-    %if mmsize == 8
-        pshufw %1
-    %else
-        pshuflw %1
-    %endif
 %endmacro
 
 %macro DEINTB 5 ; mask, reg1, mask, reg2, optional src to fill masks from
@@ -540,22 +521,8 @@
 %if mmsize == 16
     pshuflw    %1, %2, (%3)*0x55
     punpcklqdq %1, %1
-%elif cpuflag(mmx2)
-    pshufw     %1, %2, (%3)*0x55
 %else
-    %ifnidn %1, %2
-        mova       %1, %2
-    %endif
-    %if %3 & 2
-        punpckhwd  %1, %1
-    %else
-        punpcklwd  %1, %1
-    %endif
-    %if %3 & 1
-        punpckhwd  %1, %1
-    %else
-        punpcklwd  %1, %1
-    %endif
+    pshufw     %1, %2, (%3)*0x55
 %endif
 %endmacro
 
