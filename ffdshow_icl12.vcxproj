@@ -82,12 +82,6 @@
     <PreBuildEvent>
       <Command>update_version.bat</Command>
     </PreBuildEvent>
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG;_DEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_32BIT;ARCH_IS_IA32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -118,12 +112,6 @@
     <PreBuildEvent>
       <Command>update_version.bat</Command>
     </PreBuildEvent>
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG;_DEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_64BIT;ARCH_IS_X86_64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -153,12 +141,6 @@
     <PreBuildEvent>
       <Command>update_version.bat</Command>
     </PreBuildEvent>
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_32BIT;ARCH_IS_IA32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -191,12 +173,6 @@
     <PreBuildEvent>
       <Command>update_version.bat</Command>
     </PreBuildEvent>
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_64BIT;ARCH_IS_X86_64;%(PreprocessorDefinitions)</PreprocessorDefinitions>

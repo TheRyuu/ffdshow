@@ -86,9 +86,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Midl>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>include;../..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;DEBUG;SUPPORT_INTERLACE;FFDEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -122,9 +119,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Midl>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>include;../..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;SUPPORT_INTERLACE;FFDEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
