@@ -1,7 +1,7 @@
 ; Requires Inno Setup Unicode: http://www.jrsoftware.org/isdl.php
 ; (Make sure you choose to install Inno Setup Preprocessor)
-#if VER < EncodeVer(5,5,0)
-  #error Update your Inno Setup version (5.5.0 or newer)
+#if VER < EncodeVer(5,5,1)
+  #error Update your Inno Setup version (5.5.1 or newer)
 #endif
 #ifndef UNICODE
   #error Use the Unicode Inno Setup
@@ -175,7 +175,7 @@ Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl"
 Name: "da";      MessagesFile: "compiler:Languages\Danish.isl"
 Name: "de";      MessagesFile: "compiler:Languages\German.isl"
 Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "eu";      MessagesFile: "compiler:Languages\Basque.isl"
+Name: "eu";      MessagesFile:          "languages\Basque.isl"
 Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
 Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
@@ -187,7 +187,7 @@ Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl"
 Name: "pt_BR";   MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "pt_PT";   MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl"
-Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl"
+Name: "sk";      MessagesFile:          "languages\Slovak.isl"
 Name: "sl";      MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
 Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
