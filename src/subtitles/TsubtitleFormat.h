@@ -13,28 +13,28 @@ class TsubtitleFormat
 {
 public:
     struct Tword {
-        size_t i1,i2;
+        size_t i1, i2;
         TSubtitleProps props;
     };
     struct Twords : std::vector<Tword> {
-        void add(const wchar_t *l,const wchar_t* &l1,const wchar_t* &l2, TSubtitleProps &props,size_t step) {
+        void add(const wchar_t *l, const wchar_t* &l1, const wchar_t* &l2, TSubtitleProps &props, size_t step) {
             Tword word;
-            word.i1=l1-l;
-            word.i2=l2-l;
-            word.props=props;
+            word.i1 = l1 - l;
+            word.i2 = l2 - l;
+            word.props = props;
             push_back(word);
-            l1=(l2+=step);
+            l1 = (l2 += step);
             props.karaokeNewWord = false;
         }
     };
 private:
     TSubtitleProps props, lineProps;
     template<int c> struct Tncasecmp {
-        bool operator ()(wchar_t c1) {
-            return c==tolower(c1);
+        bool operator()(wchar_t c1) {
+            return c == tolower(c1);
         }
     };
-    static ffstring getAttribute(const wchar_t *start,const wchar_t *end,const wchar_t *attrname);
+    static ffstring getAttribute(const wchar_t *start, const wchar_t *end, const wchar_t *attrname);
     struct Tssa {
     private:
         TSubtitleProps &props, &lineProps;
@@ -64,7 +64,7 @@ private:
             double default_value;
             size_t size; // size of actual intx_t or double
             bool isInteger; // Integer or double value
-            TstoreParam(size_t Ioffset, double Imin, double Imax, double Idefault_value, size_t Isize, bool IisInteger):offset(Ioffset),min(Imin),max(Imax),default_value(Idefault_value),size(Isize),isInteger(IisInteger) {}
+            TstoreParam(size_t Ioffset, double Imin, double Imax, double Idefault_value, size_t Isize, bool IisInteger): offset(Ioffset), min(Imin), max(Imax), default_value(Idefault_value), size(Isize), isInteger(IisInteger) {}
         };
         struct TstoreParams: public std::vector<TstoreParam> {
             // returns number of contents that have the value within the range (min...max) and have been written to.
@@ -73,11 +73,11 @@ private:
 
         int parse_parentheses(TparenthesesContents &contents, ffstring arg);
         Tssa(TSubtitleProps &Iprops,
-            TSubtitleProps &IlineProps,
-            const TSubtitleProps &Idefprops,
-            const TSSAstyles &Istyles,
-            Twords &Iwords,
-            int Isfmt):
+             TSubtitleProps &IlineProps,
+             const TSubtitleProps &Idefprops,
+             const TSSAstyles &Istyles,
+             Twords &Iwords,
+             int Isfmt):
 
             props(Iprops),
             lineProps(IlineProps),
@@ -94,13 +94,13 @@ private:
         // fuctions that parse tokens
         void fontName(ffstring &arg);
         //void fontSize(ffstring &arg);
-        template<int TSubtitleProps::*offset,int min,int max> void intProp(ffstring &arg);
-        template<int min,int max> void intPropAn(ffstring &arg);
-        template<int min,int max> void intPropA(ffstring &arg);
-        template<int min,int max> void intPropQ(ffstring &arg);
-        template<double TSubtitleProps::*offset,int min,int max> void doubleProp(ffstring &arg);
-        template<double TSubtitleProps::*offset,int min,int max> void doublePropDiv100(ffstring &arg);
-        template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool intProp2(ffstring &arg);
+        template<int TSubtitleProps::*offset, int min, int max> void intProp(ffstring &arg);
+        template<int min, int max> void intPropAn(ffstring &arg);
+        template<int min, int max> void intPropA(ffstring &arg);
+        template<int min, int max> void intPropQ(ffstring &arg);
+        template<double TSubtitleProps::*offset, int min, int max> void doubleProp(ffstring &arg);
+        template<double TSubtitleProps::*offset, int min, int max> void doublePropDiv100(ffstring &arg);
+        template<int TSubtitleProps::*offset1, int TSubtitleProps::*offset2, int min, int max> bool intProp2(ffstring &arg);
         void clip(ffstring &arg);
         void pos(ffstring &arg);
         void move(ffstring &arg);
@@ -118,14 +118,14 @@ private:
         void alphaAll(ffstring &arg);
         void reset(ffstring &arg);
 
-        bool processToken(const wchar_t* &l2,const wchar_t *tok,TssaAction action);
-        bool processTokenC(const wchar_t* &l2,const wchar_t *tok,TssaAction action);
-        bool processTokenI(const wchar_t* &l2,const wchar_t *tok,TssaAction action,Tstr_cmp_func str_cmp_func);
-        void processTokens(const wchar_t *l,const wchar_t* &l1,const wchar_t* &l2,const wchar_t *end);
+        bool processToken(const wchar_t* &l2, const wchar_t *tok, TssaAction action);
+        bool processTokenC(const wchar_t* &l2, const wchar_t *tok, TssaAction action);
+        bool processTokenI(const wchar_t* &l2, const wchar_t *tok, TssaAction action, Tstr_cmp_func str_cmp_func);
+        void processTokens(const wchar_t *l, const wchar_t* &l1, const wchar_t* &l2, const wchar_t *end);
     };
     const ThtmlColors *htmlcolors;
 public:
-    TsubtitleFormat(const ThtmlColors *Ihtmlcolors):htmlcolors(Ihtmlcolors) {}
+    TsubtitleFormat(const ThtmlColors *Ihtmlcolors): htmlcolors(Ihtmlcolors) {}
     void processHTMLTags(Twords &words, const wchar_t* &l, const wchar_t* &l1, const wchar_t* &l2);
     const TSubtitleProps& processHTML(Twords &words, const TsubtitleLine &line);
     const TSubtitleProps& processSSA(Twords &words, const TsubtitleLine &line, int sfmt, TsubtitleText &parent);

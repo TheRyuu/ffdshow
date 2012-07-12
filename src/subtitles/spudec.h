@@ -55,10 +55,10 @@ private:
     unsigned char *aimage;       /* Alpha value */
     unsigned int scaled_frame_width, scaled_frame_height;
     unsigned int scaled_start_col, scaled_start_row;
-    unsigned int scaled_width, scaled_height, scaled_strideY,scaled_strideUV;
+    unsigned int scaled_width, scaled_height, scaled_strideY, scaled_strideUV;
     size_t scaled_image_size;
-    unsigned char *scaled_imageY,*scaled_imageUV;
-    unsigned char *scaled_aimageY,*scaled_aimageUV;
+    unsigned char *scaled_imageY, *scaled_imageUV;
+    unsigned char *scaled_aimageY, *scaled_aimageUV;
     int auto_palette; /* 1 if we lack a palette and must use an heuristic. */
     int font_start_level;  /* Darkest value used for the computed font */
     int spu_changed;
@@ -78,19 +78,19 @@ private:
     static unsigned char get_nibble(packet_t *packet);
     void spudec_cut_image(void);
     void spudec_process_data(packet_t *packet);
-    void compute_palette( packet_t *packet);
-    void spudec_process_control( unsigned int pts100);
+    void compute_palette(packet_t *packet);
+    void spudec_process_control(unsigned int pts100);
     void spudec_decode(unsigned int pts100);
     void scale_image(int x, int y, scale_pixel* table_x, scale_pixel* table_y);
     static void scale_table(unsigned int start_src, unsigned int start_tar, unsigned int end_src, unsigned int end_tar, scale_pixel * table);
-    void sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds, unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TprintPrefs &prefs);
+    void sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds, unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss, const TprintPrefs &prefs);
     static int mkalpha(int i);
     static int canon_alpha(int alpha);
     static unsigned int get_be16(const unsigned char *p);
     static unsigned int get_be24(const unsigned char *p);
     int oldscale;
 public:
-    Tspudec(IffdshowBase *Ideci,const YUVcolorA *palette, const YUVcolorA *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height);
+    Tspudec(IffdshowBase *Ideci, const YUVcolorA *palette, const YUVcolorA *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height);
     ~Tspudec();
     void spudec_heartbeat(unsigned int pts100);
     void spudec_assemble(const unsigned char *packet, unsigned int len, unsigned int pts100);

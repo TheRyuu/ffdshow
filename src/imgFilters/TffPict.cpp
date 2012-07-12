@@ -29,17 +29,17 @@
 
 int FRAME_TYPE::fromSample(IMediaSample *pIn)
 {
-    return (!pIn || pIn->IsSyncPoint()==S_OK)?I:P;
+    return (!pIn || pIn->IsSyncPoint() == S_OK) ? I : P;
 }
-int FIELD_TYPE::fromSample(IMediaSample *pIn,bool isInterlacedRawVideo)
+int FIELD_TYPE::fromSample(IMediaSample *pIn, bool isInterlacedRawVideo)
 {
     if (pIn && isInterlacedRawVideo)
-        if (comptrQ<IMediaSample2> pIn2=pIn) {
+        if (comptrQ<IMediaSample2> pIn2 = pIn) {
             AM_SAMPLE2_PROPERTIES inProp2;
-            if (SUCCEEDED(pIn2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,tStart),(PBYTE)&inProp2))) {
+            if (SUCCEEDED(pIn2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES, tStart), (PBYTE)&inProp2))) {
                 // Set interlace information (every sample)
-                if (!(inProp2.dwTypeSpecificFlags&AM_VIDEO_FLAG_WEAVE))
-                    if (inProp2.dwTypeSpecificFlags&AM_VIDEO_FLAG_FIELD1FIRST) {
+                if (!(inProp2.dwTypeSpecificFlags & AM_VIDEO_FLAG_WEAVE))
+                    if (inProp2.dwTypeSpecificFlags & AM_VIDEO_FLAG_FIELD1FIRST) {
                         return INT_TFF;
                     } else {
                         return INT_BFF;
@@ -52,20 +52,20 @@ int FIELD_TYPE::fromSample(IMediaSample *pIn,bool isInterlacedRawVideo)
 //===================================== Tpalette ====================================
 Tpalette::Tpalette(const uint32_t *palette)
 {
-    pal=palette?(const unsigned char*)palette:NULL;
-    numcolors=palette?256:0;
+    pal = palette ? (const unsigned char*)palette : NULL;
+    numcolors = palette ? 256 : 0;
 }
 
 //=================================== TffPictBase ===================================
-TffPictBase::TffPictBase(unsigned int Idx,unsigned int Idy)
+TffPictBase::TffPictBase(unsigned int Idx, unsigned int Idy)
 {
-    csp=0;
-    setSize(Idx,Idy);
+    csp = 0;
+    setSize(Idx, Idy);
 }
-void TffPictBase::setSize(unsigned int Idx,unsigned int Idy)
+void TffPictBase::setSize(unsigned int Idx, unsigned int Idy)
 {
-    rectFull=rectClip=Trect(0,0,Idx,Idy);
-    memset(diff,0,sizeof(diff));
+    rectFull = rectClip = Trect(0, 0, Idx, Idy);
+    memset(diff, 0, sizeof(diff));
 }
 void TffPictBase::setDar(const Rational &dar)
 {
@@ -74,16 +74,16 @@ void TffPictBase::setDar(const Rational &dar)
 }
 void TffPictBase::setSar(const Rational &sar)
 {
-    rectFull.sar=sar;
-    rectClip.sar=sar;
+    rectFull.sar = sar;
+    rectClip.sar = sar;
 }
 
-Trect TffPictBase::getRect(int full,int half) const
+Trect TffPictBase::getRect(int full, int half) const
 {
-    Trect rect=full?rectFull:rectClip;
+    Trect rect = full ? rectFull : rectClip;
     if (half) {
-        rect.dx/=2;
-        rect.x+=rect.dx;
+        rect.dx /= 2;
+        rect.x += rect.dx;
     }
     return rect;
 }
@@ -95,12 +95,12 @@ TffPict::TffPict(void)
 }
 void TffPict::common_init(void)
 {
-    rtStart=rtStop=mediatimeStart=mediatimeStop=REFTIME_INVALID;
-    gmcWarpingPoints=gmcWarpingPointsReal=0;
+    rtStart = rtStop = mediatimeStart = mediatimeStop = REFTIME_INVALID;
+    gmcWarpingPoints = gmcWarpingPointsReal = 0;
 #ifdef OSD_H264POC
     h264_poc = INT_MIN;
 #endif
-    edge=0;
+    edge = 0;
     discontinuity = false;
     film = repeat_first_field = false;
     video_full_range_flag = AVCOL_RANGE_UNSPECIFIED;
@@ -111,49 +111,49 @@ void TffPict::common_init(void)
 }
 void TffPict::init(void)
 {
-    csp=FF_CSP_NULL;
-    memset(&cspInfo,0,sizeof(cspInfo));
-    memset(data,0,sizeof(data));
-    memset(stride,0,sizeof(stride));
-    memset(ro,0,sizeof(ro));
-    memset(diff,0,sizeof(diff));
-    frametype=FRAME_TYPE::UNKNOWN;
-    fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
+    csp = FF_CSP_NULL;
+    memset(&cspInfo, 0, sizeof(cspInfo));
+    memset(data, 0, sizeof(data));
+    memset(stride, 0, sizeof(stride));
+    memset(ro, 0, sizeof(ro));
+    memset(diff, 0, sizeof(diff));
+    frametype = FRAME_TYPE::UNKNOWN;
+    fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
     common_init();
 }
-void TffPict::init(uint64_t Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette)
+void TffPict::init(uint64_t Icsp, unsigned char *Idata[4], const stride_t Istride[4], const Trect &r, bool Iro, int Iframetype, int Ifieldtype, size_t IsrcSize, const Tpalette &Ipalette)
 {
-    cspInfo=*csp_getInfo(csp=Icsp);
-    frametype=Iframetype;
-    fieldtype=Ifieldtype;
+    cspInfo = *csp_getInfo(csp = Icsp);
+    frametype = Iframetype;
+    fieldtype = Ifieldtype;
     unsigned int i;
-    for (i=0; i<cspInfo.numPlanes; i++) {
-        data[i]=Idata[i];
-        stride[i]=Istride[i];
-        ro[i]=Iro;
-        diff[i]=0;
+    for (i = 0; i < cspInfo.numPlanes; i++) {
+        data[i] = Idata[i];
+        stride[i] = Istride[i];
+        ro[i] = Iro;
+        diff[i] = 0;
     }
-    for (; i<4; i++) {
-        data[i]=NULL;
-        stride[i]=diff[i]=0;
-        ro[i]=false;
+    for (; i < 4; i++) {
+        data[i] = NULL;
+        stride[i] = diff[i] = 0;
+        ro[i] = false;
     }
-    palette=Ipalette;
-    rectFull=rectClip=r;
-    srcSize=IsrcSize;
+    palette = Ipalette;
+    rectFull = rectClip = r;
+    srcSize = IsrcSize;
     common_init();
 }
-TffPict::TffPict(uint64_t Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette)
+TffPict::TffPict(uint64_t Icsp, unsigned char *Idata[4], const stride_t Istride[4], const Trect &r, bool Iro, int Iframetype, int Ifieldtype, size_t IsrcSize, IMediaSample *pIn, const Tpalette &Ipalette)
 {
-    init(Icsp,Idata,Istride,r,Iro,Iframetype,Ifieldtype,IsrcSize,Ipalette);
+    init(Icsp, Idata, Istride, r, Iro, Iframetype, Ifieldtype, IsrcSize, Ipalette);
     if (pIn) {
         setTimestamps(pIn);
         setDiscontinuity(pIn);
     }
 }
-TffPict::TffPict(uint64_t Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette,bool isInterlacedRawVideo)
+TffPict::TffPict(uint64_t Icsp, unsigned char *data[4], const stride_t stride[4], const Trect &r, bool ro, IMediaSample *pIn, const Tpalette &Ipalette, bool isInterlacedRawVideo)
 {
-    init(Icsp,data,stride,r,ro,FRAME_TYPE::fromSample(pIn),FIELD_TYPE::fromSample(pIn,isInterlacedRawVideo),pIn?pIn->GetSize():0,Ipalette);
+    init(Icsp, data, stride, r, ro, FRAME_TYPE::fromSample(pIn), FIELD_TYPE::fromSample(pIn, isInterlacedRawVideo), pIn ? pIn->GetSize() : 0, Ipalette);
     if (pIn) {
         setTimestamps(pIn);
         setDiscontinuity(pIn);
@@ -161,14 +161,14 @@ TffPict::TffPict(uint64_t Icsp,unsigned char *data[4],const stride_t stride[4],c
 }
 void TffPict::setTimestamps(IMediaSample *pIn)
 {
-    HRESULT hr = pIn->GetTime(&rtStart,&rtStop);
+    HRESULT hr = pIn->GetTime(&rtStart, &rtStop);
     if (FAILED(hr)) {
-        rtStart=rtStop=REFTIME_INVALID;
+        rtStart = rtStop = REFTIME_INVALID;
     } else if (hr == VFW_S_NO_STOP_TIME) {
         rtStop = rtStart + 1;
     }
-    if (FAILED(pIn->GetMediaTime(&mediatimeStart,&mediatimeStop))) {
-        mediatimeStart=mediatimeStop=REFTIME_INVALID;
+    if (FAILED(pIn->GetMediaTime(&mediatimeStart, &mediatimeStop))) {
+        mediatimeStart = mediatimeStop = REFTIME_INVALID;
     }
 }
 
@@ -184,45 +184,45 @@ void TffPict::setFullRange(AVColorRange color_range)
     video_full_range_flag = color_range;
 }
 
-void TffPict::readLibavcodec(uint64_t Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)
+void TffPict::readLibavcodec(uint64_t Icsp, const char_t *flnm, const char_t *ext, Tbuffer &buf, IffdshowBase *deci)
 {
     Tlibavcodec *libavcodec;
     if (FAILED(deci->getLibavcodec(&libavcodec))) {
         return;
     }
-    AVCodec *avcodec=libavcodec->avcodec_find_decoder(stricmp(ext,_l(".png"))==0?CODEC_ID_PNG:CODEC_ID_MJPEG);
+    AVCodec *avcodec = libavcodec->avcodec_find_decoder(stricmp(ext, _l(".png")) == 0 ? CODEC_ID_PNG : CODEC_ID_MJPEG);
     if (!avcodec) {
         return;
     }
-    AVCodecContext *avctx=libavcodec->avcodec_alloc_context(avcodec);
-    avctx->flags|=CODEC_FLAG_TRUNCATED;
-    if (libavcodec->avcodec_open(avctx,avcodec)>=0) {
-        FILE *f=fopen(flnm,_l("rb"));
+    AVCodecContext *avctx = libavcodec->avcodec_alloc_context(avcodec);
+    avctx->flags |= CODEC_FLAG_TRUNCATED;
+    if (libavcodec->avcodec_open(avctx, avcodec) >= 0) {
+        FILE *f = fopen(flnm, _l("rb"));
         if (!f) {
             return;
         }
-        int srclen=_filelength(fileno(f));
-        uint8_t *src=(uint8_t*)calloc(srclen,2);
-        fread(src,1,srclen,f);
+        int srclen = _filelength(fileno(f));
+        uint8_t *src = (uint8_t*)calloc(srclen, 2);
+        fread(src, 1, srclen, f);
         fclose(f);
-        AVFrame *frame=libavcodec->avcodec_alloc_frame();
-        int got_picture=0;
+        AVFrame *frame = libavcodec->avcodec_alloc_frame();
+        int got_picture = 0;
         AVPacket avpkt;
         libavcodec->av_init_packet(&avpkt);
         avpkt.data = src;
         avpkt.size = srclen;
-        int ret=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
+        int ret = libavcodec->avcodec_decode_video2(avctx, frame, &got_picture, &avpkt);
         if (got_picture && frame->data[0] && frame->data[1]) {
-            const stride_t linesize[4]= {frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
-            Tpalette pal(frame->data[1],256);
-            init(csp_lavc2ffdshow(avctx->pix_fmt),frame->data,linesize,Trect(0,0,avctx->width,avctx->height),true,frametype,fieldtype,srclen,pal);
+            const stride_t linesize[4] = {frame->linesize[0], frame->linesize[1], frame->linesize[2], frame->linesize[3]};
+            Tpalette pal(frame->data[1], 256);
+            init(csp_lavc2ffdshow(avctx->pix_fmt), frame->data, linesize, Trect(0, 0, avctx->width, avctx->height), true, frametype, fieldtype, srclen, pal);
             setFullRange(avctx->color_range);
-            Tconvert *convert=new Tconvert(deci,avctx->width,avctx->height);
+            Tconvert *convert = new Tconvert(deci, avctx->width, avctx->height);
             // Currently output color space is always YCbCr.
-            convertCSP(csp_bestMatch(csp,Icsp),buf,convert);
+            convertCSP(csp_bestMatch(csp, Icsp), buf, convert);
             delete convert;
         } else {
-            readOle(Icsp,flnm,ext,buf,deci);
+            readOle(Icsp, flnm, ext, buf, deci);
         }
         free(src);
         libavcodec->av_free(frame);
@@ -231,200 +231,200 @@ void TffPict::readLibavcodec(uint64_t Icsp,const char_t *flnm,const char_t *ext,
     libavcodec->av_free(avctx);
     libavcodec->Release();
 }
-void TffPict::readOle(uint64_t Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)
+void TffPict::readOle(uint64_t Icsp, const char_t *flnm, const char_t *ext, Tbuffer &buf, IffdshowBase *deci)
 {
     //wchar_t flnmL[MAX_PATH];memset(flnmL,0,sizeof(flnmL));nCopyAnsiToWideChar(flnmL,flnm);
     comptr<IPicture> ip;
-    if (OleLoadPicturePath((LPOLESTR)(const wchar_t*)text<wchar_t>(flnm),NULL,0,0,IID_IPicture,(void**)&ip)==S_OK) {
-        long dxm,dym;
+    if (OleLoadPicturePath((LPOLESTR)(const wchar_t*)text<wchar_t>(flnm), NULL, 0, 0, IID_IPicture, (void**)&ip) == S_OK) {
+        long dxm, dym;
         ip->get_Width(&dxm);
         ip->get_Height(&dym);
-        static const int HIMETRIC_PER_INCH=2540;
-        const HDC hDCScreen=GetDC(NULL);
-        const int nPixelsPerInchX=GetDeviceCaps(hDCScreen,LOGPIXELSX);
-        const int nPixelsPerInchY=GetDeviceCaps(hDCScreen,LOGPIXELSY);
-        ReleaseDC(NULL,hDCScreen);
+        static const int HIMETRIC_PER_INCH = 2540;
+        const HDC hDCScreen = GetDC(NULL);
+        const int nPixelsPerInchX = GetDeviceCaps(hDCScreen, LOGPIXELSX);
+        const int nPixelsPerInchY = GetDeviceCaps(hDCScreen, LOGPIXELSY);
+        ReleaseDC(NULL, hDCScreen);
         Tbuffer bufRGB;
-        int pdx=(nPixelsPerInchX*dxm+HIMETRIC_PER_INCH/2)/HIMETRIC_PER_INCH,pdy=(nPixelsPerInchY*dym+HIMETRIC_PER_INCH/2)/HIMETRIC_PER_INCH;
-        int pdx4=pdx;
-        if (pdx4&3) {
-            pdx4=(pdx/4+1)*4;
+        int pdx = (nPixelsPerInchX * dxm + HIMETRIC_PER_INCH / 2) / HIMETRIC_PER_INCH, pdy = (nPixelsPerInchY * dym + HIMETRIC_PER_INCH / 2) / HIMETRIC_PER_INCH;
+        int pdx4 = pdx;
+        if (pdx4 & 3) {
+            pdx4 = (pdx / 4 + 1) * 4;
         }
-        alloc(pdx4,pdy,FF_CSP_RGB24,bufRGB);
-        HDC cdc=CreateCompatibleDC(NULL);
-        HRESULT hr=ip->SelectPicture(cdc,NULL,NULL);
+        alloc(pdx4, pdy, FF_CSP_RGB24, bufRGB);
+        HDC cdc = CreateCompatibleDC(NULL);
+        HRESULT hr = ip->SelectPicture(cdc, NULL, NULL);
         BITMAPINFO bmi;
-        bmi.bmiHeader.biSize=sizeof(bmi.bmiHeader);
-        bmi.bmiHeader.biWidth=pdx4;
-        bmi.bmiHeader.biHeight=-pdy;
-        bmi.bmiHeader.biPlanes=1;
-        bmi.bmiHeader.biBitCount=24;
-        bmi.bmiHeader.biCompression=BI_RGB;
-        bmi.bmiHeader.biSizeImage=3*rectFull.dx*rectFull.dy;
-        bmi.bmiHeader.biXPelsPerMeter=75;
-        bmi.bmiHeader.biYPelsPerMeter=75;
-        bmi.bmiHeader.biClrUsed=0;
-        bmi.bmiHeader.biClrImportant=0;
+        bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
+        bmi.bmiHeader.biWidth = pdx4;
+        bmi.bmiHeader.biHeight = -pdy;
+        bmi.bmiHeader.biPlanes = 1;
+        bmi.bmiHeader.biBitCount = 24;
+        bmi.bmiHeader.biCompression = BI_RGB;
+        bmi.bmiHeader.biSizeImage = 3 * rectFull.dx * rectFull.dy;
+        bmi.bmiHeader.biXPelsPerMeter = 75;
+        bmi.bmiHeader.biYPelsPerMeter = 75;
+        bmi.bmiHeader.biClrUsed = 0;
+        bmi.bmiHeader.biClrImportant = 0;
         HBITMAP hbmp;
         ip->get_Handle((OLE_HANDLE*)&hbmp);
-        int lines=GetDIBits(cdc,hbmp,0,pdy,bufRGB,&bmi,DIB_RGB_COLORS);
+        int lines = GetDIBits(cdc, hbmp, 0, pdy, bufRGB, &bmi, DIB_RGB_COLORS);
         DeleteDC(cdc);
-        Tconvert *convert=new Tconvert(deci,rectFull.dx,rectFull.dy);
-        convertCSP(csp_bestMatch(csp,Icsp),buf,convert);
+        Tconvert *convert = new Tconvert(deci, rectFull.dx, rectFull.dy);
+        convertCSP(csp_bestMatch(csp, Icsp), buf, convert);
         delete convert;
-        rectFull.dx=rectClip.dx=pdx;
+        rectFull.dx = rectClip.dx = pdx;
     }
 }
 
-TffPict::TffPict(uint64_t Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci)
+TffPict::TffPict(uint64_t Icsp, const char_t *flnm, Tbuffer &buf, IffdshowBase *deci)
 {
     init();
     if (!fileexists(flnm)) {
         return;
     }
     char_t ext[MAX_PATH];
-    _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,ext,MAX_PATH);
-    if (stricmp(ext,_l(".jpg"))==0 || stricmp(ext,_l(".jpeg"))==0 || stricmp(ext,_l(".png"))==0) {
-        readLibavcodec(Icsp,flnm,ext,buf,deci);
-    } else if (stricmp(ext,_l(".bmp"))==0 || stricmp(ext,_l(".gif"))==0) {
-        readOle(Icsp,flnm,ext,buf,deci);
+    _splitpath_s(flnm, NULL, 0, NULL, 0, NULL, 0, ext, MAX_PATH);
+    if (stricmp(ext, _l(".jpg")) == 0 || stricmp(ext, _l(".jpeg")) == 0 || stricmp(ext, _l(".png")) == 0) {
+        readLibavcodec(Icsp, flnm, ext, buf, deci);
+    } else if (stricmp(ext, _l(".bmp")) == 0 || stricmp(ext, _l(".gif")) == 0) {
+        readOle(Icsp, flnm, ext, buf, deci);
     }
 }
 
 void TffPict::clear(const Trect &r, unsigned int plane, int brightness, int brightnessY)
 {
-    if (r.dx!=0 && r.dy!=0 && !ro[plane]) {
-        clear(cspInfo.Bpp, cspInfo.black[plane], data[plane] + r.y * stride[plane] + cspInfo.Bpp*r.x, stride[plane], cspInfo.Bpp * r.dx, r.dy, brightness, brightnessY);
+    if (r.dx != 0 && r.dy != 0 && !ro[plane]) {
+        clear(cspInfo.Bpp, cspInfo.black[plane], data[plane] + r.y * stride[plane] + cspInfo.Bpp * r.x, stride[plane], cspInfo.Bpp * r.dx, r.dy, brightness, brightnessY);
     }
 }
-void TffPict::clear(int full,unsigned int plane)
+void TffPict::clear(int full, unsigned int plane)
 {
-    const Trect &r=full?rectFull:rectClip;
-    for (unsigned int i=0; i<cspInfo.numPlanes; i++)
-        if (plane==PLANE_ALL || i==plane) {
-            clear(Trect(r.x>>cspInfo.shiftX[i],r.y>>cspInfo.shiftY[i],r.dx>>cspInfo.shiftX[i],r.dy>>cspInfo.shiftY[i]),i);
+    const Trect &r = full ? rectFull : rectClip;
+    for (unsigned int i = 0; i < cspInfo.numPlanes; i++)
+        if (plane == PLANE_ALL || i == plane) {
+            clear(Trect(r.x >> cspInfo.shiftX[i], r.y >> cspInfo.shiftY[i], r.dx >> cspInfo.shiftX[i], r.dy >> cspInfo.shiftY[i]), i);
         }
 }
 void TffPict::clearBorder(int brightness, int brightnessY)
 {
-    if (rectFull==rectClip) {
+    if (rectFull == rectClip) {
         return;
     }
-    for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
-        const int rectFulldx=rectFull.dx>>cspInfo.shiftX[i],rectFulldy=rectFull.dy>>cspInfo.shiftY[i];
-        const int rectClipx =rectClip.x >>cspInfo.shiftX[i],rectClipy =rectClip.y >>cspInfo.shiftY[i];
-        const int rectClipdx=rectClip.dx>>cspInfo.shiftX[i],rectClipdy=rectClip.dy>>cspInfo.shiftY[i];
-        clear(Trect(0, 0, rectFulldx, rectClipy),i, brightness, brightnessY);
+    for (unsigned int i = 0; i < cspInfo.numPlanes; i++) {
+        const int rectFulldx = rectFull.dx >> cspInfo.shiftX[i], rectFulldy = rectFull.dy >> cspInfo.shiftY[i];
+        const int rectClipx = rectClip.x >> cspInfo.shiftX[i], rectClipy = rectClip.y >> cspInfo.shiftY[i];
+        const int rectClipdx = rectClip.dx >> cspInfo.shiftX[i], rectClipdy = rectClip.dy >> cspInfo.shiftY[i];
+        clear(Trect(0, 0, rectFulldx, rectClipy), i, brightness, brightnessY);
         clear(Trect(0, rectClipy + rectClipdy, rectFulldx, rectFulldy - (rectClipy + rectClipdy)), i, brightness, brightnessY);
         clear(Trect(0, rectClipy, rectClipx, rectClipdy), i, brightness, brightnessY);
-        clear(Trect(rectClipx+rectClipdx, rectClipy, rectFulldx - (rectClipx + rectClipdx), rectClipdy),i, brightness, brightnessY);
+        clear(Trect(rectClipx + rectClipdx, rectClipy, rectFulldx - (rectClipx + rectClipdx), rectClipdy), i, brightness, brightnessY);
     }
 }
-void TffPict::copyBorder(const TffPict &src,unsigned int plane)
+void TffPict::copyBorder(const TffPict &src, unsigned int plane)
 {
-    if (rectFull==rectClip) {
+    if (rectFull == rectClip) {
         return;
     }
-    for (unsigned int i=0; i<cspInfo.numPlanes; i++)
-        if (plane==PLANE_ALL || i==plane) {
+    for (unsigned int i = 0; i < cspInfo.numPlanes; i++)
+        if (plane == PLANE_ALL || i == plane) {
             //copy(data[i],stride[i],src.data[i],src.stride[i],src.rectFull.dx>>cspInfo.shiftX[i],src.rectFull.dy>>cspInfo.shiftY[i]);
-            const int rectFulldx=rectFull.dx>>cspInfo.shiftX[i],rectFulldy=rectFull.dy>>cspInfo.shiftY[i];
-            const int rectClipx =rectClip.x >>cspInfo.shiftX[i],rectClipy =rectClip.y >>cspInfo.shiftY[i];
-            const int rectClipdx=rectClip.dx>>cspInfo.shiftX[i],rectClipdy=rectClip.dy>>cspInfo.shiftY[i];
-            copyRect(src,Trect(0,0,rectFulldx,rectClipy),i);
-            copyRect(src,Trect(0,rectClipy+rectClipdy,rectFulldx,rectFulldy-(rectClipy+rectClipdy)),i);
-            copyRect(src,Trect(0,rectClipy,rectClipx,rectClipdy),i);
-            copyRect(src,Trect(rectClipx+rectClipdx,rectClipy,rectFulldx-(rectClipx+rectClipdx),rectClipdy),i);
+            const int rectFulldx = rectFull.dx >> cspInfo.shiftX[i], rectFulldy = rectFull.dy >> cspInfo.shiftY[i];
+            const int rectClipx = rectClip.x >> cspInfo.shiftX[i], rectClipy = rectClip.y >> cspInfo.shiftY[i];
+            const int rectClipdx = rectClip.dx >> cspInfo.shiftX[i], rectClipdy = rectClip.dy >> cspInfo.shiftY[i];
+            copyRect(src, Trect(0, 0, rectFulldx, rectClipy), i);
+            copyRect(src, Trect(0, rectClipy + rectClipdy, rectFulldx, rectFulldy - (rectClipy + rectClipdy)), i);
+            copyRect(src, Trect(0, rectClipy, rectClipx, rectClipdy), i);
+            copyRect(src, Trect(rectClipx + rectClipdx, rectClipy, rectFulldx - (rectClipx + rectClipdx), rectClipdy), i);
         }
 }
-void TffPict::copyRect(const TffPict &src,const Trect &r,unsigned int plane)
+void TffPict::copyRect(const TffPict &src, const Trect &r, unsigned int plane)
 {
-    if (r.dx!=0 && r.dy!=0)
-        copy(data[plane]+r.y*stride[plane]+cspInfo.Bpp*r.x,stride[plane],
-             src.data[plane]+r.y*src.stride[plane]+cspInfo.Bpp*r.x,src.stride[plane],
-             cspInfo.Bpp*r.dx,r.dy);
+    if (r.dx != 0 && r.dy != 0)
+        copy(data[plane] + r.y * stride[plane] + cspInfo.Bpp * r.x, stride[plane],
+             src.data[plane] + r.y * src.stride[plane] + cspInfo.Bpp * r.x, src.stride[plane],
+             cspInfo.Bpp * r.dx, r.dy);
 }
 
 void TffPict::setRO(bool Iro)
 {
-    for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
-        ro[i]=Iro;
+    for (unsigned int i = 0; i < cspInfo.numPlanes; i++) {
+        ro[i] = Iro;
     }
 }
 
-void TffPict::histogram(unsigned int histogram[256],int full,int half) const
+void TffPict::histogram(unsigned int histogram[256], int full, int half) const
 {
-    memset(histogram,0,256*sizeof(unsigned int));
+    memset(histogram, 0, 256 * sizeof(unsigned int));
     if (csp_isYUVplanar(csp)) {
-        Trect r=getRect(full,half);
+        Trect r = getRect(full, half);
         stride_t diff[4];
-        calcDiff(cspInfo,r,stride,diff);
-        for (const unsigned char *src=data[0]+diff[0],*srcEnd=src+r.dy*stride[0]; src!=srcEnd; src+=stride[0])
-            for (unsigned int x=0; x<r.dx; x++) {
+        calcDiff(cspInfo, r, stride, diff);
+        for (const unsigned char *src = data[0] + diff[0], *srcEnd = src + r.dy * stride[0]; src != srcEnd; src += stride[0])
+            for (unsigned int x = 0; x < r.dx; x++) {
                 histogram[src[x]]++;
             }
-    } else if ((csp&FF_CSPS_MASK)&FF_CSPS_MASK_YUV_PACKED) {
-        Trect r=getRect(full,half);
+    } else if ((csp & FF_CSPS_MASK)&FF_CSPS_MASK_YUV_PACKED) {
+        Trect r = getRect(full, half);
         stride_t diff[4];
-        calcDiff(cspInfo,r,stride,diff);
-        int lumaoffset=cspInfo.packedLumaOffset;
-        for (const unsigned char *src=data[0]+diff[0],*srcEnd=src+r.dy*stride[0]; src!=srcEnd; src+=stride[0])
-            for (unsigned int x=0; x<r.dx; x+=2) {
-                histogram[src[2*x+lumaoffset]]++;
+        calcDiff(cspInfo, r, stride, diff);
+        int lumaoffset = cspInfo.packedLumaOffset;
+        for (const unsigned char *src = data[0] + diff[0], *srcEnd = src + r.dy * stride[0]; src != srcEnd; src += stride[0])
+            for (unsigned int x = 0; x < r.dx; x += 2) {
+                histogram[src[2 * x + lumaoffset]]++;
             }
     }
 }
-void TffPict::calcDiff(const TcspInfo &cspInfo,const Trect &rectClip,const stride_t stride[4],stride_t diff[4])
+void TffPict::calcDiff(const TcspInfo &cspInfo, const Trect &rectClip, const stride_t stride[4], stride_t diff[4])
 {
-    for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
-        diff[i]=cspInfo.Bpp*(rectClip.x>>cspInfo.shiftX[i])+(rectClip.y>>cspInfo.shiftY[i])*stride[i];
+    for (unsigned int i = 0; i < cspInfo.numPlanes; i++) {
+        diff[i] = cspInfo.Bpp * (rectClip.x >> cspInfo.shiftX[i]) + (rectClip.y >> cspInfo.shiftY[i]) * stride[i];
     }
 }
 void TffPict::calcDiff(void)
 {
-    calcDiff(cspInfo,rectClip,stride,diff);
+    calcDiff(cspInfo, rectClip, stride, diff);
 }
-void TffPict::copyFrom(const TffPict &p,Tbuffer &buf,const Trect *rectCopy)
+void TffPict::copyFrom(const TffPict &p, Tbuffer &buf, const Trect *rectCopy)
 {
     if (!rectCopy) {
-        rectFull=p.rectFull;
-        rectClip=p.rectClip;
+        rectFull = p.rectFull;
+        rectClip = p.rectClip;
     } else {
-        rectFull=rectClip=*rectCopy;
+        rectFull = rectClip = *rectCopy;
     }
     convertCSP(p.csp, buf);
     if (!rectCopy)
-        for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
-            copy(data[i],stride[i],p.data[i],p.stride[i],cspInfo.Bpp*(rectFull.dx>>cspInfo.shiftX[i]),rectFull.dy>>cspInfo.shiftY[i]);
+        for (unsigned int i = 0; i < cspInfo.numPlanes; i++) {
+            copy(data[i], stride[i], p.data[i], p.stride[i], cspInfo.Bpp * (rectFull.dx >> cspInfo.shiftX[i]), rectFull.dy >> cspInfo.shiftY[i]);
         }
     else
-        for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
-            copy(data[i],stride[i],p.data[i]+p.stride[i]*(rectCopy->y>>p.cspInfo.shiftY[i])+(rectCopy->x>>p.cspInfo.shiftX[i]),p.stride[i],cspInfo.Bpp*(rectFull.dx>>cspInfo.shiftX[i]),rectFull.dy>>cspInfo.shiftY[i]);
+        for (unsigned int i = 0; i < cspInfo.numPlanes; i++) {
+            copy(data[i], stride[i], p.data[i] + p.stride[i] * (rectCopy->y >> p.cspInfo.shiftY[i]) + (rectCopy->x >> p.cspInfo.shiftX[i]), p.stride[i], cspInfo.Bpp * (rectFull.dx >> cspInfo.shiftX[i]), rectFull.dy >> cspInfo.shiftY[i]);
         }
 }
 void TffPict::setCSP(uint64_t Icsp)
 {
-    cspInfo=*csp_getInfo(csp=Icsp);
+    cspInfo = *csp_getInfo(csp = Icsp);
 }
 
 /**
  * Prepare picture buffer for new image and fill it with converted image.
  */
-void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,Tconvert *convert,int edge)
+void TffPict::convertCSP(uint64_t Icsp, Tbuffer &buf, Tconvert *convert, int edge)
 {
-    if (csp&FF_CSP_FLAGS_YUV_ADJ) {
-        csp_yuv_adj_to_plane(csp,&cspInfo,rectFull.dy,data,stride);
+    if (csp & FF_CSP_FLAGS_YUV_ADJ) {
+        csp_yuv_adj_to_plane(csp, &cspInfo, rectFull.dy, data, stride);
         calcDiff();
     }
-    if (csp&FF_CSP_FLAGS_YUV_ORDER) {
-        csp_yuv_order(csp,data,stride);
+    if (csp & FF_CSP_FLAGS_YUV_ORDER) {
+        csp_yuv_order(csp, data, stride);
     }
-    uint64_t csp0=csp;
-    const unsigned char *data0[4]= {data[0],data[1],data[2],data[3]};
-    stride_t stride0[4]= {stride[0],stride[1],stride[2],stride[3]};
-    Tpalette palette0=palette;
-    convertCSP(Icsp,buf,edge);
-    uint64_t csp2=csp0;
+    uint64_t csp0 = csp;
+    const unsigned char *data0[4] = {data[0], data[1], data[2], data[3]};
+    stride_t stride0[4] = {stride[0], stride[1], stride[2], stride[3]};
+    Tpalette palette0 = palette;
+    convertCSP(Icsp, buf, edge);
+    uint64_t csp2 = csp0;
     if (!(fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && (fieldtype & FIELD_TYPE::MASK_INT)) {
         csp2 |= FF_CSP_FLAGS_INTERLACED;
     }
@@ -437,85 +437,85 @@ void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,Tconvert *convert,int edge)
  * No real color space conversion here.
  * Note: the original implementer decided that if the buffer is already big enough to contain the new picture, existing data will not be overwritten (by an empty picture) (this applies to the TBuffer class as well)
  */
-void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
+void TffPict::convertCSP(uint64_t Icsp, Tbuffer &buf, int edge)
 {
-    cspInfo=*csp_getInfo(csp=Icsp);
+    cspInfo = *csp_getInfo(csp = Icsp);
     if (csp_isYUVplanar(csp) || csp_isYUVplanarHighBit(csp)) {
-        if (csp&FF_CSP_FLAGS_YUV_ADJ) {
-            stride[0]=cspInfo.Bpp * rectFull.dx>>cspInfo.shiftX[0];
-            stride[1]=(stride[0]>>cspInfo.shiftX[1])+edge;//((rectFull.dx>>shiftX[1])/16+2)*16;
-            stride[2]=(stride[0]>>cspInfo.shiftX[2])+edge;//((rectFull.dx>>shiftX[2])/16+2)*16;
-            stride[3]=(stride[0]>>cspInfo.shiftX[3])+edge;//((rectFull.dx>>shiftX[3])/16+2)*16;
-            stride[0]+=edge;
+        if (csp & FF_CSP_FLAGS_YUV_ADJ) {
+            stride[0] = cspInfo.Bpp * rectFull.dx >> cspInfo.shiftX[0];
+            stride[1] = (stride[0] >> cspInfo.shiftX[1]) + edge; //((rectFull.dx>>shiftX[1])/16+2)*16;
+            stride[2] = (stride[0] >> cspInfo.shiftX[2]) + edge; //((rectFull.dx>>shiftX[2])/16+2)*16;
+            stride[3] = (stride[0] >> cspInfo.shiftX[3]) + edge; //((rectFull.dx>>shiftX[3])/16+2)*16;
+            stride[0] += edge;
         } else {
-            stride[0]=get_stride_YUV_planar(cspInfo, rectFull.dx, 0, edge);
-            stride[1]=get_stride_YUV_planar(cspInfo, rectFull.dx, 1, edge);
-            stride[2]=get_stride_YUV_planar(cspInfo, rectFull.dx, 2, edge);
-            stride[3]=get_stride_YUV_planar(cspInfo, rectFull.dx, 3, edge);
+            stride[0] = get_stride_YUV_planar(cspInfo, rectFull.dx, 0, edge);
+            stride[1] = get_stride_YUV_planar(cspInfo, rectFull.dx, 1, edge);
+            stride[2] = get_stride_YUV_planar(cspInfo, rectFull.dx, 2, edge);
+            stride[3] = get_stride_YUV_planar(cspInfo, rectFull.dx, 3, edge);
         }
-        size_t size=0;
-        for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
-            size+=stride[i]*((odd2even(rectFull.dy)>>cspInfo.shiftY[i])+edge);    // rectFull.dy should be added by 1 when rectFull.dy is odd number.
+        size_t size = 0;
+        for (unsigned int i = 0; i < cspInfo.numPlanes; i++) {
+            size += stride[i] * ((odd2even(rectFull.dy) >> cspInfo.shiftY[i]) + edge); // rectFull.dy should be added by 1 when rectFull.dy is odd number.
         }
         bool overwriteData = buf.size() < size;
         buf.alloc(size);
-        data[0]=buf;
-        data[1]=data[0]+stride[0]*((odd2even(rectFull.dy)>>cspInfo.shiftY[0])+edge);
-        data[2]=data[1]+stride[1]*((odd2even(rectFull.dy)>>cspInfo.shiftY[1])+edge);
-        data[3]=data[2]+stride[2]*((odd2even(rectFull.dy)>>cspInfo.shiftY[2])+edge);
+        data[0] = buf;
+        data[1] = data[0] + stride[0] * ((odd2even(rectFull.dy) >> cspInfo.shiftY[0]) + edge);
+        data[2] = data[1] + stride[1] * ((odd2even(rectFull.dy) >> cspInfo.shiftY[1]) + edge);
+        data[3] = data[2] + stride[2] * ((odd2even(rectFull.dy) >> cspInfo.shiftY[2]) + edge);
         if (overwriteData) {
             // Black in yuv is 0,128,128
-            memset(data[0],0,stride[0]*(odd2even(rectFull.dy)>>cspInfo.shiftY[0])+edge);
-            for (unsigned int i=1; i<cspInfo.numPlanes; i++) {
-                memset(data[i],128,stride[i]*(odd2even(rectFull.dy)>>cspInfo.shiftY[i])+edge);
+            memset(data[0], 0, stride[0] * (odd2even(rectFull.dy) >> cspInfo.shiftY[0]) + edge);
+            for (unsigned int i = 1; i < cspInfo.numPlanes; i++) {
+                memset(data[i], 128, stride[i] * (odd2even(rectFull.dy) >> cspInfo.shiftY[i]) + edge);
             }
         }
     } else if ((csp & FF_CSPS_MASK) == FF_CSP_NV12) {
-        stride[0]=stride[1]=((rectFull.dx+edge)/16+2)*16;
-        size_t size = stride[0] * (odd2even(rectFull.dy) + (odd2even(rectFull.dy)>>1));
+        stride[0] = stride[1] = ((rectFull.dx + edge) / 16 + 2) * 16;
+        size_t size = stride[0] * (odd2even(rectFull.dy) + (odd2even(rectFull.dy) >> 1));
         bool overwriteData = buf.size() < size;
         buf.alloc(size);
         data[0] = buf;
         data[1] = data[0] + stride[0] * odd2even(rectFull.dy);
         if (overwriteData) {
             // Black in yuv is 0,128,128
-            memset(data[0],0,  stride[0]*(odd2even(rectFull.dy)));
-            memset(data[1],128,stride[1]*(odd2even(rectFull.dy)>>1));
+            memset(data[0], 0,  stride[0] * (odd2even(rectFull.dy)));
+            memset(data[1], 128, stride[1] * (odd2even(rectFull.dy) >> 1));
         }
     } else if ((csp & FF_CSPS_MASK) == FF_CSP_P016 || (csp & FF_CSPS_MASK) == FF_CSP_P010) {
-        stride[0]=stride[1] = ffalign(rectFull.dx + edge, 16) * 2;
-        size_t size = stride[0] * (odd2even(rectFull.dy) + (odd2even(rectFull.dy)>>1));
+        stride[0] = stride[1] = ffalign(rectFull.dx + edge, 16) * 2;
+        size_t size = stride[0] * (odd2even(rectFull.dy) + (odd2even(rectFull.dy) >> 1));
         bool overwriteData = buf.size() < size;
         buf.alloc(size);
         data[0] = buf;
         data[1] = data[0] + stride[0] * odd2even(rectFull.dy);
         if (overwriteData) {
             // Black in yuv is 0,32768,32768
-            memset(data[0],0,  stride[0]*(odd2even(rectFull.dy)));
-            memset(data[1],32768,stride[1]*(odd2even(rectFull.dy)>>1));
+            memset(data[0], 0,  stride[0] * (odd2even(rectFull.dy)));
+            memset(data[1], 32768, stride[1] * (odd2even(rectFull.dy) >> 1));
         }
     } else {
-        size_t size=0;
-        for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
+        size_t size = 0;
+        for (unsigned int i = 0; i < cspInfo.numPlanes; i++) {
             unsigned int dx = rectFull.dx;
             if (csp & FF_CSPS_MASK_FFRGB) {
                 dx = ffalign(dx, 4);
             }
-            stride[i]=(dx>>cspInfo.shiftX[i])*cspInfo.Bpp;
-            size+=stride[i]*(rectFull.dy>>cspInfo.shiftY[i]);
+            stride[i] = (dx >> cspInfo.shiftX[i]) * cspInfo.Bpp;
+            size += stride[i] * (rectFull.dy >> cspInfo.shiftY[i]);
         }
         buf.alloc(size);
-        data[0]=buf;
-        for (unsigned int i=1; i<cspInfo.numPlanes; i++) {
-            data[i]=data[i-1]+stride[i-1]*(rectFull.dy>>cspInfo.shiftY[i-1]);
+        data[0] = buf;
+        for (unsigned int i = 1; i < cspInfo.numPlanes; i++) {
+            data[i] = data[i - 1] + stride[i - 1] * (rectFull.dy >> cspInfo.shiftY[i - 1]);
         }
     }
     calcDiff();
 }
-void TffPict::alloc(unsigned int dx,unsigned int dy,uint64_t Icsp,Tbuffer &buf,int edge)
+void TffPict::alloc(unsigned int dx, unsigned int dy, uint64_t Icsp, Tbuffer &buf, int edge)
 {
-    rectFull=rectClip=Trect(0,0,dx,dy);
-    convertCSP(Icsp,buf,edge);
+    rectFull = rectClip = Trect(0, 0, dx, dy);
+    convertCSP(Icsp, buf, edge);
 }
 
 void TffPict::copy(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height, bool flip)
@@ -524,14 +524,14 @@ void TffPict::copy(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t sr
         memcpy(dstp, srcp, src_pitch * height);
     } else {
         if (!flip) {
-            for (int y=height; y>0; --y) {
+            for (int y = height; y > 0; --y) {
                 memcpy(dstp, srcp, row_size);
                 dstp += dst_pitch;
                 srcp += src_pitch;
             }
         } else {
             dstp += dst_pitch * (height - 1);
-            for (int y=height; y>0; --y) {
+            for (int y = height; y > 0; --y) {
                 memcpy(dstp, srcp, row_size);
                 dstp -= dst_pitch;
                 srcp += src_pitch;
@@ -540,32 +540,32 @@ void TffPict::copy(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t sr
     }
 }
 
-void TffPict::clear(int Bpp,unsigned int black,unsigned char *dst,stride_t stride,unsigned int row_size,unsigned int height)
+void TffPict::clear(int Bpp, unsigned int black, unsigned char *dst, stride_t stride, unsigned int row_size, unsigned int height)
 {
     switch (Bpp) {
         case 1:
-            for (unsigned int y=0; y<height; y++) {
-                memset(dst+y*stride,black,row_size);
+            for (unsigned int y = 0; y < height; y++) {
+                memset(dst + y * stride, black, row_size);
             }
             return;
         case 2:
-            black|=black<<16;
-            for (unsigned int y=0; y<height; y++)
-                for (uint32_t *p=(uint32_t*)(dst+y*stride),*pEnd=(uint32_t*)((uint8_t*)p+(row_size&~3)); p!=pEnd; p++) {
-                    *p=black;
+            black |= black << 16;
+            for (unsigned int y = 0; y < height; y++)
+                for (uint32_t *p = (uint32_t*)(dst + y * stride), *pEnd = (uint32_t*)((uint8_t*)p + (row_size&~3)); p != pEnd; p++) {
+                    *p = black;
                 }
             return;
         case 3:
-            for (unsigned int y=0; y<height; y++)
-                for (uint8_t *p=dst+y*stride,*pEnd=p+row_size; p!=pEnd; p+=3) {
-                    p[0]=((uint8_t*)&black)[0];
-                    p[1]=((uint8_t*)&black)[1];
-                    p[2]=((uint8_t*)&black)[2];
+            for (unsigned int y = 0; y < height; y++)
+                for (uint8_t *p = dst + y * stride, *pEnd = p + row_size; p != pEnd; p += 3) {
+                    p[0] = ((uint8_t*)&black)[0];
+                    p[1] = ((uint8_t*)&black)[1];
+                    p[2] = ((uint8_t*)&black)[2];
                 }
             return;
         case 4:
-            for (unsigned int y=0; y<height; y++) {
-                memsetd((uint32_t*)(dst+y*stride),black,row_size);
+            for (unsigned int y = 0; y < height; y++) {
+                memsetd((uint32_t*)(dst + y * stride), black, row_size);
             }
             return;
     }
@@ -575,15 +575,15 @@ void TffPict::clear(int Bpp, unsigned int black, unsigned char *dst, stride_t st
 {
     switch (Bpp) {
         case 1: {
-            if (black<=16) {
+            if (black <= 16) {
                 if (csp_isYUV_NV(csp)) {
                     black = brightnessY;
                 } else {
                     black = brightness;
                 }
             }
-            for (unsigned int y=0; y<height; y++) {
-                memset(dst+y*stride,black,row_size);
+            for (unsigned int y = 0; y < height; y++) {
+                memset(dst + y * stride, black, row_size);
             }
             return;
         }
@@ -597,11 +597,11 @@ void TffPict::clear(int Bpp, unsigned int black, unsigned char *dst, stride_t st
                 black = (black & 0xff) + (brightness << 8);
             }
 #endif
-            black|=black<<16;
+            black |= black << 16;
             bool odd = !!(row_size & 3);
             size_t bytes = row_size & ~3;
-            for (unsigned int y=0; y<height; y++) {
-                uint16_t *p = (uint16_t*)(dst+y*stride);
+            for (unsigned int y = 0; y < height; y++) {
+                uint16_t *p = (uint16_t*)(dst + y * stride);
                 if (odd) {
                     *p++ = black;
                 }
@@ -610,17 +610,17 @@ void TffPict::clear(int Bpp, unsigned int black, unsigned char *dst, stride_t st
             return;
         }
         case 3:
-            for (unsigned int y=0; y<height; y++)
-                for (uint8_t *p=dst+y*stride,*pEnd=p+row_size; p!=pEnd; p+=3) {
-                    p[0]=((uint8_t*)&black)[0];
-                    p[1]=((uint8_t*)&black)[1];
-                    p[2]=((uint8_t*)&black)[2];
+            for (unsigned int y = 0; y < height; y++)
+                for (uint8_t *p = dst + y * stride, *pEnd = p + row_size; p != pEnd; p += 3) {
+                    p[0] = ((uint8_t*)&black)[0];
+                    p[1] = ((uint8_t*)&black)[1];
+                    p[2] = ((uint8_t*)&black)[2];
                 }
             return;
         case 4:
             black = brightness + (brightness << 8) + (brightness << 16);
-            for (unsigned int y=0; y<height; y++) {
-                memsetd((uint32_t*)(dst+y*stride),black,row_size);
+            for (unsigned int y = 0; y < height; y++) {
+                memsetd((uint32_t*)(dst + y * stride), black, row_size);
             }
             return;
     }
@@ -632,68 +632,68 @@ void TffPict::draw_edges(uint8_t *buf, stride_t wrap, int width, int height, int
     int i;
 
     last_line = buf + (height - 1) * wrap;
-    for(i=0; i<w; i++) {
+    for (i = 0; i < w; i++) {
         /* top and bottom */
         memcpy(buf - (i + 1) * wrap, buf, width);
         memcpy(last_line + (i + 1) * wrap, last_line, width);
     }
     /* left and right */
     ptr = buf;
-    for(i=0; i<height; i++) {
+    for (i = 0; i < height; i++) {
         memset(ptr - w, ptr[0], w);
-        memset(ptr + width, ptr[width-1], w);
+        memset(ptr + width, ptr[width - 1], w);
         ptr += wrap;
     }
     /* corners */
-    for(i=0; i<w; i++) {
+    for (i = 0; i < w; i++) {
         memset(buf - (i + 1) * wrap - w, buf[0], w); /* top left */
-        memset(buf - (i + 1) * wrap + width, buf[width-1], w); /* top right */
+        memset(buf - (i + 1) * wrap + width, buf[width - 1], w); /* top right */
         memset(last_line + (i + 1) * wrap - w, last_line[0], w); /* top left */
-        memset(last_line + (i + 1) * wrap + width, last_line[width-1], w); /* top right */
+        memset(last_line + (i + 1) * wrap + width, last_line[width - 1], w); /* top right */
     }
 }
 
-void TffPict::createEdge(unsigned int Iedge,Tbuffer &buf)
+void TffPict::createEdge(unsigned int Iedge, Tbuffer &buf)
 {
-    if (edge>=Iedge) {
+    if (edge >= Iedge) {
         return;
     }
-    edge=Iedge;
-    Trect rectFull0=rectFull,rectClip0=rectClip;
+    edge = Iedge;
+    Trect rectFull0 = rectFull, rectClip0 = rectClip;
     stride_t stride0[4];
-    memcpy(stride0,stride,sizeof(stride));
+    memcpy(stride0, stride, sizeof(stride));
     unsigned char *data0[4];
-    memcpy(data0,data,sizeof(data));
-    alloc(rectFull.dx,rectFull.dy,csp,buf,2*edge);
-    rectFull=rectEdge=Trect(0,0,rectFull.dx+edge*2,rectFull.dy+edge*2);
-    rectClip=Trect(edge,edge,rectFull0.dx,rectFull0.dy);
+    memcpy(data0, data, sizeof(data));
+    alloc(rectFull.dx, rectFull.dy, csp, buf, 2 * edge);
+    rectFull = rectEdge = Trect(0, 0, rectFull.dx + edge * 2, rectFull.dy + edge * 2);
+    rectClip = Trect(edge, edge, rectFull0.dx, rectFull0.dy);
     calcDiff();
-    for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
-        edgeData[i]=data[i];
-        unsigned int dx=rectFull0.dx>>cspInfo.shiftX[i],dy=rectFull0.dy>>cspInfo.shiftY[i];
-        copy(data[i]+=diff[i],stride[i],data0[i],stride0[i],dx*cspInfo.Bpp,dy);
-        draw_edges(data[i],stride[i],dx,dy,edge);
+    for (unsigned int i = 0; i < cspInfo.numPlanes; i++) {
+        edgeData[i] = data[i];
+        unsigned int dx = rectFull0.dx >> cspInfo.shiftX[i], dy = rectFull0.dy >> cspInfo.shiftY[i];
+        copy(data[i] += diff[i], stride[i], data0[i], stride0[i], dx * cspInfo.Bpp, dy);
+        draw_edges(data[i], stride[i], dx, dy, edge);
     }
-    rectFull=rectFull0;
-    rectClip=rectClip0;
+    rectFull = rectFull0;
+    rectClip = rectClip0;
     calcDiff();
 }
 
 void TffPict::md5sum(uint8_t sum[16]) const
 {
-    memset(sum,0,16);
+    memset(sum, 0, 16);
     Tmd5 md5;
-    for (unsigned int i=0; i<cspInfo.numPlanes; i++)
-        for (unsigned int y=0; y<rectFull.dy>>cspInfo.shiftY[i]; y++) {
-            md5.sum(data[i]+y*stride[i],rectFull.dx>>cspInfo.shiftX[i]);
+    for (unsigned int i = 0; i < cspInfo.numPlanes; i++)
+        for (unsigned int y = 0; y<rectFull.dy >> cspInfo.shiftY[i]; y++) {
+            md5.sum(data[i] + y * stride[i], rectFull.dx >> cspInfo.shiftX[i]);
         }
     md5.done(sum);
 }
 
 void TffPict::debugPrintTimestamps(const wchar_t * msg) const
 {
-        REFERENCE_TIME_to_hhmmssmmm start(rtStart);
-        REFERENCE_TIME_to_hhmmssmmm stop(rtStop);
-        DPRINTF(L"%s rtStart=%s rtStop=%s",msg, start.get_str(), stop.get_str());
+    REFERENCE_TIME_to_hhmmssmmm start(rtStart);
+    REFERENCE_TIME_to_hhmmssmmm stop(rtStop);
+    DPRINTF(L"%s rtStart=%s rtStop=%s", msg, start.get_str(), stop.get_str());
 }
 

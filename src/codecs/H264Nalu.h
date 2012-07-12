@@ -77,7 +77,7 @@ public :
     };
     int          GetRoundedDataLength() {
         int    nSize = m_nCurPos - m_nNALDataPos;
-        return nSize + 128 - (nSize %128);
+        return nSize + 128 - (nSize % 128);
     }
 
     int         GetLength() {
@@ -90,7 +90,7 @@ public :
         return m_nCurPos >= m_nSize;
     };
 
-    void        SetBuffer (BYTE* pBuffer, int nSize, int nNALSize);
+    void        SetBuffer(BYTE* pBuffer, int nSize, int nNALSize);
     bool        ReadNext();
 };
 

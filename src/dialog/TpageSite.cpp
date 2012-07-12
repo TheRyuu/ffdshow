@@ -23,62 +23,62 @@
 #include "Ttranslate.h"
 #include "Cabout.h"
 
-STDMETHODIMP TpageSite::NonDelegatingQueryInterface(REFIID riid,void **ppv)
+STDMETHODIMP TpageSite::NonDelegatingQueryInterface(REFIID riid, void **ppv)
 {
-    if (riid==IID_IPropertyPageSite) {
-        return GetInterface<IPropertyPageSite>(this,ppv);
-    } else if (riid==IID_IPropertyPageSiteFF) {
-        return GetInterface<IPropertyPageSiteFF>(this,ppv);
+    if (riid == IID_IPropertyPageSite) {
+        return GetInterface<IPropertyPageSite>(this, ppv);
+    } else if (riid == IID_IPropertyPageSiteFF) {
+        return GetInterface<IPropertyPageSiteFF>(this, ppv);
     } else {
-        return CUnknown::NonDelegatingQueryInterface(riid,ppv);
+        return CUnknown::NonDelegatingQueryInterface(riid, ppv);
     }
 }
 
 TpageSite::TpageSite(int Iidff_multiplePages):
-    CUnknown(NAME("TpageSite"),NULL),TdlgWindow(IDD_PAGESITE),prevrect(0,0,0,0),
+    CUnknown(NAME("TpageSite"), NULL), TdlgWindow(IDD_PAGESITE), prevrect(0, 0, 0, 0),
     idff_multiplePages(Iidff_multiplePages)
 {
     AddRef();
-    activepage=NULL;
-    strcpy(regflnm,_l("ffdshow.reg"));
-    hicon=NULL;
+    activepage = NULL;
+    strcpy(regflnm, _l("ffdshow.reg"));
+    hicon = NULL;
 }
 TpageSite::~TpageSite()
 {
 }
 
-INT_PTR TpageSite::show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon)
+INT_PTR TpageSite::show(IffdshowBase *deci, HWND parent, int Iidcaption, int Iicon)
 {
-    if (comptrQ<ISpecifyPropertyPages> ppages=deci) {
+    if (comptrQ<ISpecifyPropertyPages> ppages = deci) {
         CAUUID pages;
         ppages->GetPages(&pages);
         comptr<IUnknown> deciU;
-        deci->QueryInterface(IID_IUnknown,(void**)&deciU);
-        return show(deci,parent,Iidcaption,Iicon,pages,deciU);
+        deci->QueryInterface(IID_IUnknown, (void**)&deciU);
+        return show(deci, parent, Iidcaption, Iicon, pages, deciU);
     } else {
         return E_FAIL;
     }
 }
-INT_PTR TpageSite::show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon,CAUUID &pages,IUnknown *unk)
+INT_PTR TpageSite::show(IffdshowBase *deci, HWND parent, int Iidcaption, int Iicon, CAUUID &pages, IUnknown *unk)
 {
-    for (ULONG i=0; i<pages.cElems; i++) {
+    for (ULONG i = 0; i < pages.cElems; i++) {
         IPropertyPage *page;
-        if (CoCreateInstance(pages.pElems[i],NULL,CLSCTX_INPROC_SERVER,IID_IPropertyPage,(void**)&page)==S_OK) {
+        if (CoCreateInstance(pages.pElems[i], NULL, CLSCTX_INPROC_SERVER, IID_IPropertyPage, (void**)&page) == S_OK) {
             page->SetPageSite(this);
-            page->SetObjects(1,&unk);
+            page->SetObjects(1, &unk);
             propertypages.push_back(page);
         }
     }
     CoTaskMemFree(pages.pElems);
     if (!propertypages.empty()) {
-        HINSTANCE hi=deci->getInstance2();
+        HINSTANCE hi = deci->getInstance2();
         setDeci(deci);
-        idcaption=Iidcaption;
+        idcaption = Iidcaption;
         if (Iicon) {
-            hicon=LoadIcon(hi,MAKEINTRESOURCE(Iicon));
+            hicon = LoadIcon(hi, MAKEINTRESOURCE(Iicon));
         }
-        INT_PTR res=dialogBox(dialogId,parent);
-        for (TpropertyPages::iterator p=propertypages.begin(); p!=propertypages.end(); p++) {
+        INT_PTR res = dialogBox(dialogId, parent);
+        for (TpropertyPages::iterator p = propertypages.begin(); p != propertypages.end(); p++) {
             (*p)->Release();
         }
         if (hicon) {
@@ -90,30 +90,30 @@ INT_PTR TpageSite::show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon,
     }
 }
 
-INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR TpageSite::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg) {
         case WM_INITDIALOG: {
             WINDOWPLACEMENT wpl;
-            wpl.length=sizeof(WINDOWPLACEMENT);
+            wpl.length = sizeof(WINDOWPLACEMENT);
 
-            GetWindowPlacement(m_hwnd,&wpl);
+            GetWindowPlacement(m_hwnd, &wpl);
 
             if (idcaption) {
-                LoadString(hi,idcaption,caption,256);
+                LoadString(hi, idcaption, caption, 256);
                 strncat_s(caption, countof(caption), _l(" configuration"), _TRUNCATE);
             }
-            SendMessage(m_hwnd,WM_SETICON,ICON_BIG,(LPARAM)hicon);
-            int sx=0,sy=0;
-            for (TpropertyPages::iterator p=propertypages.begin(); p!=propertypages.end(); p++) {
+            SendMessage(m_hwnd, WM_SETICON, ICON_BIG, (LPARAM)hicon);
+            int sx = 0, sy = 0;
+            for (TpropertyPages::iterator p = propertypages.begin(); p != propertypages.end(); p++) {
                 PROPPAGEINFO ppi;
-                memset(&ppi,0,sizeof(ppi));
+                memset(&ppi, 0, sizeof(ppi));
                 (*p)->GetPageInfo(&ppi);
-                if (ppi.size.cx>sx) {
-                    sx=ppi.size.cx;
+                if (ppi.size.cx > sx) {
+                    sx = ppi.size.cx;
                 }
-                if (ppi.size.cy>sy) {
-                    sy=ppi.size.cy;
+                if (ppi.size.cy > sy) {
+                    sy = ppi.size.cy;
                 }
                 if (ppi.pszTitle) {
                     CoTaskMemFree(ppi.pszTitle);
@@ -125,59 +125,59 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
                     CoTaskMemFree(ppi.pszDocString);
                 }
             }
-            pagerect=CRect(0,0,sx,sy);
+            pagerect = CRect(0, 0, sx, sy);
             CRect siterect;
-            GetWindowRect(GetDlgItem(m_hwnd,IDC_PLACE_PAGE),&siterect);
-            htab=GetDlgItem(m_hwnd,IDC_TAB);
+            GetWindowRect(GetDlgItem(m_hwnd, IDC_PLACE_PAGE), &siterect);
+            htab = GetDlgItem(m_hwnd, IDC_TAB);
             CRect tabrect;
-            GetWindowRect(htab,&tabrect);
+            GetWindowRect(htab, &tabrect);
 
-            static const TanchorInfo ainfo[]= {
-                IDC_BT_APPLY,TanchorInfo::BOTTOM|TanchorInfo::RIGHT,
-                IDOK,TanchorInfo::BOTTOM|TanchorInfo::RIGHT,
-                IDCANCEL,TanchorInfo::BOTTOM|TanchorInfo::RIGHT,
-                IDC_BT_EXPORT,TanchorInfo::BOTTOM|TanchorInfo::RIGHT,
+            static const TanchorInfo ainfo[] = {
+                IDC_BT_APPLY, TanchorInfo::BOTTOM | TanchorInfo::RIGHT,
+                IDOK, TanchorInfo::BOTTOM | TanchorInfo::RIGHT,
+                IDCANCEL, TanchorInfo::BOTTOM | TanchorInfo::RIGHT,
+                IDC_BT_EXPORT, TanchorInfo::BOTTOM | TanchorInfo::RIGHT,
                 //IDC_BT_DONATE,TanchorInfo::BOTTOM|TanchorInfo::LEFT,
-                IDC_LINE,TanchorInfo::BOTTOM|TanchorInfo::LEFT|TanchorInfo::RIGHT,
-                IDC_TAB,TanchorInfo::LEFT|TanchorInfo::TOP|TanchorInfo::RIGHT|TanchorInfo::BOTTOM,
-                0,0
+                IDC_LINE, TanchorInfo::BOTTOM | TanchorInfo::LEFT | TanchorInfo::RIGHT,
+                IDC_TAB, TanchorInfo::LEFT | TanchorInfo::TOP | TanchorInfo::RIGHT | TanchorInfo::BOTTOM,
+                0, 0
             };
-            anchors.add(ainfo,*this);
-            if (propertypages.size()==1) {
-                Twindow::show(0,IDC_TAB);
-                CPoint dif(tabrect.left-siterect.left,tabrect.top-siterect.top);
-                siterect+=dif;
-                setSizeD(dif.x,dif.y);
+            anchors.add(ainfo, *this);
+            if (propertypages.size() == 1) {
+                Twindow::show(0, IDC_TAB);
+                CPoint dif(tabrect.left - siterect.left, tabrect.top - siterect.top);
+                siterect += dif;
+                setSizeD(dif.x, dif.y);
             } else {
-                for (size_t i=0; i<propertypages.size(); i++) {
+                for (size_t i = 0; i < propertypages.size(); i++) {
                     TCITEM tci;
-                    tci.mask=TCIF_TEXT;
+                    tci.mask = TCIF_TEXT;
                     PROPPAGEINFO ppi;
                     propertypages[i]->GetPageInfo(&ppi);
                     char_t title[512];
                     text<char_t>(ppi.pszTitle, -1, title, countof(title));//unicode16toAnsi(ppi.pszTitle,-1,title);
-                    tci.pszText=title;
-                    TabCtrl_InsertItem(htab,i,&tci);
+                    tci.pszText = title;
+                    TabCtrl_InsertItem(htab, i, &tci);
                 }
-                setSizeD(4,0);
+                setSizeD(4, 0);
             }
-            static const TanchorInfo ainfo2[]= {
-                IDC_PLACE_PAGE,TanchorInfo::LEFT|TanchorInfo::TOP|TanchorInfo::RIGHT|TanchorInfo::BOTTOM,
-                0,0
+            static const TanchorInfo ainfo2[] = {
+                IDC_PLACE_PAGE, TanchorInfo::LEFT | TanchorInfo::TOP | TanchorInfo::RIGHT | TanchorInfo::BOTTOM,
+                0, 0
             };
-            anchors.add(ainfo2,*this);
+            anchors.add(ainfo2, *this);
 
-            CPoint sitetl=siterect.TopLeft();
-            siterect-=siterect.TopLeft();
-            int dx=pagerect.right-siterect.right,dy=pagerect.bottom-siterect.bottom;
-            setSizeD(dx,dy);
+            CPoint sitetl = siterect.TopLeft();
+            siterect -= siterect.TopLeft();
+            int dx = pagerect.right - siterect.right, dy = pagerect.bottom - siterect.bottom;
+            setSizeD(dx, dy);
 
-            ScreenToClient(m_hwnd,&sitetl);
-            pagerect+=sitetl;
+            ScreenToClient(m_hwnd, &sitetl);
+            pagerect += sitetl;
             setActivePage(propertypages.front());
             if (idff_multiplePages) {
-                int pg=deci->getParam2(idff_multiplePages);
-                PostMessage(htab,TCM_SETCURSEL,pg,0);
+                int pg = deci->getParam2(idff_multiplePages);
+                PostMessage(htab, TCM_SETCURSEL, pg, 0);
                 setActivePage(propertypages[pg]);
             }
             //addHint(IDC_BT_DONATE,_l("Thank you!"));
@@ -185,21 +185,21 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
             // Re-center the %&#@*! pagesite dialog
 
             if (!cfgGet(IDFF_dlgRestorePos)) {
-                int xDiff=((wpl.rcNormalPosition.right-wpl.rcNormalPosition.left)-pagerect.Width())/2;
+                int xDiff = ((wpl.rcNormalPosition.right - wpl.rcNormalPosition.left) - pagerect.Width()) / 2;
 
-                GetWindowPlacement(m_hwnd,&wpl);
+                GetWindowPlacement(m_hwnd, &wpl);
 
-                wpl.rcNormalPosition.left+=xDiff;
-                wpl.rcNormalPosition.right+=xDiff;
+                wpl.rcNormalPosition.left += xDiff;
+                wpl.rcNormalPosition.right += xDiff;
 
-                SetWindowPlacement(m_hwnd,&wpl);
+                SetWindowPlacement(m_hwnd, &wpl);
             }
 
             return TRUE;
         }
         case WM_SIZE: {
             CRect r;
-            GetWindowRect(m_hwnd,&r);
+            GetWindowRect(m_hwnd, &r);
             resize(r);
             return TRUE;
         }
@@ -207,23 +207,23 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
             switch (LOWORD(wParam)) {
                 case IDOK:
                 case IDCANCEL:
-                    if (HIWORD(wParam)==BN_CLICKED) {
+                    if (HIWORD(wParam) == BN_CLICKED) {
                         if (idff_multiplePages) {
-                            deci->putParam(idff_multiplePages,(int)SendMessage(htab,TCM_GETCURSEL,0,0));
+                            deci->putParam(idff_multiplePages, (int)SendMessage(htab, TCM_GETCURSEL, 0, 0));
                             deci->saveDialogSettings();
                         }
-                        if (LOWORD(wParam)==IDOK)
-                            for (TpropertyPages::iterator p=propertypages.begin(); p!=propertypages.end(); p++)
-                                if ((*p)->IsPageDirty()==S_OK) {
+                        if (LOWORD(wParam) == IDOK)
+                            for (TpropertyPages::iterator p = propertypages.begin(); p != propertypages.end(); p++)
+                                if ((*p)->IsPageDirty() == S_OK) {
                                     (*p)->Apply();
                                 }
                         activepage->Deactivate();
-                        EndDialog(m_hwnd,LOWORD(wParam));
+                        EndDialog(m_hwnd, LOWORD(wParam));
                         return TRUE;
                     }
                     break;
                 case IDC_BT_APPLY:
-                    if (HIWORD(wParam)==BN_CLICKED) {
+                    if (HIWORD(wParam) == BN_CLICKED) {
                         applyChanges();
                     }
                     return TRUE;
@@ -247,16 +247,16 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
                            return TRUE;
                     */
                 case IDC_BT_EXPORT:
-                    if (HIWORD(wParam)==BN_CLICKED) {
+                    if (HIWORD(wParam) == BN_CLICKED) {
                         applyChanges();
-                        TaboutPage::exportReg(this,regflnm);
+                        TaboutPage::exportReg(this, regflnm);
                     }
                     return TRUE;
             };
             break;
         case WM_NOTIFY: {
-            NMHDR *nmhdr=LPNMHDR(lParam);
-            if (nmhdr->hwndFrom==htab && nmhdr->idFrom==IDC_TAB)
+            NMHDR *nmhdr = LPNMHDR(lParam);
+            if (nmhdr->hwndFrom == htab && nmhdr->idFrom == IDC_TAB)
                 switch (nmhdr->code) {
                     case TCN_SELCHANGE:
                         setActivePage(propertypages[TabCtrl_GetCurSel(htab)]);
@@ -265,7 +265,7 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
             break;
         }
     }
-    return TdlgWindow::msgProc(uMsg,wParam,lParam);
+    return TdlgWindow::msgProc(uMsg, wParam, lParam);
 }
 
 void TpageSite::setActivePage(IPropertyPage *page)
@@ -273,43 +273,43 @@ void TpageSite::setActivePage(IPropertyPage *page)
     if (activepage) {
         applyChanges();
         activepage->Deactivate();
-        activepageFF=NULL;
+        activepageFF = NULL;
     }
-    activepage=page;
-    activepage->Activate(m_hwnd,&pagerect,FALSE);
+    activepage = page;
+    activepage->Activate(m_hwnd, &pagerect, FALSE);
     activepage->Show(SW_SHOW);
-    if (activepageFF=activepage) {
+    if (activepageFF = activepage) {
         activepageFF->toTop();
     }
 
-    enable(activepage->IsPageDirty()==S_OK,IDC_BT_APPLY);
+    enable(activepage->IsPageDirty() == S_OK, IDC_BT_APPLY);
 }
 
 HRESULT STDMETHODCALLTYPE TpageSite::OnStatusChange(DWORD dwFlags)
 {
-    if (dwFlags&PROPPAGESTATUS_DIRTY) {
+    if (dwFlags & PROPPAGESTATUS_DIRTY) {
         setDirty(1);
     }
-    if (dwFlags&PROPPAGESTATUS_CLEAN) {
+    if (dwFlags & PROPPAGESTATUS_CLEAN) {
         setDirty(0);
     }
     return S_OK;
 }
 void TpageSite::setDirty(int d)
 {
-    enable(d,IDC_BT_APPLY);
+    enable(d, IDC_BT_APPLY);
 }
 void TpageSite::applyChanges(void)
 {
     activepage->Apply();
-    setDirty(activepage->IsPageDirty()==S_OK);
+    setDirty(activepage->IsPageDirty() == S_OK);
 }
 HRESULT STDMETHODCALLTYPE TpageSite::GetLocaleID(LCID *pLocaleID)
 {
     if (!pLocaleID) {
         return E_POINTER;
     }
-    *pLocaleID=GetUserDefaultLCID();
+    *pLocaleID = GetUserDefaultLCID();
     return S_OK;
 }
 HRESULT STDMETHODCALLTYPE TpageSite::GetPageContainer(IUnknown **ppUnk)
@@ -323,25 +323,25 @@ HRESULT STDMETHODCALLTYPE TpageSite::TranslateAccelerator(MSG *pMsg)
 
 void TpageSite::resize(CRect &newrect)
 {
-    if (prevrect.Width()!=0) {
-        anchors.resize(*this,newrect);
+    if (prevrect.Width() != 0) {
+        anchors.resize(*this, newrect);
         if (activepage) {
             CRect r;
-            GetWindowRect(GetDlgItem(m_hwnd,IDC_PLACE_PAGE),&r);
-            SetWindowPos(GetDlgItem(m_hwnd,IDC_PLACE_PAGE),NULL,0,0,r.Width(),r.Height(),SWP_NOMOVE|SWP_NOZORDER);
+            GetWindowRect(GetDlgItem(m_hwnd, IDC_PLACE_PAGE), &r);
+            SetWindowPos(GetDlgItem(m_hwnd, IDC_PLACE_PAGE), NULL, 0, 0, r.Width(), r.Height(), SWP_NOMOVE | SWP_NOZORDER);
             if (activepageFF) {
                 activepageFF->resize(r);
             }
         }
     }
-    prevrect=newrect;
+    prevrect = newrect;
 }
 
 STDMETHODIMP TpageSite::onTranslate(void)
 {
     Twindow::translate();
     if (idcaption) {
-        setWindowText(m_hwnd,_(-dialogId,caption));
+        setWindowText(m_hwnd, _(-dialogId, caption));
     }
     return S_OK;
 }

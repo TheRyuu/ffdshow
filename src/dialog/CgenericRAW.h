@@ -4,7 +4,7 @@
 #include "TconfPageEnc.h"
 #include "ffcodecs.h"
 
-class TgenericRAWpage :public TconfPageEnc
+class TgenericRAWpage : public TconfPageEnc
 {
 public:
     TgenericRAWpage(TffdshowPageEnc *Iparent);

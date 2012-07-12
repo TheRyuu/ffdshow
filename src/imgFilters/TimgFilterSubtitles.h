@@ -11,7 +11,7 @@
 class TsubtitlesTextpin;
 class TimgFilterSubtitleExpand;
 struct TfontSettingsSub;
-DECLARE_FILTER(TimgFilterSubtitles,public,TimgFilter)
+DECLARE_FILTER(TimgFilterSubtitles, public, TimgFilter)
 
 public:
 typedef enum {
@@ -24,19 +24,19 @@ private:
 Trect oldRectClip;
 int isdvdproc;
 bool wasDiscontinuity;
-bool expandSizeChanged,fontSizeChanged;
+bool expandSizeChanged, fontSizeChanged;
 TsubtitlesFile subs;
-typedef stdext::hash_map<int,TsubtitlesTextpin*> Tembedded;
+typedef stdext::hash_map<int, TsubtitlesTextpin*> Tembedded;
 Tembedded embedded;
-Tfont font,fontCC;
-int oldstereo,oldsplitborder;
+Tfont font, fontCC;
+int oldstereo, oldsplitborder;
 double AVIfps;
 TimgFilterSubtitleExpand *expand;
 TexpandSettings expandSettings;
 Trect oldExpandRect;
 int oldExpandCode;
-unsigned int oldSizeDx,oldSizeDy;
-boost::recursive_mutex csEmbedded,csCC;
+unsigned int oldSizeDx, oldSizeDy;
+boost::recursive_mutex csEmbedded, csCC;
 TfilterQueue::iterator prevIt;
 REFERENCE_TIME prevTime;
 TffPict prevPict;
@@ -71,7 +71,7 @@ AdhocMode adhocMode; // 0: normal, 1: adhoc! process only DVD sub/menu, 2: after
 
 // Prepares glph in background.
 class TglyphThread
-{    
+{
     // Subtitles preparation requires a lot of memory to store prepared image.
     // Please note that subitles filter uses a lot of memory not only for storing prepared images.
     // If you set 20MB here, subitles filter would use 40MB or so.
@@ -129,29 +129,29 @@ public:
 HANDLE getGlyphThreadHandle();
 
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
-    return FF_CSP_420P|FF_CSP_RGB32;
+    return FF_CSP_420P | FF_CSP_RGB32;
 }
 virtual void onSizeChange();
 TsubtitlesTextpin* getTextpin();
 
 public:
-TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterSubtitles(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual ~TimgFilterSubtitles();
-virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual bool getOutputFmt(TffPictBase &pict, const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 virtual void onSeek();
-void onSubFlnmChange(int id,int),onSubFlnmChangeStr(int id,const char_t*);
+void onSubFlnmChange(int id, int), onSubFlnmChangeStr(int id, const char_t*);
 
-bool initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen);
-void addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
+bool initSubtitles(int id, int type, const unsigned char *extradata, unsigned int extradatalen);
+void addSubtitle(int id, REFERENCE_TIME start, REFERENCE_TIME stop, const unsigned char *data, unsigned int datalen, const TsubtitlesSettings *cfg, bool utf8);
 void resetSubtitles(int id);
-bool ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen);
+bool ctlSubtitles(int id, int type, unsigned int ctl_id, const void *ctl_data, unsigned int ctl_datalen);
 const char_t *getCurrentFlnm() const;
 
-void addClosedCaption(const wchar_t *line),hideClosedCaptions();
+void addClosedCaption(const wchar_t *line), hideClosedCaptions();
 virtual int getImgFilterID()
 {
     return IMGFILTER_SUBTITLES;

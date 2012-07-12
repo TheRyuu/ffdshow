@@ -20,25 +20,25 @@ extern "C" {
     struct IPropertyPage;
     DECLARE_INTERFACE_(IffProc, IUnknown)
     {
-        STDMETHOD (setTempPreset)(const char *tempPresetName) PURE;
-        STDMETHOD (setActivePreset)(const char *presetName) PURE;
-        STDMETHOD (loadPreset)(const char *presetName) PURE;
-        STDMETHOD (saveBytestreamConfig)(void *buf,size_t len) PURE; //if len=0, then buf should point to int variable which will be filled with required buffer length
-        STDMETHOD (loadBytestreamConfig)(const void *buf,size_t len) PURE;
-        STDMETHOD (config)(HWND owner) PURE;
-        STDMETHOD (getIffDecoder_)(/*IffdshowBase*/void* *deciPtr) PURE;
-        STDMETHOD (getNewSize)(unsigned int srcDx,unsigned int srcDy,unsigned int *outDx,unsigned int *outDy) PURE;
-        STDMETHOD (begin)(unsigned int srcDx,unsigned int srcDy,int FpsNum,int FpsDen) PURE;
-        STDMETHOD (process)(unsigned int framenum,uint64_t incsp,const unsigned char *src[4],ptrdiff_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],ptrdiff_t dstStride[4]) PURE;
-        STDMETHOD (processTime)(unsigned int framenum,int64_t ref_start,int64_t ref_stop,uint64_t incsp,const unsigned char *src[4],ptrdiff_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],ptrdiff_t dstStride[4]) PURE;
-        STDMETHOD (end)(void) PURE;
-        STDMETHOD_(const TcspInfo*,getCspInfo)(uint64_t csp) PURE;
-        STDMETHOD (putStringParam)(const char *param,char sep) PURE;
-        STDMETHOD (getParamsEnum)(IffdshowParamsEnum* *enumPtr) PURE;
-        STDMETHOD (notifyParamsChanged)(void) PURE;
-        STDMETHOD (saveActivePreset)(const char *name) PURE;
-        STDMETHOD (putParam)(unsigned int paramID,int val) PURE;
-        STDMETHOD (setBasePageSite)(IPropertyPage *page) PURE;
+        STDMETHOD(setTempPreset)(const char * tempPresetName) PURE;
+        STDMETHOD(setActivePreset)(const char * presetName) PURE;
+        STDMETHOD(loadPreset)(const char * presetName) PURE;
+        STDMETHOD(saveBytestreamConfig)(void * buf, size_t len) PURE; //if len=0, then buf should point to int variable which will be filled with required buffer length
+        STDMETHOD(loadBytestreamConfig)(const void * buf, size_t len) PURE;
+        STDMETHOD(config)(HWND owner) PURE;
+        STDMETHOD(getIffDecoder_)(/*IffdshowBase*/void* *deciPtr) PURE;
+        STDMETHOD(getNewSize)(unsigned int srcDx, unsigned int srcDy, unsigned int * outDx, unsigned int * outDy) PURE;
+        STDMETHOD(begin)(unsigned int srcDx, unsigned int srcDy, int FpsNum, int FpsDen) PURE;
+        STDMETHOD(process)(unsigned int framenum, uint64_t incsp, const unsigned char * src[4], ptrdiff_t srcStride[4], int ro, uint64_t outcsp, unsigned char * dst[4], ptrdiff_t dstStride[4]) PURE;
+        STDMETHOD(processTime)(unsigned int framenum, int64_t ref_start, int64_t ref_stop, uint64_t incsp, const unsigned char * src[4], ptrdiff_t srcStride[4], int ro, uint64_t outcsp, unsigned char * dst[4], ptrdiff_t dstStride[4]) PURE;
+        STDMETHOD(end)(void) PURE;
+        STDMETHOD_(const TcspInfo*, getCspInfo)(uint64_t csp) PURE;
+        STDMETHOD(putStringParam)(const char * param, char sep) PURE;
+        STDMETHOD(getParamsEnum)(IffdshowParamsEnum* *enumPtr) PURE;
+        STDMETHOD(notifyParamsChanged)(void) PURE;
+        STDMETHOD(saveActivePreset)(const char * name) PURE;
+        STDMETHOD(putParam)(unsigned int paramID, int val) PURE;
+        STDMETHOD(setBasePageSite)(IPropertyPage * page) PURE;
     };
 
 #ifdef __cplusplus

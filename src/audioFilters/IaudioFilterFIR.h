@@ -6,9 +6,9 @@ static const GUID IID_IaudioFilterFir = { 0x36d43834, 0x8f32, 0x489c, { 0xa6, 0x
 
 DECLARE_INTERFACE(IaudioFilterFir)
 {
-    STDMETHOD_(int,getFFTdataNum)(void) PURE;
-    STDMETHOD (getFFTdata)(float *fft) PURE;
-    STDMETHOD_(int,getFFTfreq)(void) PURE;
+    STDMETHOD_(int, getFFTdataNum)(void) PURE;
+    STDMETHOD(getFFTdata)(float * fft) PURE;
+    STDMETHOD_(int, getFFTfreq)(void) PURE;
 };
 
 #endif

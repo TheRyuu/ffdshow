@@ -42,8 +42,9 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
     clipdy = prefs.clipdy;
     gdi_font_scale = fontSettings.gdi_font_scale;
 
-    if (gdi_font_scale != 64 || !fontSettings.hqBorder)
+    if (gdi_font_scale != 64 || !fontSettings.hqBorder) {
         hqBorder = false;
+    }
 
     // non SSA/ASS, font settings over-ride or OSD
     if (shadowDepth == -1 || fontSettings.shadowOverride || prefs.shadowMode == TfontSettings::ShadowOSD) {
@@ -57,33 +58,35 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
     }
 
     if ((borderStyle == Not_specified && fontSettings.opaqueBox) ||
-        (outlineWidth > 0 && fontSettings.opaqueBox && fontSettings.fontSettingsOverride) ||
-        (outlineWidth > 0 && borderStyle == Opaquebox && !fontSettings.fontSettingsOverride)) {
-        opaqueBox=true;
+            (outlineWidth > 0 && fontSettings.opaqueBox && fontSettings.fontSettingsOverride) ||
+            (outlineWidth > 0 && borderStyle == Opaquebox && !fontSettings.fontSettingsOverride)) {
+        opaqueBox = true;
     }
 
-    bodyYUV = (isColor && fontSettings.colorOverride == 0) ? YUVcolorA(color,colorA) : prefs.yuvcolor;
-    outlineYUV = (isColor && fontSettings.colorOverride == 0) ? YUVcolorA(OutlineColour,OutlineColourA) : prefs.outlineYUV;
-    shadowYUV = (isColor && fontSettings.colorOverride == 0) ? YUVcolorA(ShadowColour,ShadowColourA) : prefs.shadowYUV;
+    bodyYUV = (isColor && fontSettings.colorOverride == 0) ? YUVcolorA(color, colorA) : prefs.yuvcolor;
+    outlineYUV = (isColor && fontSettings.colorOverride == 0) ? YUVcolorA(OutlineColour, OutlineColourA) : prefs.outlineYUV;
+    shadowYUV = (isColor && fontSettings.colorOverride == 0) ? YUVcolorA(ShadowColour, ShadowColourA) : prefs.shadowYUV;
 
     // non SSA/ASS or shadow over-ride
     if (!isSSA() || fontSettings.shadowOverride) {
         if (prefs.shadowMode <= TfontSettings::GradientShadow) {
-            shadowYUV.A = uint32_t(256*sqrt((double)shadowYUV.A/256.0));
+            shadowYUV.A = uint32_t(256 * sqrt((double)shadowYUV.A / 256.0));
         }
     }
 
-    scaleY = get_yscale(fontSettings.yscale/100.0, prefs.sar, fontSettings.fontSettingsOverride);
+    scaleY = get_yscale(fontSettings.yscale / 100.0, prefs.sar, fontSettings.fontSettingsOverride);
 
-    scaleX =  get_xscale(fontSettings.xscale/100.0,
-                               Rational(1,1),      // To avoid calculation error, we don't mix aspect ratio and ScaleX here.
-                               fontSettings.fontSettingsOverride);
+    scaleX =  get_xscale(fontSettings.xscale / 100.0,
+                         Rational(1, 1),     // To avoid calculation error, we don't mix aspect ratio and ScaleX here.
+                         fontSettings.fontSettingsOverride);
 
-    if (fontSettings.autosize && !isSSA())
+    if (fontSettings.autosize && !isSSA()) {
         autoSize = true;
+    }
 
-    if (!isSSA() || prefs.fontSettings.fontSettingsOverride)
+    if (!isSSA() || prefs.fontSettings.fontSettingsOverride) {
         blurStrength = prefs.blurStrength;
+    }
 
     bodyBlurCount = getBlurCountBody(prefs);
     outlineBlurCount = getBlurCountOutline(prefs);
@@ -94,13 +97,16 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
     }
 
     // Avoid division by zero.
-    if (!refResX)
+    if (!refResX) {
         refResX = 384;
-    if (!refResY)
+    }
+    if (!refResY) {
         refResY = 288;
+    }
 
-    if (fontSettings.scaleBorderAndShadowOverride && isSSA() && !fontSettings.fontSettingsOverride)
+    if (fontSettings.scaleBorderAndShadowOverride && isSSA() && !fontSettings.fontSettingsOverride) {
         scaleBorderAndShadow = true;
+    }
 
     if (scaleBorderAndShadow) {
         shadowDepth *= (double)dy / refResY;
@@ -110,21 +116,21 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
     if (size > 0 && fontSettings.sizeOverride == 0) {
         size = size * (prefs.clipdy ? prefs.clipdy : dy) / refResY;
     } else {
-        size = limit(fontSettings.getSize(dx,dy), 3U, 255U);
+        size = limit(fontSettings.getSize(dx, dy), 3U, 255U);
     }
 
-    if (bold==-1 || fontSettings.fontSettingsOverride) {
-        lfWeight=fontSettings.weight;
-    } else if (bold==0) {
-        lfWeight=0;
+    if (bold == -1 || fontSettings.fontSettingsOverride) {
+        lfWeight = fontSettings.weight;
+    } else if (bold == 0) {
+        lfWeight = 0;
     } else {
-        lfWeight=700;
+        lfWeight = 700;
     }
 
     if ((italic && !fontSettings.fontSettingsOverride) || (fontSettings.italic && isSSA() && fontSettings.fontSettingsOverride) || (fontSettings.italic && !isSSA())) {
-        italic=1;
+        italic = 1;
     } else {
-        italic=0;
+        italic = 0;
     }
 
     if ((underline && !fontSettings.fontSettingsOverride) || (fontSettings.underline && isSSA() && fontSettings.fontSettingsOverride) || (fontSettings.underline && !isSSA())) {
@@ -133,18 +139,20 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
         underline = 0;
     }
 
-    if (encoding == -1 || fontSettings.fontSettingsOverride)
+    if (encoding == -1 || fontSettings.fontSettingsOverride) {
         encoding = fontSettings.charset;
+    }
 
-    if (!fontname[0] || fontSettings.fontSettingsOverride)
+    if (!fontname[0] || fontSettings.fontSettingsOverride) {
         ff_strncpy(fontname, fontSettings.name, LF_FACESIZE);
+    }
 
     calculated_spacing = get_spacing(prefs);
 
     // none SSA/ASS or over-ride
     // Translate slider settings to \move, but don't cancel collision checks.
     if (!isMove && (!isSSA() || prefs.deci->getParam2(IDFF_subSSAOverridePlacement))) {
-        pos = CPoint((double)prefs.xpos*refResX/100.0, (double)prefs.ypos*refResY/100.0);
+        pos = CPoint((double)prefs.xpos * refResX / 100.0, (double)prefs.ypos * refResY / 100.0);
         pos2 = pos;
         isMove = true;
         forcedCollisionCheck = true;
@@ -153,7 +161,7 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
     }
 
     if (scroll.directionV) {
-        CRect scrollClip(0, scroll.y1, refResX-1, scroll.y2);
+        CRect scrollClip(0, scroll.y1, refResX - 1, scroll.y2);
         if (!isClip) {
             isClip = true;
             clip = scrollClip;
@@ -187,26 +195,29 @@ int TSubtitleMixedProps::getBlurCountBody(const TprintPrefs &prefs) const
 {
     // ASS and the settings from the stream is respected.
     if (blur_be > 0 && prefs.fontSettings.fontSettingsOverride == 0) {
-        if (outlineWidth == 0)
+        if (outlineWidth == 0) {
             return blur_be;
-        else
+        } else {
             return 0;
+        }
     }
 
     // non ASS or style over-ride by users. The settings from the dialog box is used.
     if (!isSSA() || prefs.fontSettings.fontSettingsOverride) {
-        if (prefs.fontSettings.blur == 1)
+        if (prefs.fontSettings.blur == 1) {
             return 1;
-        else
+        } else {
             return 0;
+        }
     }
 
     // Glowing shadow does not look nice unless the border is blured.
     if (prefs.shadowMode == TfontSettings::GlowingShadow && shadowDepth > 0) {
-        if (outlineWidth == 0)
+        if (outlineWidth == 0) {
             return 1;
-        else
+        } else {
             return 0;
+        }
     }
 
     return 0;
@@ -216,26 +227,29 @@ int TSubtitleMixedProps::getBlurCountOutline(const TprintPrefs &prefs) const
 {
     // ASS and the settings from the stream is respected.
     if (blur_be > 0 && prefs.fontSettings.fontSettingsOverride == 0) {
-        if (outlineWidth > 0)
+        if (outlineWidth > 0) {
             return blur_be;
-        else
+        } else {
             return 0;
+        }
     }
 
     // non ASS or style over-ride by users. The settings from the dialog box is used.
     if (!isSSA() || prefs.fontSettings.fontSettingsOverride) {
-        if (prefs.fontSettings.blur == 2)
+        if (prefs.fontSettings.blur == 2) {
             return 1;
-        else
+        } else {
             return 0;
+        }
     }
 
     // Glowing shadow does not look nice unless the border is blured.
     if (prefs.shadowMode == TfontSettings::GlowingShadow && shadowDepth > 0) {
-        if (outlineWidth > 0)
+        if (outlineWidth > 0) {
             return 1;
-        else
+        } else {
             return 0;
+        }
     }
 
     return 0;
@@ -265,7 +279,7 @@ CPoint TSubtitleMixedProps::get_rotationAxis() const
         case 9: // SSA mid
         case 10:
         case 11:
-            result.y = dy/2;
+            result.y = dy / 2;
             break;
         case 1: // SSA bottom
         case 2:
@@ -303,7 +317,7 @@ double TSubtitleMixedProps::get_marginR(double lineWidth) const
     double result;
 
     // Revert the line size to the input dimension for calculation
-    lineWidth=lineWidth * refResX / dx;
+    lineWidth = lineWidth * refResX / dx;
 
     if (isMove) {
         switch (alignment) {
@@ -315,7 +329,7 @@ double TSubtitleMixedProps::get_marginR(double lineWidth) const
             case 3: // right(SSA)
             case 7:
             case 11:
-                result=refResX - pos.x; // Right alignment : pos.x anchors to the right of paragraph
+                result = refResX - pos.x; // Right alignment : pos.x anchors to the right of paragraph
                 break;
             case 2: // center(SSA)
             case 6:
@@ -457,17 +471,20 @@ double TSubtitleMixedProps::get_marginBottom() const
 
 double TSubtitleMixedProps::getScrollStart() const
 {
-    if (scroll.directionV == -1)
+    if (scroll.directionV == -1) {
         return (double)scroll.y2 * dy / refResY;
-    if (scroll.directionV == 1)
+    }
+    if (scroll.directionV == 1) {
         return (double)scroll.y1 * dy / refResY;
+    }
     return 0;
 }
 
 double TSubtitleMixedProps::getScrollSpeed() const
 {
-    if (scroll.directionV)
+    if (scroll.directionV) {
         return (double)scroll.directionV  * dy / (refResY * scroll.delay);
+    }
     return (double)scroll.directionH  * dx / (refResX * scroll.delay);
 }
 
@@ -489,8 +506,9 @@ double TSubtitleMixedProps::get_movedistanceH() const
 
 CRect TSubtitleMixedProps::get_clip() const
 {
-    if (!isClip)
-        return CRect(0,0,dx >= 1 ? dx - 1 : 0, dy >= 1 ? dy -1 : 0);
+    if (!isClip) {
+        return CRect(0, 0, dx >= 1 ? dx - 1 : 0, dy >= 1 ? dy - 1 : 0);
+    }
 
     CRect result;
 
@@ -498,23 +516,23 @@ CRect TSubtitleMixedProps::get_clip() const
     result.top = clip.top * dy / refResY;
     result.right = clip.right * dx / refResX;
     result.bottom = clip.bottom * dy / refResY;
-    if (result.left > result.right) std::swap(result.left, result.right);
-    if (result.top > result.bottom) std::swap(result.top, result.bottom);
-    if (result.left < 0) result.left = 0;
-    if (result.top < 0) result.top = 0;
-    if (result.right < 0) result.right = 0;
-    if (result.bottom < 0) result.bottom = 0;
-    if (result.right >= (int)dx) result.right = dx >= 1 ? dx - 1 : 0;
-    if (result.bottom >= (int)dy) result.bottom = dy >= 1 ? dy -1 : 0;
-    if (result.left >= (int)dx) result.left = dx >= 1 ? dx - 1 : 0;
-    if (result.top >= (int)dy) result.top = dy >= 1 ? dy -1 : 0;
+    if (result.left > result.right) { std::swap(result.left, result.right); }
+    if (result.top > result.bottom) { std::swap(result.top, result.bottom); }
+    if (result.left < 0) { result.left = 0; }
+    if (result.top < 0) { result.top = 0; }
+    if (result.right < 0) { result.right = 0; }
+    if (result.bottom < 0) { result.bottom = 0; }
+    if (result.right >= (int)dx) { result.right = dx >= 1 ? dx - 1 : 0; }
+    if (result.bottom >= (int)dy) { result.bottom = dy >= 1 ? dy - 1 : 0; }
+    if (result.left >= (int)dx) { result.left = dx >= 1 ? dx - 1 : 0; }
+    if (result.top >= (int)dy) { result.top = dy >= 1 ? dy - 1 : 0; }
     return result;
 }
 
 void TSubtitleMixedProps::toLOGFONT(LOGFONT &lf) const
 {
-    memset(&lf,0,sizeof(lf));
-    lf.lfHeight = LONG (size * gdi_font_scale);
+    memset(&lf, 0, sizeof(lf));
+    lf.lfHeight = LONG(size * gdi_font_scale);
     lf.lfWidth = 0;
     lf.lfWeight = lfWeight;
     lf.lfItalic = italic;
@@ -524,8 +542,8 @@ void TSubtitleMixedProps::toLOGFONT(LOGFONT &lf) const
     lf.lfOutPrecision = OUT_TT_PRECIS;
     lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
     lf.lfQuality = ANTIALIASED_QUALITY;
-    lf.lfPitchAndFamily = DEFAULT_PITCH|FF_DONTCARE;
-    ff_strncpy(lf.lfFaceName,fontname,LF_FACESIZE);
+    lf.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+    ff_strncpy(lf.lfFaceName, fontname, LF_FACESIZE);
 }
 
 double TSubtitleMixedProps::get_fader(REFERENCE_TIME rtStart) const
@@ -548,32 +566,39 @@ double TSubtitleMixedProps::get_fader(REFERENCE_TIME rtStart) const
 double TSubtitleMixedProps::get_scrollFader(int pos) const
 {
     _mm_empty();
-    if (scroll.fadeaway == 0)
+    if (scroll.fadeaway == 0) {
         return 1;
+    }
     if (scroll.directionV) {
         const int &y = pos;
         double y1 = (double)scroll.y1 * dy / refResY;
         double y2 = (double)scroll.y2 * dy / refResY;
         double half = (y2 - y1) / 2;
         double fadeaway = (double)scroll.fadeaway * dy / refResY;
-        if (y < y1 || y > y2)
+        if (y < y1 || y > y2) {
             return 0;
-        if (y >= y1 + fadeaway && y <= y2 - fadeaway)
+        }
+        if (y >= y1 + fadeaway && y <= y2 - fadeaway) {
             return 1;
-        if (y < y1 + std::min(fadeaway, half))
+        }
+        if (y < y1 + std::min(fadeaway, half)) {
             return (y - y1) / fadeaway;
+        }
         return (y2 - y) / fadeaway;
     } else if (scroll.directionH) {
         const int &x = pos;
         double x2 = dx;
         double half = x2 / 2;
         double fadeaway = (double)scroll.fadeaway * dx / refResX;
-        if (x < 0 || x > x2)
+        if (x < 0 || x > x2) {
             return 0;
-        if (x >= fadeaway && x <= x2 - fadeaway)
+        }
+        if (x >= fadeaway && x <= x2 - fadeaway) {
             return 1;
-        if (x < std::min(fadeaway, half))
+        }
+        if (x < std::min(fadeaway, half)) {
             return x / fadeaway;
+        }
         return (x2 - x) / fadeaway;
     }
     return 1;
@@ -581,9 +606,11 @@ double TSubtitleMixedProps::get_scrollFader(int pos) const
 
 int TSubtitleMixedProps::get_fadeawayWidth() const
 {
-    if (!scroll.directionH || !scroll.fadeaway)
+    if (!scroll.directionH || !scroll.fadeaway) {
         return 0;
-    if (scroll.fadeaway * 2 >= refResX)
-        return dx/2 + (dx & 1);
+    }
+    if (scroll.fadeaway * 2 >= refResX) {
+        return dx / 2 + (dx & 1);
+    }
     return scroll.fadeaway * dx / refResX;
 }

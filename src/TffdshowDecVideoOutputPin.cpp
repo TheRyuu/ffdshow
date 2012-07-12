@@ -30,17 +30,17 @@ TffdshowDecVideoOutputPin::TffdshowDecVideoOutputPin(
     TffdshowDecVideo *Ifdv,
     HRESULT * phr,
     LPCWSTR pName)
-    :CTransformOutputPin(pObjectName, Ifdv, phr, pName),
-     fdv(Ifdv),
-     queue(NULL),
-     oldSettingOfMultiThread(-1),
-     isFirstFrame(true),
-     pDXVA2Allocator(NULL),
-     dwDXVA1SurfaceCount(0),
-     guidDecoderDXVA1(GUID_NULL)
+    : CTransformOutputPin(pObjectName, Ifdv, phr, pName),
+      fdv(Ifdv),
+      queue(NULL),
+      oldSettingOfMultiThread(-1),
+      isFirstFrame(true),
+      pDXVA2Allocator(NULL),
+      dwDXVA1SurfaceCount(0),
+      guidDecoderDXVA1(GUID_NULL)
 {
     DPRINTF(_l("TffdshowDecVideoOutputPin::Constructor"));
-    memset (&ddUncompPixelFormat, 0, sizeof(ddUncompPixelFormat));
+    memset(&ddUncompPixelFormat, 0, sizeof(ddUncompPixelFormat));
 }
 
 TffdshowDecVideoOutputPin::~TffdshowDecVideoOutputPin()
@@ -51,26 +51,26 @@ TffdshowDecVideoOutputPin::~TffdshowDecVideoOutputPin()
 
 void TffdshowDecVideoOutputPin::freeQueue(void)
 {
-    if(queue) {
+    if (queue) {
         queue->SetPopEvent(NULL);
         CloseHandle(hEvent);
         delete queue;
-        queue=  NULL;
-        hEvent= NULL;
+        queue =  NULL;
+        hEvent = NULL;
     }
 }
 
 HRESULT TffdshowDecVideoOutputPin::Deliver(IMediaSample * pSample)
 {
-    if(m_pInputPin == NULL) {
+    if (m_pInputPin == NULL) {
         return VFW_E_NOT_CONNECTED;
     }
-    if(!isFirstFrame && fdv->inpin->m_rateAndFlush.m_flushing) {
+    if (!isFirstFrame && fdv->inpin->m_rateAndFlush.m_flushing) {
         return S_FALSE;
     }
 
-    isFirstFrame= false;
-    if(fdv->isQueue==1) {
+    isFirstFrame = false;
+    if (fdv->isQueue == 1) {
         ASSERT(queue);
         pSample->AddRef();
         return queue->Receive(pSample);
@@ -81,30 +81,30 @@ HRESULT TffdshowDecVideoOutputPin::Deliver(IMediaSample * pSample)
 
 void TffdshowDecVideoOutputPin::waitUntillQueueCleanedUp(void)
 {
-    if (queue==NULL) {
+    if (queue == NULL) {
         return;
     }
 
     ResetEvent(hEvent);
-    while(!queue->IsIdle()) {
+    while (!queue->IsIdle()) {
         WaitForSingleObject(hEvent, INFINITE);
     }
 }
 
 void TffdshowDecVideoOutputPin::waitForPopEvent(void)
 {
-    if (queue==NULL) {
+    if (queue == NULL) {
         return;
     }
 
-    if(!queue->IsIdle()) {
+    if (!queue->IsIdle()) {
         WaitForSingleObject(hEvent, INFINITE);
     }
 }
 
 void TffdshowDecVideoOutputPin::resetPopEvent(void)
 {
-    if (queue==NULL) {
+    if (queue == NULL) {
         return;
     }
 
@@ -117,7 +117,7 @@ HRESULT TffdshowDecVideoOutputPin::DeliverBeginFlush(void)
     if (m_Connected == NULL) {
         return VFW_E_NOT_CONNECTED;
     }
-    if(fdv->isQueue==1) {
+    if (fdv->isQueue == 1) {
         queue->BeginFlush();
     } else {
         return m_Connected->BeginFlush();
@@ -131,7 +131,7 @@ HRESULT TffdshowDecVideoOutputPin::DeliverEndFlush(void)
     if (m_Connected == NULL) {
         return VFW_E_NOT_CONNECTED;
     }
-    if(fdv->isQueue==1) {
+    if (fdv->isQueue == 1) {
         queue->EndFlush();
     } else {
         return m_Connected->EndFlush();
@@ -139,15 +139,15 @@ HRESULT TffdshowDecVideoOutputPin::DeliverEndFlush(void)
     return S_OK;
 }
 
-HRESULT TffdshowDecVideoOutputPin::DeliverNewSegment( REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
+HRESULT TffdshowDecVideoOutputPin::DeliverNewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
-    DPRINTF(_l("TffdshowDecVideoOutputPin::DeliverNewSegment tStart %7.0f, tStop %7.0f"), tStart/10000.0, tStop/10000.0);
+    DPRINTF(_l("TffdshowDecVideoOutputPin::DeliverNewSegment tStart %7.0f, tStop %7.0f"), tStart / 10000.0, tStop / 10000.0);
     if (m_Connected == NULL) {
         return VFW_E_NOT_CONNECTED;
     }
 
-    isFirstFrame= true;
-    if(fdv->isQueue==1) {
+    isFirstFrame = true;
+    if (fdv->isQueue == 1) {
         DPRINTF(_l("queue->NewSegment"));
         queue->NewSegment(tStart, tStop, dRate);
     } else {
@@ -163,7 +163,7 @@ HRESULT TffdshowDecVideoOutputPin::DeliverEndOfStream(void)
     if (m_Connected == NULL) {
         return VFW_E_NOT_CONNECTED;
     }
-    if(fdv->isQueue==1) {
+    if (fdv->isQueue == 1) {
         queue->EOS();
         waitUntillQueueCleanedUp();
     } else {
@@ -174,7 +174,7 @@ HRESULT TffdshowDecVideoOutputPin::DeliverEndOfStream(void)
 
 void TffdshowDecVideoOutputPin::SendAnyway(void)
 {
-    if (queue==NULL) {
+    if (queue == NULL) {
         return;
     }
 
@@ -185,11 +185,11 @@ void TffdshowDecVideoOutputPin::SendAnyway(void)
 HRESULT TffdshowDecVideoOutputPin::Inactive(void)
 {
     DPRINTF(_l("TffdshowDecVideoOutputPin::Inactive"));
-    if (m_Connected==NULL) {
+    if (m_Connected == NULL) {
         return VFW_E_NOT_CONNECTED;
     }
 
-    if(fdv->isQueue==1) {
+    if (fdv->isQueue == 1) {
         waitUntillQueueCleanedUp();
         queue->Reset();
     }
@@ -203,15 +203,15 @@ IMediaSample* TffdshowDecVideoOutputPin::GetBuffer(void)
 
 HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
 {
-    HRESULT phr= S_OK;
+    HRESULT phr = S_OK;
     DPRINTF(_l("TffdshowDecVideoOutputPin::CompleteConnect"));
-    HRESULT hr= CTransformOutputPin::CompleteConnect(pReceivePin);
-    if(SUCCEEDED(hr)) {
-        if(queue) {
+    HRESULT hr = CTransformOutputPin::CompleteConnect(pReceivePin);
+    if (SUCCEEDED(hr)) {
+        if (queue) {
             freeQueue();
         }
-        queue= new TffOutputQueue(this,pReceivePin, &phr, false, true, 1, false);
-        hEvent= CreateEvent(NULL, false, false, NULL);
+        queue = new TffOutputQueue(this, pReceivePin, &phr, false, true, 1, false);
+        hEvent = CreateEvent(NULL, false, false, NULL);
         queue->SetPopEvent(hEvent);
     }
     return hr;
@@ -220,7 +220,7 @@ HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
 HRESULT TffdshowDecVideoOutputPin::BreakConnect(void)
 {
     // Omit checking connected or not to support dynamic reconnect.
-    if(queue) {
+    if (queue) {
         freeQueue();
     }
     m_pTransformFilter->BreakConnect(PINDIR_OUTPUT);
@@ -245,8 +245,8 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
     const AM_MEDIA_TYPE *pmt   // optional media type
 )
 {
-    CheckPointer(pReceivePin,E_POINTER);
-    ValidateReadPtr(pReceivePin,sizeof(IPin));
+    CheckPointer(pReceivePin, E_POINTER);
+    ValidateReadPtr(pReceivePin, sizeof(IPin));
     CAutoLock cObjectLock(m_pLock);
     DisplayPinInfo(pReceivePin);
 
@@ -266,24 +266,24 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
     pReceivePin->QueryPinInfo(&pininfo);
     if (pininfo.pFilter) {
         pininfo.pFilter->QueryFilterInfo(&filterinfo);
-        DPRINTF (_l("connenting to : filter=%s pin=%s"),filterinfo.achName,pininfo.achName);
+        DPRINTF(_l("connenting to : filter=%s pin=%s"), filterinfo.achName, pininfo.achName);
         if (filterinfo.pGraph) {
             filterinfo.pGraph->Release();
         }
         pininfo.pFilter->Release();
     }
-    BITMAPINFOHEADER *bmi=NULL;
-    if (pmt && pmt->formattype==FORMAT_VideoInfo2
+    BITMAPINFOHEADER *bmi = NULL;
+    if (pmt && pmt->formattype == FORMAT_VideoInfo2
             && pmt->pbFormat
-            && pmt->cbFormat>=sizeof(VIDEOINFOHEADER2)) {
+            && pmt->cbFormat >= sizeof(VIDEOINFOHEADER2)) {
         VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)pmt->pbFormat;
-        bmi=&vih->bmiHeader;
+        bmi = &vih->bmiHeader;
     }
-    if (pmt && pmt->formattype==FORMAT_VideoInfo
+    if (pmt && pmt->formattype == FORMAT_VideoInfo
             && pmt->pbFormat
-            && pmt->cbFormat>=sizeof(VIDEOINFOHEADER)) {
+            && pmt->cbFormat >= sizeof(VIDEOINFOHEADER)) {
         VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)pmt->pbFormat;
-        bmi=&vih->bmiHeader;
+        bmi = &vih->bmiHeader;
     }
 #endif
     fdv->set_downstreamID(pReceivePin);
@@ -294,7 +294,7 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
         this->fdv->DisconnectFromCompatibleFilter();
         // Since the procedure is already returning an error code, there
         // is nothing else this function can do to report the error.
-        EXECUTE_ASSERT( SUCCEEDED( BreakConnect() ) );
+        EXECUTE_ASSERT(SUCCEEDED(BreakConnect()));
         return hr;
     }
 
@@ -310,7 +310,7 @@ HRESULT TffdshowDecVideoOutputPin::GetDeliveryBuffer(IMediaSample ** ppSample,
     if (!m_pAllocator) {
         return E_NOINTERFACE;
     }
-    return m_pAllocator->GetBuffer(ppSample,pStartTime,pEndTime,dwFlags);
+    return m_pAllocator->GetBuffer(ppSample, pStartTime, pEndTime, dwFlags);
 }
 
 STDMETHODIMP TffdshowDecVideoOutputPin::NonDelegatingQueryInterface(REFIID riid, void** ppv)
@@ -328,10 +328,10 @@ HRESULT TffdshowDecVideoOutputPin::InitAllocator(IMemAllocator **ppAlloc)
     TvideoCodecDec *pCodec = NULL;
     this->fdv->getMovieSource((const TvideoCodecDec **)&pCodec);
 
-    if (pCodec->useDXVA()==2) {
+    if (pCodec->useDXVA() == 2) {
         DPRINTF(_l("TffdshowDecVideoOutputPin::InitAllocator DXVA mode"));
         //TODO : improve this by using interfaces (TvideoCodecLibavcodecDxva may not be the only decoder that would be used for DXVA purpose)
-        TvideoCodecLibavcodecDxva *pDxvaCodec=(TvideoCodecLibavcodecDxva*)pCodec;
+        TvideoCodecLibavcodecDxva *pDxvaCodec = (TvideoCodecLibavcodecDxva*)pCodec;
 
         HRESULT hr = S_FALSE;
         pDXVA2Allocator = new TffdshowDecVideoAllocatorDXVA(fdv, &hr);
@@ -357,21 +357,21 @@ STDMETHODIMP TffdshowDecVideoOutputPin::GetUncompSurfacesInfo(const GUID *pGuid,
     TvideoCodecLibavcodecDxva *pCodec = NULL;
     this->fdv->getMovieSource((const TvideoCodecDec **)&pCodec);
 
-    if (SUCCEEDED (pCodec->checkDXVA1Decoder (pGuid))) {
+    if (SUCCEEDED(pCodec->checkDXVA1Decoder(pGuid))) {
         CComQIPtr<IAMVideoAccelerator> pAMVideoAccelerator = GetConnected();
 
         if (pAMVideoAccelerator) {
             pUncompBufferInfo->dwMaxNumSurfaces = pCodec->getPicEntryNumber();
             pUncompBufferInfo->dwMinNumSurfaces = pCodec->getPicEntryNumber();
 
-            hr = pCodec->findDXVA1DecoderConfiguration (pAMVideoAccelerator, pGuid, &pUncompBufferInfo->ddUncompPixelFormat);
-            if (SUCCEEDED (hr)) {
-                memcpy (&ddUncompPixelFormat, &pUncompBufferInfo->ddUncompPixelFormat, sizeof(DDPIXELFORMAT));
+            hr = pCodec->findDXVA1DecoderConfiguration(pAMVideoAccelerator, pGuid, &pUncompBufferInfo->ddUncompPixelFormat);
+            if (SUCCEEDED(hr)) {
+                memcpy(&ddUncompPixelFormat, &pUncompBufferInfo->ddUncompPixelFormat, sizeof(DDPIXELFORMAT));
                 guidDecoderDXVA1 = *pGuid;
             }
         }
     }
-    DPRINTF(_l("TffdshowDecVideoOutputPin::GetUncompSurfacesInfo DXVA1 checking result (%x)"),hr);
+    DPRINTF(_l("TffdshowDecVideoOutputPin::GetUncompSurfacesInfo DXVA1 checking result (%x)"), hr);
     return hr;
 }
 
@@ -396,19 +396,19 @@ STDMETHODIMP TffdshowDecVideoOutputPin::GetCreateVideoAcceleratorData(const GUID
         TvideoCodecLibavcodecDxva *pCodec = NULL;
         this->fdv->getMovieSource((const TvideoCodecDec **)&pCodec);
 
-        memcpy (&UncompInfo.ddUncompPixelFormat, &ddUncompPixelFormat, sizeof (DDPIXELFORMAT));
+        memcpy(&UncompInfo.ddUncompPixelFormat, &ddUncompPixelFormat, sizeof(DDPIXELFORMAT));
         UncompInfo.dwUncompWidth        = pCodec->pictWidthRounded();
         UncompInfo.dwUncompHeight       = pCodec->pictHeightRounded();
         hr = pAMVideoAccelerator->GetCompBufferInfo(&guidDecoderDXVA1, &UncompInfo, &dwNumTypesCompBuffers, CompInfo);
 
-        if (SUCCEEDED (hr)) {
+        if (SUCCEEDED(hr)) {
 
-            hr = pCodec->createDXVA1Decoder (pAMVideoAccelerator, pGuid, dwDXVA1SurfaceCount);
+            hr = pCodec->createDXVA1Decoder(pAMVideoAccelerator, pGuid, dwDXVA1SurfaceCount);
 
-            if (SUCCEEDED (hr)) {
+            if (SUCCEEDED(hr)) {
                 pCodec->setDXVA1Params(&guidDecoderDXVA1, &ddUncompPixelFormat);
 
-                pConnectMode                    = (DXVA_ConnectMode*)CoTaskMemAlloc (sizeof(DXVA_ConnectMode));
+                pConnectMode                    = (DXVA_ConnectMode*)CoTaskMemAlloc(sizeof(DXVA_ConnectMode));
                 pConnectMode->guidMode          = guidDecoderDXVA1;
                 pConnectMode->wRestrictedMode   = pCodec->getDXVA1RestrictedMode();
                 *pdwSizeMiscData                = sizeof(DXVA_ConnectMode);
@@ -416,6 +416,6 @@ STDMETHODIMP TffdshowDecVideoOutputPin::GetCreateVideoAcceleratorData(const GUID
             }
         }
     }
-    DPRINTF(_l("TffdshowDecVideoOutputPin::GetCreateVideoAcceleratorData DXVA1 create decoder result (%x)"),hr);
+    DPRINTF(_l("TffdshowDecVideoOutputPin::GetCreateVideoAcceleratorData DXVA1 create decoder result (%x)"), hr);
     return hr;
 }

@@ -2,7 +2,7 @@
 
 #include "Toptions.h"
 
-struct TfontSettings :Toptions {
+struct TfontSettings : Toptions {
 public:
     typedef enum {
         Softest = 0,
@@ -19,24 +19,24 @@ public:
         GlowingShadow = 0,
         GradientShadow = 1,
         ClassicShadow = 2, // SSA/ASS always use this.
-        ShadowDisabled =3
+        ShadowDisabled = 3
     } TshadowMode;
 
-    TfontSettings(TintStrColl *Icoll=NULL);
+    TfontSettings(TintStrColl *Icoll = NULL);
     TfontSettings& operator =(const TfontSettings &src) {
-        memcpy(((uint8_t*)this)+sizeof(Toptions),((uint8_t*)&src)+sizeof(Toptions),sizeof(*this)-sizeof(Toptions));
+        memcpy(((uint8_t*)this) + sizeof(Toptions), ((uint8_t*)&src) + sizeof(Toptions), sizeof(*this) - sizeof(Toptions));
         return *this;
     }
     virtual void reg_op(TregOp &t);
     unsigned int getSize(int dx, int dy) const {
         if (autosize && dx && dy) {
-            return limit(sizeA*ff_sqrt(dx*dx+dy*dy)/1000,3U,255U);
+            return limit(sizeA * ff_sqrt(dx * dx + dy * dy) / 1000, 3U, 255U);
         } else {
             return sizeP;
         }
     }
-    bool getTip(char_t *buf,size_t len) {
-        tsnprintf_s(buf, len, _TRUNCATE, _l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\noutline width:%i"),name,getCharset(charset),autosize?_l("auto"):_l(""),autosize?sizeA:sizeP,weights[weight/100-1].name,spacing,outlineWidth);
+    bool getTip(char_t *buf, size_t len) {
+        tsnprintf_s(buf, len, _TRUNCATE, _l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\noutline width:%i"), name, getCharset(charset), autosize ? _l("auto") : _l(""), autosize ? sizeA : sizeP, weights[weight / 100 - 1].name, spacing, outlineWidth);
         return true;
     }
     struct Tweigth {
@@ -54,15 +54,15 @@ public:
     char_t name[260];
     int fontSettingsOverride;
     int charset;
-    int autosize,autosizeVideoWindow;
-    int sizeP,sizeA,sizeOverride;
-    int xscale,yscale;
-    int spacing,weight;
+    int autosize, autosizeVideoWindow;
+    int sizeP, sizeA, sizeOverride;
+    int xscale, yscale;
+    int spacing, weight;
     int opaqueBox;
     int italic;
     int underline;
-    int color,outlineColor,shadowColor,colorOverride;
-    int bodyAlpha,outlineAlpha,shadowAlpha;
+    int color, outlineColor, shadowColor, colorOverride;
+    int bodyAlpha, outlineAlpha, shadowAlpha;
     int split; // Check box of "Split long subtitle lines"
     int outlineWidth, outlineWidthOverride;
     int shadowSize, shadowOverride; // Subtitles shadow
@@ -80,14 +80,14 @@ public:
     bool operator == (const TfontSettings &rt) const;
     bool operator != (const TfontSettings &rt) const;
 protected:
-    virtual void getDefaultStr(int id,char_t *buf,size_t buflen);
+    virtual void getDefaultStr(int id, char_t *buf, size_t buflen);
 };
 
-struct TfontSettingsOSD :TfontSettings {
-    TfontSettingsOSD(TintStrColl *Icoll=NULL);
+struct TfontSettingsOSD : TfontSettings {
+    TfontSettingsOSD(TintStrColl *Icoll = NULL);
 };
 
-struct TfontSettingsSub :TfontSettings {
-    TfontSettingsSub(TintStrColl *Icoll=NULL);
+struct TfontSettingsSub : TfontSettings {
+    TfontSettingsSub(TintStrColl *Icoll = NULL);
     virtual void reg_op(TregOp &t);
 };

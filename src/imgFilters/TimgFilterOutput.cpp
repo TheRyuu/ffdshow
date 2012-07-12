@@ -25,9 +25,9 @@
 #include "Tlibavcodec.h"
 #include "IffdshowDecVideo.h"
 
-TimgFilterOutput::TimgFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent),
+TimgFilterOutput::TimgFilterOutput(IffdshowBase *Ideci, Tfilters *Iparent): TimgFilter(Ideci, Iparent),
     convert(NULL),
-    libavcodec(NULL),avctx(NULL),frame(NULL),dvpict(NULL),
+    libavcodec(NULL), avctx(NULL), frame(NULL), dvpict(NULL),
     vramBenchmark(this)
 {
 }
@@ -50,12 +50,12 @@ TimgFilterOutput::~TimgFilterOutput()
     }
 }
 
-HRESULT TimgFilterOutput::process(TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
+HRESULT TimgFilterOutput::process(TffPict &pict, uint64_t dstcsp, unsigned char *dst[4], int dstStride[4], LONG &dstSize, const ToutputVideoSettings *cfg)
 {
     checkBorder(pict);
-    if (   !convert
-            || convert->dx!=pict.rectFull.dx
-            || convert->dy!=pict.rectFull.dy
+    if (!convert
+            || convert->dx != pict.rectFull.dx
+            || convert->dy != pict.rectFull.dy
             || old_cspOptionsRgbInterlaceMode != cfg->cspOptionsRgbInterlaceMode
             || old_highQualityRGB != cfg->highQualityRGB
             || old_dithering != cfg->dithering
@@ -72,32 +72,32 @@ HRESULT TimgFilterOutput::process(TffPict &pict,uint64_t dstcsp,unsigned char *d
             delete convert;
         }
         vramBenchmark.init();
-        convert=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy,dstSize);
+        convert = new Tconvert(deci, pict.rectFull.dx, pict.rectFull.dy, dstSize);
     }
-    stride_t cspstride[4] = {0,0,0,0};
-    unsigned char *cspdst[4] = {0,0,0,0};
+    stride_t cspstride[4] = {0, 0, 0, 0};
+    unsigned char *cspdst[4] = {0, 0, 0, 0};
 
-    const TcspInfo *outcspInfo=csp_getInfo(dstcsp);
-    for (int i=0; i<4; i++) {
-        cspstride[i]=dstStride[0]>>outcspInfo->shiftX[i];
-        if (i==0) {
-            cspdst[i]=dst[i];
+    const TcspInfo *outcspInfo = csp_getInfo(dstcsp);
+    for (int i = 0; i < 4; i++) {
+        cspstride[i] = dstStride[0] >> outcspInfo->shiftX[i];
+        if (i == 0) {
+            cspdst[i] = dst[i];
         } else {
-            cspdst[i]=cspdst[i-1]+cspstride[i-1]*(pict.rectFull.dy>>outcspInfo->shiftY[i-1]);
+            cspdst[i] = cspdst[i - 1] + cspstride[i - 1] * (pict.rectFull.dy >> outcspInfo->shiftY[i - 1]);
         }
     }
 
     if (convert->m_wasChange) {
         vramBenchmark.onChange();
     }
-    uint64_t cspret=convert->convert(pict,
-                                (dstcsp ^ (cfg->flip ? FF_CSP_FLAGS_VFLIP : 0)) | ((!pict.film && (pict.fieldtype & FIELD_TYPE::MASK_INT)) ? FF_CSP_FLAGS_INTERLACED : 0),
-                                cspdst,
-                                cspstride,
-                                vramBenchmark.get_vram_indirect());
+    uint64_t cspret = convert->convert(pict,
+                                       (dstcsp ^ (cfg->flip ? FF_CSP_FLAGS_VFLIP : 0)) | ((!pict.film && (pict.fieldtype & FIELD_TYPE::MASK_INT)) ? FF_CSP_FLAGS_INTERLACED : 0),
+                                       cspdst,
+                                       cspstride,
+                                       vramBenchmark.get_vram_indirect());
     vramBenchmark.update();
 
-    return cspret?S_OK:E_FAIL;
+    return cspret ? S_OK : E_FAIL;
 }
 
 void TimgFilterOutput::TvramBenchmark::init(void)
@@ -123,7 +123,7 @@ bool TimgFilterOutput::TvramBenchmark::get_vram_indirect(void)
 void TimgFilterOutput::TvramBenchmark::update(void)
 {
     if (frame_count < BENCHMARK_FRAMES * 2) {
-        REFERENCE_TIME t_indirect=0,t_direct=0;
+        REFERENCE_TIME t_indirect = 0, t_direct = 0;
         unsigned int frame_count_half = frame_count >> 1;
         parent->deciV->get_CurrentTime(&t2);
 
@@ -154,16 +154,16 @@ void TimgFilterOutput::TvramBenchmark::update(void)
         }
         frame_count++;
         if (frame_count == BENCHMARK_FRAMES * 2) {
-            DPRINTF(_l("TimgFilterOutput::process V-RAM access is %s, t_indirect = %I64i, t_direct = %I64i"),vram_indirect ? _l("Indirect") : _l("Direct"),t_indirect,t_direct);
+            DPRINTF(_l("TimgFilterOutput::process V-RAM access is %s, t_indirect = %I64i, t_direct = %I64i"), vram_indirect ? _l("Indirect") : _l("Direct"), t_indirect, t_direct);
         }
     }
 }
 
-HRESULT TimgFilterOutputConvert::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterOutputConvert::process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0)
 {
-    const ToutputVideoConvertSettings *cfg=(const ToutputVideoConvertSettings*)cfg0;
-    init(pict,true,false);
+    const ToutputVideoConvertSettings *cfg = (const ToutputVideoConvertSettings*)cfg0;
+    init(pict, true, false);
     const unsigned char *src[4];
-    getCur(cfg->csp,pict,true,src);
-    return parent->processSample(++it,pict);
+    getCur(cfg->csp, pict, true, src);
+    return parent->processSample(++it, pict);
 }

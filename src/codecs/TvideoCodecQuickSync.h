@@ -11,7 +11,7 @@ struct QsFrameData;
 class TvideoCodecQuickSync : public TvideoCodecDec
 {
 public:
-    TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *IsinkD, int codecID);
+    TvideoCodecQuickSync(IffdshowBase *Ideci, IdecVideoSink *IsinkD, int codecID);
     virtual ~TvideoCodecQuickSync();
 
     virtual int getType() const { return IDFF_MOVIE_QUICK_SYNC; }
@@ -20,13 +20,13 @@ public:
     static const char_t *dllname;
 
 protected:
-    virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
-    virtual HRESULT decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn);
+    virtual bool beginDecompress(TffPictBase &pict, FOURCC infcc, const CMediaType &mt, int sourceFlags);
+    virtual HRESULT decompress(const unsigned char *src, size_t srcLen, IMediaSample *pIn);
     virtual HRESULT BeginFlush();
     virtual HRESULT EndFlush();
     virtual HRESULT onEndOfStream();
     virtual bool onDiscontinuity();
-    virtual bool testMediaType(FOURCC fcc,const CMediaType &mt);
+    virtual bool testMediaType(FOURCC fcc, const CMediaType &mt);
     virtual void setOutputPin(IPin *pPin);
     virtual bool onSeek(REFERENCE_TIME segmentStart);
     HRESULT DeliverSurface(QsFrameData* frameData);

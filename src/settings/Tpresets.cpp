@@ -39,10 +39,10 @@ void Tpresets::listRegKeys(strings &l)
     HKEY hKey;
     char_t rkey[MAX_PATH];
     tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
-    RegOpenKeyEx(HKEY_CURRENT_USER,rkey,0,KEY_READ,&hKey);
-    for (int i=0,retCode=ERROR_SUCCESS; retCode==ERROR_SUCCESS; i++) {
+    RegOpenKeyEx(HKEY_CURRENT_USER, rkey, 0, KEY_READ, &hKey);
+    for (int i = 0, retCode = ERROR_SUCCESS; retCode == ERROR_SUCCESS; i++) {
         char_t keyName[256];
-        DWORD keyNameSize=255;
+        DWORD keyNameSize = 255;
         FILETIME ftLastWriteTime;
         retCode = RegEnumKeyEx(hKey,
                                i,
@@ -53,7 +53,7 @@ void Tpresets::listRegKeys(strings &l)
                                NULL,
                                &ftLastWriteTime
                               );
-        if (retCode==ERROR_SUCCESS) {
+        if (retCode == ERROR_SUCCESS) {
             l.push_back(ffstring(keyName));
         } else {
             break;
@@ -63,33 +63,33 @@ void Tpresets::listRegKeys(strings &l)
 }
 void Tpresets::init(void)
 {
-    Tpreset *def=newPreset();
+    Tpreset *def = newPreset();
     def->loadDefault();
     push_back(def);
 
     strings keys;
     listRegKeys(keys);
-    for (strings::const_iterator i=keys.begin(); i!=keys.end(); i++)
-        if (findPreset(i->c_str())==end()) {
-            Tpreset *preset=newPreset(i->c_str());
+    for (strings::const_iterator i = keys.begin(); i != keys.end(); i++)
+        if (findPreset(i->c_str()) == end()) {
+            Tpreset *preset = newPreset(i->c_str());
             preset->loadReg();
             push_back(preset);
         }
-    if (keys.size()==0) {
+    if (keys.size() == 0) {
         (*begin())->saveReg();
     }
 }
 void Tpresets::done(void)
 {
-    for (iterator i=begin(); i!=end(); i++) {
+    for (iterator i = begin(); i != end(); i++) {
         delete *i;
     }
     clear();
 }
 Tpresets::iterator Tpresets::findPreset(const char_t *presetName)
 {
-    for (iterator i=begin(); i!=end(); i++)
-        if (_stricoll(presetName,(*i)->presetName)==0) {
+    for (iterator i = begin(); i != end(); i++)
+        if (_stricoll(presetName, (*i)->presetName) == 0) {
             return i;
         }
     return end();
@@ -97,21 +97,21 @@ Tpresets::iterator Tpresets::findPreset(const char_t *presetName)
 
 void Tpresets::storePreset(Tpreset *preset)
 {
-    iterator i=findPreset(preset->presetName);
-    if (i!=end()) {
-        *i=preset;
+    iterator i = findPreset(preset->presetName);
+    if (i != end()) {
+        *i = preset;
     } else {
         push_back(preset);
     }
 }
 
-Tpreset* Tpresets::getPreset(const char_t *presetName,bool create)
+Tpreset* Tpresets::getPreset(const char_t *presetName, bool create)
 {
-    iterator i=findPreset(presetName);
-    if (i!=end()) {
+    iterator i = findPreset(presetName);
+    if (i != end()) {
         return *i;
     } else if (create) {
-        Tpreset *newpreset=newPreset(presetName);
+        Tpreset *newpreset = newPreset(presetName);
         newpreset->loadReg();
         storePreset(newpreset);
         return newpreset;
@@ -120,7 +120,7 @@ Tpreset* Tpresets::getPreset(const char_t *presetName,bool create)
     }
 }
 
-void Tpresets::savePreset(Tpreset *preset,const char_t *presetName)
+void Tpresets::savePreset(Tpreset *preset, const char_t *presetName)
 {
     if (presetName) {
         ff_strncpy(preset->presetName, presetName, countof(preset->presetName));
@@ -128,9 +128,9 @@ void Tpresets::savePreset(Tpreset *preset,const char_t *presetName)
     preset->saveReg();
     storePreset(preset);
 }
-bool  Tpresets::savePresetFile(Tpreset *preset,const char_t *flnm)
+bool  Tpresets::savePresetFile(Tpreset *preset, const char_t *flnm)
 {
-    bool res=preset->saveFile(flnm);
+    bool res = preset->saveFile(flnm);
     if (res) {
         storePreset(preset);
     }
@@ -139,8 +139,8 @@ bool  Tpresets::savePresetFile(Tpreset *preset,const char_t *flnm)
 
 bool Tpresets::removePreset(const char_t *presetName)
 {
-    iterator i=findPreset(presetName);
-    if (i!=begin() && i!=end()) {
+    iterator i = findPreset(presetName);
+    if (i != begin() && i != end()) {
         delete *i;
         erase(i);
         return true;
@@ -155,14 +155,14 @@ void Tpresets::nextUniqueName(Tpreset *preset)
 }
 void Tpresets::nextUniqueName(char_t *presetName, size_t buflen)
 {
-    iterator i=findPreset(presetName);
-    if (i==end()) {
+    iterator i = findPreset(presetName);
+    if (i == end()) {
         return;
     }
-    for (int ii=1;; ii++) {
+    for (int ii = 1;; ii++) {
         char_t pomS[MAX_PATH];
-        tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%s %i"),presetName,ii);
-        if (findPreset(pomS)==end()) {
+        tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%s %i"), presetName, ii);
+        if (findPreset(pomS) == end()) {
             ff_strncpy(presetName, pomS, buflen);
             return;
         }
@@ -170,39 +170,39 @@ void Tpresets::nextUniqueName(char_t *presetName, size_t buflen)
 }
 void Tpresets::saveRegAll(void)
 {
-    for (iterator ii=begin(); ii!=end(); ii++)
+    for (iterator ii = begin(); ii != end(); ii++)
         if (!(*ii)->autoLoadedFromFile) {
             (*ii)->saveReg();
         }
 
     strings keys;
     listRegKeys(keys);
-    for (strings::const_iterator i=keys.begin(); i!=keys.end(); i++)
-        if (i->c_str()[0]!='\0' && findPreset(i->c_str())==end()) {
+    for (strings::const_iterator i = keys.begin(); i != keys.end(); i++)
+        if (i->c_str()[0] != '\0' && findPreset(i->c_str()) == end()) {
             char_t presetRegStr[256];
             tsnprintf_s(presetRegStr, countof(presetRegStr), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s\\%s"), reg_child, i->c_str());
-            RegDeleteKey(HKEY_CURRENT_USER,presetRegStr);
+            RegDeleteKey(HKEY_CURRENT_USER, presetRegStr);
         }
 }
 
-Tpreset* Tpresets::getAutoPreset(IffdshowBase *deci,bool filefirst)
+Tpreset* Tpresets::getAutoPreset(IffdshowBase *deci, bool filefirst)
 {
     TautoPresetProps aprops(deci);
-    return getAutoPreset0(aprops,filefirst);
+    return getAutoPreset0(aprops, filefirst);
 }
-Tpreset* Tpresets::getAutoPreset0(TautoPresetProps &aprops,bool filefirst)
+Tpreset* Tpresets::getAutoPreset0(TautoPresetProps &aprops, bool filefirst)
 {
     if (filefirst) {
-        const char_t *AVIname=aprops.getSourceFullFlnm();
+        const char_t *AVIname = aprops.getSourceFullFlnm();
         ffstring presetFlnm;
         changepathext(AVIname, presetext, presetFlnm);
         if (fileexists(presetFlnm.c_str())) {
-            Tpreset *preset=newPreset(AVIname);
+            Tpreset *preset = newPreset(AVIname);
             preset->loadFile(presetFlnm.c_str());
             Tpreset::normalizePresetName(preset->presetName, AVIname, countof(preset->presetName));
-            preset->autoLoadedFromFile=true;
-            iterator i=findPreset(preset->presetName);
-            if (i!=end() && (*i)->autoLoadedFromFile) {
+            preset->autoLoadedFromFile = true;
+            iterator i = findPreset(preset->presetName);
+            if (i != end() && (*i)->autoLoadedFromFile) {
                 removePreset(preset->presetName);
             }
             nextUniqueName(preset);
@@ -210,7 +210,7 @@ Tpreset* Tpresets::getAutoPreset0(TautoPresetProps &aprops,bool filefirst)
             return preset;
         }
     }
-    for (iterator i=begin(); i!=end(); i++)
+    for (iterator i = begin(); i != end(); i++)
         if ((*i)->isAutoPreset(aprops)) {
             return *i;
         }
@@ -218,29 +218,29 @@ Tpreset* Tpresets::getAutoPreset0(TautoPresetProps &aprops,bool filefirst)
 }
 
 //======================================= TpresetsVideo =======================================
-Tpreset* TpresetsVideo::getAutoPreset(IffdshowBase *deci,bool filefirst)
+Tpreset* TpresetsVideo::getAutoPreset(IffdshowBase *deci, bool filefirst)
 {
     TvideoAutoPresetProps aprops(deci);
-    return getAutoPreset0(aprops,filefirst);
+    return getAutoPreset0(aprops, filefirst);
 }
 Tpreset* TpresetsVideo::newPreset(const char_t *presetName)
 {
-    return new TpresetVideo(reg_child,presetName?presetName:FFPRESET_DEFAULT, filtermode);
+    return new TpresetVideo(reg_child, presetName ? presetName : FFPRESET_DEFAULT, filtermode);
 }
 
 //======================================= TpresetsVideo =======================================
 Tpreset* TpresetsVideoPlayer::newPreset(const char_t *presetName)
 {
-    return new TpresetVideoPlayer(reg_child,presetName?presetName:FFPRESET_DEFAULT, filtermode);
+    return new TpresetVideoPlayer(reg_child, presetName ? presetName : FFPRESET_DEFAULT, filtermode);
 }
 
 //======================================= TpresetsAudio =======================================
 Tpreset* TpresetsAudio::newPreset(const char_t *presetName)
 {
-    return new TpresetAudio(presetName?presetName:FFPRESET_DEFAULT,reg_child);
+    return new TpresetAudio(presetName ? presetName : FFPRESET_DEFAULT, reg_child);
 }
-Tpreset* TpresetsAudio::getAutoPreset(IffdshowBase *deci,bool filefirst)
+Tpreset* TpresetsAudio::getAutoPreset(IffdshowBase *deci, bool filefirst)
 {
     TaudioAutoPresetProps aprops(deci);
-    return getAutoPreset0(aprops,filefirst);
+    return getAutoPreset0(aprops, filefirst);
 }

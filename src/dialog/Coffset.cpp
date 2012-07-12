@@ -21,25 +21,25 @@
 
 void ToffsetPage::init(void)
 {
-    tbrSetRange(IDC_TBR_OFFSETY_X ,-32,32,4);
-    tbrSetRange(IDC_TBR_OFFSETY_Y ,-32,32,4);
-    tbrSetRange(IDC_TBR_OFFSETUV_X,-32,32,4);
-    tbrSetRange(IDC_TBR_OFFSETUV_Y,-32,32,4);
+    tbrSetRange(IDC_TBR_OFFSETY_X , -32, 32, 4);
+    tbrSetRange(IDC_TBR_OFFSETY_Y , -32, 32, 4);
+    tbrSetRange(IDC_TBR_OFFSETUV_X, -32, 32, 4);
+    tbrSetRange(IDC_TBR_OFFSETUV_Y, -32, 32, 4);
 }
 
 void ToffsetPage::cfg2dlg(void)
 {
     offset2dlg();
-    setCheck(IDC_CHB_TRANSFORM_FLIP,cfgGet(IDFF_transfFlip));
-    setCheck(IDC_CHB_TRANSFORM_MIRROR,cfgGet(IDFF_transfMirror));
+    setCheck(IDC_CHB_TRANSFORM_FLIP, cfgGet(IDFF_transfFlip));
+    setCheck(IDC_CHB_TRANSFORM_MIRROR, cfgGet(IDFF_transfMirror));
 }
 
 void ToffsetPage::offset2dlg(void)
 {
-    tbrSet(IDC_TBR_OFFSETY_X,cfgGet(IDFF_offsetY_X),IDC_LBL_OFFSETY_X);
-    tbrSet(IDC_TBR_OFFSETY_Y,cfgGet(IDFF_offsetY_Y),IDC_LBL_OFFSETY_Y);
-    tbrSet(IDC_TBR_OFFSETUV_X,cfgGet(IDFF_offsetU_X),IDC_LBL_OFFSETUV_X);
-    tbrSet(IDC_TBR_OFFSETUV_Y,cfgGet(IDFF_offsetU_Y),IDC_LBL_OFFSETUV_Y);
+    tbrSet(IDC_TBR_OFFSETY_X, cfgGet(IDFF_offsetY_X), IDC_LBL_OFFSETY_X);
+    tbrSet(IDC_TBR_OFFSETY_Y, cfgGet(IDFF_offsetY_Y), IDC_LBL_OFFSETY_Y);
+    tbrSet(IDC_TBR_OFFSETUV_X, cfgGet(IDFF_offsetU_X), IDC_LBL_OFFSETUV_X);
+    tbrSet(IDC_TBR_OFFSETUV_Y, cfgGet(IDFF_offsetU_Y), IDC_LBL_OFFSETUV_Y);
 }
 
 INT_PTR ToffsetPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -49,31 +49,31 @@ INT_PTR ToffsetPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             switch (getId(HWND(lParam))) {
                 case IDC_TBR_OFFSETUV_X:
                 case IDC_TBR_OFFSETUV_Y:
-                    cfgSet(IDFF_offsetU_X,tbrGet(IDC_TBR_OFFSETUV_X));
-                    cfgSet(IDFF_offsetU_Y,tbrGet(IDC_TBR_OFFSETUV_Y));
-                    cfgSet(IDFF_offsetV_X,tbrGet(IDC_TBR_OFFSETUV_X));
-                    cfgSet(IDFF_offsetV_Y,tbrGet(IDC_TBR_OFFSETUV_Y));
+                    cfgSet(IDFF_offsetU_X, tbrGet(IDC_TBR_OFFSETUV_X));
+                    cfgSet(IDFF_offsetU_Y, tbrGet(IDC_TBR_OFFSETUV_Y));
+                    cfgSet(IDFF_offsetV_X, tbrGet(IDC_TBR_OFFSETUV_X));
+                    cfgSet(IDFF_offsetV_Y, tbrGet(IDC_TBR_OFFSETUV_Y));
                     offset2dlg();
                     return TRUE;
             }
             break;
     }
-    return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
+    return TconfPageDecVideo::msgProc(uMsg, wParam, lParam);
 }
 
-ToffsetPage::ToffsetPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)
+ToffsetPage::ToffsetPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff): TconfPageDecVideo(Iparent, idff)
 {
-    resInter=IDC_CHB_OFFSET;
-    static const TbindTrackbar<ToffsetPage> htbr[]= {
-        IDC_TBR_OFFSETY_X,IDFF_offsetY_X,&ToffsetPage::offset2dlg,
-        IDC_TBR_OFFSETY_Y,IDFF_offsetY_Y,&ToffsetPage::offset2dlg,
-        0,0,NULL
+    resInter = IDC_CHB_OFFSET;
+    static const TbindTrackbar<ToffsetPage> htbr[] = {
+        IDC_TBR_OFFSETY_X, IDFF_offsetY_X, &ToffsetPage::offset2dlg,
+        IDC_TBR_OFFSETY_Y, IDFF_offsetY_Y, &ToffsetPage::offset2dlg,
+        0, 0, NULL
     };
     bindHtracks(htbr);
-    static const TbindCheckbox<ToffsetPage> chb[]= {
-        IDC_CHB_TRANSFORM_FLIP,IDFF_transfFlip,NULL,
-        IDC_CHB_TRANSFORM_MIRROR,IDFF_transfMirror,NULL,
-        0,NULL,NULL
+    static const TbindCheckbox<ToffsetPage> chb[] = {
+        IDC_CHB_TRANSFORM_FLIP, IDFF_transfFlip, NULL,
+        IDC_CHB_TRANSFORM_MIRROR, IDFF_transfMirror, NULL,
+        0, NULL, NULL
     };
     bindCheckboxes(chb);
 }

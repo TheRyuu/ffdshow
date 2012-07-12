@@ -41,14 +41,14 @@ TDXVA2Sample::TDXVA2Sample(TffdshowDecVideoAllocatorDXVA *pAlloc, HRESULT *phr)
 
 STDMETHODIMP TDXVA2Sample::QueryInterface(REFIID riid, __deref_out void **ppv)
 {
-    CheckPointer(ppv,E_POINTER);
-    ValidateReadWritePtr(ppv,sizeof(PVOID));
+    CheckPointer(ppv, E_POINTER);
+    ValidateReadWritePtr(ppv, sizeof(PVOID));
 
     if (riid == __uuidof(IMFGetService)) {
         return GetInterface((IMFGetService*) this, ppv);
     }
-    if (riid==IID_IFFDSDXVA2Sample) {
-        return GetInterface<IFFDSDXVA2Sample>(this,ppv);
+    if (riid == IID_IFFDSDXVA2Sample) {
+        return GetInterface<IFFDSDXVA2Sample>(this, ppv);
     } else {
         return CMediaSample::QueryInterface(riid, ppv);
     }
@@ -119,12 +119,12 @@ HRESULT TffdshowDecVideoAllocatorDXVA::Alloc()
 {
     HRESULT hr;
     CComPtr<IDirectXVideoAccelerationService> pDXVA2Service;
-    TvideoCodecLibavcodecDxva *dxvaCodec=NULL;
+    TvideoCodecLibavcodecDxva *dxvaCodec = NULL;
     deciV->getMovieSource((const TvideoCodecDec**)&dxvaCodec);
 
     CheckPointer(dxvaCodec->m_pDeviceManager, E_UNEXPECTED);
-    hr = dxvaCodec->m_pDeviceManager->GetVideoService (dxvaCodec->hDevice, IID_IDirectXVideoAccelerationService, (void**)&pDXVA2Service);
-    CheckPointer (pDXVA2Service, E_UNEXPECTED);
+    hr = dxvaCodec->m_pDeviceManager->GetVideoService(dxvaCodec->hDevice, IID_IDirectXVideoAccelerationService, (void**)&pDXVA2Service);
+    CheckPointer(pDXVA2Service, E_UNEXPECTED);
     CAutoLock lock(this);
 
     hr = __super::Alloc();
@@ -160,7 +160,7 @@ HRESULT TffdshowDecVideoAllocatorDXVA::Alloc()
 
     if (SUCCEEDED(hr)) {
         // Important : create samples in reverse order !
-        for (m_lAllocated = m_lCount-1; m_lAllocated >= 0; m_lAllocated--) {
+        for (m_lAllocated = m_lCount - 1; m_lAllocated >= 0; m_lAllocated--) {
             TDXVA2Sample *pSample = new TDXVA2Sample(this, &hr);
             if (pSample == NULL) {
                 hr = E_OUTOFMEMORY;
@@ -177,8 +177,8 @@ HRESULT TffdshowDecVideoAllocatorDXVA::Alloc()
             m_lFree.Add(pSample);
         }
 
-        hr = dxvaCodec->createDXVA2Decoder (m_lCount, ppRTSurfaceArray);
-        if (FAILED (hr)) {
+        hr = dxvaCodec->createDXVA2Decoder(m_lCount, ppRTSurfaceArray);
+        if (FAILED(hr)) {
             Free();
         }
     }
@@ -194,7 +194,7 @@ void TffdshowDecVideoAllocatorDXVA::Free()
 {
     CMediaSample *pSample = NULL;
 
-    TvideoCodecLibavcodecDxva *dxvaCodec=NULL;
+    TvideoCodecLibavcodecDxva *dxvaCodec = NULL;
     deciV->getMovieSource((const TvideoCodecDec**)&dxvaCodec);
 
     dxvaCodec->flushDXVADecoder();

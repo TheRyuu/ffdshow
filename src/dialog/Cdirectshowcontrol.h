@@ -4,7 +4,7 @@
 #include "TconfPageDec.h"
 
 class TinfoBase;
-class TdirectshowControlPageDec :public TconfPageDec
+class TdirectshowControlPageDec : public TconfPageDec
 {
 private:
     //struct Titem
@@ -24,14 +24,14 @@ private:
     // };
     //typedef std::vector<Titem> Titems;
     //Titems infoitems;
-    typedef std::pair<DWORD,const char_t*> Tmerit;
+    typedef std::pair<DWORD, const char_t*> Tmerit;
     typedef std::vector<Tmerit> Tmerits;
     Tmerits merits;
-    static bool sortMerits(const Tmerit &m1,const Tmerit &m2);
+    static bool sortMerits(const Tmerit &m1, const Tmerit &m2);
     void merit2dlg(void);
-    bool isMerit,meritset;
+    bool isMerit, meritset;
     void blacklist2dlg(void);
-    void comp_dlg2cfg(int IDC_ED_target,int IDFF_target,const char_t *delimitResult);
+    void comp_dlg2cfg(int IDC_ED_target, int IDFF_target, const char_t *delimitResult);
     void onEditCompatibilitylist(void);
     void onEditBlacklist(void);
     void onEditCompI(int IDFF_target);
@@ -41,8 +41,8 @@ protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
     //virtual void onFrame(void);
 public:
-    static void convertDelimit(const char_t* instr,const char_t *inDelimit,ffstring &outstr,const char_t *outDelimit,const char_t *newFileName=NULL);
-    static bool strCaseCmp(const ffstring &s1,const ffstring &s2);
+    static void convertDelimit(const char_t* instr, const char_t *inDelimit, ffstring &outstr, const char_t *outDelimit, const char_t *newFileName = NULL);
+    static bool strCaseCmp(const ffstring &s1, const ffstring &s2);
     TdirectshowControlPageDec(TffdshowPageDec *Iparent);
     virtual ~TdirectshowControlPageDec();
     virtual void cfg2dlg(void);

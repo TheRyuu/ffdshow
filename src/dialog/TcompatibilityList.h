@@ -4,12 +4,12 @@
 #include "Twindow.h"
 #include "interfaces.h"
 
-class TcompatibilityList :public TdlgWindow
+class TcompatibilityList : public TdlgWindow
 {
 private:
     HWND parent;
-    int x,y;
-    void cfg2dlgI(const char_t *complist0,const char_t *newFileName,const char_t *delimit);
+    int x, y;
+    void cfg2dlgI(const char_t *complist0, const char_t *newFileName, const char_t *delimit);
     const char_t* getDelimit(void);
     void onReset(void);
 protected:
@@ -22,7 +22,7 @@ protected:
     void dlg2dlg(const char_t *newFileName);
     void dlg2cfg(void);
 public:
-    TcompatibilityList(IffdshowBase *Ideci,HWND parent,int x,int y,int target);
+    TcompatibilityList(IffdshowBase *Ideci, HWND parent, int x, int y, int target);
     bool show(void);
 };
 

@@ -4,56 +4,56 @@
 #include "TffdshowPageDec.h"
 
 struct ISpecifyPropertyPagesVE;
-class TffdshowPageDecVideo :public TffdshowPageDec
+class TffdshowPageDecVideo : public TffdshowPageDec
 {
 private:
     comptrQ<IffdshowDecVideo> deciV;
     comptrQ<ISpecifyPropertyPagesVE> ve;
 protected:
     virtual void onActivate(void);
-    virtual INT_PTR msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam);
+    virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
-    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
-    TffdshowPageDecVideo(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
+    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk, HRESULT *phr);
+    TffdshowPageDecVideo(LPUNKNOWN pUnk, HRESULT *phr, const wchar_t *ItitleW, const char_t *name, int dialogId, int resstr);
 
     virtual HRESULT OnConnect(IUnknown *pUnk);
     virtual HRESULT OnDisconnect(void);
 };
 
-class TffdshowPageDecVideoRaw :public TffdshowPageDecVideo
+class TffdshowPageDecVideoRaw : public TffdshowPageDecVideo
 {
 public:
-    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
-    TffdshowPageDecVideoRaw(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
+    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk, HRESULT *phr);
+    TffdshowPageDecVideoRaw(LPUNKNOWN pUnk, HRESULT *phr, const wchar_t *ItitleW, const char_t *name, int dialogId, int resstr);
 };
 
-class TffdshowPageDecVideoSubtitles :public TffdshowPageDecVideo
+class TffdshowPageDecVideoSubtitles : public TffdshowPageDecVideo
 {
 public:
-    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
-    TffdshowPageDecVideoSubtitles(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
+    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk, HRESULT *phr);
+    TffdshowPageDecVideoSubtitles(LPUNKNOWN pUnk, HRESULT *phr, const wchar_t *ItitleW, const char_t *name, int dialogId, int resstr);
 };
 
 // DXVA pages class definition
-class TffdshowPageDecVideoDXVA :public TffdshowPageDecVideo
+class TffdshowPageDecVideoDXVA : public TffdshowPageDecVideo
 {
 public:
-    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
-    TffdshowPageDecVideoDXVA(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
+    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk, HRESULT *phr);
+    TffdshowPageDecVideoDXVA(LPUNKNOWN pUnk, HRESULT *phr, const wchar_t *ItitleW, const char_t *name, int dialogId, int resstr);
 };
 
-class TffdshowPageDecVideoVFW :public TffdshowPageDecVideo
+class TffdshowPageDecVideoVFW : public TffdshowPageDecVideo
 {
 public:
-    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
-    TffdshowPageDecVideoVFW(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
+    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk, HRESULT *phr);
+    TffdshowPageDecVideoVFW(LPUNKNOWN pUnk, HRESULT *phr, const wchar_t *ItitleW, const char_t *name, int dialogId, int resstr);
 };
 
-class TffdshowPageDecVideoProc :public TffdshowPageDecVideo
+class TffdshowPageDecVideoProc : public TffdshowPageDecVideo
 {
 public:
-    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
-    TffdshowPageDecVideoProc(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
+    static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk, HRESULT *phr);
+    TffdshowPageDecVideoProc(LPUNKNOWN pUnk, HRESULT *phr, const wchar_t *ItitleW, const char_t *name, int dialogId, int resstr);
 };
 
 #endif

@@ -18,16 +18,16 @@ typedef struct {
 class TrgbPrimaries
 {
 private:
-    short avisynthMmxMatrixBuf[88+8];
+    short avisynthMmxMatrixBuf[88 + 8];
     int32_t swscaleTable[7];
     Tmmx_ConvertRGBtoYUY2matrix mmx_ConvertRGBtoYUY2matrix;
 
     void reset(void);
     IffdshowDecVideo* deciV;
-    bool wasJpeg,wasFraps;
+    bool wasJpeg, wasFraps;
     struct Th264Primaries {
-        double green_x,green_y,blue_x,blue_y,red_X,red_y;
-        double white_x,white_y;
+        double green_x, green_y, blue_x, blue_y, red_X, red_y;
+        double white_x, white_y;
     };
 protected:
     int cspOptionsIturBt;
@@ -50,13 +50,13 @@ public:
     void setJpeg(bool isjpeg, int rgb_add = 0);
     int get_sws_cs() const {
         switch (cspOptionsIturBt) {
-        case ITUR_BT709:
-            return SWS_CS_ITU709;
-        case SMPTE240M:
-            return SWS_CS_SMPTE240M;
-        case ITUR_BT601:
-        default:
-            return SWS_CS_ITU601;
+            case ITUR_BT709:
+                return SWS_CS_ITU709;
+            case SMPTE240M:
+                return SWS_CS_SMPTE240M;
+            case ITUR_BT601:
+            default:
+                return SWS_CS_ITU601;
         }
     }
     bool isYCbCrFullRange() const {

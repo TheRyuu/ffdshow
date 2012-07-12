@@ -3,10 +3,10 @@
 
 #include "TconfPageDecAudio.h"
 
-class TdolbyDecoderPage :public TconfPageDecAudio
+class TdolbyDecoderPage : public TconfPageDecAudio
 {
 public:
-    TdolbyDecoderPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TdolbyDecoderPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void cfg2dlg(void);
 };
 

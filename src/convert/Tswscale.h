@@ -9,7 +9,7 @@ struct SwsContext;
 struct Tswscale {
 private:
     Tlibavcodec *libavcodec;
-    unsigned int dx,dy;
+    unsigned int dx, dy;
     int sws_flags;
 public:
     Tswscale(Tlibavcodec *Ilibavcodec);

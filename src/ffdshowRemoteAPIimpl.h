@@ -21,7 +21,7 @@ class Tkeyboard;
 class Tremote : public Toptions
 {
 private:
-    int is,messageMode,messageUser,acceptKeys;
+    int is, messageMode, messageUser, acceptKeys;
     IffdshowBase *deci;
     comptrQ<IffdshowDec> deciD;
     comptrQ<IffdshowDecVideo> deciV;
@@ -39,7 +39,7 @@ private:
     int fMode; // Fast forward/rewind mode
     Tkeyboard *keys;
     unsigned int subtitleIdx;
-    void start(void),stop(void);
+    void start(void), stop(void);
     bool inExplorer;
     DWORD pdwROT;
     int OSDDuration;
@@ -52,15 +52,15 @@ private:
     Ttranslate *tr;
     int currentSubStream, currentAudioStream;
 public:
-    Tremote(TintStrColl *Icoll,IffdshowBase *Ideci);
+    Tremote(TintStrColl *Icoll, IffdshowBase *Ideci);
     ~Tremote();
-    void load(void),save(void);
-    void onChange(int id,int val);
+    void load(void), save(void);
+    void onChange(int id, int val);
     void getStreams(bool reload);
     void fastForward(ffrwMode mode, int seconds);
-    void onSubStreamChange(int id,int val);
-    void onAudioStreamChange(int id,int val);
-    void onFastForwardChange(int id,int val);
+    void onSubStreamChange(int id, int val);
+    void onAudioStreamChange(int id, int val);
+    void onFastForwardChange(int id, int val);
 };
 
 #endif

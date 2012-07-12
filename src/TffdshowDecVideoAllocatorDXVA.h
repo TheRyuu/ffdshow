@@ -23,7 +23,7 @@ class TffdshowDecVideoAllocatorDXVA;
 
 
 
-DECLARE_INTERFACE_(IFFDSDXVA2Sample,IUnknown)
+DECLARE_INTERFACE_(IFFDSDXVA2Sample, IUnknown)
 {
     STDMETHOD_(int, GetDXSurfaceId()) = 0;
 };

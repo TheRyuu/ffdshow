@@ -13,13 +13,13 @@ private:
     DEINTERLACE_METHOD* (__cdecl *GetDeinterlacePluginInfo)(long CpuFeatureFlags);
     HINSTANCE hi;
 public:
-    Tdscaler_DI(const char_t *fltflnm,IffdshowBase *deci,bool onlyinfo=false);
+    Tdscaler_DI(const char_t *fltflnm, IffdshowBase *deci, bool onlyinfo = false);
     ~Tdscaler_DI();
     DEINTERLACE_METHOD *fm;
     TDScalerSettings *settings;
 };
 
-DECLARE_FILTER(TimgFilterDScalerDI,public,TimgFilter)
+DECLARE_FILTER(TimgFilterDScalerDI, public, TimgFilter)
 private:
 Tdscaler_DI *flt;
 TDeinterlaceInfo di;
@@ -27,17 +27,17 @@ char_t oldfltflnm[MAX_PATH];
 char_t oldfltcfg[512];
 int do_deinterlace;
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSP_YUY2;
 }
 virtual void onSizeChange(void);
 public:
-TimgFilterDScalerDI(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterDScalerDI(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual ~TimgFilterDScalerDI();
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 #endif

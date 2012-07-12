@@ -6,8 +6,8 @@ static const GUID IID_IimgFilterLevels = { 0x42ee9a7e, 0xcd2e, 0x48ef, { 0xbc, 0
 
 DECLARE_INTERFACE(IimgFilterLevels)
 {
-    STDMETHOD (getHistogram)(unsigned int dst[256]) PURE;
-    STDMETHOD (getInAuto)(int *min,int *max) PURE;
+    STDMETHOD(getHistogram)(unsigned int dst[256]) PURE;
+    STDMETHOD(getInAuto)(int * min, int * max) PURE;
 };
 
 #endif

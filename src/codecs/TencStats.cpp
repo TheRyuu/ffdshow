@@ -19,43 +19,43 @@
 #include "stdafx.h"
 #include "TencStats.h"
 
-void TencStats::init(unsigned int Idx,unsigned int Idy,uint64_t csp)
+void TencStats::init(unsigned int Idx, unsigned int Idy, uint64_t csp)
 {
-    dx=Idx;
-    dy=Idy;
-    const TcspInfo *cspInfo=csp_getInfo(csp);
-    for (int i=0; i<3; i++) {
-        mult[i]=(1<<cspInfo->shiftX[i])*(1<<cspInfo->shiftY[i]);
+    dx = Idx;
+    dy = Idy;
+    const TcspInfo *cspInfo = csp_getInfo(csp);
+    for (int i = 0; i < 3; i++) {
+        mult[i] = (1 << cspInfo->shiftX[i]) * (1 << cspInfo->shiftY[i]);
     }
-    sumQuants=0;
-    count=0;
-    sumFramesize=0;
-    sumPsnrY=sumPsnrU=sumPsnrV=0;
-    memset(quantCount,0,sizeof(quantCount));
+    sumQuants = 0;
+    count = 0;
+    sumFramesize = 0;
+    sumPsnrY = sumPsnrU = sumPsnrV = 0;
+    memset(quantCount, 0, sizeof(quantCount));
 }
 void TencStats::add(const TencFrameParams &frame)
 {
     count++;
-    sumFramesize+=frame.length;
-    sumPsnrY+=frame.psnrY;
-    sumPsnrU+=frame.psnrU;
-    sumPsnrV+=frame.psnrV;
-    if (frame.quant<=0) {
+    sumFramesize += frame.length;
+    sumPsnrY += frame.psnrY;
+    sumPsnrU += frame.psnrU;
+    sumPsnrV += frame.psnrV;
+    if (frame.quant <= 0) {
         return;
     }
-    sumQuants+=frame.quant;
-    if (isIn(frame.quant,1,51)) {
+    sumQuants += frame.quant;
+    if (isIn(frame.quant, 1, 51)) {
         quantCount[frame.quant]++;
     }
 }
-void TencStats::calcPSNR(double *psnrY,double *psnrU,double *psnrV) const
+void TencStats::calcPSNR(double *psnrY, double *psnrU, double *psnrV) const
 {
-    double f=dx*dy*255.0*255.0*count;
-    if (f!=0) {
-        *psnrY=psnr(sumPsnrY*mult[0]/f);
-        *psnrU=psnr(sumPsnrU*mult[1]/f);
-        *psnrV=psnr(sumPsnrV*mult[2]/f);
+    double f = dx * dy * 255.0 * 255.0 * count;
+    if (f != 0) {
+        *psnrY = psnr(sumPsnrY * mult[0] / f);
+        *psnrU = psnr(sumPsnrU * mult[1] / f);
+        *psnrV = psnr(sumPsnrV * mult[2] / f);
     } else {
-        *psnrY=*psnrU=*psnrV=0;
+        *psnrY = *psnrU = *psnrV = 0;
     }
 }

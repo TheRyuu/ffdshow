@@ -22,15 +22,15 @@
 #include "IffdshowBase.h"
 #include "TencStats.h"
 
-TmuxerFile::TmuxerFile(IffdshowBase *Ideci):Tmuxer(Ideci)
+TmuxerFile::TmuxerFile(IffdshowBase *Ideci): Tmuxer(Ideci)
 {
-    const char_t *storeExtFlnm=deci->getParamStr2(IDFF_enc_storeExtFlnm);
-    if (strchr(storeExtFlnm,'%')) {
+    const char_t *storeExtFlnm = deci->getParamStr2(IDFF_enc_storeExtFlnm);
+    if (strchr(storeExtFlnm, '%')) {
         ff_strncpy(flnmmask, storeExtFlnm, countof(flnmmask));
-        f=NULL;
+        f = NULL;
     } else {
-        f=fopen(storeExtFlnm,_l("wb"));
-        flnmmask[0]='\0';
+        f = fopen(storeExtFlnm, _l("wb"));
+        flnmmask[0] = '\0';
     }
 }
 TmuxerFile::~TmuxerFile()
@@ -40,27 +40,27 @@ TmuxerFile::~TmuxerFile()
     }
 }
 
-size_t TmuxerFile::write(const void *data,size_t len,int framenum)
+size_t TmuxerFile::write(const void *data, size_t len, int framenum)
 {
     if (flnmmask[0]) {
         char_t flnm[MAX_PATH];
         tsnprintf_s(flnm, countof(flnm), _TRUNCATE, flnmmask, framenum);
-        FILE *f=fopen(flnm,_l("wb"));
+        FILE *f = fopen(flnm, _l("wb"));
         if (!f) {
             return 0;
         }
-        len=fwrite(data,1,len,f);
+        len = fwrite(data, 1, len, f);
         fclose(f);
         return len;
     } else {
-        return f?fwrite(data,1,len,f):0;
+        return f ? fwrite(data, 1, len, f) : 0;
     }
 }
-size_t TmuxerFile::writeHeader(const void *data,size_t len,bool flush,const BITMAPINFOHEADER &bihdr)
+size_t TmuxerFile::writeHeader(const void *data, size_t len, bool flush, const BITMAPINFOHEADER &bihdr)
 {
-    return (data && len)?write(data,len,-1):0;
+    return (data && len) ? write(data, len, -1) : 0;
 }
-size_t TmuxerFile::writeFrame(const void *data,size_t len,const TencFrameParams &frameParams)
+size_t TmuxerFile::writeFrame(const void *data, size_t len, const TencFrameParams &frameParams)
 {
-    return write(data,len,frameParams.framenum);
+    return write(data, len, frameParams.framenum);
 }

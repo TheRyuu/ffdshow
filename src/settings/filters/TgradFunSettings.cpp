@@ -22,7 +22,7 @@
 #include "CgradFun.h"
 #include "TffdshowPageDec.h"
 
-const TfilterIDFF TgradFunSettings::idffs= {
+const TfilterIDFF TgradFunSettings::idffs = {
     /*name*/      _l("Deband"),
     /*id*/        IDFF_filterGradFun,
     /*is*/        IDFF_isGradFun,
@@ -33,30 +33,30 @@ const TfilterIDFF TgradFunSettings::idffs= {
     /*dlgId*/     IDD_GRADFUN,
 };
 
-TgradFunSettings::TgradFunSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsVideo(sizeof(*this),Icoll,filters,&idffs)
+TgradFunSettings::TgradFunSettings(TintStrColl *Icoll, TfilterIDFFs *filters): TfilterSettingsVideo(sizeof(*this), Icoll, filters, &idffs)
 {
-    static const TintOptionT<TgradFunSettings> iopts[]= {
-        IDFF_isGradFun       ,&TgradFunSettings::is       ,0,0,_l(""),1,
-        _l("isGradFun"),0,
-        IDFF_showGradFun     ,&TgradFunSettings::show     ,0,0,_l(""),1,
-        _l("showGradFun"),1,
-        IDFF_orderGradFun    ,&TgradFunSettings::order    ,1,1,_l(""),1,
-        _l("orderGradFun"),0,
-        IDFF_gradFunThreshold,&TgradFunSettings::threshold,51,2000,_l(""),1,
-        _l("gradFunThreshold"),120,
-        IDFF_gradFunRadius,&TgradFunSettings::radius,4,32,_l(""),1,
-        _l("gradFunRadius"),16,
+    static const TintOptionT<TgradFunSettings> iopts[] = {
+        IDFF_isGradFun       , &TgradFunSettings::is       , 0, 0, _l(""), 1,
+        _l("isGradFun"), 0,
+        IDFF_showGradFun     , &TgradFunSettings::show     , 0, 0, _l(""), 1,
+        _l("showGradFun"), 1,
+        IDFF_orderGradFun    , &TgradFunSettings::order    , 1, 1, _l(""), 1,
+        _l("orderGradFun"), 0,
+        IDFF_gradFunThreshold, &TgradFunSettings::threshold, 51, 2000, _l(""), 1,
+        _l("gradFunThreshold"), 120,
+        IDFF_gradFunRadius, &TgradFunSettings::radius, 4, 32, _l(""), 1,
+        _l("gradFunRadius"), 16,
 
         0
     };
     addOptions(iopts);
 }
 
-void TgradFunSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
+void TgradFunSettings::createFilters(size_t filtersorder, Tfilters *filters, TfilterQueue &queue) const
 {
-    idffOnChange(idffs,filters,queue.temporary);
+    idffOnChange(idffs, filters, queue.temporary);
     if (is && show) {
-        queueFilter<TimgFilterGradfun>(filtersorder,filters,queue);
+        queueFilter<TimgFilterGradfun>(filtersorder, filters, queue);
     }
 }
 void TgradFunSettings::createPages(TffdshowPageDec *parent) const
@@ -66,12 +66,12 @@ void TgradFunSettings::createPages(TffdshowPageDec *parent) const
 
 const int* TgradFunSettings::getResets(unsigned int pageId)
 {
-    static const int idResets[]= {IDFF_gradFunThreshold,IDFF_gradFunRadius,0};
+    static const int idResets[] = {IDFF_gradFunThreshold, IDFF_gradFunRadius, 0};
     return idResets;
 }
 
-bool TgradFunSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
+bool TgradFunSettings::getTip(unsigned int pageId, char_t *tipS, size_t len)
 {
-    tsnprintf_s(tipS, len, _TRUNCATE, _l("threshold: %.2f, radius: %d"), threshold/100.0f, radius);
+    tsnprintf_s(tipS, len, _TRUNCATE, _l("threshold: %.2f, radius: %d"), threshold / 100.0f, radius);
     return true;
 }

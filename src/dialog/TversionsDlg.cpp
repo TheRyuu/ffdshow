@@ -21,44 +21,44 @@
 #include "IffdshowBase.h"
 #include "Ttranslate.h"
 
-TversionsDlg::TversionsDlg(IffdshowBase *Ideci,HWND parent,const TversionInfo *Ifcs):TdlgWindow(IDD_VERSIONS,Ideci),fcs(Ifcs)
+TversionsDlg::TversionsDlg(IffdshowBase *Ideci, HWND parent, const TversionInfo *Ifcs): TdlgWindow(IDD_VERSIONS, Ideci), fcs(Ifcs)
 {
-    dialogBox(dialogId,parent);
+    dialogBox(dialogId, parent);
 }
 
-INT_PTR TversionsDlg::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR TversionsDlg::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg) {
         case WM_INITDIALOG: {
-            hlv=GetDlgItem(m_hwnd,IDC_LV_VERSIONS);
-            ListView_SetExtendedListViewStyleEx(hlv,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP);
+            hlv = GetDlgItem(m_hwnd, IDC_LV_VERSIONS);
+            ListView_SetExtendedListViewStyleEx(hlv, LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP, LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
             translate();
-            const char_t *capt=tr->translate(m_hwnd,dialogId,0,NULL);
+            const char_t *capt = tr->translate(m_hwnd, dialogId, 0, NULL);
             if (capt && capt[0]) {
-                setWindowText(m_hwnd,capt);
+                setWindowText(m_hwnd, capt);
             }
-            int ncol=0;
-            ListView_AddCol(hlv,ncol,114,_(IDC_LV_VERSIONS,_l("Library")),false);
-            ListView_AddCol(hlv,ncol,370,_(IDC_LV_VERSIONS,_l("Version")),false);
-            for (int i=0,j=0; fcs[i].name; i++) {
+            int ncol = 0;
+            ListView_AddCol(hlv, ncol, 114, _(IDC_LV_VERSIONS, _l("Library")), false);
+            ListView_AddCol(hlv, ncol, 370, _(IDC_LV_VERSIONS, _l("Version")), false);
+            for (int i = 0, j = 0; fcs[i].name; i++) {
                 LVITEM lvi;
-                memset(&lvi,0,sizeof(lvi));
-                lvi.mask=LVIF_TEXT;
-                lvi.iItem=j;
-                lvi.pszText=LPTSTR(fcs[i].name);
-                ListView_InsertItem(hlv,&lvi);
-                ffstring ver,lic;
-                fcs[i].fc(config,ver,lic);
-                ListView_SetItemText(hlv,j,1,LPTSTR(ver.c_str()));
+                memset(&lvi, 0, sizeof(lvi));
+                lvi.mask = LVIF_TEXT;
+                lvi.iItem = j;
+                lvi.pszText = LPTSTR(fcs[i].name);
+                ListView_InsertItem(hlv, &lvi);
+                ffstring ver, lic;
+                fcs[i].fc(config, ver, lic);
+                ListView_SetItemText(hlv, j, 1, LPTSTR(ver.c_str()));
                 j++;
                 if (!lic.empty()) {
                     strings lines;
-                    strtok(lic.c_str(),_l("\n"),lines);
-                    for (strings::const_iterator l=lines.begin(); l!=lines.end(); l++,j++) {
-                        lvi.iItem=j;
-                        lvi.pszText=_l("");
-                        ListView_InsertItem(hlv,&lvi);
-                        ListView_SetItemText(hlv,j,1,LPTSTR(l->c_str()));
+                    strtok(lic.c_str(), _l("\n"), lines);
+                    for (strings::const_iterator l = lines.begin(); l != lines.end(); l++, j++) {
+                        lvi.iItem = j;
+                        lvi.pszText = _l("");
+                        ListView_InsertItem(hlv, &lvi);
+                        ListView_SetItemText(hlv, j, 1, LPTSTR(l->c_str()));
                     }
                 }
             }
@@ -68,13 +68,13 @@ INT_PTR TversionsDlg::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
             switch (LOWORD(wParam)) {
                 case IDOK:
                 case IDCANCEL:
-                    if (HIWORD(wParam)==BN_CLICKED) {
-                        EndDialog(m_hwnd,LOWORD(wParam));
+                    if (HIWORD(wParam) == BN_CLICKED) {
+                        EndDialog(m_hwnd, LOWORD(wParam));
                         return TRUE;
                     }
                     break;
             };
             break;
     }
-    return TdlgWindow::msgProc(uMsg,wParam,lParam);
+    return TdlgWindow::msgProc(uMsg, wParam, lParam);
 }

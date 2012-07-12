@@ -5,29 +5,29 @@
 
 class Tdll;
 struct Textradata;
-class TvideoCodecXviD4 :public TvideoCodecDec
+class TvideoCodecXviD4 : public TvideoCodecDec
 {
 private:
     void create(void);
     Tdll *dll;
 public:
-    TvideoCodecXviD4(IffdshowBase *Ideci,IdecVideoSink *IsinkD);
+    TvideoCodecXviD4(IffdshowBase *Ideci, IdecVideoSink *IsinkD);
     virtual ~TvideoCodecXviD4();
-    int (*xvid_global)(void *handle,int opt,void *param1,void *param2);
-    int (*xvid_decore)(void *handle,int opt,void *param1,void *param2);
-    int (*xvid_plugin_single)(void *handle,int opt,void *param1,void *param2);
-    int (*xvid_plugin_lumimasking)(void *handle,int opt,void *param1,void *param2);
+    int (*xvid_global)(void *handle, int opt, void *param1, void *param2);
+    int (*xvid_decore)(void *handle, int opt, void *param1, void *param2);
+    int (*xvid_plugin_single)(void *handle, int opt, void *param1, void *param2);
+    int (*xvid_plugin_lumimasking)(void *handle, int opt, void *param1, void *param2);
     static const char_t *dllname;
 private:
-    void *enchandle,*dechandle;
+    void *enchandle, *dechandle;
     int psnr;
     TffPict pict;
     Tbuffer pictbuf;
-    static int me_hq(int rd3),me_(int me3);
+    static int me_hq(int rd3), me_(int me3);
     Textradata *extradata;
-    REFERENCE_TIME rtStart,rtStop;
+    REFERENCE_TIME rtStart, rtStop;
 protected:
-    virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
+    virtual bool beginDecompress(TffPictBase &pict, FOURCC infcc, const CMediaType &mt, int sourceFlags);
     virtual HRESULT flushDec(void);
 public:
     virtual int getType(void) const {
@@ -37,7 +37,7 @@ public:
         return CAPS::VIS_QUANTS;
     }
 
-    virtual HRESULT decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn);
+    virtual HRESULT decompress(const unsigned char *src, size_t srcLen, IMediaSample *pIn);
 };
 
 #endif

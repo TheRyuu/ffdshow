@@ -30,15 +30,15 @@ void TQSdecoderOptionsPage::init(void)
 void TQSdecoderOptionsPage::cfg2dlg(void)
 {
     // Update GUI from config
-    setCheck(IDC_QS_ENABLE_TS_CORR     , cfgGet(IDFF_QS_ENABLE_TS_CORR     ));
-    setCheck(IDC_QS_ENABLE_MT          , cfgGet(IDFF_QS_ENABLE_MT          ));
-    setCheck(IDC_QS_FORCE_FIELD_ORDER  , cfgGet(IDFF_QS_FORCE_FIELD_ORDER  ));
+    setCheck(IDC_QS_ENABLE_TS_CORR     , cfgGet(IDFF_QS_ENABLE_TS_CORR));
+    setCheck(IDC_QS_ENABLE_MT          , cfgGet(IDFF_QS_ENABLE_MT));
+    setCheck(IDC_QS_FORCE_FIELD_ORDER  , cfgGet(IDFF_QS_FORCE_FIELD_ORDER));
     setCheck(IDC_QS_ENABLE_SW_EMULATION, cfgGet(IDFF_QS_ENABLE_SW_EMULATION));
-    setCheck(IDC_QS_ENABLE_DVD_DECODE  , cfgGet(IDFF_QS_ENABLE_DVD_DECODE  ));
-    setCheck(IDC_QS_ENABLE_DI          , cfgGet(IDFF_QS_ENABLE_DI          ));
-    setCheck(IDC_QS_FORCE_DI           , cfgGet(IDFF_QS_FORCE_DI           ));
-    setCheck(IDC_QS_ENABLE_FULL_RATE   , cfgGet(IDFF_QS_ENABLE_FULL_RATE   ));
-    
+    setCheck(IDC_QS_ENABLE_DVD_DECODE  , cfgGet(IDFF_QS_ENABLE_DVD_DECODE));
+    setCheck(IDC_QS_ENABLE_DI          , cfgGet(IDFF_QS_ENABLE_DI));
+    setCheck(IDC_QS_FORCE_DI           , cfgGet(IDFF_QS_FORCE_DI));
+    setCheck(IDC_QS_ENABLE_FULL_RATE   , cfgGet(IDFF_QS_ENABLE_FULL_RATE));
+
     cbxSetCurSel(IDC_QS_FIELD_ORDER, cfgGet(IDFF_QS_FIELD_ORDER));
 
     detail2dlg();
@@ -60,24 +60,24 @@ void TQSdecoderOptionsPage::denoise2dlg(void)
 bool TQSdecoderOptionsPage::reset(bool testonly)
 {
     if (!testonly) {
-        deci->resetParam(IDFF_QS_ENABLE_TS_CORR     );
-        deci->resetParam(IDFF_QS_ENABLE_MT          );
-        deci->resetParam(IDFF_QS_FIELD_ORDER        );
+        deci->resetParam(IDFF_QS_ENABLE_TS_CORR);
+        deci->resetParam(IDFF_QS_ENABLE_MT);
+        deci->resetParam(IDFF_QS_FIELD_ORDER);
         deci->resetParam(IDFF_QS_ENABLE_SW_EMULATION);
-        deci->resetParam(IDFF_QS_FORCE_FIELD_ORDER  );
-        deci->resetParam(IDFF_QS_ENABLE_DVD_DECODE  );
-        deci->resetParam(IDFF_QS_ENABLE_DI          );
-        deci->resetParam(IDFF_QS_FORCE_DI           );
-        deci->resetParam(IDFF_QS_ENABLE_FULL_RATE   );
-        deci->resetParam(IDFF_QS_DETAIL             );
-        deci->resetParam(IDFF_QS_DENOISE            );
+        deci->resetParam(IDFF_QS_FORCE_FIELD_ORDER);
+        deci->resetParam(IDFF_QS_ENABLE_DVD_DECODE);
+        deci->resetParam(IDFF_QS_ENABLE_DI);
+        deci->resetParam(IDFF_QS_FORCE_DI);
+        deci->resetParam(IDFF_QS_ENABLE_FULL_RATE);
+        deci->resetParam(IDFF_QS_DETAIL);
+        deci->resetParam(IDFF_QS_DENOISE);
     }
     return true;
 }
 
 void TQSdecoderOptionsPage::translate(void)
 {
-    static const char_t* fieldOrderNames[]={
+    static const char_t* fieldOrderNames[] = {
         _l("Auto"),
         _l("Top Field First"),
         _l("Bottom Field First"),
@@ -89,18 +89,18 @@ void TQSdecoderOptionsPage::translate(void)
     cbxTranslate(IDC_QS_FIELD_ORDER, fieldOrderNames);
 }
 
-void TQSdecoderOptionsPage::getTip(char_t *tipS,size_t len)
+void TQSdecoderOptionsPage::getTip(char_t *tipS, size_t len)
 {
     tsnprintf_s(tipS, len, _TRUNCATE, _l("Intel\xae  QuickSync Decoder properties"));
 }
 
-TQSdecoderOptionsPage::TQSdecoderOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
+TQSdecoderOptionsPage::TQSdecoderOptionsPage(TffdshowPageDec *Iparent): TconfPageDecVideo(Iparent)
 {
-    dialogId=IDD_INTEL_QS_DECODEROPTIONS;
-    inPreset=1;
+    dialogId = IDD_INTEL_QS_DECODEROPTIONS;
+    inPreset = 1;
     //helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/video:decoder_options");
 
-    static const TbindCheckbox<TQSdecoderOptionsPage> chb[]= {
+    static const TbindCheckbox<TQSdecoderOptionsPage> chb[] = {
         IDC_QS_ENABLE_TS_CORR     , IDFF_QS_ENABLE_TS_CORR     , NULL,
         IDC_QS_ENABLE_MT          , IDFF_QS_ENABLE_MT          , NULL,
         IDC_QS_ENABLE_SW_EMULATION, IDFF_QS_ENABLE_SW_EMULATION, NULL,
@@ -109,18 +109,18 @@ TQSdecoderOptionsPage::TQSdecoderOptionsPage(TffdshowPageDec *Iparent):TconfPage
         IDC_QS_ENABLE_DI          , IDFF_QS_ENABLE_DI          , NULL,
         IDC_QS_FORCE_DI           , IDFF_QS_FORCE_DI           , NULL,
         IDC_QS_ENABLE_FULL_RATE   , IDFF_QS_ENABLE_FULL_RATE   , NULL,
-        0,NULL,NULL
+        0, NULL, NULL
     };
     bindCheckboxes(chb);
 
-    static const TbindTrackbar<TQSdecoderOptionsPage> htbr[]= {
+    static const TbindTrackbar<TQSdecoderOptionsPage> htbr[] = {
         IDC_QS_DETAIL , IDFF_QS_DETAIL , &TQSdecoderOptionsPage::detail2dlg,
         IDC_QS_DENOISE, IDFF_QS_DENOISE, &TQSdecoderOptionsPage::denoise2dlg,
-        0,0,NULL
+        0, 0, NULL
     };
     bindHtracks(htbr);
 
-    static const TbindCombobox<TQSdecoderOptionsPage> cbx[]= {
+    static const TbindCombobox<TQSdecoderOptionsPage> cbx[] = {
         IDC_QS_FIELD_ORDER, IDFF_QS_FIELD_ORDER, BINDCBX_SEL, NULL,
         0
     };

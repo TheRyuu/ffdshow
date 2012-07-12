@@ -26,7 +26,7 @@ ThtmlColors::ThtmlColors(void)
     static struct {
         const char_t *name;
         COLORREF color;
-    } const colors[]= {
+    } const colors[] = {
         {_l("white"), 0xffffff},
         {_l("whitesmoke"), 0xf5f5f5},
         {_l("ghostwhite"), 0xf8f8ff},
@@ -171,19 +171,19 @@ ThtmlColors::ThtmlColors(void)
         {_l("sienna"), 0xa0522d},
         {_l("saddlebrown"), 0x8b4513},
         {_l("brown"), 0xa52a2a},
-        {NULL,0}
+        {NULL, 0}
     };
-    for (int i=0; colors[i].name; i++) {
-        insert(std::make_pair(colors[i].name,colors[i].color));
+    for (int i = 0; colors[i].name; i++) {
+        insert(std::make_pair(colors[i].name, colors[i].color));
     }
 }
-bool ThtmlColors::getColor(const ffstring &name,COLORREF *color) const
+bool ThtmlColors::getColor(const ffstring &name, COLORREF *color) const
 {
-    const_iterator c=find(name);
-    return c==end()?false:(*color=c->second,true);
+    const_iterator c = find(name);
+    return c == end() ? false : (*color = c->second, true);
 }
-void ThtmlColors::getColor(const ffstring &name,COLORREF *color,COLORREF def) const
+void ThtmlColors::getColor(const ffstring &name, COLORREF *color, COLORREF def) const
 {
-    const_iterator c=find(name);
-    *color=c==end()?def:c->second;
+    const_iterator c = find(name);
+    *color = c == end() ? def : c->second;
 }

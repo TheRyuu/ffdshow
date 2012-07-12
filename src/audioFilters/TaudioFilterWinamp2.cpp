@@ -21,24 +21,24 @@
 #include "IffdshowDecAudio.h"
 #include "winamp2/Twinamp2.h"
 
-TaudioFilterWinamp2::TaudioFilterWinamp2(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
+TaudioFilterWinamp2::TaudioFilterWinamp2(IffdshowBase *Ideci, Tfilters *Iparent): TaudioFilter(Ideci, Iparent)
 {
-    old.flnm[0]=old.modulename[0]='\0';
-    winamp2=NULL;
-    filter=NULL;
-    old_nchannels=0;
+    old.flnm[0] = old.modulename[0] = '\0';
+    winamp2 = NULL;
+    filter = NULL;
+    old_nchannels = 0;
 }
 void TaudioFilterWinamp2::done(void)
 {
     if (filter) {
         filter->done();
-        filter=NULL;
+        filter = NULL;
     }
 }
 
-int TaudioFilterWinamp2::getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const
+int TaudioFilterWinamp2::getSupportedFormats(const TfilterSettingsAudio *cfg, bool *honourPreferred, const TsampleFormat &sf) const
 {
-    const Twinamp2settings *cfg0=(Twinamp2settings*)cfg;
+    const Twinamp2settings *cfg0 = (Twinamp2settings*)cfg;
     if (cfg0->winamp32bit) {
         return TsampleFormat::SF_ALL_24;
     } else {
@@ -46,40 +46,40 @@ int TaudioFilterWinamp2::getSupportedFormats(const TfilterSettingsAudio *cfg,boo
     }
 }
 
-bool TaudioFilterWinamp2::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
+bool TaudioFilterWinamp2::is(const TsampleFormat &fmt, const TfilterSettingsAudio *cfg)
 {
-    return super::is(fmt,cfg);
+    return super::is(fmt, cfg);
 }
 
-HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
+HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples0, size_t numsamples, const TfilterSettingsAudio *cfg0)
 {
-    if (!is(fmt,cfg0)) {
+    if (!is(fmt, cfg0)) {
         if (filter) {
             done();
-            old.flnm[0]=old.modulename[0]='\0';
+            old.flnm[0] = old.modulename[0] = '\0';
         }
-        return parent->deliverSamples(++it,fmt,samples0,numsamples);
+        return parent->deliverSamples(++it, fmt, samples0, numsamples);
     }
 
-    const Twinamp2settings *cfg=(const Twinamp2settings*)cfg0;
+    const Twinamp2settings *cfg = (const Twinamp2settings*)cfg0;
     if (!cfg->equal(old)) {
         done();
-        old=*cfg;
+        old = *cfg;
         deciA->getWinamp2(&winamp2);
-        filter=winamp2->getFilter(cfg,fmt.nchannels);
+        filter = winamp2->getFilter(cfg, fmt.nchannels);
         if (filter) {
             filter->init();
         }
     }
 
-    if (old_nchannels!=fmt.nchannels) {
-        old_nchannels=fmt.nchannels;
-        if (filter && fmt.nchannels>2 && !filter->isMultichannelAllowed(cfg->allowMultichannelOnlyIn)) {
+    if (old_nchannels != fmt.nchannels) {
+        old_nchannels = fmt.nchannels;
+        if (filter && fmt.nchannels > 2 && !filter->isMultichannelAllowed(cfg->allowMultichannelOnlyIn)) {
             done();
         }
         if (!filter) {
             deciA->getWinamp2(&winamp2);
-            filter=winamp2->getFilter(cfg,fmt.nchannels);
+            filter = winamp2->getFilter(cfg, fmt.nchannels);
             if (filter) {
                 filter->init();
             }
@@ -87,9 +87,9 @@ HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it,TsampleFormat &fm
     }
 
     if (filter) {
-        int16_t *samples1=(int16_t*)(samples0=init(cfg,fmt,samples0,numsamples,numsamples*2));
-        int bps=fmt.bitsPerSample();
-        numsamples=filter->process(samples1,numsamples,bps,fmt.nchannels,fmt.freq);
+        int16_t *samples1 = (int16_t*)(samples0 = init(cfg, fmt, samples0, numsamples, numsamples * 2));
+        int bps = fmt.bitsPerSample();
+        numsamples = filter->process(samples1, numsamples, bps, fmt.nchannels, fmt.freq);
     }
-    return parent->deliverSamples(++it,fmt,samples0,numsamples);
+    return parent->deliverSamples(++it, fmt, samples0, numsamples);
 }

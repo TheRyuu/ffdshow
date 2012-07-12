@@ -6,7 +6,7 @@ static const GUID IID_IimgFilterGrab = { 0x6d188c14, 0x3c3d, 0x4fad, { 0xb7, 0x2
 
 DECLARE_INTERFACE(IimgFilterGrab)
 {
-    STDMETHOD (grabNow)(void) PURE;
+    STDMETHOD(grabNow)(void) PURE;
 };
 
 #endif

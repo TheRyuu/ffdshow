@@ -25,11 +25,11 @@
 #include "IffdshowDecVideo.h"
 #include "ToutputVideoSettings.h"
 
-TimgFilter::TimgFilter(IffdshowBase *Ideci,Tfilters *Iparent):Tfilter(Ideci),parent((TimgFilters*)Iparent),deciV(Ideci),oldBrightness(-1)
+TimgFilter::TimgFilter(IffdshowBase *Ideci, Tfilters *Iparent): Tfilter(Ideci), parent((TimgFilters*)Iparent), deciV(Ideci), oldBrightness(-1)
 {
-    csp1=csp2=FF_CSP_NULL;
-    convert1=convert2=NULL;
-    pictRect.x=UINT_MAX;
+    csp1 = csp2 = FF_CSP_NULL;
+    convert1 = convert2 = NULL;
+    pictRect.x = UINT_MAX;
 }
 TimgFilter::~TimgFilter()
 {
@@ -37,10 +37,10 @@ TimgFilter::~TimgFilter()
 }
 void TimgFilter::checkBorder(TffPict &pict)
 {
-    if (pict.rectFull!=pict.rectClip && parent->dirtyBorder) {
+    if (pict.rectFull != pict.rectClip && parent->dirtyBorder) {
         int brightness = deciV->getBordersBrightness();
         pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness, pict.video_full_range_flag));
-        parent->dirtyBorder=0;
+        parent->dirtyBorder = 0;
     }
 }
 
@@ -50,52 +50,52 @@ void TimgFilter::free(void)
     if (convert1) {
         delete convert1;
     }
-    convert1=NULL;
+    convert1 = NULL;
     own2.clear();
     if (convert2) {
         delete convert2;
     }
-    convert2=NULL;
+    convert2 = NULL;
     own3.clear();
 }
 
-void TimgFilter::init(const TffPict &pict,int full,int half)
+void TimgFilter::init(const TffPict &pict, int full, int half)
 {
-    pictHalf=half;
-    Trect newRect=pict.getRect(full,half);
-    if (newRect!=pictRect || newRect.sar!=pictRect.sar) {
+    pictHalf = half;
+    Trect newRect = pict.getRect(full, half);
+    if (newRect != pictRect || newRect.sar != pictRect.sar) {
         onSizeChange();
         free();
-        pictRect=newRect;
+        pictRect = newRect;
     }
 }
 
-bool TimgFilter::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)
+bool TimgFilter::is(const TffPictBase &pict, const TfilterSettingsVideo *cfg)
 {
     return cfg->is && cfg->show;
 }
 
-HRESULT TimgFilter::flush(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilter::flush(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0)
 {
-    HRESULT hr = parent->processSample(++it,pict);
+    HRESULT hr = parent->processSample(++it, pict);
     if (hr == S_OK) {
         hr =  parent->deliverSample(pict);
     }
     return hr;
 }
 
-bool TimgFilter::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg)
+bool TimgFilter::getOutputFmt(TffPictBase &pict, const TfilterSettingsVideo *cfg)
 {
-    if (!is(pict,cfg)) {
+    if (!is(pict, cfg)) {
         return false;
     }
-    uint64_t supcsp1=getSupportedInputColorspaces(cfg);
-    if (((pict.csp&FF_CSPS_MASK)&(supcsp1&FF_CSPS_MASK))==0) {
-        pict.csp=csp_bestMatch(pict.csp,supcsp1&FF_CSPS_MASK)|(supcsp1&FF_CSP_FLAGS_VFLIP);
+    uint64_t supcsp1 = getSupportedInputColorspaces(cfg);
+    if (((pict.csp & FF_CSPS_MASK) & (supcsp1 & FF_CSPS_MASK)) == 0) {
+        pict.csp = csp_bestMatch(pict.csp, supcsp1 & FF_CSPS_MASK) | (supcsp1 & FF_CSP_FLAGS_VFLIP);
     }
-    uint64_t supcsp2=getSupportedOutputColorspaces(cfg);
-    if (((pict.csp&FF_CSPS_MASK)&(supcsp2&FF_CSPS_MASK))==0) {
-        pict.csp=csp_bestMatch(pict.csp,supcsp2&FF_CSPS_MASK)|(supcsp2&FF_CSP_FLAGS_VFLIP);
+    uint64_t supcsp2 = getSupportedOutputColorspaces(cfg);
+    if (((pict.csp & FF_CSPS_MASK) & (supcsp2 & FF_CSPS_MASK)) == 0) {
+        pict.csp = csp_bestMatch(pict.csp, supcsp2 & FF_CSPS_MASK) | (supcsp2 & FF_CSP_FLAGS_VFLIP);
     }
     return true;
 }
@@ -112,34 +112,34 @@ bool TimgFilter::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg)
  * *return true if color space is changed.
  * stride will be set to TimgFilter::stride1
  */
-bool TimgFilter::getCur(uint64_t csp,TffPict &pict,int full,const unsigned char **src[4])
+bool TimgFilter::getCur(uint64_t csp, TffPict &pict, int full, const unsigned char **src[4])
 {
-    uint64_t wasAdj=pict.csp&FF_CSP_FLAGS_YUV_ADJ;
-    csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
-    csp_yuv_order(pict.csp,pict.data,pict.stride);
+    uint64_t wasAdj = pict.csp & FF_CSP_FLAGS_YUV_ADJ;
+    csp_yuv_adj_to_plane(pict.csp, &pict.cspInfo, pict.rectFull.dy, pict.data, pict.stride);
+    csp_yuv_order(pict.csp, pict.data, pict.stride);
 
     // if color space is different or FF_CSP_FLAGS_YUV_ADJ is different
-    if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0 || ((csp&FF_CSP_FLAGS_YUV_ADJ) && !wasAdj)) {
+    if (((csp & FF_CSPS_MASK) & (pict.csp & FF_CSPS_MASK)) == 0 || ((csp & FF_CSP_FLAGS_YUV_ADJ) && !wasAdj)) {
         if (!convert1) {
-            convert1=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
+            convert1 = new Tconvert(deci, pict.rectFull.dx, pict.rectFull.dy);
         }
-        pict.convertCSP(csp_bestMatch(pict.csp,csp&FF_CSPS_MASK)|(csp&(FF_CSP_FLAGS_VFLIP|FF_CSP_FLAGS_YUV_ADJ|FF_CSP_FLAGS_YUV_ORDER)),own1,convert1);
+        pict.convertCSP(csp_bestMatch(pict.csp, csp & FF_CSPS_MASK) | (csp & (FF_CSP_FLAGS_VFLIP | FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_YUV_ORDER)), own1, convert1);
         pict.setRO(false);
     }
 
-    bool cspChanged=csp1!=pict.csp;
-    csp1=pict.csp;
-    const Trect &r=pictRect; //full?pict.rectFull:pict.rectClip;
+    bool cspChanged = csp1 != pict.csp;
+    csp1 = pict.csp;
+    const Trect &r = pictRect; //full?pict.rectFull:pict.rectClip;
     unsigned int i = 0;
-    for (; i<pict.cspInfo.numPlanes; i++) {
+    for (; i < pict.cspInfo.numPlanes; i++) {
         if (src[i]) {
-            *src[i]=pict.data[i]+(full?0:pict.diff[i])+(pictHalf?r.x*pict.cspInfo.Bpp>>pict.cspInfo.shiftX[i]:0);
+            *src[i] = pict.data[i] + (full ? 0 : pict.diff[i]) + (pictHalf ? r.x * pict.cspInfo.Bpp >> pict.cspInfo.shiftX[i] : 0);
         }
-        stride1[i]=pict.stride[i];
-        dx1[i]=r.dx>>pict.cspInfo.shiftX[i];
-        dy1[i]=r.dy>>pict.cspInfo.shiftY[i];
+        stride1[i] = pict.stride[i];
+        dx1[i] = r.dx >> pict.cspInfo.shiftX[i];
+        dy1[i] = r.dy >> pict.cspInfo.shiftY[i];
     }
-    for (; i<4; i++) {
+    for (; i < 4; i++) {
         src[i] = NULL;
         stride1[i] = 0;
         dx1[i] = 0;
@@ -162,70 +162,71 @@ bool TimgFilter::getCur(uint64_t csp,TffPict &pict,int full,const unsigned char 
  * *return true if color space is changed.
  * stride will be set to TimgFilter::stride2
  */
-bool TimgFilter::getNext(uint64_t csp,TffPict &pict,int full,unsigned char **dst[4],const Trect *rect2)
+bool TimgFilter::getNext(uint64_t csp, TffPict &pict, int full, unsigned char **dst[4], const Trect *rect2)
 {
     if (rect2) {
-        pict.rectFull=pict.rectClip=*rect2;
+        pict.rectFull = pict.rectClip = *rect2;
     }
-    const Trect &r=pictRect;//full?pict.rectFull:pict.rectClip;
+    const Trect &r = pictRect; //full?pict.rectFull:pict.rectClip;
     TffPict pictN;
-    if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0) {
-        pict.convertCSP(csp_bestMatch(pict.csp,csp&FF_CSPS_MASK)|(csp&FF_CSP_FLAGS_YUV_ADJ),own2);
+    if (((csp & FF_CSPS_MASK) & (pict.csp & FF_CSPS_MASK)) == 0) {
+        pict.convertCSP(csp_bestMatch(pict.csp, csp & FF_CSPS_MASK) | (csp & FF_CSP_FLAGS_YUV_ADJ), own2);
         pict.setRO(false);
-        pictN=pict;
+        pictN = pict;
     } else {
-        pictN=pict;
-        pictN.convertCSP(pict.csp|(csp&FF_CSP_FLAGS_YUV_ADJ),own2);
+        pictN = pict;
+        pictN.convertCSP(pict.csp | (csp & FF_CSP_FLAGS_YUV_ADJ), own2);
     }
-    bool copyBorder=!rect2 && !full && pict.rectClip!=pict.rectFull;
+    bool copyBorder = !rect2 && !full && pict.rectClip != pict.rectFull;
     unsigned int i = 0;
-    for (; i<pict.cspInfo.numPlanes; i++) {
+    for (; i < pict.cspInfo.numPlanes; i++) {
         if (dst[i]) {
             if (copyBorder) {
-                pictN.copyBorder(pict,i);
+                pictN.copyBorder(pict, i);
             }
             if (pictHalf && !rect2) {
-                TffPict::copy(pictN.data[i]+(full?0:pictN.diff[i]),pictN.stride[i],pict.data[i]+(full?0:pict.diff[i]),pict.stride[i],(pictRect.dx>>pictN.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pictRect.dy>>pictN.cspInfo.shiftY[i]);
+                TffPict::copy(pictN.data[i] + (full ? 0 : pictN.diff[i]), pictN.stride[i], pict.data[i] + (full ? 0 : pict.diff[i]), pict.stride[i], (pictRect.dx >> pictN.cspInfo.shiftX[i])*pict.cspInfo.Bpp, pictRect.dy >> pictN.cspInfo.shiftY[i]);
             }
-            pict.diff[i]=pictN.diff[i];
-            pict.ro[i]=false;
-            pict.data[i]=pictN.data[i];
-            pict.stride[i]=pictN.stride[i];
-            *dst[i]=pict.data[i]+(full?0:pict.diff[i]);
+            pict.diff[i] = pictN.diff[i];
+            pict.ro[i] = false;
+            pict.data[i] = pictN.data[i];
+            pict.stride[i] = pictN.stride[i];
+            *dst[i] = pict.data[i] + (full ? 0 : pict.diff[i]);
             if (pictHalf && !rect2) {
-                *dst[i]+=(pictRect.x>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp;
+                *dst[i] += (pictRect.x >> pict.cspInfo.shiftX[i]) * pict.cspInfo.Bpp;
             }
         }
-        stride2[i]=pict.stride[i];
-        dx2[i]=r.dx>>pict.cspInfo.shiftX[i];
-        dy2[i]=r.dy>>pict.cspInfo.shiftY[i];
+        stride2[i] = pict.stride[i];
+        dx2[i] = r.dx >> pict.cspInfo.shiftX[i];
+        dy2[i] = r.dy >> pict.cspInfo.shiftY[i];
     }
-    for (; i<4; i++) {
+    for (; i < 4; i++) {
         pict.data[i] = NULL;
         pict.stride[i] = 0;
         dx2[i] = 0;
         dy2[i] = 0;
-        if (dst[i])
+        if (dst[i]) {
             *dst[i] = NULL;
+        }
         stride2[i] = 0;
     }
-    bool cspChanged=csp2!=pict.csp;
-    csp2=pictN.csp;
+    bool cspChanged = csp2 != pict.csp;
+    csp2 = pictN.csp;
     return cspChanged;
 }
 
-bool TimgFilter::getNext(uint64_t csp,TffPict &pict,const Trect &clipRect,unsigned char **dst[4],const Trect *rect2)
+bool TimgFilter::getNext(uint64_t csp, TffPict &pict, const Trect &clipRect, unsigned char **dst[4], const Trect *rect2)
 {
-    bool cspChanged=getNext(csp,pict,true,dst,rect2);
-    pict.rectClip=clipRect;
+    bool cspChanged = getNext(csp, pict, true, dst, rect2);
+    pict.rectClip = clipRect;
     pict.calcDiff();
     unsigned int i = 0;
-    for (; i<pict.cspInfo.numPlanes; i++) {
+    for (; i < pict.cspInfo.numPlanes; i++) {
         if (dst[i]) {
-            *dst[i]+=pict.diff[i];
+            *dst[i] += pict.diff[i];
         }
     }
-    int brightness=deciV->getBordersBrightness();
+    int brightness = deciV->getBordersBrightness();
     if (cspChanged || oldBrightness != brightness) {
         oldBrightness = brightness;
         pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness, pict.video_full_range_flag));
@@ -249,13 +250,13 @@ bool TimgFilter::getNext(uint64_t csp,TffPict &pict,const Trect &clipRect,unsign
  * *return true if color space is changed.
  * stride will be set to TimgFilter::stride2
  */
-bool TimgFilter::getCurNext(uint64_t csp,TffPict &pict,int full,int copy,unsigned char **dst[4],Tbuffer &buf)
+bool TimgFilter::getCurNext(uint64_t csp, TffPict &pict, int full, int copy, unsigned char **dst[4], Tbuffer &buf)
 {
-    bool flip=false;
-    csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
-    csp_yuv_order(pict.csp,pict.data,pict.stride);
+    bool flip = false;
+    csp_yuv_adj_to_plane(pict.csp, &pict.cspInfo, pict.rectFull.dy, pict.data, pict.stride);
+    csp_yuv_order(pict.csp, pict.data, pict.stride);
     TffPict pictN;
-    if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0) {
+    if (((csp & FF_CSPS_MASK) & (pict.csp & FF_CSPS_MASK)) == 0) {
         bool flip1 = !!((pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP);
         const ToutputVideoSettings *outcfg = deciV->getToutputVideoSettings();
 
@@ -277,11 +278,11 @@ bool TimgFilter::getCurNext(uint64_t csp,TffPict &pict,int full,int copy,unsigne
             if (convert2) {
                 delete convert2;
             }
-            convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
+            convert2 = new Tconvert(deci, pict.rectFull.dx, pict.rectFull.dy);
         }
         pict.convertCSP((csp_bestMatch(pict.csp, csp & FF_CSPS_MASK) & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_INTERLACED)), buf, convert2);
         pict.setRO(false);
-        pictN=pict;
+        pictN = pict;
         if (flip1) {
             pictN.rectClip.y = pictN.rectFull.dy - pictN.rectClip.y - pictN.rectClip.dy;
         }
@@ -291,55 +292,56 @@ bool TimgFilter::getCurNext(uint64_t csp,TffPict &pict,int full,int copy,unsigne
         if (flip) {
             pictN.rectClip.y = pictN.rectFull.dy - pictN.rectClip.y - pictN.rectClip.dy;
         }
-        pictN.convertCSP((pict.csp & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_VFLIP)),buf);
+        pictN.convertCSP((pict.csp & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_VFLIP)), buf);
     }
-    const Trect r=pictRect;//=full?pict.rectFull:pict.rectClip;
-    if (copy==COPYMODE_DEF) {
+    const Trect r = pictRect; //=full?pict.rectFull:pict.rectClip;
+    if (copy == COPYMODE_DEF) {
         copy = full ? COPYMODE_FULL : COPYMODE_CLIP;
     }
     if (flip) {
         copy = COPYMODE_FULL;
     }
-    bool copyBorder=!full && pict.rectClip!=pict.rectFull;
+    bool copyBorder = !full && pict.rectClip != pict.rectFull;
     unsigned int i = 0;
-    for (; i<pictN.cspInfo.numPlanes; i++) {
+    for (; i < pictN.cspInfo.numPlanes; i++) {
         if (dst[i]) {
-            dx1[i]=dx2[i]=r.dx>>pict.cspInfo.shiftX[i];
-            dy1[i]=dy2[i]=r.dy>>pict.cspInfo.shiftY[i];
+            dx1[i] = dx2[i] = r.dx >> pict.cspInfo.shiftX[i];
+            dy1[i] = dy2[i] = r.dy >> pict.cspInfo.shiftY[i];
             if (pict.ro[i] || flip) {
-                pict.ro[i]=false;
+                pict.ro[i] = false;
                 switch (copy) {
                     case COPYMODE_CLIP:
                         if (copyBorder) {
-                            pictN.copyBorder(pict,i);
+                            pictN.copyBorder(pict, i);
                         }
-                        TffPict::copy(pictN.data[i]+pictN.diff[i],pictN.stride[i],pict.data[i]+pict.diff[i],pict.stride[i],(pict.rectClip.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pict.rectClip.dy>>pict.cspInfo.shiftY[i],flip);
+                        TffPict::copy(pictN.data[i] + pictN.diff[i], pictN.stride[i], pict.data[i] + pict.diff[i], pict.stride[i], (pict.rectClip.dx >> pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp, pict.rectClip.dy >> pict.cspInfo.shiftY[i], flip);
                         break;
                     case COPYMODE_FULL:
-                        TffPict::copy(pictN.data[i],pictN.stride[i],pict.data[i],pict.stride[i],(pict.rectFull.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pict.rectFull.dy>>pict.cspInfo.shiftY[i],flip);
+                        TffPict::copy(pictN.data[i], pictN.stride[i], pict.data[i], pict.stride[i], (pict.rectFull.dx >> pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp, pict.rectFull.dy >> pict.cspInfo.shiftY[i], flip);
                         break;
                     case COPYMODE_NO:
                         if (pictHalf) {
-                            TffPict::copy(pictN.data[i],pictN.stride[i],pict.data[i],pict.stride[i],(pictRect.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pictRect.dy>>pict.cspInfo.shiftY[i],flip);
+                            TffPict::copy(pictN.data[i], pictN.stride[i], pict.data[i], pict.stride[i], (pictRect.dx >> pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp, pictRect.dy >> pict.cspInfo.shiftY[i], flip);
                         }
                 }
-                pict.data[i]=pictN.data[i];
-                pict.stride[i]=pictN.stride[i];
-                pict.diff[i]=pictN.diff[i];
+                pict.data[i] = pictN.data[i];
+                pict.stride[i] = pictN.stride[i];
+                pict.diff[i] = pictN.diff[i];
             }
-            stride2[i]=pict.stride[i];
-            *dst[i]=pict.data[i]+(full?0:pict.diff[i])+(pictHalf?r.x*pict.cspInfo.Bpp>>pict.cspInfo.shiftX[i]:0);
+            stride2[i] = pict.stride[i];
+            *dst[i] = pict.data[i] + (full ? 0 : pict.diff[i]) + (pictHalf ? r.x * pict.cspInfo.Bpp >> pict.cspInfo.shiftX[i] : 0);
         }
     }
-    for (; i<4; i++) {
+    for (; i < 4; i++) {
         pict.data[i] = NULL;
         pict.stride[i] = 0;
         stride2[i] = 0;
-        if (dst[i])
+        if (dst[i]) {
             *dst[i] = NULL;
+        }
     }
-    bool cspChanged=csp2!=pict.csp;
-    pict.csp=csp2=pictN.csp;
+    bool cspChanged = csp2 != pict.csp;
+    pict.csp = csp2 = pictN.csp;
     pict.rectClip.y = pictN.rectClip.y;
     if (full) {
         checkBorder(pict);
@@ -350,14 +352,14 @@ bool TimgFilter::getCurNext(uint64_t csp,TffPict &pict,int full,int copy,unsigne
 bool TimgFilter::screenToPict(CPoint &pt)
 {
     GetCursorPos(&pt);
-    int wx,wy;
-    if (SUCCEEDED(deciV->getVideoWindowPos(&wx,&wy,NULL,NULL))) {
-        pt-=CPoint(wx,wy);
+    int wx, wy;
+    if (SUCCEEDED(deciV->getVideoWindowPos(&wx, &wy, NULL, NULL))) {
+        pt -= CPoint(wx, wy);
         CRect dst;
         if (SUCCEEDED(deciV->getVideoDestRect(&dst))) {
-            pt-=CPoint(dst.TopLeft());
-            pt.scale(dx2[0],dst.Width(),dy2[0],dst.Height());
-            if (isIn(pt.x,0L,long(dx2[0]-1)) && isIn(pt.y,0L,long(dy2[0]-1))) {
+            pt -= CPoint(dst.TopLeft());
+            pt.scale(dx2[0], dst.Width(), dy2[0], dst.Height());
+            if (isIn(pt.x, 0L, long(dx2[0] - 1)) && isIn(pt.y, 0L, long(dy2[0] - 1))) {
                 return true;
             }
         }

@@ -24,36 +24,36 @@
 
 STDMETHODIMP_(const char_t*) TOSDprovider::getInfoItemName(int type)
 {
- return _deci->getInfoItemName(type);
+    return _deci->getInfoItemName(type);
 }
-STDMETHODIMP TOSDprovider::getInfoItemValue(int id,const char_t* *value,int *wasChange,int *splitline)
+STDMETHODIMP TOSDprovider::getInfoItemValue(int id, const char_t* *value, int *wasChange, int *splitline)
 {
- return _deci->getInfoItemValue(id,value,wasChange,splitline);
+    return _deci->getInfoItemValue(id, value, wasChange, splitline);
 }
 STDMETHODIMP_(const char_t*) TOSDprovider::getFormat(void)
 {
- return tempcfg?tempcfg->getFormat():_l("");
+    return tempcfg ? tempcfg->getFormat() : _l("");
 }
 STDMETHODIMP_(bool) TOSDprovider::isOSD(void)
 {
- return tempcfg?!!tempcfg->is:false;
+    return tempcfg ? !!tempcfg->is : false;
 }
 STDMETHODIMP_(bool) TOSDprovider::isAutoHide(void)
 {
- return tempcfg?!!tempcfg->isAutoHide:false;
+    return tempcfg ? !!tempcfg->isAutoHide : false;
 }
 STDMETHODIMP_(int) TOSDprovider::getDurationVisible(void)
 {
- return tempcfg?tempcfg->durationVisible:0;
+    return tempcfg ? tempcfg->durationVisible : 0;
 }
-STDMETHODIMP TOSDprovider::getSave(int *isSave,const char_t* *flnm)
+STDMETHODIMP TOSDprovider::getSave(int *isSave, const char_t* *flnm)
 {
- if (!tempcfg) return E_UNEXPECTED;
- *isSave=tempcfg->isSave;
- *flnm=tempcfg->saveFlnm;
- return S_OK;
+    if (!tempcfg) { return E_UNEXPECTED; }
+    *isSave = tempcfg->isSave;
+    *flnm = tempcfg->saveFlnm;
+    return S_OK;
 }
-STDMETHODIMP_(int) TOSDprovider::getInfoShortcutItem(const char_t *s,int *toklen)
+STDMETHODIMP_(int) TOSDprovider::getInfoShortcutItem(const char_t *s, int *toklen)
 {
- return _deci->getInfoShortcutItem(s,toklen);
+    return _deci->getInfoShortcutItem(s, toklen);
 }

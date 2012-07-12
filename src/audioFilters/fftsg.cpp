@@ -669,7 +669,7 @@ public:
 
 
     /* length of the recursive FFT mode */
-    static const int CDFT_RECURSIVE_N=512;  /* <= (L1 cache size) / 16 */
+    static const int CDFT_RECURSIVE_N = 512; /* <= (L1 cache size) / 16 */
 
     static void cftfsub(int n, REAL *a, int *ip, int nw, REAL *w) {
         int m;
@@ -2522,5 +2522,5 @@ public:
 
 void rdft(int n, int isgn, float *a, int *ip, float *w)
 {
-    fftsg/*<float>*/::rdft(n,isgn,a,ip,w);
+    fftsg/*<float>*/::rdft(n, isgn, a, ip, w);
 }

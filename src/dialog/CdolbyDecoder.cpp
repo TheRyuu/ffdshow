@@ -21,14 +21,14 @@
 
 void TdolbyDecoderPage::cfg2dlg(void)
 {
-    SetDlgItemInt(m_hwnd,IDC_ED_DOLBYDECODER_DELAY,cfgGet(IDFF_dolbyDecoderDelay),FALSE);
+    SetDlgItemInt(m_hwnd, IDC_ED_DOLBYDECODER_DELAY, cfgGet(IDFF_dolbyDecoderDelay), FALSE);
 }
 
-TdolbyDecoderPage::TdolbyDecoderPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecAudio(Iparent,idff)
+TdolbyDecoderPage::TdolbyDecoderPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff): TconfPageDecAudio(Iparent, idff)
 {
-    resInter=IDC_CHB_DOLBYDECODER;
-    static const TbindEditInt<TdolbyDecoderPage> edInt[]= {
-        IDC_ED_DOLBYDECODER_DELAY,0,1000,IDFF_dolbyDecoderDelay,NULL,
+    resInter = IDC_CHB_DOLBYDECODER;
+    static const TbindEditInt<TdolbyDecoderPage> edInt[] = {
+        IDC_ED_DOLBYDECODER_DELAY, 0, 1000, IDFF_dolbyDecoderDelay, NULL,
         0
     };
     bindEditInts(edInt);

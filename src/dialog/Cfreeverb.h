@@ -3,10 +3,10 @@
 
 #include "TconfPageDecAudio.h"
 
-class TfreeverbPage :public TconfPageDecAudio
+class TfreeverbPage : public TconfPageDecAudio
 {
 public:
-    TfreeverbPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TfreeverbPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void init(void);
     virtual void cfg2dlg(void);
 };

@@ -39,10 +39,10 @@
 
 TcomInit comInit;
 
-extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRVR hDriver,UINT uMsg,LPARAM lParam1,LPARAM lParam2)
+extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId, HDRVR hDriver, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
 {
-    Iffvfw *ffvfw=(Iffvfw*)dwDriverId;
-    switch(uMsg) {
+    Iffvfw *ffvfw = (Iffvfw*)dwDriverId;
+    switch (uMsg) {
             // driver primitives
         case DRV_LOAD: {
             InitCommonControls();
@@ -64,21 +64,21 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
         }
         case DRV_OPEN: {
             comInit.init();
-            ICOPEN *icopen=(ICOPEN*)lParam2;
-            if (icopen!=NULL && icopen->fccType!=ICTYPE_VIDEO) {
+            ICOPEN *icopen = (ICOPEN*)lParam2;
+            if (icopen != NULL && icopen->fccType != ICTYPE_VIDEO) {
                 return DRVCNF_CANCEL;
             }
-            if (FAILED(CoCreateInstance(CLSID_FFVFW,NULL,CLSCTX_INPROC_SERVER,IID_Iffvfw,(void**)&ffvfw))) {
+            if (FAILED(CoCreateInstance(CLSID_FFVFW, NULL, CLSCTX_INPROC_SERVER, IID_Iffvfw, (void**)&ffvfw))) {
                 return DRVCNF_CANCEL;
             }
-            if (icopen!=NULL) {
-                icopen->dwError=ICERR_OK;
+            if (icopen != NULL) {
+                icopen->dwError = ICERR_OK;
             }
-            DPRINTF("VFW DRV_OPEN %i %p",hDriver,ffvfw);
+            DPRINTF("VFW DRV_OPEN %i %p", hDriver, ffvfw);
             return (LRESULT)ffvfw;
         }
         case DRV_CLOSE:
-            DPRINTF("VFW DRV_CLOSE %i %p",hDriver,ffvfw);
+            DPRINTF("VFW DRV_CLOSE %i %p", hDriver, ffvfw);
             //compress_end/decompress_end don't always get called
             if (ffvfw) {
                 ffvfw->Release();
@@ -95,45 +95,45 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
             return DRV_CANCEL;
             // info
         case ICM_GETINFO: {
-            DPRINTF("VFW ICM_GETINFO %i %p",hDriver,ffvfw);
-            ICINFO *icinfo=(ICINFO*)lParam1;
-            icinfo->fccType=ICTYPE_VIDEO;
-            icinfo->fccHandler=FOURCC_FFDS;
-            icinfo->dwFlags=VIDCF_FASTTEMPORALC|VIDCF_FASTTEMPORALD|VIDCF_COMPRESSFRAMES;
-            icinfo->dwVersion=0;
-            icinfo->dwVersionICM=ICVERSION;
-            wcscpy(icinfo->szName,FFDSHOWENC_NAME_L);
-            wcscpy(icinfo->szDescription,FFDSHOWVFW_DESC_L);
+            DPRINTF("VFW ICM_GETINFO %i %p", hDriver, ffvfw);
+            ICINFO *icinfo = (ICINFO*)lParam1;
+            icinfo->fccType = ICTYPE_VIDEO;
+            icinfo->fccHandler = FOURCC_FFDS;
+            icinfo->dwFlags = VIDCF_FASTTEMPORALC | VIDCF_FASTTEMPORALD | VIDCF_COMPRESSFRAMES;
+            icinfo->dwVersion = 0;
+            icinfo->dwVersionICM = ICVERSION;
+            wcscpy(icinfo->szName, FFDSHOWENC_NAME_L);
+            wcscpy(icinfo->szDescription, FFDSHOWVFW_DESC_L);
             return lParam2; /* size of struct */
         }
         // state control
         case ICM_ABOUT:
-            DPRINTF("VFW ICM_ABOUT %i %p",hDriver,ffvfw);
-            if (lParam1!=-1) {
+            DPRINTF("VFW ICM_ABOUT %i %p", hDriver, ffvfw);
+            if (lParam1 != -1) {
                 ffvfw->aboutDlg((HWND)lParam1);
             }
             return ICERR_OK;
         case ICM_CONFIGURE:
-            DPRINTF("VFW ICM_CONFIGURE %i %p",hDriver,ffvfw);
-            if (lParam1!=-1) {
+            DPRINTF("VFW ICM_CONFIGURE %i %p", hDriver, ffvfw);
+            if (lParam1 != -1) {
                 ffvfw->configDlg((HWND)lParam1);
             }
             return ICERR_OK;
         case ICM_GETSTATE:
-            DPRINTF("VFW ICM_GETSTATE %i %p",hDriver,ffvfw);
-            if ((void*)lParam1==NULL) {
-                return ffvfw->saveMem(NULL,0);
+            DPRINTF("VFW ICM_GETSTATE %i %p", hDriver, ffvfw);
+            if ((void*)lParam1 == NULL) {
+                return ffvfw->saveMem(NULL, 0);
             }
-            ffvfw->saveMem((void*)lParam1,lParam2);
+            ffvfw->saveMem((void*)lParam1, lParam2);
             return ICERR_OK;
         case ICM_SETSTATE: {
-            DPRINTF("VFW ICM_SETSTATE %i %p",hDriver,ffvfw);
-            if ((void*)lParam1==NULL) {
-                DPRINTF("VFW ICM_SETSTATE: DEFAULT %i %p",hDriver,ffvfw);
+            DPRINTF("VFW ICM_SETSTATE %i %p", hDriver, ffvfw);
+            if ((void*)lParam1 == NULL) {
+                DPRINTF("VFW ICM_SETSTATE: DEFAULT %i %p", hDriver, ffvfw);
                 ffvfw->loadReg();
                 return 0;
             }
-            return ffvfw->loadMem((void*)lParam1,lParam2);
+            return ffvfw->loadMem((void*)lParam1, lParam2);
         }
         // not sure the difference, private/public data?
         case ICM_GET:
@@ -150,22 +150,22 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
 
             // compressor
         case ICM_COMPRESS_QUERY:
-            DPRINTF("VFW ICM_COMPRESS_QUERY %i %p",hDriver,ffvfw);
-            return ffvfw->coQuery((BITMAPINFO*)lParam1,(BITMAPINFO*)lParam2);
+            DPRINTF("VFW ICM_COMPRESS_QUERY %i %p", hDriver, ffvfw);
+            return ffvfw->coQuery((BITMAPINFO*)lParam1, (BITMAPINFO*)lParam2);
         case ICM_COMPRESS_GET_FORMAT:
-            DPRINTF("VFW ICM_COMPRESS_GET_FORMAT %i %p",hDriver,ffvfw);
-            return ffvfw->coGetFormat((BITMAPINFO*)lParam1,(BITMAPINFO*)lParam2);
+            DPRINTF("VFW ICM_COMPRESS_GET_FORMAT %i %p", hDriver, ffvfw);
+            return ffvfw->coGetFormat((BITMAPINFO*)lParam1, (BITMAPINFO*)lParam2);
         case ICM_COMPRESS_GET_SIZE:
-            DPRINTF("VFW ICM_COMPRESS_GET_SIZE %i %p",hDriver,ffvfw);
-            return ffvfw->coGetSize((BITMAPINFO*)lParam1,(BITMAPINFO*)lParam2);
+            DPRINTF("VFW ICM_COMPRESS_GET_SIZE %i %p", hDriver, ffvfw);
+            return ffvfw->coGetSize((BITMAPINFO*)lParam1, (BITMAPINFO*)lParam2);
         case ICM_COMPRESS_FRAMES_INFO:
-            DPRINTF("VFW ICM_COMPRESS_FRAMES_INFO %i %p",hDriver,ffvfw);
+            DPRINTF("VFW ICM_COMPRESS_FRAMES_INFO %i %p", hDriver, ffvfw);
             return ffvfw->coFramesInfo((ICCOMPRESSFRAMES*)lParam1);
         case ICM_COMPRESS_BEGIN:
-            DPRINTF("VFW ICM_COMPRESS_BEGIN %i %p",hDriver,ffvfw);
-            return ffvfw->coBegin((BITMAPINFO*)lParam1,(BITMAPINFO*)lParam2);
+            DPRINTF("VFW ICM_COMPRESS_BEGIN %i %p", hDriver, ffvfw);
+            return ffvfw->coBegin((BITMAPINFO*)lParam1, (BITMAPINFO*)lParam2);
         case ICM_COMPRESS_END:
-            DPRINTF("VFW ICM_COMPRESS_END %i %p",hDriver,ffvfw);
+            DPRINTF("VFW ICM_COMPRESS_END %i %p", hDriver, ffvfw);
             return ffvfw->coEnd();
         case ICM_COMPRESS:
             //DPRINTF("VFW ICM_COMPRESS %i",ffvfw);
@@ -173,16 +173,16 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
 
             // decompressor
         case ICM_DECOMPRESS_QUERY:
-            DPRINTF("VFW ICM_DECOMPRESS_QUERY %i %p",hDriver,ffvfw);
-            return ffvfw->decQuery((BITMAPINFO*)lParam1,(BITMAPINFO*)lParam2);
+            DPRINTF("VFW ICM_DECOMPRESS_QUERY %i %p", hDriver, ffvfw);
+            return ffvfw->decQuery((BITMAPINFO*)lParam1, (BITMAPINFO*)lParam2);
         case ICM_DECOMPRESS_GET_FORMAT:
-            DPRINTF("VFW ICM_DECOMPRESS_GET_FORMAT %i %p",hDriver,ffvfw);
-            return ffvfw->decGetFormat((BITMAPINFO*)lParam1,(BITMAPINFO*)lParam2);
+            DPRINTF("VFW ICM_DECOMPRESS_GET_FORMAT %i %p", hDriver, ffvfw);
+            return ffvfw->decGetFormat((BITMAPINFO*)lParam1, (BITMAPINFO*)lParam2);
         case ICM_DECOMPRESS_BEGIN:
-            DPRINTF("VFW ICM_DECOMPRESS_BEGIN %i %p",hDriver,ffvfw);
-            return ffvfw->decBegin((BITMAPINFO*)lParam1,(BITMAPINFO*)lParam2);
+            DPRINTF("VFW ICM_DECOMPRESS_BEGIN %i %p", hDriver, ffvfw);
+            return ffvfw->decBegin((BITMAPINFO*)lParam1, (BITMAPINFO*)lParam2);
         case ICM_DECOMPRESS_END:
-            DPRINTF("VFW ICM_DECOMPRESS_END %i %p",hDriver,ffvfw);
+            DPRINTF("VFW ICM_DECOMPRESS_END %i %p", hDriver, ffvfw);
             return ffvfw->decEnd();
         case ICM_DECOMPRESS:
             //DPRINTF("VFW ICM_DECOMPRESS %i",ffvfw);
@@ -197,8 +197,8 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
             return ICERR_UNSUPPORTED;
 
         default:
-            if (uMsg<DRV_USER) {
-                return DefDriverProc(dwDriverId,hDriver,uMsg,lParam1,lParam2);
+            if (uMsg < DRV_USER) {
+                return DefDriverProc(dwDriverId, hDriver, uMsg, lParam1, lParam2);
             } else {
                 return ICERR_UNSUPPORTED;
             }
@@ -206,13 +206,13 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
 }
 
 //thanks to suxen_drol for the idea of simplifying this function
-extern "C" void CALLBACK configureVFW(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
+extern "C" void CALLBACK configureVFW(HWND hwnd, HINSTANCE hinst, LPTSTR lpCmdLine, int nCmdShow)
 {
-    DriverProc(0,0,DRV_LOAD,0,0);
-    DWORD dwDriverId=(DWORD)DriverProc(0,0,DRV_OPEN,0,0);
+    DriverProc(0, 0, DRV_LOAD, 0, 0);
+    DWORD dwDriverId = (DWORD)DriverProc(0, 0, DRV_OPEN, 0, 0);
     if (dwDriverId) {
-        DriverProc(dwDriverId,0,ICM_CONFIGURE,0,0);
-        DriverProc(dwDriverId,0,DRV_CLOSE,0,0);
+        DriverProc(dwDriverId, 0, ICM_CONFIGURE, 0, 0);
+        DriverProc(dwDriverId, 0, DRV_CLOSE, 0, 0);
     }
-    DriverProc(0,0,DRV_FREE,0,0);
+    DriverProc(0, 0, DRV_FREE, 0, 0);
 }

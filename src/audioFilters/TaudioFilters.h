@@ -6,24 +6,24 @@
 struct TsampleFormat;
 DECLARE_INTERFACE(IprocAudioSink)
 {
-    STDMETHOD (deliverProcessedSample)(const void *buf,size_t numsamples,const TsampleFormat &outsf) PURE;
+    STDMETHOD(deliverProcessedSample)(const void * buf, size_t numsamples, const TsampleFormat & outsf) PURE;
 };
 
 class TaudioFilterVolume;
 struct TpresetAudio;
 struct TvolumeSettings;
-class TaudioFilters :public Tfilters
+class TaudioFilters : public Tfilters
 {
 private:
     comptrQ<IffdshowDecAudio> deciA;
     IprocAudioSink *sink;
     Tfilter *output;
 public:
-    TaudioFilters(IffdshowBase *Ideci,IprocAudioSink *Isink);
+    TaudioFilters(IffdshowBase *Ideci, IprocAudioSink *Isink);
     virtual ~TaudioFilters();
-    void getOutputFmt(TsampleFormat &fmt,const TpresetAudio *cfg);
-    HRESULT process(const TsampleFormat &fmt,void *samples,size_t numsamples,const TpresetAudio *cfg);
-    HRESULT deliverSamples(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples);
+    void getOutputFmt(TsampleFormat &fmt, const TpresetAudio *cfg);
+    HRESULT process(const TsampleFormat &fmt, void *samples, size_t numsamples, const TpresetAudio *cfg);
+    HRESULT deliverSamples(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples, size_t numsamples);
     int preferredsfs;
 };
 
@@ -34,9 +34,9 @@ private:
     const TglobalSettingsDecAudio *globalCfg;
     int outsfs;
 protected:
-    virtual void makeQueue(const Tpreset *cfg,TfilterQueue &queue);
+    virtual void makeQueue(const Tpreset *cfg, TfilterQueue &queue);
 public:
-    TaudioFiltersPlayer(IffdshowBase *Ideci,IprocAudioSink *Isink,TpresetAudio *presetSettings);
+    TaudioFiltersPlayer(IffdshowBase *Ideci, IprocAudioSink *Isink, TpresetAudio *presetSettings);
 };
 
 #endif

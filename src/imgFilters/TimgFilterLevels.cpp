@@ -23,25 +23,25 @@
 #include "IffdshowBase.h"
 #include "TrgbPrimaries.h"
 
-TimgFilterLevels::TimgFilterLevels(IffdshowBase *Ideci,Tfilters *Iparent):
-    TimgFilter(Ideci,Iparent),
+TimgFilterLevels::TimgFilterLevels(IffdshowBase *Ideci, Tfilters *Iparent):
+    TimgFilter(Ideci, Iparent),
     timer(L"Level filter cost :")
 {
-    oldSettings.inMin=-1;
-    oldMode=0;
+    oldSettings.inMin = -1;
+    oldMode = 0;
     resetHistory();
 }
 
-bool TimgFilterLevels::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
+bool TimgFilterLevels::is(const TffPictBase &pict, const TfilterSettingsVideo *cfg0)
 {
-    const TlevelsSettings *cfg=(const TlevelsSettings*)cfg0;
-    return super::is(pict,cfg) && (cfg->mode==5 || cfg->inAuto || cfg->inMin!=0 || cfg->inMax!=255 || cfg->outMin!=0 || cfg->outMax!=255 || cfg->gamma!=100);
+    const TlevelsSettings *cfg = (const TlevelsSettings*)cfg0;
+    return super::is(pict, cfg) && (cfg->mode == 5 || cfg->inAuto || cfg->inMin != 0 || cfg->inMax != 255 || cfg->outMin != 0 || cfg->outMax != 255 || cfg->gamma != 100);
 }
 
-HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterLevels::process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0)
 {
-    const TlevelsSettings *cfg=(const TlevelsSettings*)cfg0;
-    const unsigned char *srcY=NULL, *srcU=NULL, *srcV=NULL;
+    const TlevelsSettings *cfg = (const TlevelsSettings*)cfg0;
+    const unsigned char *srcY = NULL, *srcU = NULL, *srcV = NULL;
     int incsps = supportedcsps;
     int outputLevelsMode = TrgbPrimaries::Invalid_RGB_range;
     if (cfg->forceRGB) {
@@ -50,153 +50,154 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
     }
 
     if (flag_resetHistory || cfg->mode != oldMode) {
-        flag_resetHistory=false;
+        flag_resetHistory = false;
         oldMode = cfg->mode;
         if (cfg->inAuto) {
             if (cfg->mode != 6) {
-                inMin=0;
-                memsetd(inMins,inMin,sizeof(inMins));
-                inMinSum=inMin;
-                inMax=255;
-                memsetd(inMaxs,inMax,sizeof(inMaxs));
-                inMaxSum=inMax*HISTORY;
-                minMaxPos=0;
+                inMin = 0;
+                memsetd(inMins, inMin, sizeof(inMins));
+                inMinSum = inMin;
+                inMax = 255;
+                memsetd(inMaxs, inMax, sizeof(inMaxs));
+                inMaxSum = inMax * HISTORY;
+                minMaxPos = 0;
             } else {
-                inMin=cfg->inMin;
-                inMax=cfg->inMax;
-                inMinSum=0;
-                inMaxSum=0;
+                inMin = cfg->inMin;
+                inMax = cfg->inMax;
+                inMinSum = 0;
+                inMaxSum = 0;
             }
         } else {
-            inMin=0;
-            memsetd(inMins,inMin,sizeof(inMins));
-            inMinSum=inMin;
-            inMax=255;
-            memsetd(inMaxs,inMax,sizeof(inMaxs));
-            inMaxSum=inMax*HISTORY;
-            minMaxPos=0;
+            inMin = 0;
+            memsetd(inMins, inMin, sizeof(inMins));
+            inMinSum = inMin;
+            inMax = 255;
+            memsetd(inMaxs, inMax, sizeof(inMaxs));
+            inMaxSum = inMax * HISTORY;
+            minMaxPos = 0;
         }
     }
 
     if (cfg->inAuto || (deci->getParam2(IDFF_buildHistogram) && deci->getCfgDlgHwnd())) {
         if (cfg->inAuto) {
-            init(pict,cfg->full,cfg->half);
-            getCur(incsps,pict,cfg->full,&srcY,&srcU,&srcV,NULL);
+            init(pict, cfg->full, cfg->half);
+            getCur(incsps, pict, cfg->full, &srcY, &srcU, &srcV, NULL);
         }
         CAutoLock lock(&csHistogram);
-        pict.histogram(histogram,cfg->full,cfg->half);
+        pict.histogram(histogram, cfg->full, cfg->half);
     }
     if (cfg->inAuto) {
-        if(cfg->mode!=6) {
-            int newInMin,newInMax;
+        if (cfg->mode != 6) {
+            int newInMin, newInMax;
 
-            unsigned int l=pictRect.dx*pictRect.dy/7000;
-            for (newInMin=0; newInMin<250 && histogram[newInMin]<l; newInMin++) {
+            unsigned int l = pictRect.dx * pictRect.dy / 7000;
+            for (newInMin = 0; newInMin < 250 && histogram[newInMin] < l; newInMin++) {
                 ;
             }
-            for (newInMax=255; newInMax>newInMin+1 && histogram[newInMax]<l; newInMax--) {
+            for (newInMax = 255; newInMax > newInMin + 1 && histogram[newInMax] < l; newInMax--) {
                 ;
             }
-            int diff=newInMax-newInMin;
-            if (diff<40) {
-                newInMin=limit(newInMin-20,0,254);
-                newInMax=limit(newInMax+20,1,255);
+            int diff = newInMax - newInMin;
+            if (diff < 40) {
+                newInMin = limit(newInMin - 20, 0, 254);
+                newInMax = limit(newInMax + 20, 1, 255);
             }
-            inMinSum-=inMins[minMaxPos];
-            inMins[minMaxPos]=newInMin;
-            inMinSum+=newInMin;
-            inMaxSum-=inMaxs[minMaxPos];
-            inMaxs[minMaxPos]=newInMax;
-            inMaxSum+=newInMax;
+            inMinSum -= inMins[minMaxPos];
+            inMins[minMaxPos] = newInMin;
+            inMinSum += newInMin;
+            inMaxSum -= inMaxs[minMaxPos];
+            inMaxs[minMaxPos] = newInMax;
+            inMaxSum += newInMax;
             minMaxPos++;
-            if (minMaxPos==HISTORY) {
-                minMaxPos=0;
+            if (minMaxPos == HISTORY) {
+                minMaxPos = 0;
             }
-            inMin=inMinSum/HISTORY;
-            inMax=inMaxSum/HISTORY;
+            inMin = inMinSum / HISTORY;
+            inMax = inMaxSum / HISTORY;
         } else {
             // mode==6
-            unsigned int threshold=pictRect.dx*pictRect.dy*(cfg->Ythreshold)/1000;
+            unsigned int threshold = pictRect.dx * pictRect.dy * (cfg->Ythreshold) / 1000;
 
             unsigned int countMin, countMax;
             int x;
 
-            for(countMin=0,x=0; x<inMin; countMin+=histogram[x],x++) {
+            for (countMin = 0, x = 0; x < inMin; countMin += histogram[x], x++) {
                 ;
             }
-            for(countMax=0,x=255; x>inMax; countMax+=histogram[x],x--) {
+            for (countMax = 0, x = 255; x > inMax; countMax += histogram[x], x--) {
                 ;
             }
 
-            if( countMin>threshold ) {
-                if(inMinSum>cfg->Ytemporal) {
-                    if(inMin>cfg->inMin-cfg->YmaxDelta) {
+            if (countMin > threshold) {
+                if (inMinSum > cfg->Ytemporal) {
+                    if (inMin > cfg->inMin - cfg->YmaxDelta) {
                         inMin--;
                     }
-                    inMinSum=0;
+                    inMinSum = 0;
                 } else {
                     inMinSum++;
                 }
             } else {
-                inMinSum=0;
+                inMinSum = 0;
             }
 
-            if( countMax>threshold ) {
-                if(inMaxSum>cfg->Ytemporal) {
-                    if(inMax<cfg->inMax+cfg->YmaxDelta) {
+            if (countMax > threshold) {
+                if (inMaxSum > cfg->Ytemporal) {
+                    if (inMax < cfg->inMax + cfg->YmaxDelta) {
                         inMax++;
                     }
-                    inMaxSum=0;
+                    inMaxSum = 0;
                 } else {
                     inMaxSum++;
                 }
             } else {
-                inMaxSum=0;
+                inMaxSum = 0;
             }
         }
 
         //DPRINTF("min:%i max:%i\n",inMin,inMax);
     } else {
-        inMin=cfg->inMin;
-        inMax=cfg->inMax;
+        inMin = cfg->inMin;
+        inMax = cfg->inMax;
     }
-    if (cfg->is && (cfg->mode==5 || cfg->inAuto || inMin!=0 || inMax!=255 || cfg->outMin!=0 || cfg->outMax!=255 || cfg->gamma!=100 || cfg->posterize!=255)) {
+    if (cfg->is && (cfg->mode == 5 || cfg->inAuto || inMin != 0 || inMax != 255 || cfg->outMin != 0 || cfg->outMax != 255 || cfg->gamma != 100 || cfg->posterize != 255)) {
         TautoPerformanceCounter autoTimer(&timer);
-        bool equal=cfg->equal(oldSettings);
+        bool equal = cfg->equal(oldSettings);
         if (cfg->inAuto || !equal) {
-            oldSettings=*cfg;
-            oldSettings.calcMap(map,mapc,inMin,inMax,outputLevelsMode);
+            oldSettings = *cfg;
+            oldSettings.calcMap(map, mapc, inMin, inMax, outputLevelsMode);
         }
         if (!srcY) {
-            init(pict,cfg->full,cfg->half);
-            getCur(incsps,pict,cfg->full,&srcY,&srcU,&srcV,NULL);
+            init(pict, cfg->full, cfg->half);
+            getCur(incsps, pict, cfg->full, &srcY, &srcU, &srcV, NULL);
         }
         unsigned char *dstY;
-        unsigned char *dstU,*dstV;
+        unsigned char *dstU, *dstV;
         getCurNext(incsps, pict, cfg->full, COPYMODE_NO, &dstY, &dstU, &dstV, NULL);
         if (oldSettings.onlyLuma) {
-            for (unsigned int y=0; y<dy1[0]; y++) {
+            for (unsigned int y = 0; y < dy1[0]; y++) {
                 const unsigned char *src;
-                unsigned char *dst,*dstEnd;
-                for (src=srcY+stride1[0]*y,dst=dstY+stride2[0]*y,dstEnd=dst+dx1[0]; dst<dstEnd-3; src+=4,dst+=4) {
-                    *(unsigned int*)dst=(map[src[3]]<<24)|(map[src[2]]<<16)|(map[src[1]]<<8)|map[src[0]];
+                unsigned char *dst, *dstEnd;
+                for (src = srcY + stride1[0] * y, dst = dstY + stride2[0] * y, dstEnd = dst + dx1[0]; dst < dstEnd - 3; src += 4, dst += 4) {
+                    *(unsigned int*)dst = (map[src[3]] << 24) | (map[src[2]] << 16) | (map[src[1]] << 8) | map[src[0]];
                 }
-                for (; dst!=dstEnd; src++,dst++) {
-                    *dst=uint8_t(map[*src]);
+                for (; dst != dstEnd; src++, dst++) {
+                    *dst = uint8_t(map[*src]);
                 }
             }
         } else {
-            if ((pict.csp & FF_CSPS_MASK) == FF_CSP_420P)
+            if ((pict.csp & FF_CSPS_MASK) == FF_CSP_420P) {
                 filter<FF_CSP_420P>(srcY, srcU, srcV, dstY, dstU, dstV);
-            else if ((pict.csp & FF_CSPS_MASK) == FF_CSP_422P)
+            } else if ((pict.csp & FF_CSPS_MASK) == FF_CSP_422P) {
                 filter<FF_CSP_422P>(srcY, srcU, srcV, dstY, dstU, dstV);
-            else if ((pict.csp & FF_CSPS_MASK) == FF_CSP_444P)
+            } else if ((pict.csp & FF_CSPS_MASK) == FF_CSP_444P) {
                 filter<FF_CSP_444P>(srcY, srcU, srcV, dstY, dstU, dstV);
-            else
+            } else {
                 filterRGB32(srcY, srcU, srcV, dstY, dstU, dstV);
+            }
         }
     }
-    return parent->processSample(++it,pict);
+    return parent->processSample(++it, pict);
 }
 
 inline uint8_t TimgFilterLevels::getuv(int u, int lumav)
@@ -205,7 +206,7 @@ inline uint8_t TimgFilterLevels::getuv(int u, int lumav)
 }
 
 void TimgFilterLevels::filterRGB32(const uint8_t *srcY, const uint8_t *srcU, const uint8_t *srcV,
-    uint8_t *dstY, uint8_t *dstU, uint8_t *dstV)
+                                   uint8_t *dstY, uint8_t *dstU, uint8_t *dstV)
 {
     for (unsigned int y = 0 ; y < dy1[0] ; y ++) {
         const uint8_t *srcy = srcY + stride1[0] * y;
@@ -232,8 +233,9 @@ template <uint64_t incsp> void TimgFilterLevels::filter(
 {
     for (unsigned int y = 0 ; y < dy1[0] ; y += 2) {
         int halfy = y;
-        if (incsp == FF_CSP_420P)
+        if (incsp == FF_CSP_420P) {
             halfy >>= 1;
+        }
         const uint8_t *srcy = srcY + stride1[0] * y;
         const uint8_t *srcu = srcU + stride1[1] * halfy;
         const uint8_t *srcv = srcV + stride1[1] * halfy;
@@ -245,46 +247,50 @@ template <uint64_t incsp> void TimgFilterLevels::filter(
             int u = *srcu;
             int v = *srcv;
             int lum00 = *srcy, lum01;
-            if (incsp != FF_CSP_444P)
+            if (incsp != FF_CSP_444P) {
                 lum01 = *(srcy + 1);
+            }
             int lum10 = *(srcy + stride1[0]), lum11;
-            if (incsp != FF_CSP_444P)
+            if (incsp != FF_CSP_444P) {
                 lum11 = *(srcy + stride1[0] + 1);
+            }
 
             *dsty = uint8_t(map[lum00]);
 
-            if (incsp != FF_CSP_444P)
+            if (incsp != FF_CSP_444P) {
                 *(dsty + 1) = uint8_t(map[lum01]);
+            }
 
             *(dsty + stride2[0]) = uint8_t(map[lum10]);
 
-            if (incsp != FF_CSP_444P)
+            if (incsp != FF_CSP_444P) {
                 *(dsty + stride2[0] + 1) = uint8_t(map[lum11]);
+            }
 
             if (incsp == FF_CSP_420P) {
                 int lumav = (lum00 + lum01 + lum10 + lum11) >> 2;
-                *dstu++ = getuv(u,lumav);
-                *dstv++ = getuv(v,lumav);
+                *dstu++ = getuv(u, lumav);
+                *dstv++ = getuv(v, lumav);
                 srcu++;
                 srcv++;
             } else if (incsp == FF_CSP_422P) {
                 int lumav = (lum00 + lum01) >> 1;
-                *dstu = getuv(u,lumav);
-                *dstv = getuv(v,lumav);
+                *dstu = getuv(u, lumav);
+                *dstv = getuv(v, lumav);
                 lumav = (lum10 + lum11) >> 1;
                 u = *(srcu + stride1[1]);
                 v = *(srcv + stride1[1]);
-                *(dstu++ + stride2[1]) = getuv(u,lumav);
-                *(dstv++ + stride2[1]) = getuv(v,lumav);
+                *(dstu++ + stride2[1]) = getuv(u, lumav);
+                *(dstv++ + stride2[1]) = getuv(v, lumav);
                 srcu++;
                 srcv++;
             } else if (incsp == FF_CSP_444P) {
-                *dstu = getuv(u,lum00);
-                *dstv = getuv(v,lum00);
+                *dstu = getuv(u, lum00);
+                *dstv = getuv(v, lum00);
                 u = *(srcu + stride1[1]);
                 v = *(srcv + stride1[1]);
-                *(dstu++ + stride2[1]) = getuv(u,lum10);
-                *(dstv++ + stride2[1]) = getuv(v,lum10);
+                *(dstu++ + stride2[1]) = getuv(u, lum10);
+                *(dstv++ + stride2[1]) = getuv(v, lum10);
                 srcu++;
                 srcv++;
             }
@@ -301,7 +307,7 @@ template <uint64_t incsp> void TimgFilterLevels::filter(
 
 void TimgFilterLevels::resetHistory(void)
 {
-    flag_resetHistory=true;
+    flag_resetHistory = true;
 }
 void TimgFilterLevels::onSeek(void)
 {
@@ -311,20 +317,20 @@ void TimgFilterLevels::onSeek(void)
 STDMETHODIMP TimgFilterLevels::getHistogram(unsigned int dst[256])
 {
     CAutoLock lock(&csHistogram);
-    memcpy(dst,histogram,sizeof(histogram));
+    memcpy(dst, histogram, sizeof(histogram));
     return S_OK;
 }
-STDMETHODIMP TimgFilterLevels::getInAuto(int *min,int *max)
+STDMETHODIMP TimgFilterLevels::getInAuto(int *min, int *max)
 {
-    *min=inMin;
-    *max=inMax;
+    *min = inMin;
+    *max = inMax;
     return S_OK;
 }
 
-HRESULT TimgFilterLevels::queryInterface(const IID &iid,void **ptr) const
+HRESULT TimgFilterLevels::queryInterface(const IID &iid, void **ptr) const
 {
-    if (iid==IID_IimgFilterLevels) {
-        *ptr=(IimgFilterLevels*)this;
+    if (iid == IID_IimgFilterLevels) {
+        *ptr = (IimgFilterLevels*)this;
         return S_OK;
     } else {
         return E_NOINTERFACE;

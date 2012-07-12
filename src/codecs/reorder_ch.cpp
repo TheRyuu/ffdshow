@@ -46,50 +46,50 @@ static int reorder_copy_5ch(void *dest, const void *src,
         case 1: {
             int8_t *dest_8 = (int8_t *)dest;
             const int8_t *src_8 = (int8_t *)src;
-            REORDER_COPY_5(dest_8,src_8,samples,s0,s1,s2,s3,s4);
+            REORDER_COPY_5(dest_8, src_8, samples, s0, s1, s2, s3, s4);
             break;
         }
         case 2: {
             int16_t *dest_16 = (int16_t *)dest;
             const int16_t *src_16 = (int16_t *)src;
-            REORDER_COPY_5(dest_16,src_16,samples,s0,s1,s2,s3,s4);
+            REORDER_COPY_5(dest_16, src_16, samples, s0, s1, s2, s3, s4);
             break;
         }
         case 3: {
             int8_t *dest_8 = (int8_t *)dest;
             const int8_t *src_8 = (int8_t *)src;
             for (i = 0; i < samples; i += 15) {
-                dest_8[i]    = src_8[i+s0*3];
-                dest_8[i+1]  = src_8[i+s0*3+1];
-                dest_8[i+2]  = src_8[i+s0*3+2];
-                dest_8[i+3]  = src_8[i+s1*3];
-                dest_8[i+4]  = src_8[i+s1*3+1];
-                dest_8[i+5]  = src_8[i+s1*3+2];
-                dest_8[i+6]  = src_8[i+s2*3];
-                dest_8[i+7]  = src_8[i+s2*3+1];
-                dest_8[i+8]  = src_8[i+s2*3+2];
-                dest_8[i+9]  = src_8[i+s3*3];
-                dest_8[i+10] = src_8[i+s3*3+1];
-                dest_8[i+11] = src_8[i+s3*3+2];
-                dest_8[i+12] = src_8[i+s4*3];
-                dest_8[i+13] = src_8[i+s4*3+1];
-                dest_8[i+14] = src_8[i+s4*3+2];
+                dest_8[i]    = src_8[i + s0 * 3];
+                dest_8[i + 1]  = src_8[i + s0 * 3 + 1];
+                dest_8[i + 2]  = src_8[i + s0 * 3 + 2];
+                dest_8[i + 3]  = src_8[i + s1 * 3];
+                dest_8[i + 4]  = src_8[i + s1 * 3 + 1];
+                dest_8[i + 5]  = src_8[i + s1 * 3 + 2];
+                dest_8[i + 6]  = src_8[i + s2 * 3];
+                dest_8[i + 7]  = src_8[i + s2 * 3 + 1];
+                dest_8[i + 8]  = src_8[i + s2 * 3 + 2];
+                dest_8[i + 9]  = src_8[i + s3 * 3];
+                dest_8[i + 10] = src_8[i + s3 * 3 + 1];
+                dest_8[i + 11] = src_8[i + s3 * 3 + 2];
+                dest_8[i + 12] = src_8[i + s4 * 3];
+                dest_8[i + 13] = src_8[i + s4 * 3 + 1];
+                dest_8[i + 14] = src_8[i + s4 * 3 + 2];
             }
         }
         case 4: {
             int32_t *dest_32 = (int32_t *)dest;
             const int32_t *src_32 = (int32_t *)src;
-            REORDER_COPY_5(dest_32,src_32,samples,s0,s1,s2,s3,s4);
+            REORDER_COPY_5(dest_32, src_32, samples, s0, s1, s2, s3, s4);
             break;
         }
         case 8: {
             int64_t *dest_64 = (int64_t *)dest;
             const int64_t *src_64 = (int64_t *)src;
-            REORDER_COPY_5(dest_64,src_64,samples,s0,s1,s2,s3,s4);
+            REORDER_COPY_5(dest_64, src_64, samples, s0, s1, s2, s3, s4);
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -116,53 +116,53 @@ static int reorder_copy_6ch(void *dest, const void *src,
         case 1: {
             int8_t *dest_8 = (int8_t *)dest;
             const int8_t *src_8 = (int8_t *)src;
-            REORDER_COPY_6(dest_8,src_8,samples,s0,s1,s2,s3,s4,s5);
+            REORDER_COPY_6(dest_8, src_8, samples, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 2: {
             int16_t *dest_16 = (int16_t *)dest;
             const int16_t *src_16 = (int16_t *)src;
-            REORDER_COPY_6(dest_16,src_16,samples,s0,s1,s2,s3,s4,s5);
+            REORDER_COPY_6(dest_16, src_16, samples, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 3: {
             int8_t *dest_8 = (int8_t *)dest;
             const int8_t *src_8 = (int8_t *)src;
             for (i = 0; i < samples; i += 18) {
-                dest_8[i]    = src_8[i+s0*3];
-                dest_8[i+1]  = src_8[i+s0*3+1];
-                dest_8[i+2]  = src_8[i+s0*3+2];
-                dest_8[i+3]  = src_8[i+s1*3];
-                dest_8[i+4]  = src_8[i+s1*3+1];
-                dest_8[i+5]  = src_8[i+s1*3+2];
-                dest_8[i+6]  = src_8[i+s2*3];
-                dest_8[i+7]  = src_8[i+s2*3+1];
-                dest_8[i+8]  = src_8[i+s2*3+2];
-                dest_8[i+9]  = src_8[i+s3*3];
-                dest_8[i+10] = src_8[i+s3*3+1];
-                dest_8[i+11] = src_8[i+s3*3+2];
-                dest_8[i+12] = src_8[i+s4*3];
-                dest_8[i+13] = src_8[i+s4*3+1];
-                dest_8[i+14] = src_8[i+s4*3+2];
-                dest_8[i+15] = src_8[i+s5*3];
-                dest_8[i+16] = src_8[i+s5*3+1];
-                dest_8[i+17] = src_8[i+s5*3+2];
+                dest_8[i]    = src_8[i + s0 * 3];
+                dest_8[i + 1]  = src_8[i + s0 * 3 + 1];
+                dest_8[i + 2]  = src_8[i + s0 * 3 + 2];
+                dest_8[i + 3]  = src_8[i + s1 * 3];
+                dest_8[i + 4]  = src_8[i + s1 * 3 + 1];
+                dest_8[i + 5]  = src_8[i + s1 * 3 + 2];
+                dest_8[i + 6]  = src_8[i + s2 * 3];
+                dest_8[i + 7]  = src_8[i + s2 * 3 + 1];
+                dest_8[i + 8]  = src_8[i + s2 * 3 + 2];
+                dest_8[i + 9]  = src_8[i + s3 * 3];
+                dest_8[i + 10] = src_8[i + s3 * 3 + 1];
+                dest_8[i + 11] = src_8[i + s3 * 3 + 2];
+                dest_8[i + 12] = src_8[i + s4 * 3];
+                dest_8[i + 13] = src_8[i + s4 * 3 + 1];
+                dest_8[i + 14] = src_8[i + s4 * 3 + 2];
+                dest_8[i + 15] = src_8[i + s5 * 3];
+                dest_8[i + 16] = src_8[i + s5 * 3 + 1];
+                dest_8[i + 17] = src_8[i + s5 * 3 + 2];
             }
         }
         case 4: {
             int32_t *dest_32 = (int32_t *)dest;
             const int32_t *src_32 = (int32_t *)src;
-            REORDER_COPY_6(dest_32,src_32,samples,s0,s1,s2,s3,s4,s5);
+            REORDER_COPY_6(dest_32, src_32, samples, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 8: {
             int64_t *dest_64 = (int64_t *)dest;
             const int64_t *src_64 = (int64_t *)src;
-            REORDER_COPY_6(dest_64,src_64,samples,s0,s1,s2,s3,s4,s5);
+            REORDER_COPY_6(dest_64, src_64, samples, s0, s1, s2, s3, s4, s5);
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -189,59 +189,59 @@ static int reorder_copy_8ch(void *dest, const void *src,
         case 1: {
             int8_t *dest_8 = (int8_t *)dest;
             const int8_t *src_8 = (int8_t *)src;
-            REORDER_COPY_8(dest_8,src_8,samples,s0,s1,s2,s3,s4,s5,s6,s7);
+            REORDER_COPY_8(dest_8, src_8, samples, s0, s1, s2, s3, s4, s5, s6, s7);
             break;
         }
         case 2: {
             int16_t *dest_16 = (int16_t *)dest;
             const int16_t *src_16 = (int16_t *)src;
-            REORDER_COPY_8(dest_16,src_16,samples,s0,s1,s2,s3,s4,s5,s6,s7);
+            REORDER_COPY_8(dest_16, src_16, samples, s0, s1, s2, s3, s4, s5, s6, s7);
             break;
         }
         case 3: {
             int8_t *dest_8 = (int8_t *)dest;
             const int8_t *src_8 = (int8_t *)src;
             for (i = 0; i < samples; i += 24) {
-                dest_8[i]    = src_8[i+s0*3];
-                dest_8[i+1]  = src_8[i+s0*3+1];
-                dest_8[i+2]  = src_8[i+s0*3+2];
-                dest_8[i+3]  = src_8[i+s1*3];
-                dest_8[i+4]  = src_8[i+s1*3+1];
-                dest_8[i+5]  = src_8[i+s1*3+2];
-                dest_8[i+6]  = src_8[i+s2*3];
-                dest_8[i+7]  = src_8[i+s2*3+1];
-                dest_8[i+8]  = src_8[i+s2*3+2];
-                dest_8[i+9]  = src_8[i+s3*3];
-                dest_8[i+10] = src_8[i+s3*3+1];
-                dest_8[i+11] = src_8[i+s3*3+2];
-                dest_8[i+12] = src_8[i+s4*3];
-                dest_8[i+13] = src_8[i+s4*3+1];
-                dest_8[i+14] = src_8[i+s4*3+2];
-                dest_8[i+15] = src_8[i+s5*3];
-                dest_8[i+16] = src_8[i+s5*3+1];
-                dest_8[i+17] = src_8[i+s5*3+2];
-                dest_8[i+18] = src_8[i+s6*3];
-                dest_8[i+19] = src_8[i+s6*3+1];
-                dest_8[i+20] = src_8[i+s6*3+2];
-                dest_8[i+21] = src_8[i+s7*3];
-                dest_8[i+22] = src_8[i+s7*3+1];
-                dest_8[i+23] = src_8[i+s7*3+2];
+                dest_8[i]    = src_8[i + s0 * 3];
+                dest_8[i + 1]  = src_8[i + s0 * 3 + 1];
+                dest_8[i + 2]  = src_8[i + s0 * 3 + 2];
+                dest_8[i + 3]  = src_8[i + s1 * 3];
+                dest_8[i + 4]  = src_8[i + s1 * 3 + 1];
+                dest_8[i + 5]  = src_8[i + s1 * 3 + 2];
+                dest_8[i + 6]  = src_8[i + s2 * 3];
+                dest_8[i + 7]  = src_8[i + s2 * 3 + 1];
+                dest_8[i + 8]  = src_8[i + s2 * 3 + 2];
+                dest_8[i + 9]  = src_8[i + s3 * 3];
+                dest_8[i + 10] = src_8[i + s3 * 3 + 1];
+                dest_8[i + 11] = src_8[i + s3 * 3 + 2];
+                dest_8[i + 12] = src_8[i + s4 * 3];
+                dest_8[i + 13] = src_8[i + s4 * 3 + 1];
+                dest_8[i + 14] = src_8[i + s4 * 3 + 2];
+                dest_8[i + 15] = src_8[i + s5 * 3];
+                dest_8[i + 16] = src_8[i + s5 * 3 + 1];
+                dest_8[i + 17] = src_8[i + s5 * 3 + 2];
+                dest_8[i + 18] = src_8[i + s6 * 3];
+                dest_8[i + 19] = src_8[i + s6 * 3 + 1];
+                dest_8[i + 20] = src_8[i + s6 * 3 + 2];
+                dest_8[i + 21] = src_8[i + s7 * 3];
+                dest_8[i + 22] = src_8[i + s7 * 3 + 1];
+                dest_8[i + 23] = src_8[i + s7 * 3 + 2];
             }
         }
         case 4: {
             int32_t *dest_32 = (int32_t *)dest;
             const int32_t *src_32 = (int32_t *)src;
-            REORDER_COPY_8(dest_32,src_32,samples,s0,s1,s2,s3,s4,s5,s6,s7);
+            REORDER_COPY_8(dest_32, src_32, samples, s0, s1, s2, s3, s4, s5, s6, s7);
             break;
         }
         case 8: {
             int64_t *dest_64 = (int64_t *)dest;
             const int64_t *src_64 = (int64_t *)src;
-            REORDER_COPY_8(dest_64,src_64,samples,s0,s1,s2,s3,s4,s5,s6,s7);
+            REORDER_COPY_8(dest_64, src_64, samples, s0, s1, s2, s3, s4, s5, s6, s7);
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -254,16 +254,16 @@ void reorder_channel_copy(void *src,
                           int samples,
                           int samplesize)
 {
-    if (dest_layout==src_layout) {
-        memcpy(dest, src, samples*samplesize);
+    if (dest_layout == src_layout) {
+        memcpy(dest, src, samples * samplesize);
         return;
     }
-    if (!AF_IS_SAME_CH_NUM(dest_layout,src_layout)) {
-        DPRINTF(_l("[reorder_ch] different channel count between src and dest: %x, %x"),AF_GET_CH_NUM_WITH_LFE(src_layout),
+    if (!AF_IS_SAME_CH_NUM(dest_layout, src_layout)) {
+        DPRINTF(_l("[reorder_ch] different channel count between src and dest: %x, %x"), AF_GET_CH_NUM_WITH_LFE(src_layout),
                 AF_GET_CH_NUM_WITH_LFE(dest_layout));
         return;
     }
-    switch ((src_layout<<16)|dest_layout) {
+    switch ((src_layout << 16) | dest_layout) {
             // AF_CHANNEL_LAYOUT_5_0_A   L R C Ls Rs
             // AF_CHANNEL_LAYOUT_5_0_B   L R Ls Rs C
             // AF_CHANNEL_LAYOUT_5_0_C   L C R Ls Rs
@@ -358,9 +358,9 @@ void reorder_channel_copy(void *src,
             reorder_copy_8ch(dest, src, samples, samplesize, 0, 1, 2, 3, 6, 7, 4, 5);
             break;
         default:
-            DPRINTF(_l("[reorder_channel_copy] unsupport from %x to %x, %d * %d"),src_layout, dest_layout,
+            DPRINTF(_l("[reorder_channel_copy] unsupport from %x to %x, %d * %d"), src_layout, dest_layout,
                     samples, samplesize);
-            memcpy(dest, src, samples*samplesize);
+            memcpy(dest, src, samples * samplesize);
     }
 }
 
@@ -381,66 +381,66 @@ static int reorder_self_2(void *src, unsigned int samples,
         case 1: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_2(src_8,tmp,samples,6,s0,s1);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_2(src_8, tmp, samples, 6, s0, s1);
             } else {
-                REORDER_SELF_SWAP_2(src_8,tmp,samples,5,s0,s1);
+                REORDER_SELF_SWAP_2(src_8, tmp, samples, 5, s0, s1);
             }
             break;
         }
         case 2: {
             int16_t *src_16 = (int16_t *)src;
             int16_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_2(src_16,tmp,samples,6,s0,s1);
-            } else if (chnum==3) {
-                REORDER_SELF_SWAP_2(src_16,tmp,samples,3,s0,s1);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_2(src_16, tmp, samples, 6, s0, s1);
+            } else if (chnum == 3) {
+                REORDER_SELF_SWAP_2(src_16, tmp, samples, 3, s0, s1);
             } else {
-                REORDER_SELF_SWAP_2(src_16,tmp,samples,5,s0,s1);
+                REORDER_SELF_SWAP_2(src_16, tmp, samples, 5, s0, s1);
             }
             break;
         }
         case 3: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp0, tmp1, tmp2;
-            for (i = 0; i < samples; i += chnum*3) {
-                tmp0 = src_8[i+s0*3];
-                tmp1 = src_8[i+s0*3+1];
-                tmp2 = src_8[i+s0*3+2];
-                src_8[i+s0*3]   = src_8[i+s1*3];
-                src_8[i+s0*3+1] = src_8[i+s1*3+1];
-                src_8[i+s0*3+2] = src_8[i+s1*3+2];
-                src_8[i+s1*3]   = tmp0;
-                src_8[i+s1*3+1] = tmp1;
-                src_8[i+s1*3+2] = tmp2;
+            for (i = 0; i < samples; i += chnum * 3) {
+                tmp0 = src_8[i + s0 * 3];
+                tmp1 = src_8[i + s0 * 3 + 1];
+                tmp2 = src_8[i + s0 * 3 + 2];
+                src_8[i + s0 * 3]   = src_8[i + s1 * 3];
+                src_8[i + s0 * 3 + 1] = src_8[i + s1 * 3 + 1];
+                src_8[i + s0 * 3 + 2] = src_8[i + s1 * 3 + 2];
+                src_8[i + s1 * 3]   = tmp0;
+                src_8[i + s1 * 3 + 1] = tmp1;
+                src_8[i + s1 * 3 + 2] = tmp2;
             }
         }
         case 4: {
             int32_t *src_32 = (int32_t *)src;
             int32_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_2(src_32,tmp,samples,6,s0,s1);
-            } else if (chnum==3) {
-                REORDER_SELF_SWAP_2(src_32,tmp,samples,3,s0,s1);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_2(src_32, tmp, samples, 6, s0, s1);
+            } else if (chnum == 3) {
+                REORDER_SELF_SWAP_2(src_32, tmp, samples, 3, s0, s1);
             } else {
-                REORDER_SELF_SWAP_2(src_32,tmp,samples,5,s0,s1);
+                REORDER_SELF_SWAP_2(src_32, tmp, samples, 5, s0, s1);
             }
             break;
         }
         case 8: {
             int64_t *src_64 = (int64_t *)src;
             int64_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_2(src_64,tmp,samples,6,s0,s1);
-            } else if (chnum==3) {
-                REORDER_SELF_SWAP_2(src_64,tmp,samples,3,s0,s1);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_2(src_64, tmp, samples, 6, s0, s1);
+            } else if (chnum == 3) {
+                REORDER_SELF_SWAP_2(src_64, tmp, samples, 3, s0, s1);
             } else {
-                REORDER_SELF_SWAP_2(src_64,tmp,samples,5,s0,s1);
+                REORDER_SELF_SWAP_2(src_64, tmp, samples, 5, s0, s1);
             }
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -463,65 +463,65 @@ static int reorder_self_3(void *src, unsigned int samples,
         case 1: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_3(src_8,tmp,samples,6,s0,s1,s2);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_3(src_8, tmp, samples, 6, s0, s1, s2);
             } else {
-                REORDER_SELF_SWAP_3(src_8,tmp,samples,5,s0,s1,s2);
+                REORDER_SELF_SWAP_3(src_8, tmp, samples, 5, s0, s1, s2);
             }
             break;
         }
         case 2: {
             int16_t *src_16 = (int16_t *)src;
             int16_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_3(src_16,tmp,samples,6,s0,s1,s2);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_3(src_16, tmp, samples, 6, s0, s1, s2);
             } else {
-                REORDER_SELF_SWAP_3(src_16,tmp,samples,5,s0,s1,s2);
+                REORDER_SELF_SWAP_3(src_16, tmp, samples, 5, s0, s1, s2);
             }
             break;
         }
         case 3: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp0, tmp1, tmp2;
-            for (i = 0; i < samples; i += chnum*3) {
-                tmp0 = src_8[i+s0*3];
-                tmp1 = src_8[i+s0*3+1];
-                tmp2 = src_8[i+s0*3+2];
-                src_8[i+s0*3]   = src_8[i+s1*3];
-                src_8[i+s0*3+1] = src_8[i+s1*3+1];
-                src_8[i+s0*3+2] = src_8[i+s1*3+2];
-                src_8[i+s1*3]   = src_8[i+s2*3];
-                src_8[i+s1*3+1] = src_8[i+s2*3+1];
-                src_8[i+s1*3+2] = src_8[i+s2*3+2];
-                src_8[i+s2*3]   = tmp0;
-                src_8[i+s2*3+1] = tmp1;
-                src_8[i+s2*3+2] = tmp2;
+            for (i = 0; i < samples; i += chnum * 3) {
+                tmp0 = src_8[i + s0 * 3];
+                tmp1 = src_8[i + s0 * 3 + 1];
+                tmp2 = src_8[i + s0 * 3 + 2];
+                src_8[i + s0 * 3]   = src_8[i + s1 * 3];
+                src_8[i + s0 * 3 + 1] = src_8[i + s1 * 3 + 1];
+                src_8[i + s0 * 3 + 2] = src_8[i + s1 * 3 + 2];
+                src_8[i + s1 * 3]   = src_8[i + s2 * 3];
+                src_8[i + s1 * 3 + 1] = src_8[i + s2 * 3 + 1];
+                src_8[i + s1 * 3 + 2] = src_8[i + s2 * 3 + 2];
+                src_8[i + s2 * 3]   = tmp0;
+                src_8[i + s2 * 3 + 1] = tmp1;
+                src_8[i + s2 * 3 + 2] = tmp2;
             }
         }
         case 4: {
             int32_t *src_32 = (int32_t *)src;
             int32_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_3(src_32,tmp,samples,6,s0,s1,s2);
-            } else if (chnum==5) {
-                REORDER_SELF_SWAP_3(src_32,tmp,samples,5,s0,s1,s2);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_3(src_32, tmp, samples, 6, s0, s1, s2);
+            } else if (chnum == 5) {
+                REORDER_SELF_SWAP_3(src_32, tmp, samples, 5, s0, s1, s2);
             } else {
-                REORDER_SELF_SWAP_3(src_32,tmp,samples,chnum,s0,s1,s2);
+                REORDER_SELF_SWAP_3(src_32, tmp, samples, chnum, s0, s1, s2);
             }
             break;
         }
         case 8: {
             int64_t *src_64 = (int64_t *)src;
             int64_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_3(src_64,tmp,samples,6,s0,s1,s2);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_3(src_64, tmp, samples, 6, s0, s1, s2);
             } else {
-                REORDER_SELF_SWAP_3(src_64,tmp,samples,5,s0,s1,s2);
+                REORDER_SELF_SWAP_3(src_64, tmp, samples, 5, s0, s1, s2);
             }
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -545,66 +545,66 @@ static int reorder_self_4_step_1(void *src, unsigned int samples,
         case 1: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_4_STEP_1(src_8,tmp,samples,6,s0,s1,s2,s3);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_4_STEP_1(src_8, tmp, samples, 6, s0, s1, s2, s3);
             } else {
-                REORDER_SELF_SWAP_4_STEP_1(src_8,tmp,samples,5,s0,s1,s2,s3);
+                REORDER_SELF_SWAP_4_STEP_1(src_8, tmp, samples, 5, s0, s1, s2, s3);
             }
             break;
         }
         case 2: {
             int16_t *src_16 = (int16_t *)src;
             int16_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_4_STEP_1(src_16,tmp,samples,6,s0,s1,s2,s3);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_4_STEP_1(src_16, tmp, samples, 6, s0, s1, s2, s3);
             } else {
-                REORDER_SELF_SWAP_4_STEP_1(src_16,tmp,samples,5,s0,s1,s2,s3);
+                REORDER_SELF_SWAP_4_STEP_1(src_16, tmp, samples, 5, s0, s1, s2, s3);
             }
             break;
         }
         case 3: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp0, tmp1, tmp2;
-            for (i = 0; i < samples; i += chnum*3) {
-                tmp0 = src_8[i+s0*3];
-                tmp1 = src_8[i+s0*3+1];
-                tmp2 = src_8[i+s0*3+2];
-                src_8[i+s0*3]   = src_8[i+s1*3];
-                src_8[i+s0*3+1] = src_8[i+s1*3+1];
-                src_8[i+s0*3+2] = src_8[i+s1*3+2];
-                src_8[i+s1*3]   = src_8[i+s2*3];
-                src_8[i+s1*3+1] = src_8[i+s2*3+1];
-                src_8[i+s1*3+2] = src_8[i+s2*3+2];
-                src_8[i+s2*3]   = src_8[i+s3*3];
-                src_8[i+s2*3+1] = src_8[i+s3*3+1];
-                src_8[i+s2*3+2] = src_8[i+s3*3+2];
-                src_8[i+s3*3]   = tmp0;
-                src_8[i+s3*3+1] = tmp1;
-                src_8[i+s3*3+2] = tmp2;
+            for (i = 0; i < samples; i += chnum * 3) {
+                tmp0 = src_8[i + s0 * 3];
+                tmp1 = src_8[i + s0 * 3 + 1];
+                tmp2 = src_8[i + s0 * 3 + 2];
+                src_8[i + s0 * 3]   = src_8[i + s1 * 3];
+                src_8[i + s0 * 3 + 1] = src_8[i + s1 * 3 + 1];
+                src_8[i + s0 * 3 + 2] = src_8[i + s1 * 3 + 2];
+                src_8[i + s1 * 3]   = src_8[i + s2 * 3];
+                src_8[i + s1 * 3 + 1] = src_8[i + s2 * 3 + 1];
+                src_8[i + s1 * 3 + 2] = src_8[i + s2 * 3 + 2];
+                src_8[i + s2 * 3]   = src_8[i + s3 * 3];
+                src_8[i + s2 * 3 + 1] = src_8[i + s3 * 3 + 1];
+                src_8[i + s2 * 3 + 2] = src_8[i + s3 * 3 + 2];
+                src_8[i + s3 * 3]   = tmp0;
+                src_8[i + s3 * 3 + 1] = tmp1;
+                src_8[i + s3 * 3 + 2] = tmp2;
             }
         }
         case 4: {
             int32_t *src_32 = (int32_t *)src;
             int32_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_4_STEP_1(src_32,tmp,samples,6,s0,s1,s2,s3);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_4_STEP_1(src_32, tmp, samples, 6, s0, s1, s2, s3);
             } else {
-                REORDER_SELF_SWAP_4_STEP_1(src_32,tmp,samples,5,s0,s1,s2,s3);
+                REORDER_SELF_SWAP_4_STEP_1(src_32, tmp, samples, 5, s0, s1, s2, s3);
             }
             break;
         }
         case 8: {
             int64_t *src_64 = (int64_t *)src;
             int64_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_4_STEP_1(src_64,tmp,samples,6,s0,s1,s2,s3);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_4_STEP_1(src_64, tmp, samples, 6, s0, s1, s2, s3);
             } else {
-                REORDER_SELF_SWAP_4_STEP_1(src_64,tmp,samples,5,s0,s1,s2,s3);
+                REORDER_SELF_SWAP_4_STEP_1(src_64, tmp, samples, 5, s0, s1, s2, s3);
             }
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -629,54 +629,54 @@ static int reorder_self_4_step_2(void *src, unsigned int samples,
         case 1: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp;
-            REORDER_SELF_SWAP_4_STEP_2(src_8,tmp,samples,chnum,s0,s1,s2,s3);
+            REORDER_SELF_SWAP_4_STEP_2(src_8, tmp, samples, chnum, s0, s1, s2, s3);
             break;
         }
         case 2: {
             int16_t *src_16 = (int16_t *)src;
             int16_t tmp;
-            REORDER_SELF_SWAP_4_STEP_2(src_16,tmp,samples,chnum,s0,s1,s2,s3);
+            REORDER_SELF_SWAP_4_STEP_2(src_16, tmp, samples, chnum, s0, s1, s2, s3);
             break;
         }
         case 3: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp0, tmp1, tmp2;
-            for (i = 0; i < samples; i += chnum*3) {
-                tmp0 = src_8[i+s0*3];
-                tmp1 = src_8[i+s0*3+1];
-                tmp2 = src_8[i+s0*3+2];
-                src_8[i+s0*3]   = src_8[i+s2*3];
-                src_8[i+s0*3+1] = src_8[i+s2*3+1];
-                src_8[i+s0*3+2] = src_8[i+s2*3+2];
-                src_8[i+s2*3]   = tmp0;
-                src_8[i+s2*3+1] = tmp1;
-                src_8[i+s2*3+2] = tmp2;
-                tmp0 = src_8[i+s1*3];
-                tmp1 = src_8[i+s1*3+1];
-                tmp2 = src_8[i+s1*3+2];
-                src_8[i+s1*3]   = src_8[i+s3*3];
-                src_8[i+s1*3+1] = src_8[i+s3*3+1];
-                src_8[i+s1*3+2] = src_8[i+s3*3+2];
-                src_8[i+s3*3]   = tmp0;
-                src_8[i+s3*3+1] = tmp1;
-                src_8[i+s3*3+2] = tmp2;
+            for (i = 0; i < samples; i += chnum * 3) {
+                tmp0 = src_8[i + s0 * 3];
+                tmp1 = src_8[i + s0 * 3 + 1];
+                tmp2 = src_8[i + s0 * 3 + 2];
+                src_8[i + s0 * 3]   = src_8[i + s2 * 3];
+                src_8[i + s0 * 3 + 1] = src_8[i + s2 * 3 + 1];
+                src_8[i + s0 * 3 + 2] = src_8[i + s2 * 3 + 2];
+                src_8[i + s2 * 3]   = tmp0;
+                src_8[i + s2 * 3 + 1] = tmp1;
+                src_8[i + s2 * 3 + 2] = tmp2;
+                tmp0 = src_8[i + s1 * 3];
+                tmp1 = src_8[i + s1 * 3 + 1];
+                tmp2 = src_8[i + s1 * 3 + 2];
+                src_8[i + s1 * 3]   = src_8[i + s3 * 3];
+                src_8[i + s1 * 3 + 1] = src_8[i + s3 * 3 + 1];
+                src_8[i + s1 * 3 + 2] = src_8[i + s3 * 3 + 2];
+                src_8[i + s3 * 3]   = tmp0;
+                src_8[i + s3 * 3 + 1] = tmp1;
+                src_8[i + s3 * 3 + 2] = tmp2;
             }
             break;
         }
         case 4: {
             int32_t *src_32 = (int32_t *)src;
             int32_t tmp;
-            REORDER_SELF_SWAP_4_STEP_2(src_32,tmp,samples,chnum,s0,s1,s2,s3);
+            REORDER_SELF_SWAP_4_STEP_2(src_32, tmp, samples, chnum, s0, s1, s2, s3);
             break;
         }
         case 8: {
             int64_t *src_64 = (int64_t *)src;
             int64_t tmp;
-            REORDER_SELF_SWAP_4_STEP_2(src_64,tmp,samples,chnum,s0,s1,s2,s3);
+            REORDER_SELF_SWAP_4_STEP_2(src_64, tmp, samples, chnum, s0, s1, s2, s3);
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
     }
     return 1;
 }
@@ -700,69 +700,69 @@ static int reorder_self_5_step_1(void *src, unsigned int samples,
         case 1: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_5_STEP_1(src_8,tmp,samples,6,s0,s1,s2,s3,s4);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_5_STEP_1(src_8, tmp, samples, 6, s0, s1, s2, s3, s4);
             } else {
-                REORDER_SELF_SWAP_5_STEP_1(src_8,tmp,samples,5,s0,s1,s2,s3,s4);
+                REORDER_SELF_SWAP_5_STEP_1(src_8, tmp, samples, 5, s0, s1, s2, s3, s4);
             }
             break;
         }
         case 2: {
             int16_t *src_16 = (int16_t *)src;
             int16_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_5_STEP_1(src_16,tmp,samples,6,s0,s1,s2,s3,s4);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_5_STEP_1(src_16, tmp, samples, 6, s0, s1, s2, s3, s4);
             } else {
-                REORDER_SELF_SWAP_5_STEP_1(src_16,tmp,samples,5,s0,s1,s2,s3,s4);
+                REORDER_SELF_SWAP_5_STEP_1(src_16, tmp, samples, 5, s0, s1, s2, s3, s4);
             }
             break;
         }
         case 3: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp0, tmp1, tmp2;
-            for (i = 0; i < samples; i += chnum*3) {
-                tmp0 = src_8[i+s0*3];
-                tmp1 = src_8[i+s0*3+1];
-                tmp2 = src_8[i+s0*3+2];
-                src_8[i+s0*3]   = src_8[i+s1*3];
-                src_8[i+s0*3+1] = src_8[i+s1*3+1];
-                src_8[i+s0*3+2] = src_8[i+s1*3+2];
-                src_8[i+s1*3]   = src_8[i+s2*3];
-                src_8[i+s1*3+1] = src_8[i+s2*3+1];
-                src_8[i+s1*3+2] = src_8[i+s2*3+2];
-                src_8[i+s2*3]   = src_8[i+s3*3];
-                src_8[i+s2*3+1] = src_8[i+s3*3+1];
-                src_8[i+s2*3+2] = src_8[i+s3*3+2];
-                src_8[i+s3*3]   = src_8[i+s4*3];
-                src_8[i+s3*3+1] = src_8[i+s4*3+1];
-                src_8[i+s3*3+2] = src_8[i+s4*3+2];
-                src_8[i+s4*3]   = tmp0;
-                src_8[i+s4*3+1] = tmp1;
-                src_8[i+s4*3+2] = tmp2;
+            for (i = 0; i < samples; i += chnum * 3) {
+                tmp0 = src_8[i + s0 * 3];
+                tmp1 = src_8[i + s0 * 3 + 1];
+                tmp2 = src_8[i + s0 * 3 + 2];
+                src_8[i + s0 * 3]   = src_8[i + s1 * 3];
+                src_8[i + s0 * 3 + 1] = src_8[i + s1 * 3 + 1];
+                src_8[i + s0 * 3 + 2] = src_8[i + s1 * 3 + 2];
+                src_8[i + s1 * 3]   = src_8[i + s2 * 3];
+                src_8[i + s1 * 3 + 1] = src_8[i + s2 * 3 + 1];
+                src_8[i + s1 * 3 + 2] = src_8[i + s2 * 3 + 2];
+                src_8[i + s2 * 3]   = src_8[i + s3 * 3];
+                src_8[i + s2 * 3 + 1] = src_8[i + s3 * 3 + 1];
+                src_8[i + s2 * 3 + 2] = src_8[i + s3 * 3 + 2];
+                src_8[i + s3 * 3]   = src_8[i + s4 * 3];
+                src_8[i + s3 * 3 + 1] = src_8[i + s4 * 3 + 1];
+                src_8[i + s3 * 3 + 2] = src_8[i + s4 * 3 + 2];
+                src_8[i + s4 * 3]   = tmp0;
+                src_8[i + s4 * 3 + 1] = tmp1;
+                src_8[i + s4 * 3 + 2] = tmp2;
             }
         }
         case 4: {
             int32_t *src_32 = (int32_t *)src;
             int32_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_5_STEP_1(src_32,tmp,samples,6,s0,s1,s2,s3,s4);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_5_STEP_1(src_32, tmp, samples, 6, s0, s1, s2, s3, s4);
             } else {
-                REORDER_SELF_SWAP_5_STEP_1(src_32,tmp,samples,5,s0,s1,s2,s3,s4);
+                REORDER_SELF_SWAP_5_STEP_1(src_32, tmp, samples, 5, s0, s1, s2, s3, s4);
             }
             break;
         }
         case 8: {
             int64_t *src_64 = (int64_t *)src;
             int64_t tmp;
-            if (chnum==6) {
-                REORDER_SELF_SWAP_5_STEP_1(src_64,tmp,samples,6,s0,s1,s2,s3,s4);
+            if (chnum == 6) {
+                REORDER_SELF_SWAP_5_STEP_1(src_64, tmp, samples, 6, s0, s1, s2, s3, s4);
             } else {
-                REORDER_SELF_SWAP_5_STEP_1(src_64,tmp,samples,5,s0,s1,s2,s3,s4);
+                REORDER_SELF_SWAP_5_STEP_1(src_64, tmp, samples, 5, s0, s1, s2, s3, s4);
             }
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -790,56 +790,56 @@ static int reorder_self_2_3(void *src, unsigned int samples,
         case 1: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp;
-            REORDER_SELF_SWAP_2_3(src_8,tmp,samples,6,s0,s1,s2,s3,s4);
+            REORDER_SELF_SWAP_2_3(src_8, tmp, samples, 6, s0, s1, s2, s3, s4);
             break;
         }
         case 2: {
             int16_t *src_16 = (int16_t *)src;
             int16_t tmp;
-            REORDER_SELF_SWAP_2_3(src_16,tmp,samples,6,s0,s1,s2,s3,s4);
+            REORDER_SELF_SWAP_2_3(src_16, tmp, samples, 6, s0, s1, s2, s3, s4);
             break;
         }
         case 3: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp0, tmp1, tmp2;
             for (i = 0; i < samples; i += 18) {
-                tmp0 = src_8[i+s0*3];
-                tmp1 = src_8[i+s0*3+1];
-                tmp2 = src_8[i+s0*3+2];
-                src_8[i+s0*3]   = src_8[i+s1*3];
-                src_8[i+s0*3+1] = src_8[i+s1*3+1];
-                src_8[i+s0*3+2] = src_8[i+s1*3+2];
-                src_8[i+s1*3]   = tmp0;
-                src_8[i+s1*3+1] = tmp1;
-                src_8[i+s1*3+2] = tmp2;
-                tmp0 = src_8[i+s2*3];
-                tmp1 = src_8[i+s2*3+1];
-                tmp2 = src_8[i+s2*3+2];
-                src_8[i+s2*3]   = src_8[i+s3*3];
-                src_8[i+s2*3+1] = src_8[i+s3*3+1];
-                src_8[i+s2*3+2] = src_8[i+s3*3+2];
-                src_8[i+s3*3]   = src_8[i+s4*3];
-                src_8[i+s3*3+1] = src_8[i+s4*3+1];
-                src_8[i+s3*3+2] = src_8[i+s4*3+2];
-                src_8[i+s4*3]   = tmp0;
-                src_8[i+s4*3+1] = tmp1;
-                src_8[i+s4*3+2] = tmp2;
+                tmp0 = src_8[i + s0 * 3];
+                tmp1 = src_8[i + s0 * 3 + 1];
+                tmp2 = src_8[i + s0 * 3 + 2];
+                src_8[i + s0 * 3]   = src_8[i + s1 * 3];
+                src_8[i + s0 * 3 + 1] = src_8[i + s1 * 3 + 1];
+                src_8[i + s0 * 3 + 2] = src_8[i + s1 * 3 + 2];
+                src_8[i + s1 * 3]   = tmp0;
+                src_8[i + s1 * 3 + 1] = tmp1;
+                src_8[i + s1 * 3 + 2] = tmp2;
+                tmp0 = src_8[i + s2 * 3];
+                tmp1 = src_8[i + s2 * 3 + 1];
+                tmp2 = src_8[i + s2 * 3 + 2];
+                src_8[i + s2 * 3]   = src_8[i + s3 * 3];
+                src_8[i + s2 * 3 + 1] = src_8[i + s3 * 3 + 1];
+                src_8[i + s2 * 3 + 2] = src_8[i + s3 * 3 + 2];
+                src_8[i + s3 * 3]   = src_8[i + s4 * 3];
+                src_8[i + s3 * 3 + 1] = src_8[i + s4 * 3 + 1];
+                src_8[i + s3 * 3 + 2] = src_8[i + s4 * 3 + 2];
+                src_8[i + s4 * 3]   = tmp0;
+                src_8[i + s4 * 3 + 1] = tmp1;
+                src_8[i + s4 * 3 + 2] = tmp2;
             }
         }
         case 4: {
             int32_t *src_32 = (int32_t *)src;
             int32_t tmp;
-            REORDER_SELF_SWAP_2_3(src_32,tmp,samples,6,s0,s1,s2,s3,s4);
+            REORDER_SELF_SWAP_2_3(src_32, tmp, samples, 6, s0, s1, s2, s3, s4);
             break;
         }
         case 8: {
             int64_t *src_64 = (int64_t *)src;
             int64_t tmp;
-            REORDER_SELF_SWAP_2_3(src_64,tmp,samples,6,s0,s1,s2,s3,s4);
+            REORDER_SELF_SWAP_2_3(src_64, tmp, samples, 6, s0, s1, s2, s3, s4);
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -866,59 +866,59 @@ static int reorder_self_3_3(void *src, unsigned int samples,
         case 1: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp;
-            REORDER_SELF_SWAP_3_3(src_8,tmp,samples,6,s0,s1,s2,s3,s4,s5);
+            REORDER_SELF_SWAP_3_3(src_8, tmp, samples, 6, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 2: {
             int16_t *src_16 = (int16_t *)src;
             int16_t tmp;
-            REORDER_SELF_SWAP_3_3(src_16,tmp,samples,6,s0,s1,s2,s3,s4,s5);
+            REORDER_SELF_SWAP_3_3(src_16, tmp, samples, 6, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 3: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp0, tmp1, tmp2;
             for (i = 0; i < samples; i += 18) {
-                tmp0 = src_8[i+s0*3];
-                tmp1 = src_8[i+s0*3+1];
-                tmp2 = src_8[i+s0*3+2];
-                src_8[i+s0*3]   = src_8[i+s1*3];
-                src_8[i+s0*3+1] = src_8[i+s1*3+1];
-                src_8[i+s0*3+2] = src_8[i+s1*3+2];
-                src_8[i+s1*3]   = src_8[i+s2*3];
-                src_8[i+s1*3+1] = src_8[i+s2*3+1];
-                src_8[i+s1*3+2] = src_8[i+s2*3+2];
-                src_8[i+s2*3]   = tmp0;
-                src_8[i+s2*3+1] = tmp1;
-                src_8[i+s2*3+2] = tmp2;
-                tmp0 = src_8[i+s3*3];
-                tmp1 = src_8[i+s3*3+1];
-                tmp2 = src_8[i+s3*3+2];
-                src_8[i+s3*3]   = src_8[i+s4*3];
-                src_8[i+s3*3+1] = src_8[i+s4*3+1];
-                src_8[i+s3*3+2] = src_8[i+s4*3+2];
-                src_8[i+s4*3]   = src_8[i+s5*3];
-                src_8[i+s4*3+1] = src_8[i+s5*3+1];
-                src_8[i+s4*3+2] = src_8[i+s5*3+2];
-                src_8[i+s5*3]   = tmp0;
-                src_8[i+s5*3+1] = tmp1;
-                src_8[i+s5*3+2] = tmp2;
+                tmp0 = src_8[i + s0 * 3];
+                tmp1 = src_8[i + s0 * 3 + 1];
+                tmp2 = src_8[i + s0 * 3 + 2];
+                src_8[i + s0 * 3]   = src_8[i + s1 * 3];
+                src_8[i + s0 * 3 + 1] = src_8[i + s1 * 3 + 1];
+                src_8[i + s0 * 3 + 2] = src_8[i + s1 * 3 + 2];
+                src_8[i + s1 * 3]   = src_8[i + s2 * 3];
+                src_8[i + s1 * 3 + 1] = src_8[i + s2 * 3 + 1];
+                src_8[i + s1 * 3 + 2] = src_8[i + s2 * 3 + 2];
+                src_8[i + s2 * 3]   = tmp0;
+                src_8[i + s2 * 3 + 1] = tmp1;
+                src_8[i + s2 * 3 + 2] = tmp2;
+                tmp0 = src_8[i + s3 * 3];
+                tmp1 = src_8[i + s3 * 3 + 1];
+                tmp2 = src_8[i + s3 * 3 + 2];
+                src_8[i + s3 * 3]   = src_8[i + s4 * 3];
+                src_8[i + s3 * 3 + 1] = src_8[i + s4 * 3 + 1];
+                src_8[i + s3 * 3 + 2] = src_8[i + s4 * 3 + 2];
+                src_8[i + s4 * 3]   = src_8[i + s5 * 3];
+                src_8[i + s4 * 3 + 1] = src_8[i + s5 * 3 + 1];
+                src_8[i + s4 * 3 + 2] = src_8[i + s5 * 3 + 2];
+                src_8[i + s5 * 3]   = tmp0;
+                src_8[i + s5 * 3 + 1] = tmp1;
+                src_8[i + s5 * 3 + 2] = tmp2;
             }
         }
         case 4: {
             int32_t *src_32 = (int32_t *)src;
             int32_t tmp;
-            REORDER_SELF_SWAP_3_3(src_32,tmp,samples,6,s0,s1,s2,s3,s4,s5);
+            REORDER_SELF_SWAP_3_3(src_32, tmp, samples, 6, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 8: {
             int64_t *src_64 = (int64_t *)src;
             int64_t tmp;
-            REORDER_SELF_SWAP_3_3(src_64,tmp,samples,6,s0,s1,s2,s3,s4,s5);
+            REORDER_SELF_SWAP_3_3(src_64, tmp, samples, 6, s0, s1, s2, s3, s4, s5);
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -945,59 +945,59 @@ static int reorder_self_2_4(void *src, unsigned int samples,
         case 1: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp;
-            REORDER_SELF_SWAP_2_4(src_8,tmp,samples,6,s0,s1,s2,s3,s4,s5);
+            REORDER_SELF_SWAP_2_4(src_8, tmp, samples, 6, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 2: {
             int16_t *src_16 = (int16_t *)src;
             int16_t tmp;
-            REORDER_SELF_SWAP_2_4(src_16,tmp,samples,6,s0,s1,s2,s3,s4,s5);
+            REORDER_SELF_SWAP_2_4(src_16, tmp, samples, 6, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 3: {
             int8_t *src_8 = (int8_t *)src;
             int8_t tmp0, tmp1, tmp2;
             for (i = 0; i < samples; i += 18) {
-                tmp0 = src_8[i+s0*3];
-                tmp1 = src_8[i+s0*3+1];
-                tmp2 = src_8[i+s0*3+2];
-                src_8[i+s0*3]   = src_8[i+s1*3];
-                src_8[i+s0*3+1] = src_8[i+s1*3+1];
-                src_8[i+s0*3+2] = src_8[i+s1*3+2];
-                src_8[i+s1*3]   = tmp0;
-                src_8[i+s1*3+1] = tmp1;
-                src_8[i+s1*3+2] = tmp2;
-                tmp0 = src_8[i+s2*3];
-                tmp1 = src_8[i+s2*3+1];
-                tmp2 = src_8[i+s2*3+2];
-                src_8[i+s2*3]   = src_8[i+s3*3];
-                src_8[i+s2*3+1] = src_8[i+s3*3+1];
-                src_8[i+s2*3+2] = src_8[i+s3*3+2];
-                src_8[i+s3*3]   = src_8[i+s4*3];
-                src_8[i+s3*3+1] = src_8[i+s4*3+1];
-                src_8[i+s3*3+2] = src_8[i+s4*3+2];
-                src_8[i+s4*3]   = src_8[i+s5*3];
-                src_8[i+s4*3+1] = src_8[i+s5*3+1];
-                src_8[i+s4*3+2] = src_8[i+s5*3+2];
-                src_8[i+s5*3]   = tmp0;
-                src_8[i+s5*3+1] = tmp1;
-                src_8[i+s5*3+2] = tmp2;
+                tmp0 = src_8[i + s0 * 3];
+                tmp1 = src_8[i + s0 * 3 + 1];
+                tmp2 = src_8[i + s0 * 3 + 2];
+                src_8[i + s0 * 3]   = src_8[i + s1 * 3];
+                src_8[i + s0 * 3 + 1] = src_8[i + s1 * 3 + 1];
+                src_8[i + s0 * 3 + 2] = src_8[i + s1 * 3 + 2];
+                src_8[i + s1 * 3]   = tmp0;
+                src_8[i + s1 * 3 + 1] = tmp1;
+                src_8[i + s1 * 3 + 2] = tmp2;
+                tmp0 = src_8[i + s2 * 3];
+                tmp1 = src_8[i + s2 * 3 + 1];
+                tmp2 = src_8[i + s2 * 3 + 2];
+                src_8[i + s2 * 3]   = src_8[i + s3 * 3];
+                src_8[i + s2 * 3 + 1] = src_8[i + s3 * 3 + 1];
+                src_8[i + s2 * 3 + 2] = src_8[i + s3 * 3 + 2];
+                src_8[i + s3 * 3]   = src_8[i + s4 * 3];
+                src_8[i + s3 * 3 + 1] = src_8[i + s4 * 3 + 1];
+                src_8[i + s3 * 3 + 2] = src_8[i + s4 * 3 + 2];
+                src_8[i + s4 * 3]   = src_8[i + s5 * 3];
+                src_8[i + s4 * 3 + 1] = src_8[i + s5 * 3 + 1];
+                src_8[i + s4 * 3 + 2] = src_8[i + s5 * 3 + 2];
+                src_8[i + s5 * 3]   = tmp0;
+                src_8[i + s5 * 3 + 1] = tmp1;
+                src_8[i + s5 * 3 + 2] = tmp2;
             }
         }
         case 4: {
             int32_t *src_32 = (int32_t *)src;
             int32_t tmp;
-            REORDER_SELF_SWAP_2_4(src_32,tmp,samples,6,s0,s1,s2,s3,s4,s5);
+            REORDER_SELF_SWAP_2_4(src_32, tmp, samples, 6, s0, s1, s2, s3, s4, s5);
             break;
         }
         case 8: {
             int64_t *src_64 = (int64_t *)src;
             int64_t tmp;
-            REORDER_SELF_SWAP_2_4(src_64,tmp,samples,6,s0,s1,s2,s3,s4,s5);
+            REORDER_SELF_SWAP_2_4(src_64, tmp, samples, 6, s0, s1, s2, s3, s4, s5);
             break;
         }
         default:
-            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
+            DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"), samplesize);
             return 0;
     }
     return 1;
@@ -1010,14 +1010,14 @@ void reorder_channel(void *src,
                      int samplesize)
 {
     int16_t *src_16 = NULL;
-    if (dest_layout==src_layout) {
+    if (dest_layout == src_layout) {
         return;
     }
-    if (!AF_IS_SAME_CH_NUM(dest_layout,src_layout)) {
-        DPRINTF(_l("[reorder_channel] different channel count between current and target: %x, %x"),AF_GET_CH_NUM_WITH_LFE(src_layout),AF_GET_CH_NUM_WITH_LFE(dest_layout));
+    if (!AF_IS_SAME_CH_NUM(dest_layout, src_layout)) {
+        DPRINTF(_l("[reorder_channel] different channel count between current and target: %x, %x"), AF_GET_CH_NUM_WITH_LFE(src_layout), AF_GET_CH_NUM_WITH_LFE(dest_layout));
         return;
     }
-    switch ((src_layout<<16)|dest_layout) {
+    switch ((src_layout << 16) | dest_layout) {
             // AF_CHANNEL_LAYOUT_5_0_A   L R C Ls Rs
             // AF_CHANNEL_LAYOUT_5_0_B   L R Ls Rs C
             // AF_CHANNEL_LAYOUT_5_0_C   L C R Ls Rs
@@ -1065,7 +1065,7 @@ void reorder_channel(void *src,
             // AF_CHANNEL_LAYOUT_5_1_E   LFE L C R Ls Rs
         case AF_CHANNEL_LAYOUT_5_1_A << 16 | AF_CHANNEL_LAYOUT_5_1_B:
             if (samplesize != 3) {
-                reorder_self_2(src, samples/2, samplesize*2, 3, 1, 2);
+                reorder_self_2(src, samples / 2, samplesize * 2, 3, 1, 2);
             } else {
                 reorder_self_4_step_2(src, samples, samplesize, 6, 2, 3, 4, 5);
             }
@@ -1078,7 +1078,7 @@ void reorder_channel(void *src,
             break;
         case AF_CHANNEL_LAYOUT_5_1_B << 16 | AF_CHANNEL_LAYOUT_5_1_A:
             if (samplesize != 3) {
-                reorder_self_2(src, samples/2, samplesize*2, 3, 1, 2);
+                reorder_self_2(src, samples / 2, samplesize * 2, 3, 1, 2);
             } else {
                 reorder_self_4_step_2(src, samples, samplesize, 6, 2, 3, 4, 5);
             }
@@ -1123,7 +1123,7 @@ void reorder_channel(void *src,
             reorder_self_3(src, samples, samplesize, 8, 7, 6, 3);
             break;
         default:
-            DPRINTF(_l("[reorder_channel] unsupported from %x to %x, %d * %d"),src_layout, dest_layout, samples, samplesize);
+            DPRINTF(_l("[reorder_channel] unsupported from %x to %x, %d * %d"), src_layout, dest_layout, samples, samplesize);
     }
 }
 
@@ -1132,12 +1132,12 @@ void reorder_channel(void *src,
 
 static void test_copy(int channels)
 {
-    int samples = 12*1024*1024;
+    int samples = 12 * 1024 * 1024;
     int samplesize = 2;
     int i;
-    unsigned char *bufin = av_malloc((samples+100)*samplesize);
-    unsigned char *bufout = av_malloc((samples+100)*samplesize);
-    memset(bufin, 0xFF, samples*samplesize);
+    unsigned char *bufin = av_malloc((samples + 100) * samplesize);
+    unsigned char *bufout = av_malloc((samples + 100) * samplesize);
+    memset(bufin, 0xFF, samples * samplesize);
     for (i = 0; i < 100; ++i)
         reorder_channel_copy(bufin, AF_CHANNEL_LAYOUT_5_1_A,
                              bufout, AF_CHANNEL_LAYOUT_5_1_B,

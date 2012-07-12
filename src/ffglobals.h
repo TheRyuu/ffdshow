@@ -107,7 +107,7 @@ extern "C" LONG  __cdecl _InterlockedCompareExchange(LONG volatile *Dest, LONG E
 #define STRINGIFY(s) TOSTRING(s)
 #define TOSTRING(s) #s
 
-struct H264_SPS{
+struct H264_SPS {
     int profile_idc;
     int level_idc;
     int chroma_format_idc;
@@ -168,77 +168,77 @@ struct H264_SPS{
 
 typedef std::vector<HWND> THWNDs;
 struct Tstrptrs : std::vector<const char_t*> {};
-struct Tstrpart : std::pair<const wchar_t*,size_t> {
-    Tstrpart(const wchar_t *p,size_t len):std::pair<const wchar_t*,size_t>(p,len) {}
-    Tstrpart(const wchar_t *p):std::pair<const wchar_t*,size_t>(p,strlen(p)) {}
+struct Tstrpart : std::pair<const wchar_t*, size_t> {
+    Tstrpart(const wchar_t *p, size_t len): std::pair<const wchar_t*, size_t>(p, len) {}
+    Tstrpart(const wchar_t *p): std::pair<const wchar_t*, size_t>(p, strlen(p)) {}
 };
 typedef std::vector<int> ints;
 
-void* memsetd(void *dest,uint32_t c,size_t bytes);
-char_t* strncatf(char_t *dst,size_t dstsize,const char_t *fmt,...);
-char_t* strncpyf(char_t *dst,size_t dstsize,const char_t *fmt,...);
-template<class tchar,class TlistElem> void strtok(const tchar *s,const tchar *delim,std::vector<TlistElem> &list,bool add_empty=false,size_t max_parts=std::numeric_limits<size_t>::max());
-template<class tchar> void strtok(const tchar *s,const tchar *delim,ints &list,bool add_empty=false,size_t max_parts=std::numeric_limits<size_t>::max());
-void mergetok(char_t *dst,size_t dstlen,const char_t *delim,const strings &list);
-template<class char_t> const char_t* stristr(const char_t *haystack,const char_t *needle);
-template<class char_t> const char_t* strnstr(const char_t *haystack,size_t n,const char_t *needle);
-template<class char_t> const char_t* strnistr(const char_t *haystack,size_t n,const char_t *needle);
-template<class char_t> const char_t* strnchr(const char_t *s,size_t n,int c);
-template<class char_t> char_t* strrmchar(char_t *s,int c);
-template<class char_t> const void* memnstr(const void *haystack,size_t n,const char_t *needle);
-bool dlgGetDir(HWND owner,char_t *dir,const char_t *capt);
-bool dlgGetFile(bool save,HWND owner,const char_t *capt,const char_t *filter,const char_t *defext,char_t *flnm,const char_t *initdir,DWORD flags,DWORD *filterIndex=NULL);
-bool dlgOpenFiles(HWND owner,const char_t *capt,const char_t *filter,const char_t *defext,strings &files,const char_t *initdir,DWORD flags);
-void findFiles(const char_t *mask,strings &list,bool fullpaths=true);
-bool fileexists(const char_t *flnm),directoryexists(const char_t *dir);
-inline bool operator !=(const FILETIME &t1,const FILETIME &t2)
+void* memsetd(void *dest, uint32_t c, size_t bytes);
+char_t* strncatf(char_t *dst, size_t dstsize, const char_t *fmt, ...);
+char_t* strncpyf(char_t *dst, size_t dstsize, const char_t *fmt, ...);
+template<class tchar, class TlistElem> void strtok(const tchar *s, const tchar *delim, std::vector<TlistElem> &list, bool add_empty = false, size_t max_parts = std::numeric_limits<size_t>::max());
+template<class tchar> void strtok(const tchar *s, const tchar *delim, ints &list, bool add_empty = false, size_t max_parts = std::numeric_limits<size_t>::max());
+void mergetok(char_t *dst, size_t dstlen, const char_t *delim, const strings &list);
+template<class char_t> const char_t* stristr(const char_t *haystack, const char_t *needle);
+template<class char_t> const char_t* strnstr(const char_t *haystack, size_t n, const char_t *needle);
+template<class char_t> const char_t* strnistr(const char_t *haystack, size_t n, const char_t *needle);
+template<class char_t> const char_t* strnchr(const char_t *s, size_t n, int c);
+template<class char_t> char_t* strrmchar(char_t *s, int c);
+template<class char_t> const void* memnstr(const void *haystack, size_t n, const char_t *needle);
+bool dlgGetDir(HWND owner, char_t *dir, const char_t *capt);
+bool dlgGetFile(bool save, HWND owner, const char_t *capt, const char_t *filter, const char_t *defext, char_t *flnm, const char_t *initdir, DWORD flags, DWORD *filterIndex = NULL);
+bool dlgOpenFiles(HWND owner, const char_t *capt, const char_t *filter, const char_t *defext, strings &files, const char_t *initdir, DWORD flags);
+void findFiles(const char_t *mask, strings &list, bool fullpaths = true);
+bool fileexists(const char_t *flnm), directoryexists(const char_t *dir);
+inline bool operator !=(const FILETIME &t1, const FILETIME &t2)
 {
-    return t1.dwHighDateTime!=t2.dwHighDateTime || t1.dwLowDateTime!=t2.dwLowDateTime;
+    return t1.dwHighDateTime != t2.dwHighDateTime || t1.dwLowDateTime != t2.dwLowDateTime;
 }
 FILETIME fileLastWriteTime(const char_t *flnm);
-void extractfilepath(const char_t *flnm,char_t *path);
-void extractfilepath(const char_t *flnm,ffstring &path);
-void extractfilename(const char_t *flnm,char_t *nameext);
-void extractfilename(const char_t *flnm,ffstring &nameext);
-void extractfilenameWOext(const char_t *flnm,char_t *name);
-void extractfilenameWOext(const char_t *flnm,ffstring &name);
-void extractfileext (const char_t *flnm,char_t *ext); //without the .
-void extractfileext(const char_t *flnm,ffstring &ext);
+void extractfilepath(const char_t *flnm, char_t *path);
+void extractfilepath(const char_t *flnm, ffstring &path);
+void extractfilename(const char_t *flnm, char_t *nameext);
+void extractfilename(const char_t *flnm, ffstring &nameext);
+void extractfilenameWOext(const char_t *flnm, char_t *name);
+void extractfilenameWOext(const char_t *flnm, ffstring &name);
+void extractfileext(const char_t *flnm, char_t *ext); //without the .
+void extractfileext(const char_t *flnm, ffstring &ext);
 void changepathext(const char_t *flnm, const char_t *ext, ffstring &path);
-int nCopyAnsiToWideChar(WCHAR *pWCStr,PCTSTR pAnsiIn,int cchAnsi=0);
-char *unicode16toAnsi(const WCHAR *data16,int data16len=-1,char *data8=NULL);
-char *utf8toAnsi(const char *data,int datalen=-1,char *data8=NULL);
-wchar_t *utf8toUnicode(const char *data,int datalen,wchar_t *data16=NULL);
+int nCopyAnsiToWideChar(WCHAR *pWCStr, PCTSTR pAnsiIn, int cchAnsi = 0);
+char *unicode16toAnsi(const WCHAR *data16, int data16len = -1, char *data8 = NULL);
+char *utf8toAnsi(const char *data, int datalen = -1, char *data8 = NULL);
+wchar_t *utf8toUnicode(const char *data, int datalen, wchar_t *data16 = NULL);
 unsigned int ff_sqrt(unsigned int a);
 int av_log2(unsigned int v);
 int64_t lavc_gcd(int64_t a, int64_t b);
 int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t max);
-void saveFrame(unsigned int num,const unsigned char *buf,size_t len);
+void saveFrame(unsigned int num, const unsigned char *buf, size_t len);
 char_t *readTextFile(const char_t *filename);
 struct TffPictBase;
-bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,TffPictBase &pict,bool *isH264);
-bool decodeMPEG4pictureHeader(const unsigned char *hdr,size_t len,TffPictBase &pict);
-bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_SPS* sps = NULL);
-void getChildWindows(HWND h,THWNDs &lst);
+bool decodeMPEGsequenceHeader(bool mpeg2, const unsigned char *hdr, size_t len, TffPictBase &pict, bool *isH264);
+bool decodeMPEG4pictureHeader(const unsigned char *hdr, size_t len, TffPictBase &pict);
+bool decodeH264SPS(const unsigned char *hdr, size_t len, TffPictBase &pict, H264_SPS* sps = NULL);
+void getChildWindows(HWND h, THWNDs &lst);
 void randomize(void);
 int countbits(uint32_t x);
 enum {
-    FNM_NOESCAPE=0x01,
-    FNM_PATHNAME=0x02,
-    FNM_NOCASE  =0x08
+    FNM_NOESCAPE = 0x01,
+    FNM_PATHNAME = 0x02,
+    FNM_NOCASE   = 0x08
 };
-bool fnmatch(const char_t *pattern, const char_t *string, int flags=FNM_NOCASE|FNM_NOESCAPE);
-void setThreadName(DWORD dwThreadID,LPCSTR szThreadName);
-char_t *guid2str(const GUID &riid,char_t *dest,int bufsize);
+bool fnmatch(const char_t *pattern, const char_t *string, int flags = FNM_NOCASE | FNM_NOESCAPE);
+void setThreadName(DWORD dwThreadID, LPCSTR szThreadName);
+char_t *guid2str(const GUID &riid, char_t *dest, int bufsize);
 inline FOURCC FCCupper(FOURCC fourCC)
 {
-    return toupper(fourCC&0xFF)+(toupper((fourCC>>8)&0xFF)<<8)+(toupper((fourCC>>16)&0xFF)<<16)+(toupper((fourCC>>24)&0xFF)<<24);
+    return toupper(fourCC & 0xFF) + (toupper((fourCC >> 8) & 0xFF) << 8) + (toupper((fourCC >> 16) & 0xFF) << 16) + (toupper((fourCC >> 24) & 0xFF) << 24);
 }
-const char_t *fourcc2str(FOURCC fcc,char_t *name,size_t namelength);
-FOURCC hdr2fourcc(const BITMAPINFOHEADER *hdr,const GUID *subtype);
+const char_t *fourcc2str(FOURCC fcc, char_t *name, size_t namelength);
+FOURCC hdr2fourcc(const BITMAPINFOHEADER *hdr, const GUID *subtype);
 void fixMPEGinAVI(FOURCC &fcc);
-HWND createInvisibleWindow(HINSTANCE hi,const char_t *classname,const char_t *windowname,WNDPROC wndproc,void* lparam,ATOM *atom);
-void getCLSIDname(const CLSID &clsid,char_t *buf,size_t buflen);
+HWND createInvisibleWindow(HINSTANCE hi, const char_t *classname, const char_t *windowname, WNDPROC wndproc, void* lparam, ATOM *atom);
+void getCLSIDname(const CLSID &clsid, char_t *buf, size_t buflen);
 void *getAlignedPtr(void *ptr);
 
 // if T is char, ff_abs(0x80) returns -128. Users have to cast the result to unsinged char.
@@ -250,83 +250,83 @@ void *getAlignedPtr(void *ptr);
 
 inline unsigned char ff_abs(char x)
 {
-    return (unsigned char)((x<0) ? -x : x);
+    return (unsigned char)((x < 0) ? -x : x);
 }
 
 inline unsigned short ff_abs(short x)
 {
-    return (unsigned short)((x<0) ? -x : x);
+    return (unsigned short)((x < 0) ? -x : x);
 }
 
 inline unsigned int ff_abs(int x)
 {
-    return (unsigned int)((x<0) ? -x : x);
+    return (unsigned int)((x < 0) ? -x : x);
 }
 
 inline unsigned long ff_abs(long x)
 {
-    return (unsigned long)((x<0) ? -x : x);
+    return (unsigned long)((x < 0) ? -x : x);
 }
 
 inline uint64_t ff_abs(int64_t x)
 {
-    return uint64_t((x<0) ? -x : x);
+    return uint64_t((x < 0) ? -x : x);
 }
 
 inline float ff_abs(float x)
 {
-    return (x<0) ? -x : x;
+    return (x < 0) ? -x : x;
 }
 
 inline double ff_abs(double x)
 {
-    return (x<0) ? -x : x;
+    return (x < 0) ? -x : x;
 }
 
 template<class T> inline T odd2even(T x)
 {
-    return x&1 ?
+    return x & 1 ?
            x + 1 :
            x;
 }
 
 inline int ff_round(double x)
 {
-    return int(x+(x>0.0?0.5:-0.5));
+    return int(x + (x > 0.0 ? 0.5 : -0.5));
 }
 inline int ff_round(float x)
 {
-    return int(x+(x>0.0f?0.5f:-0.5f));
+    return int(x + (x > 0.0f ? 0.5f : -0.5f));
 }
 
-template<class T> inline T roundRshift(const T &x,int s)
+template<class T> inline T roundRshift(const T &x, int s)
 {
-    return (x+(1<<s)/2)>>s;
+    return (x + (1 << s) / 2) >> s;
 }
 template<class T> inline T roundDiv(const T &a, const T &b)
 {
-    return (a>0?a+(b>>1):a-(b>>1))/b;
+    return (a > 0 ? a + (b >> 1) : a - (b >> 1)) / b;
 }
 
 template<class T> inline T sqr(const T &a)
 {
-    return a*a;
+    return a * a;
 }
 
-template <class Tin,class Tout> inline Tout mapRange(Tin in,const std::pair<Tin,Tin> &inrange,const std::pair<Tout,Tout> &outrange)
+template <class Tin, class Tout> inline Tout mapRange(Tin in, const std::pair<Tin, Tin> &inrange, const std::pair<Tout, Tout> &outrange)
 {
-    if (inrange.first!=inrange.second && outrange.first!=outrange.second) {
-        return Tout((outrange.second-outrange.first)*(in-inrange.first)/(inrange.second-inrange.first)+outrange.first);
+    if (inrange.first != inrange.second && outrange.first != outrange.second) {
+        return Tout((outrange.second - outrange.first) * (in - inrange.first) / (inrange.second - inrange.first) + outrange.first);
     } else {
         return Tout(0);
     }
 }
 
-template<class T> inline const T& limit(const T& val,const T& min,const T& max)
+template<class T> inline const T& limit(const T& val, const T& min, const T& max)
 {
-    if (val<min) {
+    if (val < min) {
         return min;
-    } else if (val>max) {
+    } else if (val > max) {
         return max;
     } else {
         return val;
@@ -334,28 +334,28 @@ template<class T> inline const T& limit(const T& val,const T& min,const T& max)
 }
 static inline uint8_t limit_uint8(int a)
 {
-    if (a&(~255)) {
-        return uint8_t((-a)>>31);
+    if (a & (~255)) {
+        return uint8_t((-a) >> 31);
     } else {
         return uint8_t(a);
     }
 }
 
-template<class T> inline bool isIn(const T& x,const T& min,const T& max)
+template<class T> inline bool isIn(const T& x, const T& min, const T& max)
 {
-    return (min<=x && x<=max);
+    return (min <= x && x <= max);
 }
 
-template<class T> inline bool isIn(const std::vector<T> &v,const T& a)
+template<class T> inline bool isIn(const std::vector<T> &v, const T& a)
 {
-    return std::find(v.begin(),v.end(),a)!=v.end();
+    return std::find(v.begin(), v.end(), a) != v.end();
 }
 
 template<class T> inline char sign(const T& x)
 {
-    if (x<0) {
+    if (x < 0) {
         return -1;
-    } else if (x>0) {
+    } else if (x > 0) {
         return 1;
     } else {
         return 0;
@@ -364,37 +364,37 @@ template<class T> inline char sign(const T& x)
 
 template<class T> inline bool odd(T x)
 {
-    return x&1;
+    return x & 1;
 }
 template<class T> inline bool even(T x)
 {
-    return (x&1)==0;
+    return (x & 1) == 0;
 }
 
 static inline double value2db(double value)
 {
-    return value>0?log10(value)*20.0:0.0;
+    return value > 0 ? log10(value) * 20.0 : 0.0;
 }
 static inline double db2value(double db)
 {
-    return pow(10.0,db/20.0);
+    return pow(10.0, db / 20.0);
 }
-static inline double db2value(double db,int mul)
+static inline double db2value(double db, int mul)
 {
-    return pow(10.0,db/(mul*20.0));
+    return pow(10.0, db / (mul * 20.0));
 }
 
 static inline float value2db(float value)
 {
-    return value>0?log10f(value)*20.0f:0.0f;
+    return value > 0 ? log10f(value) * 20.0f : 0.0f;
 }
 static inline float db2value(float db)
 {
-    return powf(10.0f,db/20.0f);
+    return powf(10.0f, db / 20.0f);
 }
-static inline float db2value(float db,int mul)
+static inline float db2value(float db, int mul)
 {
-    return powf(10.0f,db/(mul*20.0f));
+    return powf(10.0f, db / (mul * 20.0f));
 }
 static inline int ffalign(int x, int align)
 {
@@ -405,7 +405,8 @@ static inline int ffalign(unsigned int x, int align)
     return (x + align - 1) & ~(align - 1);
 }
 
-class REFERENCE_TIME_to_hhmmssmmm {
+class REFERENCE_TIME_to_hhmmssmmm
+{
 private:
     wchar_t str[16];
 public:
@@ -418,63 +419,63 @@ public:
 template<typename T> inline const T& bswap(T& var)
 {
     BYTE* s = (BYTE*)&var;
-    for(BYTE* d = s + sizeof(var)-1; s < d; s++, d--) {
+    for (BYTE* d = s + sizeof(var) - 1; s < d; s++, d--) {
         *s ^= *d, *d ^= *s, *s ^= *d;
     }
     return var;
 }
 
 #if defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300)
-template<typename T,typename U> struct IsSameType {
-    enum {value=false};
+template<typename T, typename U> struct IsSameType {
+    enum {value = false};
 };
-template<typename T> struct IsSameType<T,T> {
-    enum {value=true};
+template<typename T> struct IsSameType<T, T> {
+    enum {value = true};
 };
 
-template<bool is,typename T,typename U> struct selectType {
+template<bool is, typename T, typename U> struct selectType {
     typedef T result;
 };
-template<typename T,typename U> struct selectType<false,T,U> {
+template<typename T, typename U> struct selectType<false, T, U> {
     typedef U result;
 };
 
 template<int v> struct intToVal {
-    static const int value=v;
+    static const int value = v;
 };
 #endif
 
-void dumpBytes(const char_t *flnm,const unsigned char *buf,size_t len);
+void dumpBytes(const char_t *flnm, const unsigned char *buf, size_t len);
 
 inline double psnr(double d)
 {
-    if (d==0) {
+    if (d == 0) {
         return -1;
     }
-    return -10.0*log(d)/log(10.0);
+    return -10.0 * log(d) / log(10.0);
 }
 
 template<class Tptr> inline Tptr* lpwAlign(Tptr* pIn)
 {
     DWORD_PTR ul;
     ul = (DWORD_PTR) pIn;
-    ul +=3;
-    ul >>=2;
-    ul <<=2;
+    ul += 3;
+    ul >>= 2;
+    ul <<= 2;
     return (Tptr*)ul;
 }
 
-template<template <class> class alloc> struct TbyteBufferBase :public std::vector<unsigned char,alloc<unsigned char> > {
+template<template <class> class alloc> struct TbyteBufferBase : public std::vector<unsigned char, alloc<unsigned char> > {
     TbyteBufferBase(void) {}
-    TbyteBufferBase(size_t Isize):std::vector<typename TbyteBufferBase<alloc>::value_type,typename TbyteBufferBase<alloc>::allocator_type>(Isize) {}
-    TbyteBufferBase(const void *ptr,size_t len) {
-        append(ptr,len);
+    TbyteBufferBase(size_t Isize): std::vector<typename TbyteBufferBase<alloc>::value_type, typename TbyteBufferBase<alloc>::allocator_type>(Isize) {}
+    TbyteBufferBase(const void *ptr, size_t len) {
+        append(ptr, len);
     }
     template<class Ta> void append(const Ta &b) {
-        insert(this->end(),(const unsigned char*)&b,(const unsigned char*)&b+sizeof(Ta));
+        insert(this->end(), (const unsigned char*)&b, (const unsigned char*)&b + sizeof(Ta));
     }
-    void append(const void *ptr,size_t len) {
-        insert(this->end(),(const unsigned char*)ptr,(const unsigned char*)ptr+len);
+    void append(const void *ptr, size_t len) {
+        insert(this->end(), (const unsigned char*)ptr, (const unsigned char*)ptr + len);
     }
 };
 typedef TbyteBufferBase<std::allocator> TbyteBuffer;
@@ -486,8 +487,8 @@ private:
     void *buf;
     size_t buflen;
 public:
-    Tbuffer(void):buf(NULL),buflen(0),free(true) {}
-    Tbuffer(size_t Ibuflen):buf(NULL),buflen(0),free(true) {
+    Tbuffer(void): buf(NULL), buflen(0), free(true) {}
+    Tbuffer(size_t Ibuflen): buf(NULL), buflen(0), free(true) {
         alloc(Ibuflen);
     }
     ~Tbuffer() {
@@ -500,44 +501,44 @@ public:
         if (buf) {
             aligned_free(buf);
         }
-        buf=NULL;
-        buflen=0;
+        buf = NULL;
+        buflen = 0;
     }
     size_t size(void) const {
         return buflen;
     }
     void* alloc(size_t Ibuflen) {
-        if (buflen<Ibuflen) {
-            buf=aligned_realloc(buf,buflen=Ibuflen);
+        if (buflen < Ibuflen) {
+            buf = aligned_realloc(buf, buflen = Ibuflen);
         }
         return buf;
     }
-    void* allocZ(size_t Ibuflen,int z) { // clear memory with z
-        if (buflen<Ibuflen) {
-            buf=aligned_realloc(buf,buflen=Ibuflen);
-            memset(buf,z,Ibuflen);
+    void* allocZ(size_t Ibuflen, int z) { // clear memory with z
+        if (buflen < Ibuflen) {
+            buf = aligned_realloc(buf, buflen = Ibuflen);
+            memset(buf, z, Ibuflen);
         }
         return buf;
     }
     void* resize(size_t Ibuflen) {
-        if (buflen<Ibuflen) {
-            void *temp=aligned_realloc(NULL,Ibuflen);
+        if (buflen < Ibuflen) {
+            void *temp = aligned_realloc(NULL, Ibuflen);
             if (temp && buf && buflen) {
-                memcpy(temp,buf,buflen);
+                memcpy(temp, buf, buflen);
             }
             if (buf) {
                 aligned_free(buf);
             }
-            buf=temp;
-            buflen=Ibuflen;
+            buf = temp;
+            buflen = Ibuflen;
         }
         return buf;
     }
     void* resize2(size_t Ibuflen) {
-        if (buflen<Ibuflen) {
-            void *temp=aligned_realloc(NULL, Ibuflen * 2);
+        if (buflen < Ibuflen) {
+            void *temp = aligned_realloc(NULL, Ibuflen * 2);
             if (temp && buf && buflen) {
-                memcpy(temp,buf,buflen);
+                memcpy(temp, buf, buflen);
             }
             if (buf) {
                 aligned_free(buf);
@@ -552,11 +553,11 @@ public:
     }
 };
 
-template<class T,class alloc=std::allocator<T> > struct vectorEx :public std::vector<T,alloc> {
+template<class T, class alloc = std::allocator<T> > struct vectorEx : public std::vector<T, alloc> {
 private:
-    void add(const T &t1,va_list marker) {
+    void add(const T &t1, va_list marker) {
         push_back(t1);
-        while (T t=va_arg(marker,T)) {
+        while (T t = va_arg(marker, T)) {
             push_back(t);
         }
     }
@@ -565,37 +566,37 @@ public:
     vectorEx(T t) {
         push_back(t);
     }
-    vectorEx(T t1,T t2,...) {
+    vectorEx(T t1, T t2, ...) {
         if (!t1) {
             return;
         }
         push_back(t1);
         va_list marker;
-        va_start(marker,t2);
+        va_start(marker, t2);
         if (t2) {
-            add(t2,marker);
+            add(t2, marker);
         }
         va_end(marker);
     }
     void add(T t) {
         push_back(t);
     }
-    void add(T t1,T t2,...) {
+    void add(T t1, T t2, ...) {
         push_back(t1);
         va_list marker;
-        va_start(marker,t2);
+        va_start(marker, t2);
         if (t2) {
-            add(t2,marker);
+            add(t2, marker);
         }
         va_end(marker);
     }
-    void addEnd(T tend,T t1,T t2,...) {
+    void addEnd(T tend, T t1, T t2, ...) {
         push_back(t1);
         push_back(t2);
         va_list marker;
-        va_start(marker,t2);
+        va_start(marker, t2);
         T t;
-        while ((t=va_arg(marker,T))!=tend) {
+        while ((t = va_arg(marker, T)) != tend) {
             push_back(t);
         }
         va_end(marker);
@@ -603,76 +604,76 @@ public:
 };
 
 struct YUVcolor {
-    uint32_t r,g,b;
+    uint32_t r, g, b;
     unsigned char Y;
-    char U,V;
+    char U, V;
     YUVcolor(void) {
-        Y=U=V=0;
-        r=g=b=0;
+        Y = U = V = 0;
+        r = g = b = 0;
     }
     YUVcolor(COLORREF rgb);
 };
 
 
 struct YUVcolorA {
-    uint32_t r,g,b;
-    uint32_t Y,U,V,A;
+    uint32_t r, g, b;
+    uint32_t Y, U, V, A;
 
     COLORREF m_rgb;   // duplicated data, just for convenience 0x00bbggrr
     uint32_t m_aaa64; // duplicated data, just for convenience. DVD's contrast 0-15, this: 0-64. 0x00404040, at max
     YUVcolorA();
-    YUVcolorA(YUVcolor yuv,unsigned int alpha=256);
-    YUVcolorA(COLORREF rgb,unsigned int alpha=256);
+    YUVcolorA(YUVcolor yuv, unsigned int alpha = 256);
+    YUVcolorA(COLORREF rgb, unsigned int alpha = 256);
     struct vobsubWeirdCsp_t {};
     YUVcolorA(COLORREF rgb, vobsubWeirdCsp_t);
     bool operator !=(const YUVcolorA &rt) const {
-        return !(r==rt.r && g==rt.g && b==rt.b && A==rt.A);
+        return !(r == rt.r && g == rt.g && b == rt.b && A == rt.A);
     }
     bool operator ==(const YUVcolorA &rt) const {
-        return (r==rt.r && g==rt.g && b==rt.b && A==rt.A);
+        return (r == rt.r && g == rt.g && b == rt.b && A == rt.A);
     }
     bool operator ==(const _AM_DVD_YUV &rt) const {
-        return (Y==rt.Y && U==rt.U && V==rt.V && A==rt.Reserved);
+        return (Y == rt.Y && U == rt.U && V == rt.V && A == rt.Reserved);
     }
     bool operator !=(const _AM_DVD_YUV &rt) const {
-        return !(Y==rt.Y && U==rt.U && V==rt.V && A==rt.Reserved);
+        return !(Y == rt.Y && U == rt.U && V == rt.V && A == rt.Reserved);
     }
     YUVcolorA& operator =(const _AM_DVD_YUV &rt);
     bool isGray() {
-        return (r==g && r==b);
+        return (r == g && r == b);
     }
     void setAlpha(uint32_t alpha);
 };
 
 enum {
-    rfReplaceAll=1,
-    rfIgnoreCase=2
+    rfReplaceAll = 1,
+    rfIgnoreCase = 2
 };
-template<class replstring,class ffstring> static inline replstring stringreplace0(const replstring &s0,const ffstring &oldstr,const ffstring &newstr,int flags)
+template<class replstring, class ffstring> static inline replstring stringreplace0(const replstring &s0, const ffstring &oldstr, const ffstring &newstr, int flags)
 {
-    replstring s=s0;
-    size_t pos=replstring::npos+1,oldstrsize=oldstr.size(),newstrsize=newstr.size();
+    replstring s = s0;
+    size_t pos = replstring::npos + 1, oldstrsize = oldstr.size(), newstrsize = newstr.size();
     for (;;) {
-        pos=s.find(oldstr,pos);
-        if (pos==replstring::npos) {
+        pos = s.find(oldstr, pos);
+        if (pos == replstring::npos) {
             break;
         }
-        s.replace(pos,oldstrsize,newstr);
-        if ((flags&rfReplaceAll)==0) {
+        s.replace(pos, oldstrsize, newstr);
+        if ((flags & rfReplaceAll) == 0) {
             break;
         }
-        pos+=newstrsize;
+        pos += newstrsize;
     }
     return s;
 }
 #if defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300)
-template<template<class char_t> class replstring> replstring<char> stringreplace(const replstring<char> &s0,const DwString<char> &oldstr,const DwString<char> &newstr,int flags=0)
+template<template<class char_t> class replstring> replstring<char> stringreplace(const replstring<char> &s0, const DwString<char> &oldstr, const DwString<char> &newstr, int flags = 0)
 {
-    return stringreplace0< replstring<char>,DwString<char> >(s0,oldstr,newstr,flags);
+    return stringreplace0< replstring<char>, DwString<char> >(s0, oldstr, newstr, flags);
 }
-template<template<class char_t> class replstring> replstring<wchar_t> stringreplace(const replstring<wchar_t> &s0,const DwString<wchar_t> &oldstr,const DwString<wchar_t> &newstr,int flags=0)
+template<template<class char_t> class replstring> replstring<wchar_t> stringreplace(const replstring<wchar_t> &s0, const DwString<wchar_t> &oldstr, const DwString<wchar_t> &newstr, int flags = 0)
 {
-    return stringreplace0< replstring<wchar_t>,DwString<wchar_t> >(s0,oldstr,newstr,flags);
+    return stringreplace0< replstring<wchar_t>, DwString<wchar_t> >(s0, oldstr, newstr, flags);
 }
 #endif
 
@@ -815,7 +816,7 @@ typedef struct tagNMLVGETINFOTIPW {
 // encoding
 struct ENC_MODE {
     enum {
-        UNKNOWN      =-1,
+        UNKNOWN      = -1,
         CBR          = 0,
         VBR_QUAL     = 1,
         VBR_QUANT    = 2,
@@ -826,43 +827,43 @@ extern const char_t *encQuantTypes[];
 
 struct Taspect {
     const char_t *caption;
-    float x,y;
+    float x, y;
 };
-extern const Taspect sampleAspects[],displayAspects[];
+extern const Taspect sampleAspects[], displayAspects[];
 
 struct FFSTATS {
     enum {
-        UNUSED=0,
-        WRITE=1,
-        READ=2,
-        RW=WRITE|READ
+        UNUSED = 0,
+        WRITE  = 1,
+        READ   = 2,
+        RW = WRITE | READ
     };
 };
 
 struct CREDITS_MODE {
     enum {
-        PERCENT=0,
-        QUANT  =1,
-        SIZE   =2
+        PERCENT = 0,
+        QUANT   = 1,
+        SIZE    = 2
     };
 };
 
 struct CREDITS_POS {
     enum {
-        NONE =0,
-        START=1,
-        END  =2
+        NONE  = 0,
+        START = 1,
+        END   = 2
     };
 };
 
 struct QUANT {
     enum {
-        H263   =0,
-        MPEG   =1,
-        MOD    =2,
-        MOD_NEW=3,
-        CUSTOM =4,
-        JVT    =5
+        H263    = 0,
+        MPEG    = 1,
+        MOD     = 2,
+        MOD_NEW = 3,
+        CUSTOM  = 4,
+        JVT     = 5
     };
 };
 
@@ -906,7 +907,7 @@ template <typename Lockable> class deferred_lock:
     Lockable *lockptr;
 public:
     deferred_lock(): lockptr(NULL) {}
-    void lock (Lockable *l) {
+    void lock(Lockable *l) {
         lockptr = l;
         l->lock();
     }
@@ -918,7 +919,7 @@ public:
 };
 
 struct defer_priority_set_t
-    {};
+{};
 
 class TthreadPriority
 {
@@ -968,7 +969,7 @@ struct Trt2str:
         rt -= m;
         rt /= 60;
         wchar_t buf[32];
-        _snwprintf_s(buf,countof(buf),_TRUNCATE,L"%02d:%02d:%02d %03d %04d",int(rt),m,s,ms,below_ms);
+        _snwprintf_s(buf, countof(buf), _TRUNCATE, L"%02d:%02d:%02d %03d %04d", int(rt), m, s, ms, below_ms);
         if (rt0 < 0) {
             ffstring::operator = (L"-");
         } else {

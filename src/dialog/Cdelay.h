@@ -3,10 +3,10 @@
 
 #include "TconfPageDecAudio.h"
 
-class TdelayPage :public TconfPageDecAudio
+class TdelayPage : public TconfPageDecAudio
 {
 public:
-    TdelayPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TdelayPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void cfg2dlg(void);
 };
 

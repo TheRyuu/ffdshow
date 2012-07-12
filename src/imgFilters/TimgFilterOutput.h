@@ -7,7 +7,7 @@ struct ToutputVideoSettings;
 struct Tlibavcodec;
 struct AVCodecContext;
 struct AVFrame;
-DECLARE_FILTER(TimgFilterOutput,public,TimgFilter)
+DECLARE_FILTER(TimgFilterOutput, public, TimgFilter)
 private:
 Tconvert *convert;
 Tlibavcodec *libavcodec;
@@ -16,19 +16,19 @@ AVFrame *frame;
 TffPict *dvpict;
 Tbuffer dvpictbuf;
 protected:
-int old_cspOptionsRgbInterlaceMode, old_highQualityRGB, old_outputLevelsMode, old_inputLevelsMode, old_IturBt,old_dithering;
+int old_cspOptionsRgbInterlaceMode, old_highQualityRGB, old_outputLevelsMode, old_inputLevelsMode, old_IturBt, old_dithering;
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK;
 }
 public:
-TimgFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterOutput(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual ~TimgFilterOutput();
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0)
 {
     return E_NOTIMPL;
 }
-HRESULT process(TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg); //S_FALSE = dv
+HRESULT process(TffPict &pict, uint64_t dstcsp, unsigned char *dst[4], int dstStride[4], LONG &dstSize, const ToutputVideoSettings *cfg); //S_FALSE = dv
 
 protected:
 class TvramBenchmark
@@ -43,7 +43,7 @@ private:
     REFERENCE_TIME time_on_convert_indirect[BENCHMARK_FRAMES];
     unsigned int frame_count;
     bool vram_indirect;
-    REFERENCE_TIME t1,t2;
+    REFERENCE_TIME t1, t2;
 public:
     void init(void);
     TvramBenchmark(TimgFilterOutput *Iparent);
@@ -57,15 +57,15 @@ public:
 } vramBenchmark;
 };
 
-DECLARE_FILTER(TimgFilterOutputConvert,public,TimgFilter)
+DECLARE_FILTER(TimgFilterOutputConvert, public, TimgFilter)
 protected:
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK;
 }
 public:
-TimgFilterOutputConvert(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent) {}
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+TimgFilterOutputConvert(IffdshowBase *Ideci, Tfilters *Iparent): TimgFilter(Ideci, Iparent) {}
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 #endif

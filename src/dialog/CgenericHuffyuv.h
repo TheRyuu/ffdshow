@@ -4,14 +4,14 @@
 #include "TconfPageEnc.h"
 #include "ffcodecs.h"
 
-class TgenericHuffyuvPage :public TconfPageEnc
+class TgenericHuffyuvPage : public TconfPageEnc
 {
 public:
     TgenericHuffyuvPage(TffdshowPageEnc *Iparent);
     virtual void init(void);
     virtual void cfg2dlg(void);
     virtual bool forCodec(int codecId) {
-        return codecId==CODEC_ID_FFVHUFF;
+        return codecId == CODEC_ID_FFVHUFF;
     }
     virtual bool enabled(void);
     virtual void translate(void);

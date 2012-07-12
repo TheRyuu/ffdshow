@@ -26,22 +26,22 @@
 #include "TDScalerSettings.h"
 
 //========================= Tdscaler_FLT ==========================
-Tdscaler_FLT::Tdscaler_FLT(const char_t *fltflnm,IffdshowBase *deci)
+Tdscaler_FLT::Tdscaler_FLT(const char_t *fltflnm, IffdshowBase *deci)
 {
-    hi=HINSTANCE(deci->getInstance2());
-    f=new Tdll(fltflnm,NULL);
-    f->loadFunction(GetFilterPluginInfo,"GetFilterPluginInfo");
+    hi = HINSTANCE(deci->getInstance2());
+    f = new Tdll(fltflnm, NULL);
+    f->loadFunction(GetFilterPluginInfo, "GetFilterPluginInfo");
     if (f->ok) {
-        fm=GetFilterPluginInfo(TDScalerSettings::dscalerCpu());
-        fm->hModule=f->hdll;
+        fm = GetFilterPluginInfo(TDScalerSettings::dscalerCpu());
+        fm->hModule = f->hdll;
         if (fm->pfnPluginStart) {
             fm->pfnPluginStart();
         }
-        fm->bActive=1;
-        settings=new TDScalerSettings(deci,fm->nSettings,fm->pSettings);
+        fm->bActive = 1;
+        settings = new TDScalerSettings(deci, fm->nSettings, fm->pSettings);
     } else {
-        fm=NULL;
-        settings=NULL;
+        fm = NULL;
+        settings = NULL;
     }
 }
 Tdscaler_FLT::~Tdscaler_FLT()
@@ -58,21 +58,21 @@ Tdscaler_FLT::~Tdscaler_FLT()
 }
 
 //============================== TimgFilterDScaler =========================
-TimgFilterDScalerFLT::TimgFilterDScalerFLT(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+TimgFilterDScalerFLT::TimgFilterDScalerFLT(IffdshowBase *Ideci, Tfilters *Iparent): TimgFilter(Ideci, Iparent)
 {
-    oldfltflnm[0]='\0';
-    oldfltcfg[0]='\0';
+    oldfltflnm[0] = '\0';
+    oldfltcfg[0] = '\0';
 
-    flt=NULL;
+    flt = NULL;
 
-    memset(&di,0,sizeof(di));
-    di.Version=DEINTERLACE_INFO_CURRENT_VERSION;
-    di.pMemcpy=memcpy;
+    memset(&di, 0, sizeof(di));
+    di.Version = DEINTERLACE_INFO_CURRENT_VERSION;
+    di.pMemcpy = memcpy;
 
-    di.CpuFeatureFlags=TDScalerSettings::dscalerCpu();
+    di.CpuFeatureFlags = TDScalerSettings::dscalerCpu();
 
-    for (int i=0; i<MAX_PICTURE_HISTORY; i++) {
-        di.PictureHistory[i]=NULL;
+    for (int i = 0; i < MAX_PICTURE_HISTORY; i++) {
+        di.PictureHistory[i] = NULL;
     }
 }
 TimgFilterDScalerFLT::~TimgFilterDScalerFLT()
@@ -84,11 +84,11 @@ TimgFilterDScalerFLT::~TimgFilterDScalerFLT()
 
 void TimgFilterDScalerFLT::done(void)
 {
-    for (int i=0; i<MAX_PICTURE_HISTORY; i++)
+    for (int i = 0; i < MAX_PICTURE_HISTORY; i++)
         if (di.PictureHistory[i]) {
             aligned_free(di.PictureHistory[i]->pData);
             delete di.PictureHistory[i];
-            di.PictureHistory[i]=NULL;
+            di.PictureHistory[i] = NULL;
         }
 }
 void TimgFilterDScalerFLT::onSizeChange(void)
@@ -96,65 +96,65 @@ void TimgFilterDScalerFLT::onSizeChange(void)
     done();
 }
 
-bool TimgFilterDScalerFLT::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
+bool TimgFilterDScalerFLT::is(const TffPictBase &pict, const TfilterSettingsVideo *cfg0)
 {
-    const TDScalerFilterSettings *cfg=(const TDScalerFilterSettings*)cfg0;
-    return super::is(pict,cfg) && cfg->fltflnm[0];
+    const TDScalerFilterSettings *cfg = (const TDScalerFilterSettings*)cfg0;
+    return super::is(pict, cfg) && cfg->fltflnm[0];
 }
 
-HRESULT TimgFilterDScalerFLT::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterDScalerFLT::process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0)
 {
-    const TDScalerFilterSettings *cfg=(const TDScalerFilterSettings*)cfg0;
-    if (cfg->fltflnm[0] && stricmp(oldfltflnm,cfg->fltflnm)!=0) {
+    const TDScalerFilterSettings *cfg = (const TDScalerFilterSettings*)cfg0;
+    if (cfg->fltflnm[0] && stricmp(oldfltflnm, cfg->fltflnm) != 0) {
         if (flt) {
             delete flt;
         }
         done();
         ff_strncpy(oldfltflnm, cfg->fltflnm, countof(oldfltflnm));
-        flt=new Tdscaler_FLT(oldfltflnm,deci);
+        flt = new Tdscaler_FLT(oldfltflnm, deci);
     }
     if (flt && flt->fm) {
-        if (strcmp(oldfltcfg,cfg->cfg)!=0) {
+        if (strcmp(oldfltcfg, cfg->cfg) != 0) {
             ff_strncpy(oldfltcfg, cfg->cfg, countof(oldfltcfg));
             flt->settings->str2cfg(oldfltcfg);
         }
 
-        init(pict,cfg->full,cfg->half);
+        init(pict, cfg->full, cfg->half);
         const unsigned char *srcYUY2;
-        getCur(FF_CSP_YUY2,pict,cfg->full,&srcYUY2,NULL,NULL,NULL);
-        if (di.PictureHistory[0]==NULL) {
-            for (int i=0; i<flt->fm->HistoryRequired; i++) {
-                di.PictureHistory[i]=new TPicture;
-                pictsize=stride1[0]*pictRect.dy;
-                di.PictureHistory[i]->pData=(unsigned char*)aligned_malloc(pictsize);
+        getCur(FF_CSP_YUY2, pict, cfg->full, &srcYUY2, NULL, NULL, NULL);
+        if (di.PictureHistory[0] == NULL) {
+            for (int i = 0; i < flt->fm->HistoryRequired; i++) {
+                di.PictureHistory[i] = new TPicture;
+                pictsize = stride1[0] * pictRect.dy;
+                di.PictureHistory[i]->pData = (unsigned char*)aligned_malloc(pictsize);
             }
-            di.SourceRect=pictRect;
-            di.OverlayPitch=(DWORD)stride1[0];
-            di.FrameWidth=dx1[0];
-            di.LineLength=di.FrameWidth*2;
-            di.FrameHeight=dy1[0];
-            di.FieldHeight=dy1[0];
-            di.DestRect=pictRect;
-            di.InputPitch=(long)stride1[0];
-            di.PictureHistory[0]->IsFirstInSeries=1;
+            di.SourceRect = pictRect;
+            di.OverlayPitch = (DWORD)stride1[0];
+            di.FrameWidth = dx1[0];
+            di.LineLength = di.FrameWidth * 2;
+            di.FrameHeight = dy1[0];
+            di.FieldHeight = dy1[0];
+            di.DestRect = pictRect;
+            di.InputPitch = (long)stride1[0];
+            di.PictureHistory[0]->IsFirstInSeries = 1;
         }
-        di.PictureHistory[0]->Flags=PICTURE_PROGRESSIVE;
-        TffPict::copy(di.PictureHistory[0]->pData,stride1[0],srcYUY2,stride1[0],dx1[0]*2,dy1[0]);
+        di.PictureHistory[0]->Flags = PICTURE_PROGRESSIVE;
+        TffPict::copy(di.PictureHistory[0]->pData, stride1[0], srcYUY2, stride1[0], dx1[0] * 2, dy1[0]);
         unsigned char *dstYUV;
-        getNext(FF_CSP_YUY2,pict,cfg->full,&dstYUV,NULL,NULL,NULL);
-        di.Overlay=dstYUV;
+        getNext(FF_CSP_YUY2, pict, cfg->full, &dstYUV, NULL, NULL, NULL);
+        di.Overlay = dstYUV;
 
         deciV->lock(IDFF_lockDScaler);
         flt->fm->pfnAlgorithm(&di);
         deciV->unlock(IDFF_lockDScaler);
 
-        di.PictureHistory[0]->IsFirstInSeries=0;
-        TffPict::copy(dstYUV,stride2[0],di.PictureHistory[0]->pData,stride1[0],dx1[0]*2,dy1[0]);
-        if (flt->fm->HistoryRequired>1) {
-            TPicture *p=di.PictureHistory[flt->fm->HistoryRequired-1];
-            memmove(di.PictureHistory+1,di.PictureHistory,(flt->fm->HistoryRequired-1)*sizeof(TPicture*));
-            di.PictureHistory[0]=p;
+        di.PictureHistory[0]->IsFirstInSeries = 0;
+        TffPict::copy(dstYUV, stride2[0], di.PictureHistory[0]->pData, stride1[0], dx1[0] * 2, dy1[0]);
+        if (flt->fm->HistoryRequired > 1) {
+            TPicture *p = di.PictureHistory[flt->fm->HistoryRequired - 1];
+            memmove(di.PictureHistory + 1, di.PictureHistory, (flt->fm->HistoryRequired - 1)*sizeof(TPicture*));
+            di.PictureHistory[0] = p;
         }
     }
-    return parent->processSample(++it,pict);
+    return parent->processSample(++it, pict);
 }

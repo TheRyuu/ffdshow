@@ -12,10 +12,10 @@ class TffdshowBase;
 #pragma pack(push,1)
 struct TffdshowParamInfo {
     int id;
-    const TCHAR *valnamePtr,*namePtr;
-    char *valname,*name;
+    const TCHAR *valnamePtr, *namePtr;
+    char *valname, *name;
     int type;
-    int min,max; //for integer
+    int min, max; //for integer
     int maxlen; //for string
     int inPreset;
     void *ptr;
@@ -23,10 +23,10 @@ struct TffdshowParamInfo {
 };
 #pragma pack(pop)
 
-DECLARE_INTERFACE_(IffdshowParamsEnum,IUnknown)
+DECLARE_INTERFACE_(IffdshowParamsEnum, IUnknown)
 {
-    STDMETHOD (resetEnum)(void) PURE;
-    STDMETHOD (nextEnum)(TffdshowParamInfo* paramPtr) PURE;
+    STDMETHOD(resetEnum)(void) PURE;
+    STDMETHOD(nextEnum)(TffdshowParamInfo * paramPtr) PURE;
 };
 
 #endif

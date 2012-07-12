@@ -23,42 +23,42 @@
 #include "TsubtitleProps.h"
 #include "TsubreaderMplayer.h"
 
-void nmTextSubtitles::strToInt(const ffstring &str,int *i)
+void nmTextSubtitles::strToInt(const ffstring &str, int *i)
 {
     if (!str.empty()) {
-        if (str.compare(0,4,L" yes",4)==0) {
+        if (str.compare(0, 4, L" yes", 4) == 0) {
             *i = 1;
             return;
-        } else if (str.compare(0,3,L" no",3)==0) {
+        } else if (str.compare(0, 3, L" no", 3) == 0) {
             *i = 0;
             return;
         }
         wchar_t *end;
-        int val=strtol(str.c_str(),&end,10);
-        if (*end=='\0' && val>=0) {
-            *i=val;
+        int val = strtol(str.c_str(), &end, 10);
+        if (*end == '\0' && val >= 0) {
+            *i = val;
         }
     }
 }
 
-void nmTextSubtitles::strToIntMargin(const ffstring &str,int *i)
+void nmTextSubtitles::strToIntMargin(const ffstring &str, int *i)
 {
     if (!str.empty() /*str.size()==4 && str.compare(_L("0000"))!=0*/) {
         wchar_t *end;
-        int val=strtol(str.c_str(),&end,10);
-        if (*end=='\0' && val>0) {
-            *i=val;
+        int val = strtol(str.c_str(), &end, 10);
+        if (*end == '\0' && val > 0) {
+            *i = val;
         }
     }
 }
 
-void nmTextSubtitles::strToDouble(const ffstring &str,double *d)
+void nmTextSubtitles::strToDouble(const ffstring &str, double *d)
 {
     if (!str.empty()) {
         wchar_t *end;
-        double val=strtod(str.c_str(),&end);
-        if (*end=='\0') {
-            *d=val;
+        double val = strtod(str.c_str(), &end);
+        if (*end == '\0') {
+            *d = val;
         }
     }
 }

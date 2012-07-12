@@ -33,7 +33,7 @@ public:
     virtual uint32_t getBits2(int number_of_bits);
     virtual void bitstream_fill_current();
     inline BYTE readByte()  {
-        return (BYTE) getBits( 8);
+        return (BYTE) getBits(8);
     };
     inline SHORT readShort() {
         return (SHORT)getBits(16);
@@ -42,8 +42,8 @@ public:
         return (DWORD)getBits(32);
     };
     inline void skipBytes(int nbBytes) {
-        wordpointer+=nbBytes;
-        bitsleft-=8*nbBytes;
+        wordpointer += nbBytes;
+        bitsleft -= 8 * nbBytes;
     };
 };
 #endif

@@ -23,7 +23,7 @@
 #include "ffdshow_constants.h"
 
 //=============================== Tcodec ===============================
-Tcodec::Tcodec(IffdshowBase *Ideci):deci(Ideci)
+Tcodec::Tcodec(IffdshowBase *Ideci): deci(Ideci)
 {
     deci->getConfig(&config);
 }
@@ -65,7 +65,7 @@ const char_t* Tcodec::getMovieSourceName(int source)
 }
 
 //============================= TcodecDec ==============================
-TcodecDec::TcodecDec(IffdshowBase *Ideci,IdecSink *Isink):
+TcodecDec::TcodecDec(IffdshowBase *Ideci, IdecSink *Isink):
     Tcodec(Ideci),
     deciD(Ideci),
     sink(Isink)
@@ -77,6 +77,6 @@ TcodecDec::~TcodecDec()
 
 HRESULT TcodecDec::flush(void)
 {
-    HRESULT hr=flushDec();
-    return SUCCEEDED(hr) && sink?sink->flushDecodedSamples():hr;
+    HRESULT hr = flushDec();
+    return SUCCEEDED(hr) && sink ? sink->flushDecodedSamples() : hr;
 }

@@ -21,29 +21,29 @@
 #include "TcodecSettings.h"
 #include "ffdshow_constants.h"
 
-const char_t* TpresetsEnc::preset_lavc_vcd_pal=_l("Libavcodec VCD PAL");
-const char_t* TpresetsEnc::preset_lavc_vcd_ntsc=_l("Libavcodec VCD NTSC");
-const char_t* TpresetsEnc::preset_lavc_svcd_pal=_l("Libavcodec SVCD PAL");
-const char_t* TpresetsEnc::preset_lavc_svcd_ntsc=_l("Libavcodec SVCD NTSC");
-const char_t* TpresetsEnc::preset_lavc_dvd_pal=_l("Libavcodec DVD PAL");
-const char_t* TpresetsEnc::preset_lavc_dvd_ntsc=_l("Libavcodec DVD NTSC");
+const char_t* TpresetsEnc::preset_lavc_vcd_pal = _l("Libavcodec VCD PAL");
+const char_t* TpresetsEnc::preset_lavc_vcd_ntsc = _l("Libavcodec VCD NTSC");
+const char_t* TpresetsEnc::preset_lavc_svcd_pal = _l("Libavcodec SVCD PAL");
+const char_t* TpresetsEnc::preset_lavc_svcd_ntsc = _l("Libavcodec SVCD NTSC");
+const char_t* TpresetsEnc::preset_lavc_dvd_pal = _l("Libavcodec DVD PAL");
+const char_t* TpresetsEnc::preset_lavc_dvd_ntsc = _l("Libavcodec DVD NTSC");
 
 //================================== TpresetEnc ====================================
 void TpresetEnc::initBuiltin(void)
 {
-    strcpy(name,_l("Builtin"));
+    strcpy(name, _l("Builtin"));
 
-    struct TregOpDefault :public TregOp {
+    struct TregOpDefault : public TregOp {
     private:
         TpresetEnc *preset;
     public:
-        TregOpDefault(TpresetEnc *Ipreset):preset(Ipreset) {}
-        virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z) {
-            preset->vals.insert(std::make_pair(X,Tval(Z)));
+        TregOpDefault(TpresetEnc *Ipreset): preset(Ipreset) {}
+        virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z) {
+            preset->vals.insert(std::make_pair(X, Tval(Z)));
             return true;
         }
         virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false) {
-            preset->vals.insert(std::make_pair(X,Tval(Z)));
+            preset->vals.insert(std::make_pair(X, Tval(Z)));
         }
     } t(this);
     TcoSettings co(new TintStrColl);
@@ -52,76 +52,76 @@ void TpresetEnc::initBuiltin(void)
 void TpresetEnc::load(const char_t *Iname)
 {
     char_t key[MAX_PATH];
-    strcpy(key,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
+    strcpy(key, FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
     ff_strncpy(name, Iname ? Iname : _l("Default"), countof(name));
     if (Iname) {
         strncat_s(key, countof(key), _l("\\"), _TRUNCATE);
         strncat_s(key, countof(key), name, _TRUNCATE);
     };
 
-    struct TregOpPresetRegRead :public TregOp {
+    struct TregOpPresetRegRead : public TregOp {
     private:
         TpresetEnc *preset;
         HKEY hKey;
     public:
-        TregOpPresetRegRead(TpresetEnc *Ipreset,HKEY hive,const char_t *key):preset(Ipreset) {
-            hKey=NULL;
-            RegOpenKeyEx(hive,key,0,KEY_READ,&hKey);
+        TregOpPresetRegRead(TpresetEnc *Ipreset, HKEY hive, const char_t *key): preset(Ipreset) {
+            hKey = NULL;
+            RegOpenKeyEx(hive, key, 0, KEY_READ, &hKey);
         }
         virtual ~TregOpPresetRegRead() {
             if (hKey) {
                 RegCloseKey(hKey);
             }
         }
-        virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z) {
-            DWORD size=sizeof(int);
+        virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z) {
+            DWORD size = sizeof(int);
             int val;
-            if (hKey && RegQueryValueEx(hKey,X,0,0,(LPBYTE)&val,&size)==ERROR_SUCCESS) {
-                preset->vals.insert(std::make_pair(X,Tval(val)));
+            if (hKey && RegQueryValueEx(hKey, X, 0, 0, (LPBYTE)&val, &size) == ERROR_SUCCESS) {
+                preset->vals.insert(std::make_pair(X, Tval(val)));
                 return true;
             } else {
                 return false;
             }
         }
         virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false) {
-            DWORD size=MAX_PATH*sizeof(char_t);
+            DWORD size = MAX_PATH * sizeof(char_t);
             char_t val[MAX_PATH];
-            if (hKey && RegQueryValueEx(hKey,X,0,0,(LPBYTE)val,&size)==ERROR_SUCCESS) {
-                preset->vals.insert(std::make_pair(X,Tval(val)));
+            if (hKey && RegQueryValueEx(hKey, X, 0, 0, (LPBYTE)val, &size) == ERROR_SUCCESS) {
+                preset->vals.insert(std::make_pair(X, Tval(val)));
             }
         }
-    } t(this,HKEY_CURRENT_USER,key);
+    } t(this, HKEY_CURRENT_USER, key);
     TcoSettings co(new TintStrColl);
     co.reg_op(t);
 }
 void TpresetEnc::save(void)
 {
     char_t key[MAX_PATH];
-    strcpy(key,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
+    strcpy(key, FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
     strncat_s(key, countof(key), _l("\\"), _TRUNCATE);
     strncat_s(key, countof(key), name, _TRUNCATE);
     DWORD dispo;
-    HKEY hKey=NULL;
-    if (RegCreateKeyEx(HKEY_CURRENT_USER,key,0,FFDSHOW_REG_CLASS,REG_OPTION_NON_VOLATILE,KEY_WRITE,0,&hKey,&dispo)!=ERROR_SUCCESS) {
+    HKEY hKey = NULL;
+    if (RegCreateKeyEx(HKEY_CURRENT_USER, key, 0, FFDSHOW_REG_CLASS, REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, &hKey, &dispo) != ERROR_SUCCESS) {
         return;
     }
-    for (Tvals::const_iterator v=vals.begin(); v!=vals.end(); v++)
+    for (Tvals::const_iterator v = vals.begin(); v != vals.end(); v++)
         if (v->second.s.empty()) {
-            RegSetValueEx(hKey,v->first,0,REG_DWORD,(LPBYTE)&v->second.i,sizeof(int));
+            RegSetValueEx(hKey, v->first, 0, REG_DWORD, (LPBYTE)&v->second.i, sizeof(int));
         } else {
-            RegSetValueEx(hKey,v->first,0,REG_SZ,(LPBYTE)v->second.s.c_str(),DWORD((v->second.s.size()+1)*sizeof(char_t)));
+            RegSetValueEx(hKey, v->first, 0, REG_SZ, (LPBYTE)v->second.s.c_str(), DWORD((v->second.s.size() + 1)*sizeof(char_t)));
         }
     RegCloseKey(hKey);
 }
 
 bool TpresetEnc::TregOpCategory::isIn(int id)
 {
-    if (id==0 || !propsIDs) {
+    if (id == 0 || !propsIDs) {
         return false;
     }
-    const int *p=propsIDs;
+    const int *p = propsIDs;
     while (*p) {
-        if (*p==id) {
+        if (*p == id) {
             return true;
         }
         p++;
@@ -129,16 +129,16 @@ bool TpresetEnc::TregOpCategory::isIn(int id)
     return false;
 }
 
-void TpresetEnc::apply(TcoSettings *co,const int *propsIDs)
+void TpresetEnc::apply(TcoSettings *co, const int *propsIDs)
 {
-    struct TregOpApply :public TregOpCategory {
+    struct TregOpApply : public TregOpCategory {
     public:
-        TregOpApply(TpresetEnc *Ipreset,TcoSettings *Ico,const int *IpropsIDs):TregOpCategory(Ipreset,Ico,IpropsIDs) {}
-        virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z) {
+        TregOpApply(TpresetEnc *Ipreset, TcoSettings *Ico, const int *IpropsIDs): TregOpCategory(Ipreset, Ico, IpropsIDs) {}
+        virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z) {
             if (isIn(id)) {
-                TpresetEnc::Tvals::iterator val=preset->vals.find(X);
-                if (val!=preset->vals.end()) {
-                    Y=val->second.i;
+                TpresetEnc::Tvals::iterator val = preset->vals.find(X);
+                if (val != preset->vals.end()) {
+                    Y = val->second.i;
                     return false;
                 }
             }
@@ -146,33 +146,33 @@ void TpresetEnc::apply(TcoSettings *co,const int *propsIDs)
         }
         virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false) {
             if (isIn(id)) {
-                TpresetEnc::Tvals::iterator val=preset->vals.find(X);
-                if (val!=preset->vals.end()) {
-                    ff_strncpy(Y,val->second.s.c_str(),buflen);
-                    Y[buflen-1]='\0';
+                TpresetEnc::Tvals::iterator val = preset->vals.find(X);
+                if (val != preset->vals.end()) {
+                    ff_strncpy(Y, val->second.s.c_str(), buflen);
+                    Y[buflen - 1] = '\0';
                 }
             }
         }
-    } t(this,co,propsIDs);
+    } t(this, co, propsIDs);
     co->reg_op(t);
 }
-void TpresetEnc::store(TcoSettings *co,const int *propsIDs)
+void TpresetEnc::store(TcoSettings *co, const int *propsIDs)
 {
-    struct TregOpStore :public TregOpCategory {
+    struct TregOpStore : public TregOpCategory {
     public:
-        TregOpStore(TpresetEnc *Ipreset,TcoSettings *Ico,const int *IpropsIDs):TregOpCategory(Ipreset,Ico,IpropsIDs) {}
-        virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z) {
+        TregOpStore(TpresetEnc *Ipreset, TcoSettings *Ico, const int *IpropsIDs): TregOpCategory(Ipreset, Ico, IpropsIDs) {}
+        virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z) {
             if (isIn(id)) {
-                preset->vals[X]=Tval(Y);
+                preset->vals[X] = Tval(Y);
             }
             return true;
         }
         virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false) {
             if (isIn(id)) {
-                preset->vals[X]=Tval(Y);
+                preset->vals[X] = Tval(Y);
             }
         }
-    } t(this,co,propsIDs);
+    } t(this, co, propsIDs);
     co->reg_op(t);
 }
 
@@ -185,10 +185,10 @@ void TpresetEnc::rename(const char_t *newname)
 void TpresetEnc::remove(void)
 {
     char_t key[MAX_PATH];
-    strcpy(key,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
+    strcpy(key, FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
     strncat_s(key, countof(key), _l("\\"), _TRUNCATE);
     strncat_s(key, countof(key), name, _TRUNCATE);
-    RegDeleteKey(HKEY_CURRENT_USER,key);
+    RegDeleteKey(HKEY_CURRENT_USER, key);
 }
 
 //================================= TpresetsEnc ====================================
@@ -205,10 +205,10 @@ void TpresetsEnc::init(void)
     push_back(preset);
 
     HKEY hKey;
-    RegOpenKeyEx(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC,0,KEY_READ,&hKey);
-    for (int i=0,retCode=ERROR_SUCCESS; retCode==ERROR_SUCCESS; i++) {
+    RegOpenKeyEx(HKEY_CURRENT_USER, FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC, 0, KEY_READ, &hKey);
+    for (int i = 0, retCode = ERROR_SUCCESS; retCode == ERROR_SUCCESS; i++) {
         char_t keyName[MAX_PATH];
-        DWORD keyNameSize=MAX_PATH;
+        DWORD keyNameSize = MAX_PATH;
         FILETIME ftLastWriteTime;
         retCode = RegEnumKeyEx(hKey,
                                i,
@@ -219,8 +219,8 @@ void TpresetsEnc::init(void)
                                NULL,
                                &ftLastWriteTime
                               );
-        if (retCode==ERROR_SUCCESS) {
-            if (strcmp(keyName,_l("makeAVIS"))!=0) {
+        if (retCode == ERROR_SUCCESS) {
+            if (strcmp(keyName, _l("makeAVIS")) != 0) {
                 TpresetEnc presetAVIS;
                 presetAVIS.load(keyName);
                 push_back(presetAVIS);
@@ -233,14 +233,14 @@ void TpresetsEnc::init(void)
 }
 void TpresetsEnc::save(void)
 {
-    for (size_t i=2; i<size(); i++) {
+    for (size_t i = 2; i < size(); i++) {
         at(i).save();
     }
 }
 TpresetEnc* TpresetsEnc::getPreset(const char_t *name)
 {
-    for (iterator i=begin(); i!=end(); i++)
-        if (stricmp(name,i->name)==0) {
+    for (iterator i = begin(); i != end(); i++)
+        if (stricmp(name, i->name) == 0) {
             return &*i;
         }
     return NULL;
@@ -254,8 +254,8 @@ TpresetEnc* TpresetsEnc::createPreset(const char_t *name)
 }
 void TpresetsEnc::remove(TpresetEnc *preset)
 {
-    for (iterator p=begin(); p!=end(); p++)
-        if (stricmp(p->name,preset->name)==0) {
+    for (iterator p = begin(); p != end(); p++)
+        if (stricmp(p->name, preset->name) == 0) {
             p->remove();
             erase(p);
             return;

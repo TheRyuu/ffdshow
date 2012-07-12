@@ -24,7 +24,7 @@
 #include "TsubtitlesTextpinPGS.h"
 #include "Tsubreader.h"
 
-TsubtitlesTextpin::TsubtitlesTextpin(int Itype,IffdshowBase *Ideci):Tsubtitles(Ideci),type(Itype)
+TsubtitlesTextpin::TsubtitlesTextpin(int Itype, IffdshowBase *Ideci): Tsubtitles(Ideci), type(Itype)
 {
     init();
 }
@@ -34,17 +34,17 @@ void TsubtitlesTextpin::resetSubtitles(void)
     init();
 }
 
-TsubtitlesTextpin* TsubtitlesTextpin::create(int type,const unsigned char *extradata,unsigned int extradatalen,IffdshowBase *Ideci)
+TsubtitlesTextpin* TsubtitlesTextpin::create(int type, const unsigned char *extradata, unsigned int extradatalen, IffdshowBase *Ideci)
 {
     DPRINTF(_l("TsubtitlesTextpin::create"));
     switch (type) {
         case Tsubreader::SUB_PGS:
-            return new TsubtitlesTextpinPGS(type,Ideci);
+            return new TsubtitlesTextpinPGS(type, Ideci);
         case Tsubreader::SUB_DVD:
         case Tsubreader::SUB_CVD:
         case Tsubreader::SUB_SVCD:
-            return new TsubtitlesTextpinDVD(type,Ideci);
+            return new TsubtitlesTextpinDVD(type, Ideci);
         default:
-            return new TsubtitlesTextpinText(type,Ideci,extradata,extradatalen);
+            return new TsubtitlesTextpinText(type, Ideci, extradata, extradatalen);
     }
 }

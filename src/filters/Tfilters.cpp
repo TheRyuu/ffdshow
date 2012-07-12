@@ -23,61 +23,65 @@
 #include "ffdshow_constants.h"
 #include "TpresetSettings.h"
 
-Tfilters::Tfilters(IffdshowBase *Ideci):deci(Ideci),deciD(Ideci)
+Tfilters::Tfilters(IffdshowBase *Ideci): deci(Ideci), deciD(Ideci)
 {
- deci->getConfig(&config);
- queueChanged=1;
- isdvdproc=!!deci->getParam2(IDFF_dvdproc);
+    deci->getConfig(&config);
+    queueChanged = 1;
+    isdvdproc = !!deci->getParam2(IDFF_dvdproc);
 }
 
 Tfilters::~Tfilters()
 {
- for (iterator i=begin();i!=end();i++)
-  {
-   i->second->done();
-   delete i->second;
-  }
+    for (iterator i = begin(); i != end(); i++) {
+        i->second->done();
+        delete i->second;
+    }
 }
 
-void Tfilters::makeQueue(const Tpreset *cfg,TfilterQueue &queue)
+void Tfilters::makeQueue(const Tpreset *cfg, TfilterQueue &queue)
 {
- queue.clear();
- cfg->createFilters(this,queue);
+    queue.clear();
+    cfg->createFilters(this, queue);
 }
 
 void Tfilters::onSeek(void)
 {
- for (iterator f=begin();f!=end();f++)
-  f->second->onSeek();
+    for (iterator f = begin(); f != end(); f++) {
+        f->second->onSeek();
+    }
 }
 
 void Tfilters::onFlush(void)
 {
- for (iterator f=begin();f!=end();f++)
-  f->second->onFlush();
+    for (iterator f = begin(); f != end(); f++) {
+        f->second->onFlush();
+    }
 }
 
 void Tfilters::onStop(void)
 {
- for (iterator f=begin();f!=end();f++)
-  f->second->onStop();
+    for (iterator f = begin(); f != end(); f++) {
+        f->second->onStop();
+    }
 }
 
 void Tfilters::onDisconnect(PIN_DIRECTION dir)
 {
- for (iterator f=begin();f!=end();f++)
-  f->second->onDisconnect(dir);
+    for (iterator f = begin(); f != end(); f++) {
+        f->second->onDisconnect(dir);
+    }
 }
 
-void Tfilters::onQueueChange(int id,int val)
+void Tfilters::onQueueChange(int id, int val)
 {
- InterlockedIncrement((LONG*)&queueChanged);
+    InterlockedIncrement((LONG*)&queueChanged);
 }
 
-HRESULT Tfilters::queryFilterInterface(const IID &iid,void **ptr) const
+HRESULT Tfilters::queryFilterInterface(const IID &iid, void **ptr) const
 {
- for (const_iterator i=begin();i!=end();i++)
-  if (i->second->queryInterface(iid,ptr)==S_OK)
-   return S_OK;
- return E_NOINTERFACE;
+    for (const_iterator i = begin(); i != end(); i++)
+        if (i->second->queryInterface(iid, ptr) == S_OK) {
+            return S_OK;
+        }
+    return E_NOINTERFACE;
 }

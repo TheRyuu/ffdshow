@@ -3,23 +3,23 @@
 
 #include "TfilterSettings.h"
 
-struct TlogoawaySettings :TfilterSettingsVideo {
+struct TlogoawaySettings : TfilterSettingsVideo {
 private:
     static const TfilterIDFF idffs;
 protected:
     virtual const int *getResets(unsigned int pageId);
 public:
-    TlogoawaySettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
-    int x,y,dx,dy;
-    int mode,lumaonly;
+    TlogoawaySettings(TintStrColl *Icoll = NULL, TfilterIDFFs *filters = NULL);
+    int x, y, dx, dy;
+    int mode, lumaonly;
     int blur;
-    int bordn_mode,bords_mode,bordw_mode,borde_mode;
+    int bordn_mode, bords_mode, bordw_mode, borde_mode;
     int pointnw, pointne, pointsw, pointse;
     int vhweight;
     int solidcolor;
     char_t parambitmap[MAX_PATH];
     enum {
-        MODE_LUMINANCE=1,
+        MODE_LUMINANCE = 1,
         MODE_XY,
         MODE_UGLARM,
         MODE_SOLIDFILL,
@@ -54,13 +54,13 @@ public:
     static const char_t *navigators[];
     struct TborderPreset {
         const char_t *name;
-        int n,e,s,w;
+        int n, e, s, w;
     };
     static const TborderPreset borderPresets[];
 
-    virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
+    virtual void createFilters(size_t filtersorder, Tfilters *filters, TfilterQueue &queue) const;
     virtual void createPages(TffdshowPageDec *parent) const;
-    virtual bool getTip(unsigned int pageId,char_t *buf,size_t buflen);
+    virtual bool getTip(unsigned int pageId, char_t *buf, size_t buflen);
 };
 
 #endif

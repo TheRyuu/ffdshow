@@ -4,7 +4,7 @@
 #include "ffImgfmt.h"
 
 void nic_postprocess(unsigned char * dst[],    stride_t dst_stride[4],
-                     unsigned int chromaShiftX,unsigned int chromaShiftY,
+                     unsigned int chromaShiftX, unsigned int chromaShiftY,
                      int horizontal_size,      int vertical_size,
                      const int8_t *QP_store,   int QP_stride,
                      int mode,

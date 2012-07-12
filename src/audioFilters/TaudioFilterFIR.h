@@ -7,18 +7,18 @@
 #include "IaudioFilterFIR.h"
 
 class TaudioFilterFir : public TaudioFilter, public IaudioFilterFir
-    _DECLARE_FILTER(TaudioFilterFir,TaudioFilter)
+    _DECLARE_FILTER(TaudioFilterFir, TaudioFilter)
     private:
         TfirSettings old;
-unsigned int oldfreq,oldchannels;
-int ip[2+1024];
+unsigned int oldfreq, oldchannels;
+int ip[2 + 1024];
 float w[65536];
-unsigned int tapes,filterpos;
+unsigned int tapes, filterpos;
 TfirFilter::_ftype_t *fir;
 float *filterbuf[8];
 
 struct TstoredFFT {
-    TstoredFFT(void):have(false),data(NULL),datalen(0),freq(0) {}
+    TstoredFFT(void): have(false), data(NULL), datalen(0), freq(0) {}
     ~TstoredFFT() {
         if (data) {
             free(data);
@@ -32,18 +32,18 @@ struct TstoredFFT {
 } storedfft;
 CCritSec csFFT;
 protected:
-virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
-virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const
+virtual bool is(const TsampleFormat &fmt, const TfilterSettingsAudio *cfg);
+virtual int getSupportedFormats(const TfilterSettingsAudio *cfg, bool *honourPreferred, const TsampleFormat &sf) const
 {
     return TsampleFormat::SF_FLOAT32;
 }
 public:
-TaudioFilterFir(IffdshowBase *Ideci,Tfilters *Iparent);
+TaudioFilterFir(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples, size_t numsamples, const TfilterSettingsAudio *cfg0);
 virtual void onSeek(void);
 
-virtual HRESULT queryInterface(const IID &iid,void **ptr) const;
+virtual HRESULT queryInterface(const IID &iid, void **ptr) const;
 STDMETHODIMP_(int) getFFTdataNum(void);
 STDMETHODIMP getFFTdata(float *fft);
 STDMETHODIMP_(int) getFFTfreq(void);

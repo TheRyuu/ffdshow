@@ -24,12 +24,12 @@
 #include "firfilter.h"
 #include "TfirSettings.h"
 
-TaudioFilterHeadphone::TaudioFilterHeadphone(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
+TaudioFilterHeadphone::TaudioFilterHeadphone(IffdshowBase *Ideci, Tfilters *Iparent): TaudioFilter(Ideci, Iparent)
 {
-    oldfmt.freq=0;
-    olddim=-1;
-    p_sys=NULL;
-    inited=false;
+    oldfmt.freq = 0;
+    olddim = -1;
+    p_sys = NULL;
+    inited = false;
 }
 void TaudioFilterHeadphone::done(void)
 {
@@ -41,7 +41,7 @@ void TaudioFilterHeadphone::done(void)
             free(p_sys->p_atomic_operations);
         }
         free(p_sys);
-        p_sys=NULL;
+        p_sys = NULL;
     }
 }
 
@@ -63,10 +63,10 @@ void TaudioFilterHeadphone::done(void)
  *
  *          x-axis
  *  */
-void TaudioFilterHeadphone::aout_filter_sys_t::ComputeChannelOperations (
+void TaudioFilterHeadphone::aout_filter_sys_t::ComputeChannelOperations(
     unsigned int i_rate , unsigned int i_next_atomic_operation
     , int i_source_channel_offset , double d_x , double d_z
-    , double d_channel_amplitude_factor )
+    , double d_channel_amplitude_factor)
 {
     double d_c = 340; /*sound celerity (unit: m/s)*/
 
@@ -76,12 +76,12 @@ void TaudioFilterHeadphone::aout_filter_sys_t::ComputeChannelOperations (
     p_atomic_operations[i_next_atomic_operation]
     .i_dest_channel_offset = 0;/* left */
     p_atomic_operations[i_next_atomic_operation]
-    .i_delay = (int)( sqrt( (-0.1-d_x)*(-0.1-d_x) + (0-d_z)*(0-d_z) )
-                      / d_c * i_rate );
-    if ( d_x < 0 ) {
+    .i_delay = (int)(sqrt((-0.1 - d_x) * (-0.1 - d_x) + (0 - d_z) * (0 - d_z))
+                     / d_c * i_rate);
+    if (d_x < 0) {
         p_atomic_operations[i_next_atomic_operation]
         .d_amplitude_factor = d_channel_amplitude_factor * 1.1 / 2;
-    } else if ( d_x > 0 ) {
+    } else if (d_x > 0) {
         p_atomic_operations[i_next_atomic_operation]
         .d_amplitude_factor = d_channel_amplitude_factor * 0.9 / 2;
     } else {
@@ -95,12 +95,12 @@ void TaudioFilterHeadphone::aout_filter_sys_t::ComputeChannelOperations (
     p_atomic_operations[i_next_atomic_operation + 1]
     .i_dest_channel_offset = 1;/* right */
     p_atomic_operations[i_next_atomic_operation + 1]
-    .i_delay = (int)( sqrt( (0.1-d_x)*(0.1-d_x) + (0-d_z)*(0-d_z) )
-                      / d_c * i_rate );
-    if ( d_x < 0 ) {
+    .i_delay = (int)(sqrt((0.1 - d_x) * (0.1 - d_x) + (0 - d_z) * (0 - d_z))
+                     / d_c * i_rate);
+    if (d_x < 0) {
         p_atomic_operations[i_next_atomic_operation + 1]
         .d_amplitude_factor = d_channel_amplitude_factor * 0.9 / 2;
-    } else if ( d_x > 0 ) {
+    } else if (d_x > 0) {
         p_atomic_operations[i_next_atomic_operation + 1]
         .d_amplitude_factor = d_channel_amplitude_factor * 1.1 / 2;
     } else {
@@ -109,75 +109,75 @@ void TaudioFilterHeadphone::aout_filter_sys_t::ComputeChannelOperations (
     }
 }
 
-int TaudioFilterHeadphone::aout_filter_sys_t::Init(const TsampleFormat &fmt,const TmixerSettings *cfg)
+int TaudioFilterHeadphone::aout_filter_sys_t::Init(const TsampleFormat &fmt, const TmixerSettings *cfg)
 {
     double d_x = cfg->headphone_dim;//config_GetInt ( p_filter , "headphone-dim" );
     double d_z = d_x;
-    double d_z_rear = -d_x/3;
+    double d_z_rear = -d_x / 3;
     unsigned int i_next_atomic_operation;
     int i_source_channel_offset;
 
     /* Number of elementary operations */
     i_nb_atomic_operations = fmt.nchannels * 2;
-    p_atomic_operations = (atomic_operation_t*)malloc ( sizeof(atomic_operation_t)
-                          * i_nb_atomic_operations );
+    p_atomic_operations = (atomic_operation_t*)malloc(sizeof(atomic_operation_t)
+                          * i_nb_atomic_operations);
     /* For each virtual speaker, computes elementary wave propagation time
      * to each ear */
     i_next_atomic_operation = 0;
     i_source_channel_offset = 0;
-    for (unsigned int ch=0; ch<fmt.nchannels; ch++)
-        if ( fmt.speakers[ch] == SPEAKER_FRONT_LEFT) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , -d_x , d_z , 2.0 / fmt.nchannels );
+    for (unsigned int ch = 0; ch < fmt.nchannels; ch++)
+        if (fmt.speakers[ch] == SPEAKER_FRONT_LEFT) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , -d_x , d_z , 2.0 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
-        } else if ( fmt.speakers[ch] ==  SPEAKER_FRONT_RIGHT ) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , d_x , d_z , 2.0 / fmt.nchannels );
+        } else if (fmt.speakers[ch] ==  SPEAKER_FRONT_RIGHT) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , d_x , d_z , 2.0 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
-        } else if ( fmt.speakers[ch] == SPEAKER_BACK_LEFT ) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , -d_x , d_z_rear , 1.5 / fmt.nchannels );
+        } else if (fmt.speakers[ch] == SPEAKER_BACK_LEFT) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , -d_x , d_z_rear , 1.5 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
-        } else if ( fmt.speakers[ch] == SPEAKER_BACK_RIGHT ) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , d_x , d_z_rear , 1.5 / fmt.nchannels );
+        } else if (fmt.speakers[ch] == SPEAKER_BACK_RIGHT) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , d_x , d_z_rear , 1.5 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
-        } else if ( fmt.speakers[ch] ==  SPEAKER_BACK_CENTER ) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , 0 , -d_z , 1.5 / fmt.nchannels );
+        } else if (fmt.speakers[ch] ==  SPEAKER_BACK_CENTER) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , 0 , -d_z , 1.5 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
-        } else if ( fmt.speakers[ch] ==  SPEAKER_FRONT_CENTER ) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , 0 , d_z , 1.5 / fmt.nchannels );
+        } else if (fmt.speakers[ch] ==  SPEAKER_FRONT_CENTER) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , 0 , d_z , 1.5 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
-        } else if ( fmt.speakers[ch] == SPEAKER_LOW_FREQUENCY ) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , 0 , d_z_rear , 5.0 / fmt.nchannels );
+        } else if (fmt.speakers[ch] == SPEAKER_LOW_FREQUENCY) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , 0 , d_z_rear , 5.0 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
-        } else if ( fmt.speakers[ch] ==  SPEAKER_SIDE_LEFT ) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , -d_x , 0 , 1.5 / fmt.nchannels );
+        } else if (fmt.speakers[ch] ==  SPEAKER_SIDE_LEFT) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , -d_x , 0 , 1.5 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
-        } else if ( fmt.speakers[ch] == SPEAKER_SIDE_RIGHT ) {
-            ComputeChannelOperations ( fmt.freq
-                                       , i_next_atomic_operation , i_source_channel_offset
-                                       , d_x , 0 , 1.5 / fmt.nchannels );
+        } else if (fmt.speakers[ch] == SPEAKER_SIDE_RIGHT) {
+            ComputeChannelOperations(fmt.freq
+                                     , i_next_atomic_operation , i_source_channel_offset
+                                     , d_x , 0 , 1.5 / fmt.nchannels);
             i_next_atomic_operation += 2;
             i_source_channel_offset++;
         }
@@ -185,25 +185,25 @@ int TaudioFilterHeadphone::aout_filter_sys_t::Init(const TsampleFormat &fmt,cons
     /* Initialize the overflow buffer
      * we need it because the process induce a delay in the samples */
     i_overflow_buffer_size = 0;
-    for (unsigned int i= 0 ; i < i_nb_atomic_operations ; i++ ) {
-        if ( i_overflow_buffer_size
+    for (unsigned int i = 0 ; i < i_nb_atomic_operations ; i++) {
+        if (i_overflow_buffer_size
                 < p_atomic_operations[i].i_delay * ((fmt.nchannels >= 2) ? fmt.nchannels : 2)
-                * sizeof (float) ) {
+                * sizeof(float)) {
             i_overflow_buffer_size
-            = p_atomic_operations[i].i_delay * ((fmt.nchannels >= 2) ? fmt.nchannels : 2)
-              * sizeof (float);
+                = p_atomic_operations[i].i_delay * ((fmt.nchannels >= 2) ? fmt.nchannels : 2)
+                  * sizeof(float);
         }
     }
-    p_overflow_buffer = (byte_t*)malloc ( i_overflow_buffer_size );
-    memset ( p_overflow_buffer , 0 , i_overflow_buffer_size );
+    p_overflow_buffer = (byte_t*)malloc(i_overflow_buffer_size);
+    memset(p_overflow_buffer , 0 , i_overflow_buffer_size);
 
     /* end */
     return 0;
 }
 
-bool TaudioFilterHeadphone::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
+bool TaudioFilterHeadphone::getOutputFmt(TsampleFormat &fmt, const TfilterSettingsAudio *cfg)
 {
-    if (super::getOutputFmt(fmt,cfg)) {
+    if (super::getOutputFmt(fmt, cfg)) {
         fmt.setChannels(2);
         return true;
     } else {
@@ -211,100 +211,100 @@ bool TaudioFilterHeadphone::getOutputFmt(TsampleFormat &fmt,const TfilterSetting
     }
 }
 
-HRESULT TaudioFilterHeadphone::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
+HRESULT TaudioFilterHeadphone::process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples0, size_t numsamples, const TfilterSettingsAudio *cfg0)
 {
-    const TmixerSettings *cfg=(const TmixerSettings*)cfg0;
+    const TmixerSettings *cfg = (const TmixerSettings*)cfg0;
 
-    if (!p_sys || oldfmt!=fmt || olddim!=cfg->headphone_dim) {
-        oldfmt=fmt;
-        olddim=cfg->headphone_dim;
+    if (!p_sys || oldfmt != fmt || olddim != cfg->headphone_dim) {
+        oldfmt = fmt;
+        olddim = cfg->headphone_dim;
         done();
         /* Allocate the memory needed to store the module's structure */
-        p_sys=(aout_filter_sys_t*)malloc(sizeof(aout_filter_sys_t));
-        p_sys->i_overflow_buffer_size=0;
-        p_sys->p_overflow_buffer=NULL;
-        p_sys->i_nb_atomic_operations=0;
-        p_sys->p_atomic_operations=NULL;
-        inited=p_sys->Init(fmt,cfg)>=0;
+        p_sys = (aout_filter_sys_t*)malloc(sizeof(aout_filter_sys_t));
+        p_sys->i_overflow_buffer_size = 0;
+        p_sys->p_overflow_buffer = NULL;
+        p_sys->i_nb_atomic_operations = 0;
+        p_sys->p_atomic_operations = NULL;
+        inited = p_sys->Init(fmt, cfg) >= 0;
     }
 
     if (inited) {
-        float *p_in=(float*)init(cfg,fmt,samples0,numsamples);
-        unsigned int i_input_nb=fmt.nchannels;
+        float *p_in = (float*)init(cfg, fmt, samples0, numsamples);
+        unsigned int i_input_nb = fmt.nchannels;
         fmt.setChannels(2);
-        float *p_out=(float*)alloc_buffer(fmt,numsamples,buf);
-        unsigned int i_output_nb=fmt.nchannels;
+        float *p_out = (float*)alloc_buffer(fmt, numsamples, buf);
+        unsigned int i_output_nb = fmt.nchannels;
 
         /* Slide the overflow buffer */
         byte_t *p_overflow = p_sys->p_overflow_buffer;
         size_t i_overflow_size = p_sys->i_overflow_buffer_size;
-        size_t i_out_size=numsamples*fmt.blockAlign();
+        size_t i_out_size = numsamples * fmt.blockAlign();
 
-        memset ( p_out , 0 , i_out_size );
-        if ( i_out_size > i_overflow_size ) {
-            memcpy ( p_out , p_overflow , i_overflow_size );
+        memset(p_out , 0 , i_out_size);
+        if (i_out_size > i_overflow_size) {
+            memcpy(p_out , p_overflow , i_overflow_size);
         } else {
-            memcpy ( p_out , p_overflow , i_out_size );
+            memcpy(p_out , p_overflow , i_out_size);
         }
 
         byte_t *p_slide = p_sys->p_overflow_buffer;
-        while ( p_slide < p_overflow + i_overflow_size ) {
-            if ( p_slide + i_out_size < p_overflow + i_overflow_size ) {
-                memset ( p_slide , 0 , i_out_size );
-                if ( p_slide + 2 * i_out_size < p_overflow + i_overflow_size ) {
-                    memcpy ( p_slide , p_slide + i_out_size , i_out_size );
+        while (p_slide < p_overflow + i_overflow_size) {
+            if (p_slide + i_out_size < p_overflow + i_overflow_size) {
+                memset(p_slide , 0 , i_out_size);
+                if (p_slide + 2 * i_out_size < p_overflow + i_overflow_size) {
+                    memcpy(p_slide , p_slide + i_out_size , i_out_size);
                 } else {
-                    memcpy ( p_slide , p_slide + i_out_size , p_overflow + i_overflow_size - ( p_slide + i_out_size ) );
+                    memcpy(p_slide , p_slide + i_out_size , p_overflow + i_overflow_size - (p_slide + i_out_size));
                 }
             } else {
-                memset ( p_slide , 0 , p_overflow + i_overflow_size - p_slide );
+                memset(p_slide , 0 , p_overflow + i_overflow_size - p_slide);
             }
             p_slide += i_out_size;
         }
 
         /* apply the atomic operations */
-        for ( unsigned int i = 0 ; i < p_sys->i_nb_atomic_operations ; i++ ) {
+        for (unsigned int i = 0 ; i < p_sys->i_nb_atomic_operations ; i++) {
             /* shorter variable names */
             int i_source_channel_offset = p_sys->p_atomic_operations[i].i_source_channel_offset;
             int i_dest_channel_offset = p_sys->p_atomic_operations[i].i_dest_channel_offset;
             unsigned int i_delay = p_sys->p_atomic_operations[i].i_delay;
             double d_amplitude_factor = p_sys->p_atomic_operations[i].d_amplitude_factor;
 
-            if ( numsamples > i_delay ) {
+            if (numsamples > i_delay) {
                 unsigned int j;
                 /* current buffer coefficients */
-                for ( j = 0 ; j < numsamples - i_delay ; j++ ) {
-                    p_out[ (i_delay+j)*i_output_nb + i_dest_channel_offset ]
+                for (j = 0 ; j < numsamples - i_delay ; j++) {
+                    p_out[(i_delay + j)*i_output_nb + i_dest_channel_offset ]
                     += float(p_in[ j * i_input_nb + i_source_channel_offset ]
                              * d_amplitude_factor);
                 }
 
                 /* overflow buffer coefficients */
-                for ( j = 0 ; j < i_delay ; j++ ) {
-                    ((float*)p_overflow)[ j*i_output_nb + i_dest_channel_offset ]
-                    += float(p_in[ (numsamples - i_delay + j)
-                                   * i_input_nb + i_source_channel_offset ]
+                for (j = 0 ; j < i_delay ; j++) {
+                    ((float*)p_overflow)[ j * i_output_nb + i_dest_channel_offset ]
+                    += float(p_in[(numsamples - i_delay + j)
+                                  * i_input_nb + i_source_channel_offset ]
                              * d_amplitude_factor);
                 }
             } else {
                 /* overflow buffer coefficients only */
-                for ( unsigned int j = 0 ; j < numsamples ; j++ ) {
-                    ((float*)p_overflow)[ (i_delay - numsamples + j)
-                                          * i_output_nb + i_dest_channel_offset ]
+                for (unsigned int j = 0 ; j < numsamples ; j++) {
+                    ((float*)p_overflow)[(i_delay - numsamples + j)
+                                         * i_output_nb + i_dest_channel_offset ]
                     += float(p_in[ j * i_input_nb + i_source_channel_offset ]
                              * d_amplitude_factor);
                 }
             }
         }
-        samples0=p_out;
+        samples0 = p_out;
     }
-    return parent->deliverSamples(++it,fmt,samples0,numsamples);
+    return parent->deliverSamples(++it, fmt, samples0, numsamples);
 }
 
 void TaudioFilterHeadphone::onSeek(void)
 {
     if (p_sys) {
-        memset(p_sys->p_overflow_buffer , 0 , p_sys->i_overflow_buffer_size );
+        memset(p_sys->p_overflow_buffer , 0 , p_sys->i_overflow_buffer_size);
     }
 }
 
@@ -712,23 +712,23 @@ const float TaudioFilterHeadphone2::cr_filt[128] = {
 };
 
 /* Amplitude scaling factors */
-const float TaudioFilterHeadphone2::M17_0DB=0.1414213562f;
-const float TaudioFilterHeadphone2::M9_03DB=0.3535533906f;
-const float TaudioFilterHeadphone2::M6_99DB=0.4472135955f;
-const float TaudioFilterHeadphone2::M4_77DB=0.5773502692f;
-const float TaudioFilterHeadphone2::M3_01DB=0.7071067812f;
-const float TaudioFilterHeadphone2::M1_76DB=0.8164965809f;
+const float TaudioFilterHeadphone2::M17_0DB = 0.1414213562f;
+const float TaudioFilterHeadphone2::M9_03DB = 0.3535533906f;
+const float TaudioFilterHeadphone2::M6_99DB = 0.4472135955f;
+const float TaudioFilterHeadphone2::M4_77DB = 0.5773502692f;
+const float TaudioFilterHeadphone2::M3_01DB = 0.7071067812f;
+const float TaudioFilterHeadphone2::M1_76DB = 0.8164965809f;
 
-const float TaudioFilterHeadphone2::IRTHRESH=0.001f;    /* Impulse response pruning thresh. */
-const float TaudioFilterHeadphone2::BASSGAIN=(float)M_SQRT2;    /* Bass compensation gain */
-const float TaudioFilterHeadphone2::BASSCROSS=0.35f;    /* Bass cross talk */
+const float TaudioFilterHeadphone2::IRTHRESH = 0.001f;  /* Impulse response pruning thresh. */
+const float TaudioFilterHeadphone2::BASSGAIN = (float)M_SQRT2;  /* Bass compensation gain */
+const float TaudioFilterHeadphone2::BASSCROSS = 0.35f;  /* Bass cross talk */
 
-const float TaudioFilterHeadphone2::STEXPAND2=0.07f;    /* Stereo expansion / 2 */
+const float TaudioFilterHeadphone2::STEXPAND2 = 0.07f;  /* Stereo expansion / 2 */
 
-TaudioFilterHeadphone2::TaudioFilterHeadphone2(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
+TaudioFilterHeadphone2::TaudioFilterHeadphone2(IffdshowBase *Ideci, Tfilters *Iparent): TaudioFilter(Ideci, Iparent)
 {
-    s=NULL;
-    oldfmt.freq=0;
+    s = NULL;
+    oldfmt.freq = 0;
 }
 
 void TaudioFilterHeadphone2::done(void)
@@ -736,12 +736,12 @@ void TaudioFilterHeadphone2::done(void)
     if (s) {
         delete s;
     }
-    s=NULL;
+    s = NULL;
 }
 
-bool TaudioFilterHeadphone2::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
+bool TaudioFilterHeadphone2::getOutputFmt(TsampleFormat &fmt, const TfilterSettingsAudio *cfg)
 {
-    if (super::getOutputFmt(fmt,cfg)) {
+    if (super::getOutputFmt(fmt, cfg)) {
         fmt.setChannels(2);
         return true;
     } else {
@@ -758,8 +758,8 @@ int TaudioFilterHeadphone2::pulse_detect(const float *sx)
     const float thresh = IRTHRESH;
     int i;
 
-    for(i = 0; i < nmax; i++)
-        if(fabs(sx[i]) > thresh) {
+    for (i = 0; i < nmax; i++)
+        if (fabs(sx[i]) > thresh) {
             return i;
         }
     return 0;
@@ -782,7 +782,7 @@ TaudioFilterHeadphone2::af_hrtf_s::af_hrtf_s(const TsampleFormat &fmt):
 {
     cyc_pos = dlbuflen - 1;
 
-    for(int i = 0; i < dlbuflen; i++)
+    for (int i = 0; i < dlbuflen; i++)
         lf[i] = rf[i] = lr[i] = rr[i] = cf[i] =
                                             cr[i] = /* la[i] = ra[i] = */ 0;
 
@@ -795,14 +795,14 @@ TaudioFilterHeadphone2::af_hrtf_s::af_hrtf_s(const TsampleFormat &fmt):
 
     //ba_ir = (float*)malloc(basslen * sizeof(float));
     float fc = 2.0f * BASSFILTFREQ / (float)fmt.freq;
-    ba_ir=TfirFilter::design_fir(&basslen, &fc, TfirSettings::LOWPASS, TfirSettings::WINDOW_KAISER, float(4*M_PI));
-    for(unsigned int i = 0; i < basslen; i++) {
+    ba_ir = TfirFilter::design_fir(&basslen, &fc, TfirSettings::LOWPASS, TfirSettings::WINDOW_KAISER, float(4 * M_PI));
+    for (unsigned int i = 0; i < basslen; i++) {
         ba_ir[i] *= BASSGAIN;
     }
 }
 TaudioFilterHeadphone2::af_hrtf_s::~af_hrtf_s()
 {
-    if(ba_ir) {
+    if (ba_ir) {
         aligned_free(ba_ir);
     }
 }
@@ -826,26 +826,26 @@ void TaudioFilterHeadphone2::af_hrtf_s::update_ch(const float *in, const int k)
 
 inline float af_filter_fir(register unsigned int n, const float* w, const float* x)
 {
-    return TfirFilter::firfilter(w,0,n,n,x);
+    return TfirFilter::firfilter(w, 0, n, n, x);
 }
 
-float TaudioFilterHeadphone2::conv(const int nx, const int nk, const float *sx, const float *sk,const int offset)
+float TaudioFilterHeadphone2::conv(const int nx, const int nk, const float *sx, const float *sk, const int offset)
 {
     /* k = reminder of offset / nx */
     int k = offset >= 0 ? offset % nx : nx + (offset % nx);
-    if(nk + k <= nx) {
+    if (nk + k <= nx) {
         return af_filter_fir(nk, sx + k, sk);
     } else {
         return af_filter_fir(nk + k - nx, sx, sk + nx - k) + af_filter_fir(nx - k, sx + k, sk);
     }
 }
 
-HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
+HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples, size_t numsamples, const TfilterSettingsAudio *cfg0)
 {
-    const TmixerSettings *cfg=(const TmixerSettings*)cfg0;
+    const TmixerSettings *cfg = (const TmixerSettings*)cfg0;
 
-    if (!s || oldfmt!=fmt) {
-        oldfmt=fmt;
+    if (!s || oldfmt != fmt) {
+        oldfmt = fmt;
         done();
         /* MPlayer's 5 channel layout (notation for the variable):
          *
@@ -853,28 +853,28 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
          * encoded: Cs (CR)
          *
          * or: L = left, C = center, R = right, F = front, R = rear*/
-        indexes[0]=fmt.findSpeaker(SPEAKER_FRONT_LEFT);
-        indexes[1]=fmt.findSpeaker(SPEAKER_FRONT_RIGHT);
-        indexes[2]=fmt.findSpeaker(SPEAKER_BACK_LEFT);
-        indexes[3]=fmt.findSpeaker(SPEAKER_BACK_RIGHT);
-        indexes[4]=fmt.findSpeaker(SPEAKER_FRONT_CENTER);
-        indexes[5]=fmt.findSpeaker(SPEAKER_LOW_FREQUENCY);
+        indexes[0] = fmt.findSpeaker(SPEAKER_FRONT_LEFT);
+        indexes[1] = fmt.findSpeaker(SPEAKER_FRONT_RIGHT);
+        indexes[2] = fmt.findSpeaker(SPEAKER_BACK_LEFT);
+        indexes[3] = fmt.findSpeaker(SPEAKER_BACK_RIGHT);
+        indexes[4] = fmt.findSpeaker(SPEAKER_FRONT_CENTER);
+        indexes[5] = fmt.findSpeaker(SPEAKER_LOW_FREQUENCY);
         //indexes[6]=fmt.findSpeaker(SPEAKER_BACK_CENTER);
         //indexes[7]=fmt.findSpeaker(SPEAKER_SIDE_LEFT);
         //indexes[8]=fmt.findSpeaker(SPEAKER_SIDE_RIGHT);
-        s=new af_hrtf_s(fmt);
+        s = new af_hrtf_s(fmt);
     }
 
-    float *inbuf=(float*)init(cfg,fmt,samples,numsamples); // Input audio data
-    float *end=inbuf+numsamples*fmt.nchannels; // Loop end
+    float *inbuf = (float*)init(cfg, fmt, samples, numsamples); // Input audio data
+    float *end = inbuf + numsamples * fmt.nchannels; // Loop end
     fmt.setChannels(2);
-    float *out=(float*)(samples=alloc_buffer(fmt,numsamples,buf));
+    float *out = (float*)(samples = alloc_buffer(fmt, numsamples, buf));
 
     const int dblen = s->dlbuflen, hlen = s->hrflen, blen = s->basslen;
-    while(inbuf < end) {
+    while (inbuf < end) {
         const int k = s->cyc_pos;
-        for (int i=0 ; i<6 /* 9 */ ; i++) {
-            in[i]=indexes[i]!=-1 ? inbuf[indexes[i]] : 0.0f;
+        for (int i = 0 ; i < 6 /* 9 */ ; i++) {
+            in[i] = indexes[i] != -1 ? inbuf[indexes[i]] : 0.0f;
         }
 
         s->update_ch(in, k);
@@ -883,26 +883,26 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
            front channels (like reflection from a room wall) - a kind of
            psycho-acoustically "cheating" to focus the center front
            channel, which is normally hard to be perceived as front */
-        static const float CFECHOAMPL=M17_0DB;    /* Center front echo amplitude */
+        static const float CFECHOAMPL = M17_0DB;  /* Center front echo amplitude */
         s->lf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
         s->rf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
 
-        float common,left,right;
+        float common, left, right;
 
         common = conv(dblen, hlen, &s->cf[0], &s->cf_ir[0], k + s->cf_o);
 
         left    =
-            ( conv(dblen, hlen, &s->lf[0], s->af_ir, k + s->af_o) +
-              conv(dblen, hlen, &s->rf[0], s->of_ir, k + s->of_o) +
-              conv(dblen, hlen, &s->lr[0], s->ar_ir, k + s->ar_o) +
-              conv(dblen, hlen, &s->rr[0], s->or_ir, k + s->or_o) +
-              common);
+            (conv(dblen, hlen, &s->lf[0], s->af_ir, k + s->af_o) +
+             conv(dblen, hlen, &s->rf[0], s->of_ir, k + s->of_o) +
+             conv(dblen, hlen, &s->lr[0], s->ar_ir, k + s->ar_o) +
+             conv(dblen, hlen, &s->rr[0], s->or_ir, k + s->or_o) +
+             common);
         right   =
-            ( conv(dblen, hlen, &s->rf[0], s->af_ir, k + s->af_o) +
-              conv(dblen, hlen, &s->lf[0], s->of_ir, k + s->of_o) +
-              conv(dblen, hlen, &s->rr[0], s->ar_ir, k + s->ar_o) +
-              conv(dblen, hlen, &s->lr[0], s->or_ir, k + s->or_o) +
-              common);
+            (conv(dblen, hlen, &s->rf[0], s->af_ir, k + s->af_o) +
+             conv(dblen, hlen, &s->lf[0], s->of_ir, k + s->of_o) +
+             conv(dblen, hlen, &s->rr[0], s->ar_ir, k + s->ar_o) +
+             conv(dblen, hlen, &s->lr[0], s->or_ir, k + s->or_o) +
+             common);
 
         /* Bass compensation for the lower frequency cut of the HRTF.  A
            cross talk of the left and right channel is introduced to
@@ -915,13 +915,13 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
         left  += (1 - BASSCROSS) * left_b  + BASSCROSS * right_b;
         right += (1 - BASSCROSS) * right_b + BASSCROSS * left_b;
         /* Also mix the LFE channel (if available) */
-        if(indexes[5]!=-1) {
+        if (indexes[5] != -1) {
             left  += in[5] * M3_01DB;
             right += in[5] * M3_01DB;
         }
 
         /* Amplitude renormalization. */
-        static const float AMPLNORM=M6_99DB;    /* Overall amplitude renormalization */
+        static const float AMPLNORM = M6_99DB;  /* Overall amplitude renormalization */
         left  *= AMPLNORM;
         right *= AMPLNORM;
 
@@ -935,9 +935,9 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
         inbuf += oldfmt.nchannels;
         out += fmt.nchannels;
         s->cyc_pos--;
-        if(s->cyc_pos < 0) {
+        if (s->cyc_pos < 0) {
             s->cyc_pos += dblen;
         }
     }
-    return parent->deliverSamples(++it,fmt,samples,numsamples);
+    return parent->deliverSamples(++it, fmt, samples, numsamples);
 }

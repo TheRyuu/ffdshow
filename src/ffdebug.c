@@ -21,81 +21,88 @@
 #include <stdio.h>
 #include "char_t.h"
 
-int allowDPRINTF=0;
+int allowDPRINTF = 0;
 
-void DPRINTFvaA(const char *fmt,va_list valist)
+void DPRINTFvaA(const char *fmt, va_list valist)
 {
- char buf[1024];
- int len;
+    char buf[1024];
+    int len;
 
- if (!allowDPRINTF)
-  return;
- len=_vsnprintf(buf,1023,fmt,valist);
- if (len>0)
-  {
-   if (buf[len-1]!='\n')
-    {
-     buf[len]='\n';
-     buf[len+1]='\0';
+    if (!allowDPRINTF) {
+        return;
     }
-   OutputDebugStringA(buf);
-  }
-}
-void DPRINTFvaW(const wchar_t *fmt,va_list valist)
-{
- wchar_t buf[1024];
- int len;
-
- if (!allowDPRINTF)
-  return;
- len=_vsnwprintf(buf,1023,fmt,valist);
- if (len>0)
-  {
-   if (buf[len-1]!='\n')
-    {
-     buf[len]='\n';
-     buf[len+1]='\0';
+    len = _vsnprintf(buf, 1023, fmt, valist);
+    if (len > 0) {
+        if (buf[len - 1] != '\n') {
+            buf[len] = '\n';
+            buf[len + 1] = '\0';
+        }
+        OutputDebugStringA(buf);
     }
-   OutputDebugStringW(buf);
-  }
 }
-void DPRINTFva(const char_t *fmt,va_list valist)
+
+void DPRINTFvaW(const wchar_t *fmt, va_list valist)
 {
- if (!allowDPRINTF)
-  return;
+    wchar_t buf[1024];
+    int len;
+
+    if (!allowDPRINTF) {
+        return;
+    }
+    len = _vsnwprintf(buf, 1023, fmt, valist);
+    if (len > 0) {
+        if (buf[len - 1] != '\n') {
+            buf[len] = '\n';
+            buf[len + 1] = '\0';
+        }
+        OutputDebugStringW(buf);
+    }
+}
+
+void DPRINTFva(const char_t *fmt, va_list valist)
+{
+    if (!allowDPRINTF) {
+        return;
+    }
 #ifdef UNICODE
- DPRINTFvaW(fmt,valist);
+    DPRINTFvaW(fmt, valist);
 #else
- DPRINTFvaA(fmt,valist);
+    DPRINTFvaA(fmt, valist);
 #endif
 }
-void DPRINTF(const char_t *fmt,...)
-{
- va_list args;
 
- if (!allowDPRINTF)
-  return;
- va_start(args, fmt);
- DPRINTFva(fmt,args);
- va_end(args);
+void DPRINTF(const char_t *fmt, ...)
+{
+    va_list args;
+
+    if (!allowDPRINTF) {
+        return;
+    }
+    va_start(args, fmt);
+    DPRINTFva(fmt, args);
+    va_end(args);
 }
-void DPRINTFA(const char *fmt,...)
-{
- va_list args;
 
- if (!allowDPRINTF)
-  return;
- va_start(args, fmt);
- DPRINTFvaA(fmt,args);
- va_end(args);
+void DPRINTFA(const char *fmt, ...)
+{
+    va_list args;
+
+    if (!allowDPRINTF) {
+        return;
+    }
+    va_start(args, fmt);
+    DPRINTFvaA(fmt, args);
+    va_end(args);
 }
-void DPRINTFW(const wchar_t *fmt,...)
-{
- va_list args;
 
- if (!allowDPRINTF)
-  return;
- va_start(args, fmt);
- DPRINTFvaW(fmt,args);
- va_end(args);
+void DPRINTFW(const wchar_t *fmt, ...)
+{
+    va_list args;
+
+    if (!allowDPRINTF) {
+        return;
+    }
+    va_start(args, fmt);
+    DPRINTFvaW(fmt, args);
+    va_end(args);
 }

@@ -39,17 +39,17 @@ private:
     boost::mutex mut;
     boost::condition_variable cond;
 public:
-    Twinamp2dsp(Twinamp2dspDll *Idll,winampDSPModule *Imod);
+    Twinamp2dsp(Twinamp2dspDll *Idll, winampDSPModule *Imod);
     ~Twinamp2dsp();
     void addref(void);
     void release(void);
     ffstring descr;
     int init(void);
     void config(HWND parent);
-    size_t process(int16_t *samples,size_t numsamples,int bps,int nch,int srate);
+    size_t process(int16_t *samples, size_t numsamples, int bps, int nch, int srate);
     void done(void);
     bool isMultichannelAllowed(const char_t *compList) const {
-        return dll?dll->isMultichannelAllowed(compList):false;
+        return dll ? dll->isMultichannelAllowed(compList) : false;
     }
 };
 
@@ -63,7 +63,7 @@ public:
     typedef std::vector<Twinamp2dspDll*> Twinamp2dspDlls;
     Twinamp2dspDlls dsps;
     Twinamp2dspDll* getFilter(const char_t *flnm);
-    Twinamp2dsp* getFilter(const Twinamp2settings *cfg,int nchannels);
+    Twinamp2dsp* getFilter(const Twinamp2settings *cfg, int nchannels);
 };
 
 #endif

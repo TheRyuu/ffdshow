@@ -31,29 +31,29 @@
 #include "TfakeImediaSample.h"
 #include "IntelQuickSyncDecoder/src/IQuickSyncDecoder.h"
 
-const char_t* TvideoCodecQuickSync::dllname=_l(QS_DEC_DLL_NAME);
+const char_t* TvideoCodecQuickSync::dllname = _l(QS_DEC_DLL_NAME);
 static bool CheckForSSE41()
 {
-   int CPUInfo[4];
+    int CPUInfo[4];
     __cpuid(CPUInfo, 1);
 
-    return 0 != (CPUInfo[2] & (1<<19)); //19th bit of 2nd reg means sse4.1 is enabled
+    return 0 != (CPUInfo[2] & (1 << 19)); //19th bit of 2nd reg means sse4.1 is enabled
 }
 
 static const bool s_SSE4_1_enabled = CheckForSSE41();
 
 HRESULT TvideoCodecQuickSync::DeliverSurfaceCallback(void* obj, QsFrameData* frameData)
 {
-    if (!obj) return E_UNEXPECTED;
+    if (!obj) { return E_UNEXPECTED; }
 
     return ((TvideoCodecQuickSync*)obj)->DeliverSurface(frameData);
 }
 
-TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *IsinkD, int codecID) :
+TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci, IdecVideoSink *IsinkD, int codecID) :
     Tcodec(Ideci),
-    TcodecDec(Ideci,IsinkD),
+    TcodecDec(Ideci, IsinkD),
     TvideoCodec(Ideci),
-    TvideoCodecDec(Ideci,IsinkD),
+    TvideoCodecDec(Ideci, IsinkD),
     createQuickSync(NULL),
     destroyQuickSync(NULL),
     m_QuickSync(NULL),
@@ -62,28 +62,23 @@ TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *Is
     m_MediaSample(_l("Fake Media Sample"), &m_FakeAllocator, NULL, NULL, 0)
 {
     ok = false;
-    m_Dll = new Tdll(dllname,config);
+    m_Dll = new Tdll(dllname, config);
     m_Dll->loadFunction(createQuickSync, "createQuickSync");
     m_Dll->loadFunction(destroyQuickSync, "destroyQuickSync");
-    if (NULL != createQuickSync && NULL != destroyQuickSync)
-    {
+    if (NULL != createQuickSync && NULL != destroyQuickSync) {
         m_QuickSync = createQuickSync();
         ok = (m_QuickSync) && m_QuickSync->getOK();
-        if (ok)
-        {
+        if (ok) {
             m_QuickSync->SetDeliverSurfaceCallback(this, DeliverSurfaceCallback);
 
             // workaround for WMC so it doesn't fail.
-            if (0 == _tcscmp(Ideci->getExeflnm(), _l("ehshell.exe")))
-            {
+            if (0 == _tcscmp(Ideci->getExeflnm(), _l("ehshell.exe"))) {
                 CQsConfig cfg;
                 m_QuickSync->GetConfig(&cfg);
                 cfg.bEnableSwEmulation = true;
                 m_QuickSync->SetConfig(&cfg);
             }
-        }
-        else
-        {
+        } else {
             destroyQuickSync(m_QuickSync);
             m_QuickSync = NULL;
         }
@@ -93,15 +88,11 @@ TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *Is
 TvideoCodecQuickSync::~TvideoCodecQuickSync()
 {
     CAutoLock lock(&m_csLock);
-    if (destroyQuickSync)
-    {
-        try
-        {
+    if (destroyQuickSync) {
+        try {
             destroyQuickSync(m_QuickSync);
             m_QuickSync = NULL;
-        }
-        catch (...)
-        {
+        } catch (...) {
             m_QuickSync = NULL;
         }
     }
@@ -113,29 +104,30 @@ const char_t* TvideoCodecQuickSync::getName(void) const
     return _l("Intel\xae QuickSync");
 }
 
-bool TvideoCodecQuickSync::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags)
+bool TvideoCodecQuickSync::beginDecompress(TffPictBase &pict, FOURCC infcc, const CMediaType &mt, int sourceFlags)
 {
-    if (!ok) return false;
+    if (!ok) { return false; }
 
     CAutoLock lock(&m_csLock);
     CQsConfig cfg;
     m_QuickSync->GetConfig(&cfg);
-    
+
     // force ffdshow defaults/options
     cfg.bTimeStampCorrection          = deci->getParam2(IDFF_QS_ENABLE_TS_CORR) != 0;
     cfg.bEnableMultithreading         = deci->getParam2(IDFF_QS_ENABLE_MT) != 0;
     cfg.eFieldOrder                   = deci->getParam2(IDFF_QS_FIELD_ORDER);
     cfg.bEnableSwEmulation            = deci->getParam2(IDFF_QS_ENABLE_SW_EMULATION) != 0;
-    cfg.bForceFieldOrder              = deci->getParam2(IDFF_QS_FORCE_FIELD_ORDER) != 0; 
-    cfg.bEnableDvdDecoding            = deci->getParam2(IDFF_QS_ENABLE_DVD_DECODE) != 0; 
+    cfg.bForceFieldOrder              = deci->getParam2(IDFF_QS_FORCE_FIELD_ORDER) != 0;
+    cfg.bEnableDvdDecoding            = deci->getParam2(IDFF_QS_ENABLE_DVD_DECODE) != 0;
     cfg.bVppEnableDeinterlacing       = deci->getParam2(IDFF_QS_ENABLE_DI) != 0;
     cfg.bVppEnableForcedDeinterlacing = deci->getParam2(IDFF_QS_FORCE_DI) != 0;
     cfg.bVppEnableFullRateDI          = deci->getParam2(IDFF_QS_ENABLE_FULL_RATE) != 0;
     cfg.nVppDetailStrength            = deci->getParam2(IDFF_QS_DETAIL);
     cfg.nVppDenoiseStrength           = deci->getParam2(IDFF_QS_DENOISE);
 
-    if (cfg.bVppEnableForcedDeinterlacing)
+    if (cfg.bVppEnableForcedDeinterlacing) {
         cfg.bVppEnableDeinterlacing = true;
+    }
 
     // Auto enable VPP
     cfg.bEnableVideoProcessing = (cfg.nVppDenoiseStrength || cfg.nVppDetailStrength || cfg.bVppEnableDeinterlacing);
@@ -149,18 +141,17 @@ bool TvideoCodecQuickSync::beginDecompress(TffPictBase &pict,FOURCC infcc,const 
     return hr == S_OK;
 }
 
-HRESULT TvideoCodecQuickSync::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
+HRESULT TvideoCodecQuickSync::decompress(const unsigned char *src, size_t srcLen, IMediaSample *pIn)
 {
-    if (!ok) return E_UNEXPECTED;
+    if (!ok) { return E_UNEXPECTED; }
 
     CAutoLock lock(&m_csLock);
 
     IMediaSample* pMediaSample = pIn;
     TfakeMediaSample* pFakeMediaSample = (E_NOTIMPL == pIn->GetActualDataLength()) ? static_cast<TfakeMediaSample*>(pIn) : NULL;
-    
+
     // VFW flow
-    if (NULL != pFakeMediaSample)
-    {
+    if (NULL != pFakeMediaSample) {
         m_MediaSample.SetDiscontinuity(pFakeMediaSample->IsDiscontinuity() == S_OK ? TRUE : FALSE);
         m_MediaSample.SetSyncPoint(pFakeMediaSample->IsSyncPoint() == S_OK ? TRUE : FALSE);
         m_MediaSample.SetPointer(const_cast<BYTE*>(src), (LONG)srcLen);
@@ -171,17 +162,16 @@ HRESULT TvideoCodecQuickSync::decompress(const unsigned char *src,size_t srcLen,
     bool isSyncPoint = pMediaSample->IsSyncPoint() == S_OK;
     HRESULT hr = m_QuickSync->Decode(pMediaSample);
 
-    if (pMediaSample->IsPreroll() == S_OK)
-    {
+    if (pMediaSample->IsPreroll() == S_OK) {
         return sinkD->deliverPreroll((isSyncPoint) ? FRAME_TYPE::I : FRAME_TYPE::P);
     }
-    
+
     return hr;
 }
 
 bool TvideoCodecQuickSync::onSeek(REFERENCE_TIME segmentStart)
 {
-    if (!ok)  return false;
+    if (!ok) { return false; }
 
     CAutoLock lock(&m_csLock);
     telecineManager.onSeek();
@@ -190,36 +180,35 @@ bool TvideoCodecQuickSync::onSeek(REFERENCE_TIME segmentStart)
 
 HRESULT TvideoCodecQuickSync::DeliverSurface(QsFrameData* frameData)
 {
-    if (NULL == frameData) return E_POINTER;
+    if (NULL == frameData) { return E_POINTER; }
 
-    unsigned char* dstBuffer[4]= {frameData->y, frameData->u, 0, 0};
-    ptrdiff_t strides[4]= {frameData->dwStride, frameData->dwStride, 0, 0};
+    unsigned char* dstBuffer[4] = {frameData->y, frameData->u, 0, 0};
+    ptrdiff_t strides[4] = {frameData->dwStride, frameData->dwStride, 0, 0};
     int frametype, fieldtype;
 
     // set frame type - Not curently available!
-    switch (frameData->frameType)
-    {
-    case QsFrameData::P:
-        frametype = FRAME_TYPE::P; break;
-    case QsFrameData::B:
-        frametype = FRAME_TYPE::B; break;
-    case QsFrameData::I:
-    default:
-        frametype = FRAME_TYPE::I;
+    switch (frameData->frameType) {
+        case QsFrameData::P:
+            frametype = FRAME_TYPE::P;
+            break;
+        case QsFrameData::B:
+            frametype = FRAME_TYPE::B;
+            break;
+        case QsFrameData::I:
+        default:
+            frametype = FRAME_TYPE::I;
     }
 
     // interlacing info
     // progressive
-    if (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_WEAVE)
-    {
+    if (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_WEAVE) {
         fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
     }
     // interlaced
-    else
-    {
-        fieldtype = (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_FIELD1FIRST) ? 
-            (FIELD_TYPE::INT_TFF) :
-            (FIELD_TYPE::INT_BFF);
+    else {
+        fieldtype = (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_FIELD1FIRST) ?
+                    (FIELD_TYPE::INT_TFF) :
+                    (FIELD_TYPE::INT_BFF);
     }
 
     Trect r(frameData->rcClip);
@@ -231,8 +220,7 @@ HRESULT TvideoCodecQuickSync::DeliverSurface(QsFrameData* frameData)
     pict.rtStop  = frameData->rtStop;
 
     // aspect ratio
-    if (frameData->dwPictAspectRatioX * frameData->dwPictAspectRatioY != 0)
-    {
+    if (frameData->dwPictAspectRatioX * frameData->dwPictAspectRatioY != 0) {
         Rational dar(frameData->dwPictAspectRatioX, frameData->dwPictAspectRatioY);
         pict.setDar(dar);
     }
@@ -254,7 +242,7 @@ HRESULT TvideoCodecQuickSync::DeliverSurface(QsFrameData* frameData)
 
 HRESULT TvideoCodecQuickSync::BeginFlush()
 {
-    if (!ok) return E_UNEXPECTED;
+    if (!ok) { return E_UNEXPECTED; }
 
     // No lock!
     HRESULT hr =  m_QuickSync->BeginFlush();
@@ -264,7 +252,7 @@ HRESULT TvideoCodecQuickSync::BeginFlush()
 
 HRESULT TvideoCodecQuickSync::EndFlush()
 {
-    if (!ok) return E_UNEXPECTED;
+    if (!ok) { return E_UNEXPECTED; }
 
     // No lock!
     return m_QuickSync->EndFlush();
@@ -272,54 +260,53 @@ HRESULT TvideoCodecQuickSync::EndFlush()
 
 bool TvideoCodecQuickSync::onDiscontinuity()
 {
-    if (!ok) return false;
+    if (!ok) { return false; }
     return __super::onDiscontinuity();
 }
 
 // called on "end of stream" event
 HRESULT TvideoCodecQuickSync::onEndOfStream()
 {
-    if (!ok) return E_UNEXPECTED;
+    if (!ok) { return E_UNEXPECTED; }
 
     CAutoLock lock(&m_csLock);
     HRESULT hr = m_QuickSync->Flush(true);
     return hr;
 }
 
-bool TvideoCodecQuickSync::testMediaType(FOURCC fcc,const CMediaType &mt)
+bool TvideoCodecQuickSync::testMediaType(FOURCC fcc, const CMediaType &mt)
 {
-    if (!ok) return false;
+    if (!ok) { return false; }
     return S_OK == m_QuickSync->TestMediaType(&mt, fcc);
 }
 
 void TvideoCodecQuickSync::setOutputPin(IPin *pPin)
 {
-    if (!ok) return;
+    if (!ok) { return; }
 
-    if (NULL == pPin)
-    {
+    if (NULL == pPin) {
         m_QuickSync->SetD3DDeviceManager(NULL);
     }
 
     IDirect3DDeviceManager9 *pDeviceManager = NULL;
     IMFGetService *pGetService = NULL;
     HRESULT hr = pPin->QueryInterface(__uuidof(IMFGetService), (void**)&pGetService);
-    if (SUCCEEDED(hr))
-    {
+    if (SUCCEEDED(hr)) {
         hr = pGetService->GetService(MR_VIDEO_ACCELERATION_SERVICE, IID_IDirect3DDeviceManager9, (void**)&pDeviceManager);
     }
 
     m_QuickSync->SetD3DDeviceManager((SUCCEEDED(hr)) ? pDeviceManager : NULL);
 
-    if (pDeviceManager) pDeviceManager->Release();
-    if (pGetService) pGetService->Release();
+    if (pDeviceManager) { pDeviceManager->Release(); }
+    if (pGetService) { pGetService->Release(); }
 }
 
 bool TvideoCodecQuickSync::check(Tconfig* config)
 {
     // Check for SSE4.1 so old CPUs will not be bothered
-    if (!s_SSE4_1_enabled)
+    if (!s_SSE4_1_enabled) {
         return false;
+    }
     static bool checkResult = Tdll::check(dllname, config); //no need to do this more than once
     return checkResult;
 }

@@ -30,7 +30,7 @@
 TrenderedSubtitleWordBase::~TrenderedSubtitleWordBase()
 {
     if (own)
-        for (int i=0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             aligned_free(bmp[i]);
             aligned_free(msk[i]);
             aligned_free(outline[i]);
@@ -39,45 +39,45 @@ TrenderedSubtitleWordBase::~TrenderedSubtitleWordBase()
 }
 
 //============================== TrenderedSubtitleLine::TprintPrefs ===============================
-TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings)
+TprintPrefs::TprintPrefs(IffdshowBase *Ideci, const TfontSettings *IfontSettings)
 {
-    memset(this,0,sizeof(this)); // This doesn't seem to help after optimization.
+    memset(this, 0, sizeof(this)); // This doesn't seem to help after optimization.
     dx = dy = 0;
-    isOSD=false;
+    isOSD = false;
     xpos = ypos = 0;
     align = 0;
     linespacing = 0;
-    sizeDx=0;
-    sizeDy=0;
+    sizeDx = 0;
+    sizeDy = 0;
     if (IfontSettings) {
         fontSettings = *IfontSettings;
     }
-    deci=Ideci;
-    config=NULL;
-    stereoScopicParallax=0;
+    deci = Ideci;
+    config = NULL;
+    stereoScopicParallax = 0;
     vobchangeposition = false;
     subimgscale = vobaamode = vobaagauss = 0;
     OSDitemSplit = 0;
-    textMarginLR=0;
-    tabsize=8;
-    dvd=false;
+    textMarginLR = 0;
+    tabsize = 8;
+    dvd = false;
     shadowMode = TfontSettings::ClassicShadow;
     shadowSize = csp = 0;
     outlineWidth = 0;
     blurStrength = TfontSettings::Softest;
-    outlineBlur=false;
-    clipdy=0;
-    sar=Rational(1,1);
-    opaqueBox=false;
-    italic=0;
-    underline=0;
-    subformat=-1;
-    xinput=0;
-    yinput=0;
-    rtStart=REFTIME_INVALID;
-    yuvcolor=YUVcolorA(fontSettings.color,fontSettings.bodyAlpha);
-    outlineYUV=YUVcolorA(fontSettings.outlineColor,fontSettings.outlineAlpha);
-    shadowYUV=YUVcolorA(fontSettings.shadowColor,fontSettings.shadowAlpha);
+    outlineBlur = false;
+    clipdy = 0;
+    sar = Rational(1, 1);
+    opaqueBox = false;
+    italic = 0;
+    underline = 0;
+    subformat = -1;
+    xinput = 0;
+    yinput = 0;
+    rtStart = REFTIME_INVALID;
+    yuvcolor = YUVcolorA(fontSettings.color, fontSettings.bodyAlpha);
+    outlineYUV = YUVcolorA(fontSettings.outlineColor, fontSettings.outlineAlpha);
+    shadowYUV = YUVcolorA(fontSettings.shadowColor, fontSettings.shadowAlpha);
 }
 
 bool TprintPrefs::operator != (const TprintPrefs &rt) const
@@ -125,9 +125,9 @@ double TrenderedSubtitleLine::width() const
     if (empty()) {
         return 0;
     }
-    double dx=0;
-    foreach (TrenderedSubtitleWordBase *word, *this)
-        dx += word->dxChar;
+    double dx = 0;
+    foreach(TrenderedSubtitleWordBase * word, *this)
+    dx += word->dxChar;
     return dx;
 }
 
@@ -136,12 +136,12 @@ unsigned int TrenderedSubtitleLine::height() const
     if (empty()) {
         return 0;
     }
-    int aboveBaseline=0,belowBaseline=0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        aboveBaseline=std::max<int>(aboveBaseline,word->get_baseline());
-        belowBaseline=std::max<int>(belowBaseline,word->dy[0]-word->get_baseline());
+    int aboveBaseline = 0, belowBaseline = 0;
+    foreach(TrenderedSubtitleWordBase * word, *this) {
+        aboveBaseline = std::max<int>(aboveBaseline, word->get_baseline());
+        belowBaseline = std::max<int>(belowBaseline, word->dy[0] - word->get_baseline());
     }
-    return aboveBaseline+belowBaseline;
+    return aboveBaseline + belowBaseline;
 }
 
 double TrenderedSubtitleLine::lineHeight() const
@@ -149,10 +149,10 @@ double TrenderedSubtitleLine::lineHeight() const
     if (empty()) {
         return emptyHeight;
     }
-    double aboveBaseline = 0,belowBaseline = 0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        aboveBaseline=std::max<double>(aboveBaseline,word->get_ascent());
-        belowBaseline=std::max<double>(belowBaseline,word->get_descent());
+    double aboveBaseline = 0, belowBaseline = 0;
+    foreach(TrenderedSubtitleWordBase * word, *this) {
+        aboveBaseline = std::max<double>(aboveBaseline, word->get_ascent());
+        belowBaseline = std::max<double>(belowBaseline, word->get_descent());
     }
     return aboveBaseline + belowBaseline;
 }
@@ -163,8 +163,8 @@ double TrenderedSubtitleLine::baselineHeight() const
         return 0;
     }
     double aboveBaseline = 0;
-    foreach (TrenderedSubtitleWordBase *word, *this)
-        aboveBaseline = std::max<double>(aboveBaseline, word->get_baseline());
+    foreach(TrenderedSubtitleWordBase * word, *this)
+    aboveBaseline = std::max<double>(aboveBaseline, word->get_baseline());
     return aboveBaseline;
 }
 
@@ -173,11 +173,12 @@ double TrenderedSubtitleLine::getTopOverhang() const
     if (empty()) {
         return 0;
     }
-    double aboveBaseline = 0,aboveBaseLinePlusOutline = 0;
-    foreach (TrenderedSubtitleWordBase *w, *this) {
+    double aboveBaseline = 0, aboveBaseLinePlusOutline = 0;
+    foreach(TrenderedSubtitleWordBase * w, *this) {
         TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(w);
-        if (word == NULL)
+        if (word == NULL) {
             return 0;
+        }
         aboveBaseline            = std::max<double>(aboveBaseline, word->get_ascent());
         aboveBaseLinePlusOutline = std::max<double>(aboveBaseLinePlusOutline, word->aboveBaseLinePlusOutline());
     }
@@ -189,11 +190,12 @@ double TrenderedSubtitleLine::getBottomOverhang() const
     if (empty()) {
         return 0;
     }
-    double belowBaseline = 0,belowBaseLinePlusOutline = 0;
-    foreach (TrenderedSubtitleWordBase *w, *this) {
+    double belowBaseline = 0, belowBaseLinePlusOutline = 0;
+    foreach(TrenderedSubtitleWordBase * w, *this) {
         TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(w);
-        if (word == NULL)
+        if (word == NULL) {
             return 0;
+        }
         belowBaseline            = std::max<double>(belowBaseline, word->get_descent());
         belowBaseLinePlusOutline = std::max<double>(belowBaseLinePlusOutline, word->belowBaseLinePlusOutline());
     }
@@ -202,21 +204,25 @@ double TrenderedSubtitleLine::getBottomOverhang() const
 
 double TrenderedSubtitleLine::getLeftOverhang() const
 {
-    if (empty())
+    if (empty()) {
         return 0;
+    }
     TrenderedTextSubtitleWord *front = dynamic_cast<TrenderedTextSubtitleWord *>(this->front());
-    if (!front)
+    if (!front) {
         return 0;
+    }
     return front->mprops.outlineWidth;
 }
 
 double TrenderedSubtitleLine::getRightOverhang() const
 {
-    if (empty())
+    if (empty()) {
         return 0;
+    }
     TrenderedTextSubtitleWord *back = dynamic_cast<TrenderedTextSubtitleWord *>(this->back());
-    if (!back)
+    if (!back) {
         return 0;
+    }
     return back->mprops.outlineWidth;
 }
 
@@ -227,7 +233,7 @@ void TrenderedSubtitleLine::setParagraphRect(CRectDouble &IparagraphRect)
 }
 
 void TrenderedSubtitleLine::print(
-    double startx,double starty,
+    double startx, double starty,
     const TprintPrefs &prefs,
     unsigned int prefsdx,
     unsigned int prefsdy,
@@ -253,28 +259,28 @@ void TrenderedSubtitleLine::print(
     for (const_iterator w = begin() ; w != end() ; startx += (*w)->dxChar, w++) {
         TrenderedTextSubtitleWord *textw = dynamic_cast<TrenderedTextSubtitleWord *>(*w);
         if (textw) {
-            textw->printText(startx,starty,baseline,prefs.rtStart,prefsdx,prefsdy,dst,stride);
+            textw->printText(startx, starty, baseline, prefs.rtStart, prefsdx, prefsdy, dst, stride);
         } else {
-            if (startx >= int(prefsdx)) continue;
+            if (startx >= int(prefsdx)) { continue; }
             TrenderedSubtitleWordBase *word = *w;
-            const unsigned char *msk[3],*bmp[3];
+            const unsigned char *msk[3], *bmp[3];
             unsigned char *dstLn[3];
             int x[3];
             unsigned int dx[3];
             int dy[3];
             int sy0 = int(starty + baseline - word->get_baseline());
-            for (int i=0; i<3; i++) {
+            for (int i = 0; i < 3; i++) {
                 x[i] = int(startx) >> cspInfo->shiftX[i];
                 msk[i] = word->msk[i];
                 bmp[i] = word->bmp[i];
-                if (prefs.align!=ALIGN_FFDSHOW && x[i]<0) {
+                if (prefs.align != ALIGN_FFDSHOW && x[i] < 0) {
                     msk[i] += -x[i];
                     bmp[i] += -x[i];
                 }
                 int sy = sy0 >> cspInfo->shiftY[i];
-                dy[i] = std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int(word->dy[i]));
+                dy[i] = std::min((int(prefsdy) >> cspInfo->shiftY[i]) - sy, int(word->dy[i]));
                 dstLn[i] = dst[i] + int(sy * stride[i]);
-                if (x[i]>0) {
+                if (x[i] > 0) {
                     dstLn[i] += x[i] * cspInfo->Bpp;
                 }
 
@@ -285,7 +291,7 @@ void TrenderedSubtitleLine::print(
                 } else {
                     dx[i] = word->dx[i];
                 }
-                dx[i] = std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
+                dx[i] = std::min(dx[i], prefsdx >> cspInfo->shiftX[i]);
             }
 
             if (dx[0] > 0 && dy[0] > 0 && dx[1] > 0 && dy[1] > 0) {
@@ -302,15 +308,15 @@ const TSubtitleMixedProps& TrenderedSubtitleLine::getProps() const
 
 void TrenderedSubtitleLine::clear()
 {
-    foreach (TrenderedSubtitleWordBase *word, *this)
-        delete word;
+    foreach(TrenderedSubtitleWordBase * word, *this)
+    delete word;
     std::vector<value_type>::clear();
 }
 
 size_t TrenderedSubtitleLine::getMemorySize() const
 {
     size_t memSize = sizeof(*this) + size() * sizeof(void*);
-        foreach (const TrenderedSubtitleWordBase *word, *this)
+    foreach(const TrenderedSubtitleWordBase * word, *this)
     memSize += word->getMemorySize();
     return memSize;
 }
@@ -343,76 +349,76 @@ void TrenderedSubtitleLines::print(
     // Stereoscopic plus collision is not supported.
     if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA
             || (isText && !prefs.stereoScopicParallax && !prefs.isOSD)) {
-        return printASS(prefs,dst,stride);
+        return printASS(prefs, dst, stride);
     }
-    double y=0;
+    double y = 0;
     if (empty()) {
         return;
     }
-    unsigned int prefsdx,prefsdy;
+    unsigned int prefsdx, prefsdy;
     if (prefs.sizeDx && prefs.sizeDy) {
-        prefsdx=prefs.sizeDx;
-        prefsdy=prefs.sizeDy;
+        prefsdx = prefs.sizeDx;
+        prefsdy = prefs.sizeDy;
     } else {
-        prefsdx=prefs.dx;
-        prefsdy=prefs.dy;
+        prefsdx = prefs.dx;
+        prefsdy = prefs.dy;
     }
 
-    double h=0,h1=0;
-    for (const_iterator i=begin(); i!=end(); i++) {
-        double h2=h1+(*i)->height();
-        h1+=(double)prefs.linespacing*(*i)->lineHeight()/100;
-        if (h2>h) {
-            h=h2;
+    double h = 0, h1 = 0;
+    for (const_iterator i = begin(); i != end(); i++) {
+        double h2 = h1 + (*i)->height();
+        h1 += (double)prefs.linespacing * (*i)->lineHeight() / 100;
+        if (h2 > h) {
+            h = h2;
         }
     }
 
-    if (prefs.isOSD && prefs.ypos>=0) {      // IffdshowDecVideo::drawOSD
-        y = (double)(prefs.ypos*prefsdy)/100.0;
-    } else if (prefs.ypos<0) {               // prefs.ypos<0 means -prefs.ypos is absolute potision. OSD use this.
+    if (prefs.isOSD && prefs.ypos >= 0) {    // IffdshowDecVideo::drawOSD
+        y = (double)(prefs.ypos * prefsdy) / 100.0;
+    } else if (prefs.ypos < 0) {             // prefs.ypos<0 means -prefs.ypos is absolute potision. OSD use this.
         y = -(double)prefs.ypos;
     } else {
-        y = ((double)prefs.ypos*prefsdy)/100.0-h/2;
+        y = ((double)prefs.ypos * prefsdy) / 100.0 - h / 2;
     }
 
-    if (prefs.ypos>=0 && y+h >= (double)prefsdy) {
-        y=(double)prefsdy-h-1;
+    if (prefs.ypos >= 0 && y + h >= (double)prefsdy) {
+        y = (double)prefsdy - h - 1;
     }
 
-    for (const_iterator i=begin(); i!=end(); y+=(double)prefs.linespacing*(*i)->lineHeight()/100,i++) {
-        if (y<0) {
+    for (const_iterator i = begin(); i != end(); y += (double)prefs.linespacing * (*i)->lineHeight() / 100, i++) {
+        if (y < 0) {
             continue;
         }
 
-        if ((unsigned int)y>=prefsdy) {
+        if ((unsigned int)y >= prefsdy) {
             break;
         }
         int x;
-        unsigned int cdx=(*i)->width();
-        if (prefs.xpos<0) {
-            x=-prefs.xpos;    // OSD
+        unsigned int cdx = (*i)->width();
+        if (prefs.xpos < 0) {
+            x = -prefs.xpos;  // OSD
         } else {
             // subtitles
-            x=(prefs.xpos * prefsdx)/100 + prefs.stereoScopicParallax;
+            x = (prefs.xpos * prefsdx) / 100 + prefs.stereoScopicParallax;
             switch (prefs.align) {
                 case ALIGN_LEFT:
                     break;
                 case ALIGN_FFDSHOW:
                 case ALIGN_CENTER:
-                    x=x-cdx/2;
+                    x = x - cdx / 2;
                     break;
                 case ALIGN_RIGHT:
-                    x=x-cdx;
+                    x = x - cdx;
                     break;
             }
         }
-        if (x+cdx>=prefsdx && !prefs.isOSD) {
-            x=prefsdx-cdx-1;
+        if (x + cdx >= prefsdx && !prefs.isOSD) {
+            x = prefsdx - cdx - 1;
         }
-        if (x<0) {
-            x=0;
+        if (x < 0) {
+            x = 0;
         }
-        (*i)->print(x,y,prefs,prefsdx,prefsdy,dst,stride); // print a line (=print words).
+        (*i)->print(x, y, prefs, prefsdx, prefsdy, dst, stride); // print a line (=print words).
     }
 }
 
@@ -421,26 +427,26 @@ void TrenderedSubtitleLines::printASS(
     unsigned char **dst,  // output image to draw on. NULL: not real rendering, just prepare bitmaps for the text.
     const stride_t *stride)
 {
-    double y=0;
+    double y = 0;
     if (empty()) {
         return;
     }
-    unsigned int prefsdx,prefsdy;
+    unsigned int prefsdx, prefsdy;
     if (prefs.sizeDx && prefs.sizeDy) {
-        prefsdx=prefs.sizeDx;
-        prefsdy=prefs.sizeDy;
+        prefsdx = prefs.sizeDx;
+        prefsdy = prefs.sizeDy;
     } else {
-        prefsdx=prefs.dx;
-        prefsdy=prefs.dy;
+        prefsdx = prefs.dx;
+        prefsdy = prefs.dy;
     }
 
-    std::map<ParagraphKey,ParagraphValue> paragraphs;
+    std::map<ParagraphKey, ParagraphValue> paragraphs;
 
     // pass 1: prepare paragraphs : a paragraph is a set of lines that have the same properties
     // (same margins, alignment and position)
-    foreach (TrenderedSubtitleLine *line, *this) {
+    foreach(TrenderedSubtitleLine * line, *this) {
         ParagraphKey pkey(line);
-        std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
+        std::map<ParagraphKey, ParagraphValue>::iterator pi = paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
             pi->second.processLine(line, pkey.alignment);
         } else {
@@ -448,26 +454,27 @@ void TrenderedSubtitleLines::printASS(
             ParagraphValue pval;
             pval.overhang.top = line->getTopOverhang();
             pval.processLine(line, pkey.alignment);
-            paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
+            paragraphs.insert(std::pair<ParagraphKey, ParagraphValue>(pkey, pval));
         }
     }
 
-    std::sort(begin(),end(),TlayerSort());
+    std::sort(begin(), end(), TlayerSort());
 
     // pass 2: print
-    foreach (TrenderedSubtitleLine *line, *this) {
+    foreach(TrenderedSubtitleLine * line, *this) {
         const TSubtitleMixedProps &lineprops = line->getProps();
-        double x=0;
+        double x = 0;
         ParagraphKey pkey(line);
         if (!line->getHasPrintedRect() || lineprops.isASSmove() || lineprops.isScroll()) {
-            std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
+            std::map<ParagraphKey, ParagraphValue>::iterator pi = paragraphs.find(pkey);
             if (pi != paragraphs.end()) {
-                ParagraphValue &pval=pi->second;
+                ParagraphValue &pval = pi->second;
                 if (pval.firstuse) {
                     if (lineprops.scroll.directionV) {
                         pval.y = lineprops.getScrollStart();
-                        if (lineprops.scroll.directionV == 1)
+                        if (lineprops.scroll.directionV == 1) {
                             pval.y -= pval.height;
+                        }
                     }  else {
                         switch (pkey.alignment) {
                             case 9: // SSA mid
@@ -476,9 +483,9 @@ void TrenderedSubtitleLines::printASS(
                                 // With middle alignment and position/move tag we position the paragraph to the requested
                                 // position basing on the anchor point set at the middle
                                 if (pkey.isMove) {
-                                    pval.y=pkey.marginTop-pval.height/2.0;
+                                    pval.y = pkey.marginTop - pval.height / 2.0;
                                 } else { // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
-                                    pval.y=(prefsdy - pval.height)/2.0;
+                                    pval.y = (prefsdy - pval.height) / 2.0;
                                 }
                                 break;
                             case 5: // SSA top
@@ -490,19 +497,19 @@ void TrenderedSubtitleLines::printASS(
                             case 2:
                             case 3:
                             default:
-                                pval.y=(double)prefsdy - 1 - pkey.marginBottom - pval.height;
+                                pval.y = (double)prefsdy - 1 - pkey.marginBottom - pval.height;
                                 break;
                         }
                     }
 
                     // If option is checked (or if subs are SUBVIEWER), correct vertical placement if text goes out of the screen
                     if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside)
-                        || !lineprops.isSSA()) && !lineprops.isMove && !lineprops.isScroll()) {
-                        if (pval.y+pval.height>prefsdy) {
-                            pval.y=prefsdy-pval.height;
+                            || !lineprops.isSSA()) && !lineprops.isMove && !lineprops.isScroll()) {
+                        if (pval.y + pval.height > prefsdy) {
+                            pval.y = prefsdy - pval.height;
                         }
-                        if (pval.y<0) {
-                            pval.y=0;
+                        if (pval.y < 0) {
+                            pval.y = 0;
                         }
                     }
 
@@ -515,15 +522,15 @@ void TrenderedSubtitleLines::printASS(
                         if (prefs.rtStart >= lineprops.get_moveStop()) {
                             pval.y += lineprops.get_movedistanceV();
                         } else
-                            pval.y += lineprops.get_movedistanceV()*
-                                      (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
+                            pval.y += lineprops.get_movedistanceV() *
+                                      (prefs.rtStart - lineprops.get_moveStart()) / (lineprops.get_moveStop() - lineprops.get_moveStart());
                     }
                 }
 
                 double cdx = line->width();
                 // Left and right margins need to be recalculated according to the length of the line
-                double marginL=lineprops.get_marginL(cdx);
-                double marginR=lineprops.get_marginR(cdx);
+                double marginL = lineprops.get_marginL(cdx);
+                double marginR = lineprops.get_marginR(cdx);
 
                 if (lineprops.scroll.directionH == -1) {
                     x = prefsdx;
@@ -534,7 +541,7 @@ void TrenderedSubtitleLines::printASS(
                         case 1: // left(SSA)
                         case 5:
                         case 9:
-                            x=marginL;
+                            x = marginL;
                             break;
                         case 3: // right(SSA)
                         case 7:
@@ -548,20 +555,20 @@ void TrenderedSubtitleLines::printASS(
                             if (lineprops.isMove) { // If position defined, then marginL is relative to left border of the screen
                                 x = marginL;
                             } else { // else marginL is relative to the center of the screen
-                                x = ((double)prefsdx - marginL - marginR - cdx)/2.0 + marginL;
+                                x = ((double)prefsdx - marginL - marginR - cdx) / 2.0 + marginL;
                             }
                             break;
                     }
                 }
 
                 // If option is checked, correct horizontal placement if text goes out of the screen
-                if ( prefs.deci->getParam2(IDFF_subSSAMaintainInside)
+                if (prefs.deci->getParam2(IDFF_subSSAMaintainInside)
                         && !lineprops.isMove) {
                     if (x + cdx > (double)prefsdx) {
                         x = prefsdx - cdx;
                     }
                     if (x < 0) {
-                        x=0;
+                        x = 0;
                     }
                 }
 
@@ -576,8 +583,9 @@ void TrenderedSubtitleLines::printASS(
                 } else {
                     pval.y += double(prefs.linespacing) * line->lineHeight() / 100.0;
                 }
-                if (dst)
+                if (dst) {
                     line->setParagraphRect(pval.myrect);
+                }
             }
 
         } else {
@@ -594,8 +602,8 @@ void TrenderedSubtitleLines::printASS(
             if (prefs.rtStart >= lineprops.get_moveStop()) {
                 x += lineprops.get_movedistanceH();
             } else
-                x += lineprops.get_movedistanceH()*
-                     (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
+                x += lineprops.get_movedistanceH() *
+                     (prefs.rtStart - lineprops.get_moveStart()) / (lineprops.get_moveStop() - lineprops.get_moveStart());
         }
 
         line->print(x, y, prefs, prefsdx, prefsdy, dst, stride);
@@ -618,7 +626,7 @@ void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x,
             // We can skip check if (l == end()) break; safely as this is guaranteed to be not empty.
             again = false;
         }
-        if ( line->mprops.layer == (*l)->mprops.layer
+        if (line->mprops.layer == (*l)->mprops.layer
                 && (*l)->checkCollision(pval.myrect, hisrect)) {
             if (alignment <= 3) {
                 // bottom
@@ -662,7 +670,7 @@ void TrenderedSubtitleLines::ParagraphValue::processLine(TrenderedSubtitleLine *
 {
     double oldWidth = width;
     double currentWidth = line->width();
-    double currentWidthDiv2 = currentWidth/2.0;
+    double currentWidthDiv2 = currentWidth / 2.0;
     height += line->lineHeight();
     width = std::max(width, currentWidth);
     overhang.bottom = line->getBottomOverhang();
@@ -697,7 +705,7 @@ void TrenderedSubtitleLines::ParagraphValue::processLine(TrenderedSubtitleLine *
 
 void TrenderedSubtitleLines::clear()
 {
-    foreach (TrenderedSubtitleLine *line, *this) {
+    foreach(TrenderedSubtitleLine * line, *this) {
         line->clear();
         delete line;
     }
@@ -707,83 +715,83 @@ void TrenderedSubtitleLines::clear()
 size_t TrenderedSubtitleLines::getMemorySize() const
 {
     size_t memSize = sizeof(*this) + size() * sizeof(void*);
-    foreach (const TrenderedSubtitleLine *line, *this)
+    foreach(const TrenderedSubtitleLine * line, *this)
     memSize += line->getMemorySize();
     return memSize;
 }
 
 bool TrenderedSubtitleLines::ParagraphKey::operator < (const ParagraphKey &rt) const
 {
-    if (alignment<rt.alignment) {
+    if (alignment < rt.alignment) {
         return true;
     }
-    if (alignment>rt.alignment) {
+    if (alignment > rt.alignment) {
         return false;
     }
-    if (marginTop<rt.marginTop) {
+    if (marginTop < rt.marginTop) {
         return true;
     }
-    if (marginTop>rt.marginTop) {
+    if (marginTop > rt.marginTop) {
         return false;
     }
-    if (marginBottom<rt.marginBottom) {
+    if (marginBottom < rt.marginBottom) {
         return true;
     }
-    if (marginBottom>rt.marginBottom) {
+    if (marginBottom > rt.marginBottom) {
         return false;
     }
-    if (marginL<rt.marginL) {
+    if (marginL < rt.marginL) {
         return true;
     }
-    if (marginL>rt.marginL) {
+    if (marginL > rt.marginL) {
         return false;
     }
-    if (marginR<rt.marginR) {
+    if (marginR < rt.marginR) {
         return true;
     }
-    if (marginR>rt.marginR) {
+    if (marginR > rt.marginR) {
         return false;
     }
-    if (isMove<rt.isMove) {
+    if (isMove < rt.isMove) {
         return true;
     }
-    if (isMove>rt.isMove) {
+    if (isMove > rt.isMove) {
         return false;
     }
-    if (isScroll<rt.isScroll) {
+    if (isScroll < rt.isScroll) {
         return true;
     }
-    if (isScroll>rt.isScroll) {
+    if (isScroll > rt.isScroll) {
         return false;
     }
-    if (pos<rt.pos) {
+    if (pos < rt.pos) {
         return true;
     }
-    if (pos>rt.pos) {
+    if (pos > rt.pos) {
         return false;
     }
-    if (layer<rt.layer) {
+    if (layer < rt.layer) {
         return true;
     }
-    if (layer>rt.layer) {
+    if (layer > rt.layer) {
         return false;
     }
-    if (hasPrintedRect<rt.hasPrintedRect) {
+    if (hasPrintedRect < rt.hasPrintedRect) {
         return true;
     }
-    if (hasPrintedRect>rt.hasPrintedRect) {
+    if (hasPrintedRect > rt.hasPrintedRect) {
         return false;
     }
-    if (lineID<rt.lineID) {
+    if (lineID < rt.lineID) {
         return true;
     }
-    if (lineID>rt.lineID) {
+    if (lineID > rt.lineID) {
         return false;
     }
-    if (printedRect<rt.printedRect) {
+    if (printedRect < rt.printedRect) {
         return true;
     }
-    if (printedRect>rt.printedRect) {
+    if (printedRect > rt.printedRect) {
         return false;
     }
     return false;
@@ -814,7 +822,7 @@ bool TrenderedSubtitleLines::ParagraphKey::operator == (const ParagraphKey &rt) 
     return !(*this != rt);
 }
 
-bool TrenderedSubtitleLines::TlayerSort::operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const
+bool TrenderedSubtitleLines::TlayerSort::operator()(TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const
 {
     return lt->getProps().layer < rt->getProps().layer;
 }
@@ -838,20 +846,20 @@ Tfont::~Tfont()
 void Tfont::init()
 {
     done();
-    hdc=CreateCompatibleDC(NULL);
+    hdc = CreateCompatibleDC(NULL);
     if (!hdc) {
         return;
     }
-    SetBkMode(hdc,TRANSPARENT);
-    SetTextColor(hdc,0xffffff);
-    SetMapMode(hdc,MM_TEXT);
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, 0xffffff);
+    SetMapMode(hdc, MM_TEXT);
 }
 
 void Tfont::done()
 {
     if (hdc) {
         if (oldFont) {
-            SelectObject(hdc,oldFont);
+            SelectObject(hdc, oldFont);
         }
         oldFont = NULL;
         DeleteDC(hdc);
@@ -859,10 +867,10 @@ void Tfont::done()
     }
 }
 
-void Tfont::prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange)
+void Tfont::prepareC(TsubtitleText *sub, const TprintPrefs &prefs, bool forceChange)
 {
-    sub->prepareGlyph(prefs,*this,forceChange);
-    lines.insert(lines.end(),sub->lines.begin(),sub->lines.end());
+    sub->prepareGlyph(prefs, *this, forceChange);
+    lines.insert(lines.end(), sub->lines.begin(), sub->lines.end());
 }
 
 int Tfont::print(
@@ -875,10 +883,10 @@ int Tfont::print(
     if (!sub) {
         return 0;
     }
-    prepareC(sub,prefs,forceChange);
-    lines.print(prefs,dst,stride);
+    prepareC(sub, prefs, forceChange);
+    lines.print(prefs, dst, stride);
     int h = 0;
-    foreach (TrenderedSubtitleLine *line, lines)
+    foreach(TrenderedSubtitleLine * line, lines)
     h += line->height();
     reset();
     return h;
@@ -889,5 +897,5 @@ void Tfont::print(
     unsigned char **dst,
     const stride_t *stride)
 {
-    lines.print(prefs,dst,stride);
+    lines.print(prefs, dst, stride);
 }

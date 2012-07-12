@@ -20,18 +20,18 @@
 #include "TsubtitlesTextpinUSF.h"
 #include "TsubreaderUSF.h"
 
-TsubtitlesTextpinUSF::TsubtitlesTextpinUSF(int Itype,IffdshowBase *Ideci,const unsigned char *extradata,unsigned int extradatalen):TsubtitlesTextpin(Itype,Ideci)
+TsubtitlesTextpinUSF::TsubtitlesTextpinUSF(int Itype, IffdshowBase *Ideci, const unsigned char *extradata, unsigned int extradatalen): TsubtitlesTextpin(Itype, Ideci)
 {
-    subs=new TsubreaderUSF2(TstreamMem(extradata,extradatalen,Tstream::ENC_UTF8),deci,true);
+    subs = new TsubreaderUSF2(TstreamMem(extradata, extradatalen, Tstream::ENC_UTF8), deci, true);
 }
 
 TsubtitlesTextpinUSF::~TsubtitlesTextpinUSF()
 {
 }
 
-void TsubtitlesTextpinUSF::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg, bool utf8)
+void TsubtitlesTextpinUSF::addSubtitle(REFERENCE_TIME start, REFERENCE_TIME stop, const unsigned char *data, unsigned int datalen, const TsubtitlesSettings *cfg, bool utf8)
 {
-    ((TsubreaderUSF2*)subs)->addSub(start,stop,data,datalen);
+    ((TsubreaderUSF2*)subs)->addSub(start, stop, data, datalen);
     init();
 }
 

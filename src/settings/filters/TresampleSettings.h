@@ -4,13 +4,13 @@
 #include "TfilterSettings.h"
 
 struct TsampleFormat;
-struct TresampleSettings :TfilterSettingsAudio {
+struct TresampleSettings : TfilterSettingsAudio {
 private:
     static const TfilterIDFF idffs;
 protected:
     virtual const int *getResets(unsigned int pageId);
 public:
-    TresampleSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
+    TresampleSettings(TintStrColl *Icoll = NULL, TfilterIDFFs *filters = NULL);
     enum {
         RESAMPLE_LAVC_NORMAL,
         RESAMPLE_LAVC_HIGH,
@@ -25,13 +25,13 @@ public:
     };
     static const Tresampler resamplers[];
     static const char_t *getResamplerName(int mode);
-    int freq,mode;
-    int _if,cond,condFreq;
+    int freq, mode;
+    int _if, cond, condFreq;
     static const char_t* getCondStr(int cond);
     bool isResample(const TsampleFormat &fmt) const;
-    virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
+    virtual void createFilters(size_t filtersorder, Tfilters *filters, TfilterQueue &queue) const;
     virtual void createPages(TffdshowPageDec *parent) const;
-    virtual bool getTip(unsigned int pageId,char_t *buf,size_t buflen);
+    virtual bool getTip(unsigned int pageId, char_t *buf, size_t buflen);
 };
 
 #endif

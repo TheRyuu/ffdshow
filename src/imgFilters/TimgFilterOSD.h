@@ -12,8 +12,8 @@ struct TfontSettingsOSD;
 struct TOSDsettings;
 class Ttranslate;
 struct TOSDsettingsVideo;
-class TimgFilterOSD : public TimgFilter,public TOSDprovider
-    _DECLARE_FILTER(TimgFilterOSD,TimgFilter)
+class TimgFilterOSD : public TimgFilter, public TOSDprovider
+    _DECLARE_FILTER(TimgFilterOSD, TimgFilter)
     private:
         TimgFiltersPlayer *parent;
 Ttranslate *trans;
@@ -25,21 +25,21 @@ private:
     bool firsttime;
     struct TosdValue {
     private:
-        char_t s[512],olds[512];
+        char_t s[512], olds[512];
         int oldVal;
-        Rational oldSar,oldDar;
+        Rational oldSar, oldDar;
         double oldDuration;
         IOSDprovider *provider;
         int type;
         mutable const char_t *name;
     public:
-        TosdValue(void):name(NULL),provider(NULL) {}
-        TosdValue(int Itype,IOSDprovider *Iprovider):type(Itype),provider(Iprovider),oldDuration(-1),name(NULL) {
-            s[0]=olds[0]='\0';
-            oldVal=-1;
+        TosdValue(void): name(NULL), provider(NULL) {}
+        TosdValue(int Itype, IOSDprovider *Iprovider): type(Itype), provider(Iprovider), oldDuration(-1), name(NULL) {
+            s[0] = olds[0] = '\0';
+            oldVal = -1;
         }
         const char_t* getName(void) const;
-        const char_t* getVal(bool &wasChange,bool &splitline,const TffPict &pict);
+        const char_t* getVal(bool &wasChange, bool &splitline, const TffPict &pict);
     };
     struct TosdToken {
     public:
@@ -51,16 +51,16 @@ private:
         ffstring string;
         TosdValue val;
     public:
-        TosdToken(const char_t *s):type(TOKEN_STRING),string(s) {}
-        TosdToken(int Itype,IOSDprovider *Iprovider):type(TOKEN_VALUE),val(Itype,Iprovider) {}
+        TosdToken(const char_t *s): type(TOKEN_STRING), string(s) {}
+        TosdToken(int Itype, IOSDprovider *Iprovider): type(TOKEN_VALUE), val(Itype, Iprovider) {}
         const char_t *getName(void) const;
-        const char_t *getStr(bool &wasChange,bool &splitline,const TffPict &pict) {
+        const char_t *getStr(bool &wasChange, bool &splitline, const TffPict &pict) {
             switch (type) {
                 case TOKEN_VALUE:
-                    return val.getVal(wasChange,splitline,pict);
+                    return val.getVal(wasChange, splitline, pict);
                 default:
                 case TOKEN_STRING:
-                    wasChange=splitline=false;
+                    wasChange = splitline = false;
                     return string.c_str();
             }
         }
@@ -68,7 +68,7 @@ private:
     typedef std::vector<TosdToken> TosdTokens;
     TosdTokens tokens;
 public:
-    TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciB,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &Iformat,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic=false);
+    TosdLine(IffdshowBase *Ideci, IffdshowDec *IdeciB, IffdshowDecVideo *IdeciV, const Tconfig *Iconfig, const ffstring &Iformat, unsigned int Iduration, IOSDprovider *Iprovider, bool Iitalic = false);
     int duration;
     unsigned int posX;
     unsigned int posY;
@@ -108,11 +108,11 @@ private:
     char_t oldSaveFlnm[MAX_PATH];
     char_t oldFormat[1024];
 public:
-    Tosds(IOSDprovider *Iprovider=NULL,const char_t *Iname=NULL);
+    Tosds(IOSDprovider *Iprovider = NULL, const char_t *Iname = NULL);
     ~Tosds();
     bool is;
     IOSDprovider *provider;
-    void init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TOSDsettingsVideo *cfg,int framecnt);
+    void init(bool allowSave, IffdshowBase *deci, IffdshowDec *deciD, IffdshowDecVideo *deciV, const Tconfig *config, const TOSDsettingsVideo *cfg, int framecnt);
     unsigned int print(
         IffdshowBase *deci,
         const TffPict &pict,
@@ -160,24 +160,24 @@ struct TshortOsdParameters {
 
 CCritSec cs;
 CCritSec csClean;
-typedef std::pair<ffstring,TshortOsdParameters> TshortOsdTemp;
+typedef std::pair<ffstring, TshortOsdParameters> TshortOsdTemp;
 std::vector<TshortOsdTemp> shortOsdRelativeTemp;
 std::vector<TshortOsdTemp> shortOsdAbsoluteTemp;
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
-    return FF_CSP_420P|FF_CSP_RGB32;
+    return FF_CSP_420P | FF_CSP_RGB32;
 }
 public:
-TimgFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterOSD(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual ~TimgFilterOSD(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg);
 virtual void done(void);
-bool shortOSDmessage(const char_t *msg,unsigned int duration);
-bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
+bool shortOSDmessage(const char_t *msg, unsigned int duration);
+bool shortOSDmessageAbsolute(const char_t *msg, unsigned int duration, unsigned int posX, unsigned int posY);
 bool cleanShortOSDmessages(void);
-HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
+HRESULT registerOSDprovider(IOSDprovider *provider, const char *name);
 HRESULT unregisterOSDprovider(IOSDprovider *provider);
 virtual bool acceptRandomYV12andRGB32(void)
 {

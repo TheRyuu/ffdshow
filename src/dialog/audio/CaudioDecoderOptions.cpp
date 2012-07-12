@@ -20,7 +20,7 @@
 
 void TaudioDecoderOptionsPage::init(void)
 {
-    tbrSetRange(IDC_TBR_DECODER_DRC_LEVEL,0,100);
+    tbrSetRange(IDC_TBR_DECODER_DRC_LEVEL, 0, 100);
 }
 
 void TaudioDecoderOptionsPage::cfg2dlg(void)
@@ -29,11 +29,11 @@ void TaudioDecoderOptionsPage::cfg2dlg(void)
 }
 void TaudioDecoderOptionsPage::drc2dlg(void)
 {
-    setCheck(IDC_CHB_AUDIO_DECODER_DRC,cfgGet(IDFF_audio_decoder_DRC));
+    setCheck(IDC_CHB_AUDIO_DECODER_DRC, cfgGet(IDFF_audio_decoder_DRC));
     int level = cfgGet(IDFF_audio_decoder_DRC_Level);
     tbrSet(IDC_TBR_DECODER_DRC_LEVEL, level);
-    setText(IDC_LBL_DECODER_DRC_LEVEL,_l("%i %%"),level);
-    setCheck(IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION,cfgGet(IDFF_audio_decoder_JitterCorrection));
+    setText(IDC_LBL_DECODER_DRC_LEVEL, _l("%i %%"), level);
+    setCheck(IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION, cfgGet(IDFF_audio_decoder_JitterCorrection));
 }
 
 INT_PTR TaudioDecoderOptionsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -47,7 +47,7 @@ INT_PTR TaudioDecoderOptionsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lPara
                     return TRUE;
             }
     }
-    return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
+    return TconfPageDecAudio::msgProc(uMsg, wParam, lParam);
 }
 
 bool TaudioDecoderOptionsPage::reset(bool testonly)
@@ -65,15 +65,15 @@ void TaudioDecoderOptionsPage::translate(void)
     TconfPageDec::translate();
 }
 
-TaudioDecoderOptionsPage::TaudioDecoderOptionsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
+TaudioDecoderOptionsPage::TaudioDecoderOptionsPage(TffdshowPageDec *Iparent): TconfPageDecAudio(Iparent)
 {
     helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/audio:decoder_options");
-    dialogId=IDD_AUDIODECODEROPTIONS;
-    inPreset=1;
-    static const TbindCheckbox<TaudioDecoderOptionsPage> chb[]= {
-        IDC_CHB_AUDIO_DECODER_DRC,IDFF_audio_decoder_DRC,NULL,
-        IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION,IDFF_audio_decoder_JitterCorrection,NULL,
-        0,NULL,NULL
+    dialogId = IDD_AUDIODECODEROPTIONS;
+    inPreset = 1;
+    static const TbindCheckbox<TaudioDecoderOptionsPage> chb[] = {
+        IDC_CHB_AUDIO_DECODER_DRC, IDFF_audio_decoder_DRC, NULL,
+        IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION, IDFF_audio_decoder_JitterCorrection, NULL,
+        0, NULL, NULL
     };
     bindCheckboxes(chb);
 }

@@ -4,7 +4,7 @@
 
 struct Tsubtitle {
     virtual ~Tsubtitle() {}
-    REFERENCE_TIME start,stop;
+    REFERENCE_TIME start, stop;
     Tsubtitle() {
         start = stop = REFTIME_INVALID;
     }
@@ -15,14 +15,14 @@ struct Tsubtitle {
         bool forceChange,
         TprintPrefs &prefs,
         unsigned char **dst,
-        const stride_t *stride) =0;
+        const stride_t *stride) = 0;
     virtual size_t numlines(void) const {
         return 1;
     }
     virtual size_t numchars(void) const {
         return 1;
     }
-    virtual void append(const unsigned char *data,unsigned int datalen) {}
+    virtual void append(const unsigned char *data, unsigned int datalen) {}
     virtual void addEmpty(void) {}
     virtual bool isText(void) const {
         return false;

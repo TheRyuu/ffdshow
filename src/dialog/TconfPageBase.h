@@ -7,7 +7,7 @@
 #include "Twidget.h"
 
 class TffdshowPageBase;
-class TconfPageBase :public Twindow
+class TconfPageBase : public Twindow
 {
 private:
     char_t dialogNameRes[256];
@@ -23,9 +23,9 @@ protected:
 
     virtual void onEditChange(void);
 public:
-    TconfPageBase(TffdshowPageBase *Iparent,int IfilterPageId=0);
+    TconfPageBase(TffdshowPageBase *Iparent, int IfilterPageId = 0);
     virtual ~TconfPageBase();
-    void createWindow(void),destroyWindow(void);
+    void createWindow(void), destroyWindow(void);
     HWND hwndParent;
     HTREEITEM hti;
     virtual const char_t* dialogName(void);
@@ -34,9 +34,9 @@ public:
     }
     virtual void translate(void);
     int inPreset;
-    int filterID,filterPageID;
+    int filterID, filterPageID;
     int uniqueID(void) const {
-        return dialogId|(filterID?filterID<<16:0);
+        return dialogId | (filterID ? filterID << 16 : 0);
     }
     const int *propsIDs;
     virtual int  getInter(void) {
@@ -68,11 +68,11 @@ public:
     virtual bool hasReset(void) {
         return false;
     }
-    virtual bool reset(bool testonly=false) {
+    virtual bool reset(bool testonly = false) {
         return false;
     }
-    virtual void getTip(char_t *tipS,size_t len) {
-        tipS[0]='\0';
+    virtual void getTip(char_t *tipS, size_t len) {
+        tipS[0] = '\0';
     }
     void resize(const CRect &newrect);
 };

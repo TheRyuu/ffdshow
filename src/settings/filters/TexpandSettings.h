@@ -4,10 +4,10 @@
 #include "TfilterSettings.h"
 #include "TffRect.h"
 
-struct TexpandSettings :TfilterSettingsVideo {
-    TexpandSettings(void):TfilterSettingsVideo(sizeof(*this),false,NULL) {}
+struct TexpandSettings : TfilterSettingsVideo {
+    TexpandSettings(void): TfilterSettingsVideo(sizeof(*this), false, NULL) {}
     Trect newrect;
-    virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
+    virtual void createFilters(size_t filtersorder, Tfilters *filters, TfilterQueue &queue) const;
     virtual void createPages(TffdshowPageDec *parent) const {}
 };
 

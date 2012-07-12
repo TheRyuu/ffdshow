@@ -23,9 +23,9 @@
 #include "CpostProc.h"
 #include "TffdshowPageDec.h"
 
-const int TpostprocSettings::deblockStrengthDef=256;
+const int TpostprocSettings::deblockStrengthDef = 256;
 
-const TfilterIDFF TpostprocSettings::idffs= {
+const TfilterIDFF TpostprocSettings::idffs = {
     /*name*/      _l("Postprocessing"),
     /*id*/        IDFF_filterPostproc,
     /*is*/        IDFF_isPostproc,
@@ -36,86 +36,86 @@ const TfilterIDFF TpostprocSettings::idffs= {
     /*dlgId*/     IDD_POSTPROC,
 };
 
-TpostprocSettings::TpostprocSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsVideo(sizeof(*this),Icoll,filters,&idffs)
+TpostprocSettings::TpostprocSettings(TintStrColl *Icoll, TfilterIDFFs *filters): TfilterSettingsVideo(sizeof(*this), Icoll, filters, &idffs)
 {
     //levelFixChrom=0;
-    static const TintOptionT<TpostprocSettings> iopts[]= {
-        IDFF_isPostproc            ,&TpostprocSettings::is                    ,0,0,_l(""),1,
-        _l("isPostproc"),0,
-        IDFF_showPostproc          ,&TpostprocSettings::show                  ,0,0,_l(""),1,
-        _l("showPostproc"),1,
-        IDFF_orderPostproc         ,&TpostprocSettings::order                 ,1,1,_l(""),1,
-        _l("orderPostproc"),0,
-        IDFF_fullPostproc          ,&TpostprocSettings::full                  ,0,0,_l(""),1,
-        _l("fullPostproc"),0,
-        IDFF_halfPostproc          ,&TpostprocSettings::half                  ,0,0,_l(""),1,
-        _l("halfPostproc"),0,
-        IDFF_postprocMethod        ,&TpostprocSettings::method                ,0,5,_l(""),1,
-        _l("postprocMethod"),0,
-        IDFF_postprocMethodNicFirst,&TpostprocSettings::nicFirst              ,0,0,_l(""),1,
-        _l("postprocMethodNicFirst"),0,
-        IDFF_ppqual                ,&TpostprocSettings::qual                  ,0,6,_l(""),1,
-        _l("ppqual"),6,
-        IDFF_sppqual               ,&TpostprocSettings::sppQual               ,0,6,_l(""),1,
-        _l("sppqual"),3,
-        IDFF_autoq                 ,&TpostprocSettings::autoq                 ,0,0,_l(""),1,
-        _l("autoq"),0,
-        IDFF_ppIsCustom            ,&TpostprocSettings::isCustom              ,0,0,_l(""),1,
-        _l("ppIsCustom"),0,
-        IDFF_ppcustom              ,&TpostprocSettings::custom                ,1,1,_l(""),1,
-        _l("ppcustom"),0,
-        IDFF_deblockAvcodecAccurate,&TpostprocSettings::deblockAvcodecAccurate,0,0,_l(""),1,
-        _l("deblockMplayerAccurate"),0,
-        IDFF_deblockStrength       ,&TpostprocSettings::deblockStrength       ,0,512,_l(""),1,
-        _l("deblockStrength"),deblockStrengthDef,
-        IDFF_levelFixLum           ,&TpostprocSettings::levelFixLum           ,0,0,_l(""),1,
-        _l("levelFixLum"),0,
+    static const TintOptionT<TpostprocSettings> iopts[] = {
+        IDFF_isPostproc            , &TpostprocSettings::is                    , 0, 0, _l(""), 1,
+        _l("isPostproc"), 0,
+        IDFF_showPostproc          , &TpostprocSettings::show                  , 0, 0, _l(""), 1,
+        _l("showPostproc"), 1,
+        IDFF_orderPostproc         , &TpostprocSettings::order                 , 1, 1, _l(""), 1,
+        _l("orderPostproc"), 0,
+        IDFF_fullPostproc          , &TpostprocSettings::full                  , 0, 0, _l(""), 1,
+        _l("fullPostproc"), 0,
+        IDFF_halfPostproc          , &TpostprocSettings::half                  , 0, 0, _l(""), 1,
+        _l("halfPostproc"), 0,
+        IDFF_postprocMethod        , &TpostprocSettings::method                , 0, 5, _l(""), 1,
+        _l("postprocMethod"), 0,
+        IDFF_postprocMethodNicFirst, &TpostprocSettings::nicFirst              , 0, 0, _l(""), 1,
+        _l("postprocMethodNicFirst"), 0,
+        IDFF_ppqual                , &TpostprocSettings::qual                  , 0, 6, _l(""), 1,
+        _l("ppqual"), 6,
+        IDFF_sppqual               , &TpostprocSettings::sppQual               , 0, 6, _l(""), 1,
+        _l("sppqual"), 3,
+        IDFF_autoq                 , &TpostprocSettings::autoq                 , 0, 0, _l(""), 1,
+        _l("autoq"), 0,
+        IDFF_ppIsCustom            , &TpostprocSettings::isCustom              , 0, 0, _l(""), 1,
+        _l("ppIsCustom"), 0,
+        IDFF_ppcustom              , &TpostprocSettings::custom                , 1, 1, _l(""), 1,
+        _l("ppcustom"), 0,
+        IDFF_deblockAvcodecAccurate, &TpostprocSettings::deblockAvcodecAccurate, 0, 0, _l(""), 1,
+        _l("deblockMplayerAccurate"), 0,
+        IDFF_deblockStrength       , &TpostprocSettings::deblockStrength       , 0, 512, _l(""), 1,
+        _l("deblockStrength"), deblockStrengthDef,
+        IDFF_levelFixLum           , &TpostprocSettings::levelFixLum           , 0, 0, _l(""), 1,
+        _l("levelFixLum"), 0,
         /*
            IDFF_levelFixChrom         ,&TpostprocSettings::levelFixChrom         ,0,0,_l(""),1,
              _l("levelFixChrom"),0,
         */
-        IDFF_fullYrange            ,&TpostprocSettings::fullYrange            ,0,0,_l(""),1,
-        _l("fullYrange"),0,
-        IDFF_postprocNicXthresh    ,&TpostprocSettings::nicXthresh            ,0,255,_l(""),1,
-        _l("postprocNicXthresh"),20,
-        IDFF_postprocNicYthresh    ,&TpostprocSettings::nicYthresh            ,0,255,_l(""),1,
-        _l("postprocNicYthresh"),40,
-        IDFF_postprocSPPmode       ,&TpostprocSettings::sppMode               ,0,1,_l(""),1,
-        _l("postprocSPPmode"),0,
+        IDFF_fullYrange            , &TpostprocSettings::fullYrange            , 0, 0, _l(""), 1,
+        _l("fullYrange"), 0,
+        IDFF_postprocNicXthresh    , &TpostprocSettings::nicXthresh            , 0, 255, _l(""), 1,
+        _l("postprocNicXthresh"), 20,
+        IDFF_postprocNicYthresh    , &TpostprocSettings::nicYthresh            , 0, 255, _l(""), 1,
+        _l("postprocNicYthresh"), 40,
+        IDFF_postprocSPPmode       , &TpostprocSettings::sppMode               , 0, 1, _l(""), 1,
+        _l("postprocSPPmode"), 0,
         0
     };
     addOptions(iopts);
 }
 
-void TpostprocSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
+void TpostprocSettings::createFilters(size_t filtersorder, Tfilters *filters, TfilterQueue &queue) const
 {
-    idffOnChange(idffs,filters,queue.temporary);
+    idffOnChange(idffs, filters, queue.temporary);
     if (is && show) {
         if (!queue.temporary) {
-            setOnChange(IDFF_postprocMethod,filters,&Tfilters::onQueueChange);
-            setOnChange(IDFF_postprocMethodNicFirst,filters,&Tfilters::onQueueChange);
+            setOnChange(IDFF_postprocMethod, filters, &Tfilters::onQueueChange);
+            setOnChange(IDFF_postprocMethodNicFirst, filters, &Tfilters::onQueueChange);
         }
         switch (method) {
             case 0:
-                queueFilter<TimgFilterPostprocAvcodec>(filtersorder,filters,queue);
+                queueFilter<TimgFilterPostprocAvcodec>(filtersorder, filters, queue);
                 break;
             case 1:
-                queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue);
+                queueFilter<TimgFilterPostprocNic>(filtersorder, filters, queue);
                 break;
             case 2:
                 if (nicFirst) {
-                    queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue);
-                    queueFilter<TimgFilterPostprocAvcodec>(filtersorder,filters,queue);
+                    queueFilter<TimgFilterPostprocNic>(filtersorder, filters, queue);
+                    queueFilter<TimgFilterPostprocAvcodec>(filtersorder, filters, queue);
                 } else {
-                    queueFilter<TimgFilterPostprocAvcodec>(filtersorder,filters,queue);
-                    queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue);
+                    queueFilter<TimgFilterPostprocAvcodec>(filtersorder, filters, queue);
+                    queueFilter<TimgFilterPostprocNic>(filtersorder, filters, queue);
                 }
                 break;
             case 4:
-                queueFilter<TimgFilterPostprocSpp>(filtersorder,filters,queue);
+                queueFilter<TimgFilterPostprocSpp>(filtersorder, filters, queue);
                 break;
             case 5:
-                queueFilter<TimgFilterPostprocFspp>(filtersorder,filters,queue);
+                queueFilter<TimgFilterPostprocFspp>(filtersorder, filters, queue);
                 break;
         }
     }
@@ -127,39 +127,39 @@ void TpostprocSettings::createPages(TffdshowPageDec *parent) const
 
 const int* TpostprocSettings::getResets(unsigned int pageId)
 {
-    static const int idResets[]= {
-        IDFF_postprocMethod,IDFF_postprocMethodNicFirst,
-        IDFF_ppIsCustom,IDFF_ppcustom,
-        IDFF_ppqual,IDFF_sppqual,IDFF_autoq,
+    static const int idResets[] = {
+        IDFF_postprocMethod, IDFF_postprocMethodNicFirst,
+        IDFF_ppIsCustom, IDFF_ppcustom,
+        IDFF_ppqual, IDFF_sppqual, IDFF_autoq,
         IDFF_deblockAvcodecAccurate,
         IDFF_deblockStrength,
         IDFF_levelFixLum,/*IDFF_levelFixChrom,*/IDFF_fullYrange,
-        IDFF_postprocNicXthresh,IDFF_postprocNicYthresh,
+        IDFF_postprocNicXthresh, IDFF_postprocNicYthresh,
         IDFF_postprocSPPmode,
         0
     };
     return idResets;
 }
 
-bool TpostprocSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
+bool TpostprocSettings::getTip(unsigned int pageId, char_t *tipS, size_t len)
 {
     if (isCustom) {
-        tsnprintf_s(tipS, len, _TRUNCATE,_l("custom: %s%s%s%s%s%s"),custom&LUM_V_DEBLOCK?_l("luma deblock (V),"):_l(""),custom&LUM_H_DEBLOCK?_l("luma deblock (H),"):_l(""),custom&CHROM_V_DEBLOCK?_l("chroma deblock (V),"):_l(""),custom&CHROM_H_DEBLOCK?_l("chroma deblock (H),"):_l(""),custom&LUM_DERING?_l("luma dering,"):_l(""),custom&CHROM_DERING?_l("chroma dering,"):_l(""));
-        char_t *c=strrchr(tipS,',');
+        tsnprintf_s(tipS, len, _TRUNCATE, _l("custom: %s%s%s%s%s%s"), custom & LUM_V_DEBLOCK ? _l("luma deblock (V),") : _l(""), custom & LUM_H_DEBLOCK ? _l("luma deblock (H),") : _l(""), custom & CHROM_V_DEBLOCK ? _l("chroma deblock (V),") : _l(""), custom & CHROM_H_DEBLOCK ? _l("chroma deblock (H),") : _l(""), custom & LUM_DERING ? _l("luma dering,") : _l(""), custom & CHROM_DERING ? _l("chroma dering,") : _l(""));
+        char_t *c = strrchr(tipS, ',');
         if (c) {
-            *c='\n';
+            *c = '\n';
         } else {
             strncat_s(tipS, len, _l("\n"), _TRUNCATE);
         }
     } else {
         ff_strncpy(tipS, _l("presets: "), len);
-        strncatf(tipS, len,_l("strength %i"),qual);
+        strncatf(tipS, len, _l("strength %i"), qual);
         if (autoq) {
             strncat_s(tipS, len, _l(" automatic"), _TRUNCATE);
         }
         strncat_s(tipS, len, _l("\n"), _TRUNCATE);
     }
-    strncatf(tipS, len, _l("processing strength: %i\n"),deblockStrength);
+    strncatf(tipS, len, _l("processing strength: %i\n"), deblockStrength);
     switch (method) {
         case 0:
             strncat_s(tipS, len, _l("ffmpeg"), _TRUNCATE);

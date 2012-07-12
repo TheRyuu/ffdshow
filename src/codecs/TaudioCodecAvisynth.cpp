@@ -24,15 +24,15 @@
 #include "IffdshowDecAudio.h"
 #include "avisynth/Tavisynth.h"
 
-TaudioCodecAvisynth::TaudioCodecAvisynth(IffdshowBase *deci,IdecAudioSink *Isink):
+TaudioCodecAvisynth::TaudioCodecAvisynth(IffdshowBase *deci, IdecAudioSink *Isink):
     Tcodec(deci),
-    TaudioCodec(deci,Isink),
+    TaudioCodec(deci, Isink),
     avisynth(NULL)
 {
 }
 bool TaudioCodecAvisynth::init(const CMediaType &mt)
 {
-    avisynth=new TavisynthAudio(mt,fmt,deci,"ffdshow_acm_avisynth_script");
+    avisynth = new TavisynthAudio(mt, fmt, deci, "ffdshow_acm_avisynth_script");
     return avisynth->ok;
 }
 TaudioCodecAvisynth::~TaudioCodecAvisynth()
@@ -42,22 +42,22 @@ TaudioCodecAvisynth::~TaudioCodecAvisynth()
     }
 }
 
-void TaudioCodecAvisynth::getInputDescr1(char_t *buf,size_t buflen) const
+void TaudioCodecAvisynth::getInputDescr1(char_t *buf, size_t buflen) const
 {
-    ff_strncpy(buf,_l("Avisynth"),buflen);
-    buf[buflen-1]='\0';
+    ff_strncpy(buf, _l("Avisynth"), buflen);
+    buf[buflen - 1] = '\0';
 }
 HRESULT TaudioCodecAvisynth::decode(TbyteBuffer &src)
 {
-    uint64_t s1=NULL;
-    uint64_t s2=NULL;
+    uint64_t s1 = NULL;
+    uint64_t s2 = NULL;
     if (src.size()) {
         s1 = *(uint64_t*)(&src[0]);
         s2 = *(uint64_t*)(&src[0] + 8);
     }
-    int dstLength=int((s2-s1+1)*avisynth->vi->BytesPerAudioSample());
-    int16_t *dst=(int16_t*)getDst(dstLength);
-    (*avisynth->clip)->GetAudio(dst,s1,s2-s1+1);
+    int dstLength = int((s2 - s1 + 1) * avisynth->vi->BytesPerAudioSample());
+    int16_t *dst = (int16_t*)getDst(dstLength);
+    (*avisynth->clip)->GetAudio(dst, s1, s2 - s1 + 1);
     src.clear();
-    return sinkA->deliverDecodedSample(dst,(unsigned int)(s2-s1+1),fmt);
+    return sinkA->deliverDecodedSample(dst, (unsigned int)(s2 - s1 + 1), fmt);
 }

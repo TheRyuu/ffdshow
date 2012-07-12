@@ -64,8 +64,8 @@ void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
 
     for (y = 0; y < height; y++) {
         unsigned char *dst_line[2];
-        dst_line[0] = dst + dst_pitch*2*y;
-        dst_line[1] = dst + dst_pitch*(2*y+1);
+        dst_line[0] = dst + dst_pitch * 2 * y;
+        dst_line[1] = dst + dst_pitch * (2 * y + 1);
 
         /* Todo: x = width - 2, x = width - 1 */
 
@@ -134,10 +134,10 @@ void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
                 product1a = color[5];
             }
 
-            *((unsigned long *) (&dst_line[0][x * 8])) = product1a;
-            *((unsigned long *) (&dst_line[0][x * 8 + 4])) = product1b;
-            *((unsigned long *) (&dst_line[1][x * 8])) = product2a;
-            *((unsigned long *) (&dst_line[1][x * 8 + 4])) = product2b;
+            *((unsigned long *)(&dst_line[0][x * 8])) = product1a;
+            *((unsigned long *)(&dst_line[0][x * 8 + 4])) = product1b;
+            *((unsigned long *)(&dst_line[1][x * 8])) = product2a;
+            *((unsigned long *)(&dst_line[1][x * 8 + 4])) = product2b;
 
             /* Move color matrix forward */
             color[0] = color[1];
@@ -205,20 +205,20 @@ int T2xSaI::GetResult1(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E)
     int y = 0;
     int r = 0;
     if (A == C) {
-        x+=1;
+        x += 1;
     } else if (B == C) {
-        y+=1;
+        y += 1;
     }
     if (A == D) {
-        x+=1;
+        x += 1;
     } else if (B == D) {
-        y+=1;
+        y += 1;
     }
     if (x <= 1) {
-        r+=1;
+        r += 1;
     }
     if (y <= 1) {
-        r-=1;
+        r -= 1;
     }
     return r;
 }
@@ -229,25 +229,25 @@ int T2xSaI::GetResult2(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E)
     int y = 0;
     int r = 0;
     if (A == C) {
-        x+=1;
+        x += 1;
     } else if (B == C) {
-        y+=1;
+        y += 1;
     }
     if (A == D) {
-        x+=1;
+        x += 1;
     } else if (B == D) {
-        y+=1;
+        y += 1;
     }
     if (x <= 1) {
-        r-=1;
+        r -= 1;
     }
     if (y <= 1) {
-        r+=1;
+        r += 1;
     }
     return r;
 }
 
-void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, int width, int height,stride_t dstPitch)
+void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, int width, int height, stride_t dstPitch)
 {
     uint32 line;
     uint32 x_offset;
@@ -258,13 +258,13 @@ void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, in
     const uint16 *bp[4] = {
         (uint16*)(srcPtr/*-srcPitch*/),
         (uint16*) srcPtr,
-        (uint16*)(srcPtr+srcPitch),
-        (uint16*)(srcPtr+2*srcPitch)
+        (uint16*)(srcPtr + srcPitch),
+        (uint16*)(srcPtr + 2 * srcPitch)
     };
 
-    for (; height; height-=1) {
-        uint8_t *dP = dstBitmap+line*dstPitch+x_offset; /*bmp_write_line (dstBitmap, line) + x_offset*/;
-        for (int x = 0; x<width; x++ ) {
+    for (; height; height -= 1) {
+        uint8_t *dP = dstBitmap + line * dstPitch + x_offset; /*bmp_write_line (dstBitmap, line) + x_offset*/;
+        for (int x = 0; x < width; x++) {
             register uint32 colorA, colorB;
             uint32 colorC, colorD,
                    colorE, colorF, colorG, colorH,
@@ -278,39 +278,39 @@ void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, in
             //                                       G|A B|K
             //                                       H|C D|L
             //                                       M|N O|P
-            int a1=x>0?-1:0;
-            int a2=x<width-1?1:0;
-            int a3=x<width-2?2:1;
-            colorI = bp[0][a1+x];//*(bP- Nextline - 1);
-            colorE = bp[0][ 0+x];//*(bP- Nextline);
-            colorF = bp[0][a2+x];//*(bP- Nextline + 1);
-            colorJ = bp[0][a3+x];//*(bP- Nextline + 2);
+            int a1 = x > 0 ? -1 : 0;
+            int a2 = x < width - 1 ? 1 : 0;
+            int a3 = x < width - 2 ? 2 : 1;
+            colorI = bp[0][a1 + x]; //*(bP- Nextline - 1);
+            colorE = bp[0][ 0 + x]; //*(bP- Nextline);
+            colorF = bp[0][a2 + x]; //*(bP- Nextline + 1);
+            colorJ = bp[0][a3 + x]; //*(bP- Nextline + 2);
 
-            colorG = bp[1][a1+x];//*(bP - 1);
-            colorA = bp[1][ 0+x];//*(bP);
-            colorB = bp[1][a2+x];//*(bP + 1);
-            colorK = bp[1][a3+x];//*(bP + 2);
+            colorG = bp[1][a1 + x]; //*(bP - 1);
+            colorA = bp[1][ 0 + x]; //*(bP);
+            colorB = bp[1][a2 + x]; //*(bP + 1);
+            colorK = bp[1][a3 + x]; //*(bP + 2);
 
-            colorH = bp[2][a1+x];//*(bP + Nextline - 1);
-            colorC = bp[2][ 0+x];//*(bP + Nextline);
-            colorD = bp[2][a2+x];//*(bP + Nextline + 1);
-            colorL = bp[2][a3+x];//*(bP + Nextline + 2);
+            colorH = bp[2][a1 + x]; //*(bP + Nextline - 1);
+            colorC = bp[2][ 0 + x]; //*(bP + Nextline);
+            colorD = bp[2][a2 + x]; //*(bP + Nextline + 1);
+            colorL = bp[2][a3 + x]; //*(bP + Nextline + 2);
 
-            colorM = bp[3][a1+x];//*(bP + Nextline + Nextline - 1);
-            colorN = bp[3][ 0+x];//*(bP + Nextline + Nextline);
-            colorO = bp[3][a2+x];//*(bP + Nextline + Nextline + 1);
-            colorP = bp[3][a3+x];//*(bP + Nextline + Nextline + 2);
+            colorM = bp[3][a1 + x]; //*(bP + Nextline + Nextline - 1);
+            colorN = bp[3][ 0 + x]; //*(bP + Nextline + Nextline);
+            colorO = bp[3][a2 + x]; //*(bP + Nextline + Nextline + 1);
+            colorP = bp[3][a3 + x]; //*(bP + Nextline + Nextline + 2);
 
             if ((colorA == colorD) && (colorB != colorC)) {
-                if ( ((colorA == colorE) && (colorB == colorL)) ||
-                        ((colorA == colorC) && (colorA == colorF) && (colorB != colorE) && (colorB == colorJ)) ) {
+                if (((colorA == colorE) && (colorB == colorL)) ||
+                        ((colorA == colorC) && (colorA == colorF) && (colorB != colorE) && (colorB == colorJ))) {
                     product = colorA;
                 } else {
                     product = INTERPOLATE16(colorA, colorB);
                 }
 
                 if (((colorA == colorG) && (colorC == colorO)) ||
-                        ((colorA == colorB) && (colorA == colorH) && (colorG != colorC) && (colorC == colorM)) ) {
+                        ((colorA == colorB) && (colorA == colorH) && (colorG != colorC) && (colorC == colorM))) {
                     product1 = colorA;
                 } else {
                     product1 = INTERPOLATE16(colorA, colorC);
@@ -318,14 +318,14 @@ void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, in
                 product2 = colorA;
             } else if ((colorB == colorC) && (colorA != colorD)) {
                 if (((colorB == colorF) && (colorA == colorH)) ||
-                        ((colorB == colorE) && (colorB == colorD) && (colorA != colorF) && (colorA == colorI)) ) {
+                        ((colorB == colorE) && (colorB == colorD) && (colorA != colorF) && (colorA == colorI))) {
                     product = colorB;
                 } else {
                     product = INTERPOLATE16(colorA, colorB);
                 }
 
                 if (((colorC == colorH) && (colorA == colorF)) ||
-                        ((colorC == colorG) && (colorC == colorD) && (colorA != colorH) && (colorA == colorI)) ) {
+                        ((colorC == colorG) && (colorC == colorD) && (colorA != colorH) && (colorA == colorI))) {
                     product1 = colorC;
                 } else {
                     product1 = INTERPOLATE16(colorA, colorC);
@@ -341,10 +341,10 @@ void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, in
                     product1 = INTERPOLATE16(colorA, colorC);
                     product = INTERPOLATE16(colorA, colorB);
 
-                    r += GetResult1 (colorA, colorB, colorG, colorE, colorI);
-                    r += GetResult2 (colorB, colorA, colorK, colorF, colorJ);
-                    r += GetResult2 (colorB, colorA, colorH, colorN, colorM);
-                    r += GetResult1 (colorA, colorB, colorL, colorO, colorP);
+                    r += GetResult1(colorA, colorB, colorG, colorE, colorI);
+                    r += GetResult2(colorB, colorA, colorK, colorF, colorJ);
+                    r += GetResult2(colorB, colorA, colorH, colorN, colorM);
+                    r += GetResult1(colorA, colorB, colorL, colorO, colorP);
 
                     if (r > 0) {
                         product2 = colorA;
@@ -376,16 +376,16 @@ void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, in
 
             product = colorA | (product << 16);
             product1 = product1 | (product2 << 16);
-            *(uint32_t*)dP=product;
-            *(uint32_t*)(dP+dstPitch)=product1;
+            *(uint32_t*)dP = product;
+            *(uint32_t*)(dP + dstPitch) = product1;
 
             dP += 4;
         }//end of for ( finish= width etc..)
-        bp[0]=bp[1];
-        bp[1]=bp[2];
-        bp[2]=bp[3];
-        if (height>3) {
-            bp[3]+=srcPitch/2;
+        bp[0] = bp[1];
+        bp[1] = bp[2];
+        bp[2] = bp[3];
+        if (height > 3) {
+            bp[3] += srcPitch / 2;
         }
         line += 2;
         //srcPtr += srcPitch;
@@ -395,26 +395,26 @@ void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, in
 
 //=====================================================================================
 int Thq2x::LUT16to32[65536];
-__align8(int,Thq2x::RGBtoYUV[65536]);
+__align8(int, Thq2x::RGBtoYUV[65536]);
 
 void Thq2x::init(void)
 {
     int i, j, k, r, g, b, Y, u, v;
 
-    for (i=0; i<65536; i++) {
+    for (i = 0; i < 65536; i++) {
         LUT16to32[i] = ((i & 0xF800) << 8) + ((i & 0x07E0) << 5) + ((i & 0x001F) << 3);
     }
 
-    for (i=0; i<32; i++)
-        for (j=0; j<64; j++)
-            for (k=0; k<32; k++) {
+    for (i = 0; i < 32; i++)
+        for (j = 0; j < 64; j++)
+            for (k = 0; k < 32; k++) {
                 r = i << 3;
                 g = j << 2;
                 b = k << 3;
                 Y = (r + g + b) >> 2;
                 u = 128 + ((r - b) >> 2);
-                v = 128 + ((-r + 2*g -b)>>3);
-                RGBtoYUV[ (i << 11) + (j << 5) + k ] = (Y<<16) + (u<<8) + v;
+                v = 128 + ((-r + 2 * g - b) >> 3);
+                RGBtoYUV[(i << 11) + (j << 5) + k ] = (Y << 16) + (u << 8) + v;
             }
 }
 
@@ -426,95 +426,95 @@ const __int64 Thq2x::const14   = 0x0000000E000E000ELL;
 
 __forceinline void Thq2x::Interp1(unsigned char * pc, int c1, int c2)
 {
-    *((int*)pc) = (c1*3+c2) >> 2;
+    *((int*)pc) = (c1 * 3 + c2) >> 2;
 }
 
 __forceinline void Thq2x::Interp2(unsigned char * pc, int c1, int c2, int c3)
 {
-    *((int*)pc) = (c1*2+c2+c3) >> 2;
+    *((int*)pc) = (c1 * 2 + c2 + c3) >> 2;
 }
 
 __forceinline void Thq2x::Interp5(unsigned char * pc, int c1, int c2)
 {
-    *((int*)pc) = (c1+c2) >> 1;
+    *((int*)pc) = (c1 + c2) >> 1;
 }
 
 __forceinline void Thq2x::Interp6(unsigned char * pc, int c1, int c2, int c3)
 {
     //*((int*)pc) = (c1*5+c2*2+c3)/8;
-    unsigned char *eax= pc;
-    __m64 mm1,mm2,mm3;
-    movd      ( mm1, c1);
-    movd      ( mm2, c2);
-    movd      ( mm3, c3);
-    punpcklbw ( mm1, reg_blank);
-    punpcklbw ( mm2, reg_blank);
-    punpcklbw ( mm3, reg_blank);
-    pmullw    ( mm1, const5);
-    psllw     ( mm2, 1);
-    paddw     ( mm1, mm3);
-    paddw     ( mm1, mm2);
-    psrlw     ( mm1, 3);
-    packuswb  ( mm1, reg_blank);
-    movd(       eax, mm1);
+    unsigned char *eax = pc;
+    __m64 mm1, mm2, mm3;
+    movd(mm1, c1);
+    movd(mm2, c2);
+    movd(mm3, c3);
+    punpcklbw(mm1, reg_blank);
+    punpcklbw(mm2, reg_blank);
+    punpcklbw(mm3, reg_blank);
+    pmullw(mm1, const5);
+    psllw(mm2, 1);
+    paddw(mm1, mm3);
+    paddw(mm1, mm2);
+    psrlw(mm1, 3);
+    packuswb(mm1, reg_blank);
+    movd(eax, mm1);
 }
 
 __forceinline void Thq2x::Interp7(unsigned char * pc, int c1, int c2, int c3)
 {
     //*((int*)pc) = (c1*6+c2+c3)/8;
-    unsigned char *eax= pc;
-    __m64 mm1,mm2,mm3;
-    movd      ( mm1, c1);
-    movd      ( mm2, c2);
-    movd      ( mm3, c3);
-    punpcklbw ( mm1, reg_blank);
-    punpcklbw ( mm2, reg_blank);
-    punpcklbw ( mm3, reg_blank);
-    pmullw    ( mm1, const6);
-    paddw     ( mm2, mm3);
-    paddw     ( mm1, mm2);
-    psrlw     ( mm1, 3);
-    packuswb  ( mm1, reg_blank);
-    movd      ( eax, mm1);
+    unsigned char *eax = pc;
+    __m64 mm1, mm2, mm3;
+    movd(mm1, c1);
+    movd(mm2, c2);
+    movd(mm3, c3);
+    punpcklbw(mm1, reg_blank);
+    punpcklbw(mm2, reg_blank);
+    punpcklbw(mm3, reg_blank);
+    pmullw(mm1, const6);
+    paddw(mm2, mm3);
+    paddw(mm1, mm2);
+    psrlw(mm1, 3);
+    packuswb(mm1, reg_blank);
+    movd(eax, mm1);
 }
 
 __forceinline void Thq2x::Interp9(unsigned char * pc, int c1, int c2, int c3)
 {
     //*((int*)pc) = (c1*2+(c2+c3)*3)/8;
-    unsigned char *eax= pc;
-    __m64 mm1,mm2,mm3;
-    movd       (mm1, c1);
-    movd       (mm2, c2);
-    movd       (mm3, c3);
-    punpcklbw  (mm1, reg_blank);
-    punpcklbw  (mm2, reg_blank);
-    punpcklbw  (mm3, reg_blank);
-    psllw      (mm1, 1);
-    paddw      (mm2, mm3);
-    pmullw     (mm2, const3);
-    paddw      (mm1, mm2);
-    psrlw      (mm1, 3);
-    packuswb   (mm1, reg_blank);
-    movd       (eax, mm1);
+    unsigned char *eax = pc;
+    __m64 mm1, mm2, mm3;
+    movd(mm1, c1);
+    movd(mm2, c2);
+    movd(mm3, c3);
+    punpcklbw(mm1, reg_blank);
+    punpcklbw(mm2, reg_blank);
+    punpcklbw(mm3, reg_blank);
+    psllw(mm1, 1);
+    paddw(mm2, mm3);
+    pmullw(mm2, const3);
+    paddw(mm1, mm2);
+    psrlw(mm1, 3);
+    packuswb(mm1, reg_blank);
+    movd(eax, mm1);
 }
 
 __forceinline void Thq2x::Interp10(unsigned char * pc, int c1, int c2, int c3)
 {
     //*((int*)pc) = (c1*14+c2+c3)/16;
-    unsigned char *eax= pc;
-    __m64 mm1,mm2,mm3;
-    movd       (mm1, c1);
-    movd       (mm2, c2);
-    movd       (mm3, c3);
-    punpcklbw  (mm1, reg_blank);
-    punpcklbw  (mm2, reg_blank);
-    punpcklbw  (mm3, reg_blank);
-    pmullw     (mm1, const14);
-    paddw      (mm2, mm3);
-    paddw      (mm1, mm2);
-    psrlw      (mm1, 4);
-    packuswb   (mm1, reg_blank);
-    movd       (eax, mm1);
+    unsigned char *eax = pc;
+    __m64 mm1, mm2, mm3;
+    movd(mm1, c1);
+    movd(mm2, c2);
+    movd(mm3, c3);
+    punpcklbw(mm1, reg_blank);
+    punpcklbw(mm2, reg_blank);
+    punpcklbw(mm3, reg_blank);
+    pmullw(mm1, const14);
+    paddw(mm2, mm3);
+    paddw(mm1, mm2);
+    psrlw(mm1, 4);
+    packuswb(mm1, reg_blank);
+    movd(eax, mm1);
 }
 
 #define PIXEL00_0     *((int*)(pOut)) = c[5];
@@ -568,32 +568,32 @@ __forceinline void Thq2x::Interp10(unsigned char * pc, int c1, int c2, int c3)
 
 __forceinline int Thq2x::Diff(unsigned int w5, unsigned int w1)
 {
-    static const __int64 treshold=0x0000000000300706LL;
-    int eax=0;;
-    unsigned int ebx=w5;
-    unsigned int edx=w1;
-    if (ebx==edx) {
+    static const __int64 treshold = 0x0000000000300706LL;
+    int eax = 0;;
+    unsigned int ebx = w5;
+    unsigned int edx = w1;
+    if (ebx == edx) {
         return eax;
     }
-    const unsigned char *ecx=(const unsigned char*)RGBtoYUV;
-    __m64 mm1,mm5,mm2;
-    movd    (mm1,ecx + ebx*4);
-    movq    (mm5,mm1);
-    movd    (mm2,ecx + edx*4);
-    psubusb (mm1,mm2);
-    psubusb (mm2,mm5);
-    por     (mm1,mm2);
-    psubusb (mm1,treshold);
-    movd    (eax,mm1);
+    const unsigned char *ecx = (const unsigned char*)RGBtoYUV;
+    __m64 mm1, mm5, mm2;
+    movd(mm1, ecx + ebx * 4);
+    movq(mm5, mm1);
+    movd(mm2, ecx + edx * 4);
+    psubusb(mm1, mm2);
+    psubusb(mm2, mm5);
+    por(mm1, mm2);
+    psubusb(mm1, treshold);
+    movd(eax, mm1);
     return eax;
 }
 // returns result in eax register
 
-void Thq2x::hq2x_32( const unsigned char * src, unsigned char * dst, int dx, int dy, stride_t srcBpL, stride_t dstBpL )
+void Thq2x::hq2x_32(const unsigned char * src, unsigned char * dst, int dx, int dy, stride_t srcBpL, stride_t dstBpL)
 {
-    static bool firsttime=true;
+    static bool firsttime = true;
     if (firsttime) {
-        firsttime=false;
+        firsttime = false;
         init();
     }
 
@@ -613,25 +613,25 @@ void Thq2x::hq2x_32( const unsigned char * src, unsigned char * dst, int dx, int
     //   | w7 | w8 | w9 |
     //   +----+----+----+
 
-    for (j=0; j<dy; j++) {
-        if (j>0) {
+    for (j = 0; j < dy; j++) {
+        if (j > 0) {
             prevline = -srcBpL;
         } else {
             prevline = 0;
         }
-        if (j<dy-1) {
+        if (j < dy - 1) {
             nextline =  srcBpL;
         } else {
             nextline = 0;
         }
-        const unsigned char *pIn=src+j*srcBpL;
-        unsigned char *pOut=dst+(j*2)*dstBpL;
-        for (i=0; i<dx; i++) {
+        const unsigned char *pIn = src + j * srcBpL;
+        unsigned char *pOut = dst + (j * 2) * dstBpL;
+        for (i = 0; i < dx; i++) {
             w[2] = *((unsigned short*)(pIn + prevline));
             w[5] = *((unsigned short*)pIn);
             w[8] = *((unsigned short*)(pIn + nextline));
 
-            if (i>0) {
+            if (i > 0) {
                 w[1] = *((unsigned short*)(pIn + prevline - 2));
                 w[4] = *((unsigned short*)(pIn - 2));
                 w[7] = *((unsigned short*)(pIn + nextline - 2));
@@ -641,7 +641,7 @@ void Thq2x::hq2x_32( const unsigned char * src, unsigned char * dst, int dx, int
                 w[7] = w[8];
             }
 
-            if (i<dx-1) {
+            if (i < dx - 1) {
                 w[3] = *((unsigned short*)(pIn + prevline + 2));
                 w[6] = *((unsigned short*)(pIn + 2));
                 w[9] = *((unsigned short*)(pIn + nextline + 2));
@@ -653,32 +653,32 @@ void Thq2x::hq2x_32( const unsigned char * src, unsigned char * dst, int dx, int
 
             int pattern = 0;
 
-            if ( Diff(w[5],w[1]) ) {
+            if (Diff(w[5], w[1])) {
                 pattern |= 0x0001;
             }
-            if ( Diff(w[5],w[2]) ) {
+            if (Diff(w[5], w[2])) {
                 pattern |= 0x0002;
             }
-            if ( Diff(w[5],w[3]) ) {
+            if (Diff(w[5], w[3])) {
                 pattern |= 0x0004;
             }
-            if ( Diff(w[5],w[4]) ) {
+            if (Diff(w[5], w[4])) {
                 pattern |= 0x0008;
             }
-            if ( Diff(w[5],w[6]) ) {
+            if (Diff(w[5], w[6])) {
                 pattern |= 0x0010;
             }
-            if ( Diff(w[5],w[7]) ) {
+            if (Diff(w[5], w[7])) {
                 pattern |= 0x0020;
             }
-            if ( Diff(w[5],w[8]) ) {
+            if (Diff(w[5], w[8])) {
                 pattern |= 0x0040;
             }
-            if ( Diff(w[5],w[9]) ) {
+            if (Diff(w[5], w[9])) {
                 pattern |= 0x0080;
             }
 
-            for (k=1; k<=9; k++) {
+            for (k = 1; k <= 9; k++) {
                 c[k] = LUT16to32[w[k]];
             }
 
@@ -2634,8 +2634,8 @@ void Thq2x::hq2x_32( const unsigned char * src, unsigned char * dst, int dx, int
                     break;
                 }
             }
-            pIn+=2;
-            pOut+=8;
+            pIn += 2;
+            pOut += 8;
         }
     }
     _mm_empty();

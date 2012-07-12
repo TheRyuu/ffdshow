@@ -232,7 +232,7 @@ DWORD TffOutputQueue::ThreadProc()
 // leave flush mode - pass this downstream
 void TffOutputQueue::EndFlush()
 {
-    if(!m_bFlushing) {
+    if (!m_bFlushing) {
         return;
     }
     return COutputQueue::EndFlush();
@@ -264,7 +264,7 @@ void TffOutputQueue::QueueSample(IMediaSample *pSample)
 //  On return all samples will have been Release()'d
 //
 
-HRESULT TffOutputQueue::ReceiveMultiple (
+HRESULT TffOutputQueue::ReceiveMultiple(
     IMediaSample **ppSamples,
     long nSamples,
     long *nSamplesProcessed)

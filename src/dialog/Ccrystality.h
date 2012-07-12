@@ -3,10 +3,10 @@
 
 #include "TconfPageDecAudio.h"
 
-class TcrystalityPage :public TconfPageDecAudio
+class TcrystalityPage : public TconfPageDecAudio
 {
 public:
-    TcrystalityPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TcrystalityPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void init(void);
     virtual void cfg2dlg(void);
 };

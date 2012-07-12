@@ -3,18 +3,18 @@
 
 #include "TconfPageDecVideo.h"
 
-class TpostProcPage :public TconfPageDecVideo
+class TpostProcPage : public TconfPageDecVideo
 {
 private:
-    void postProc2dlg(void),setPPchbs(void);
+    void postProc2dlg(void), setPPchbs(void);
     void strength2dlg(void);
-    void avcodec2dlg(int is),avcodec2dlg_1(void),nic2dlg(int is),nic2dlg_1(void);
+    void avcodec2dlg(int is), avcodec2dlg_1(void), nic2dlg(int is), nic2dlg_1(void);
     void onAuto(void);
-    static const int idAvcodec[],idNics[],idSPP[];
+    static const int idAvcodec[], idNics[], idSPP[];
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
-    TpostProcPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TpostProcPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void init(void);
     virtual void cfg2dlg(void);
     virtual void translate(void);

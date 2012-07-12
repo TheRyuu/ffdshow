@@ -84,8 +84,8 @@ protected:
 
     // TvideoCodecLibavcodec overloaded methods
     virtual void create(void);
-    virtual bool beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags);
-    virtual HRESULT decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn);
+    virtual bool beginDecompress(TffPictBase &pict, FOURCC fcc, const CMediaType &mt, int sourceFlags);
+    virtual HRESULT decompress(const unsigned char *src, size_t srcLen0, IMediaSample *pIn);
 
     // TvideoCodecLibavcodecDXVA methods
     virtual bool isVista(void);
@@ -95,7 +95,7 @@ protected:
     virtual void OverlayYV12OnUSWCFrame(unsigned char * pSrc, unsigned char * pDest, UINT width, UINT height, UINT pitch);
 
 public:
-    TvideoCodecLibavcodecDxva(IffdshowBase *Ideci,IdecVideoSink *IsinkD, CodecID IcodecId);
+    TvideoCodecLibavcodecDxva(IffdshowBase *Ideci, IdecVideoSink *IsinkD, CodecID IcodecId);
     virtual ~TvideoCodecLibavcodecDxva();
 
     //TvideoCodecDec overloaded methods
@@ -115,7 +115,7 @@ public:
     virtual HRESULT configureDXVA2(IPin *pPin);
     virtual HRESULT setEVRForDXVA2(IPin *pPin);
     virtual void fillInVideoDescription(DXVA2_VideoDesc *pDesc);
-    virtual HRESULT findDXVA2DecoderConfiguration(IDirectXVideoDecoderService *pDecoderService,const GUID& guidDecoder,DXVA2_ConfigPictureDecode *pSelectedConfig,BOOL *pbFoundDXVA2Configuration);
+    virtual HRESULT findDXVA2DecoderConfiguration(IDirectXVideoDecoderService *pDecoderService, const GUID& guidDecoder, DXVA2_ConfigPictureDecode *pSelectedConfig, BOOL *pbFoundDXVA2Configuration);
     virtual HRESULT createDXVA2Decoder(UINT nNumRenderTargets, IDirect3DSurface9** pDecoderRenderTargets);
     virtual HRESULT findDXVA1DecoderConfiguration(IAMVideoAccelerator* pAMVideoAccelerator, const GUID* guidDecoder, DDPIXELFORMAT* pPixelFormat);
     virtual HRESULT checkDXVA1Decoder(const GUID *pGuid);

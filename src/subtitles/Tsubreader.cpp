@@ -27,59 +27,59 @@ Tsubreader::~Tsubreader()
 }
 void Tsubreader::clear(void)
 {
-    foreach (Tsubtitle* &subtitle, *this) {
+    foreach(Tsubtitle* &subtitle, *this) {
         delete subtitle;
-        subtitle=NULL;
+        subtitle = NULL;
     }
     std::vector<value_type>::clear();
     IsProcessOverlapDone = false;
 }
 
-int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
+int Tsubreader::sub_autodetect(Tstream &fd, const Tconfig *config)
 {
-    int j=0;
-    static const int LINE_LEN=1000;
-    int format=SUB_INVALID;
+    int j = 0;
+    static const int LINE_LEN = 1000;
+    int format = SUB_INVALID;
     DPRINTF(_l("Tsubreader::sub_autodetect"));
     while (j < 100) {
         j++;
-        wchar_t line[LINE_LEN+1];
-        if (!fd.fgets (line, LINE_LEN)) {
-            format=SUB_INVALID;
+        wchar_t line[LINE_LEN + 1];
+        if (!fd.fgets(line, LINE_LEN)) {
+            format = SUB_INVALID;
             break;
         }
         int i;
         wchar_t p;
-        if (swscanf (line, L"{%d}{%d}", &i, &i)==2) {
-            format=SUB_MICRODVD;
+        if (swscanf(line, L"{%d}{%d}", &i, &i) == 2) {
+            format = SUB_MICRODVD;
             break;
         }
-        if (swscanf (line, L"{%d}{}", &i)==1) {
-            format=SUB_MICRODVD;
+        if (swscanf(line, L"{%d}{}", &i) == 1) {
+            format = SUB_MICRODVD;
             break;
         }
-        if (swscanf (line, L"[%d][%d]", &i, &i)==2) {
-            format=SUB_MPL2|SUB_USESTIME;
+        if (swscanf(line, L"[%d][%d]", &i, &i) == 2) {
+            format = SUB_MPL2 | SUB_USESTIME;
             break;
         }
-        if (swscanf (line, L"%d:%d:%d.%d,%d:%d:%d.%d",     &i, &i, &i, &i, &i, &i, &i, &i)==8) {
-            format=SUB_SUBRIP|SUB_USESTIME;
+        if (swscanf(line, L"%d:%d:%d.%d,%d:%d:%d.%d",     &i, &i, &i, &i, &i, &i, &i, &i) == 8) {
+            format = SUB_SUBRIP | SUB_USESTIME;
             break;
         }
-        if (swscanf (line, L"%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d", &i, &i, &i, (wchar_t *)&i, &i, &i, &i, &i, (wchar_t *)&i, &i)==10) {
-            format=SUB_SUBVIEWER|SUB_USESTIME;
+        if (swscanf(line, L"%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d", &i, &i, &i, (wchar_t *)&i, &i, &i, &i, &i, (wchar_t *)&i, &i) == 10) {
+            format = SUB_SUBVIEWER | SUB_USESTIME;
             break;
         }
-        if (swscanf (line, L"{T %d:%d:%d:%d",&i, &i, &i, &i)==4) {
-            format=SUB_SUBVIEWER2|SUB_USESTIME;
+        if (swscanf(line, L"{T %d:%d:%d:%d", &i, &i, &i, &i) == 4) {
+            format = SUB_SUBVIEWER2 | SUB_USESTIME;
             break;
         }
-        if (strstr (line, L"<SAMI>")) {
-            format=SUB_SAMI|SUB_USESTIME;
+        if (strstr(line, L"<SAMI>")) {
+            format = SUB_SAMI | SUB_USESTIME;
             break;
         }
-        if (swscanf (line, L"%d:%d:%d:",     &i, &i, &i )==3) { //also true for "%d:%d:%d ". swscanf ignore last char.
-            format=SUB_VPLAYER|SUB_USESTIME;
+        if (swscanf(line, L"%d:%d:%d:",     &i, &i, &i) == 3) { //also true for "%d:%d:%d ". swscanf ignore last char.
+            format = SUB_VPLAYER | SUB_USESTIME;
             break;
         }
         //TODO: just checking if first line of sub starts with "<" is WAY
@@ -87,66 +87,66 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
         // Please someone who knows the format of RT... FIX IT!!!
         // It may conflict with other sub formats in the future (actually it doesn't)
         //should be better now
-        if ( stristr(line, L"time begin")!=NULL ) {
-            format=SUB_RT|SUB_USESTIME;
+        if (stristr(line, L"time begin") != NULL) {
+            format = SUB_RT | SUB_USESTIME;
             break;
         }
 
-        if (!memcmp(line, L"Dialogue: Marked", 16*2)) {
-            format=SUB_SSA|SUB_USESTIME;
+        if (!memcmp(line, L"Dialogue: Marked", 16 * 2)) {
+            format = SUB_SSA | SUB_USESTIME;
             break;
         }
-        if (!memcmp(line, L"Dialogue: ", 10*2)) {
-            format=SUB_SSA|SUB_USESTIME;
+        if (!memcmp(line, L"Dialogue: ", 10 * 2)) {
+            format = SUB_SSA | SUB_USESTIME;
             break;
         }
-        if (swscanf (line, L"%d,%d,\"%c", &i, &i, (wchar_t *) &i) == 3) {
-            format=SUB_DUNNOWHAT;
+        if (swscanf(line, L"%d,%d,\"%c", &i, &i, (wchar_t *) &i) == 3) {
+            format = SUB_DUNNOWHAT;
             break;
         }
-        if (swscanf (line, L"FORMAT=%d", &i) == 1) {
-            format=SUB_MPSUB;
+        if (swscanf(line, L"FORMAT=%d", &i) == 1) {
+            format = SUB_MPSUB;
             break;
         }
-        if (swscanf (line, L"FORMAT=TIM%c", &p)==1 && p=='E') {
-            format=SUB_MPSUB|SUB_USESTIME;
+        if (swscanf(line, L"FORMAT=TIM%c", &p) == 1 && p == 'E') {
+            format = SUB_MPSUB | SUB_USESTIME;
             break;
         }
-        if (strstr (line, L"-->>")) {
-            format=SUB_AQTITLE|SUB_USESTIME;
+        if (strstr(line, L"-->>")) {
+            format = SUB_AQTITLE | SUB_USESTIME;
             break;
         }
-        if (swscanf (line, L"[%d:%d:%d]", &i, &i, &i)==3) {
-            format=SUB_SUBRIP09|SUB_USESTIME;
+        if (swscanf(line, L"[%d:%d:%d]", &i, &i, &i) == 3) {
+            format = SUB_SUBRIP09 | SUB_USESTIME;
             break;
         }
         //TODO : external bluray subtitles support. The test should also be improved
-        if (j==1 && !memcmp(line, L"PG", 2*2)) {
+        if (j == 1 && !memcmp(line, L"PG", 2 * 2)) {
             // Keep file opened because it will take too much memory to load all the subtitles
-            format=SUB_PGS|SUB_USESTIME|SUB_KEEP_FILE_OPENED;
+            format = SUB_PGS | SUB_USESTIME | SUB_KEEP_FILE_OPENED;
             break;
         }
     }
-    if (format!=SUB_INVALID) {
-        setSubEnc(format,fd);
+    if (format != SUB_INVALID) {
+        setSubEnc(format, fd);
     }
     return format;  // too many bad lines
 }
 
-bool Tsubreader::subComp(const Tsubtitle *s1,const Tsubtitle *s2)
+bool Tsubreader::subComp(const Tsubtitle *s1, const Tsubtitle *s2)
 {
-    return s1->start<s2->start;
+    return s1->start < s2->start;
 }
 void Tsubreader::timesort(void)
 {
-    std::sort(begin(),end(),subComp);
+    std::sort(begin(), end(), subComp);
 }
 
 void Tsubreader::processDuration(const TsubtitlesSettings *cfg)
 {
     timesort();
     if (cfg->isMinDuration) {
-        foreach (Tsubtitle* subtitle, *this) {
+        foreach(Tsubtitle * subtitle, *this) {
             REFERENCE_TIME minduration = 0;
             switch (cfg->minDurationType) {
                 case 0:
@@ -156,13 +156,13 @@ void Tsubreader::processDuration(const TsubtitlesSettings *cfg)
                     minduration = cfg->minDurationLine * subtitle->numlines();
                     break;
                 case 2:
-                    minduration  =cfg->minDurationChar * subtitle->numchars();
+                    minduration  = cfg->minDurationChar * subtitle->numchars();
                     break;
             }
-            minduration*=REF_SECOND_MULT/1000;
-            minduration=std::max(REFERENCE_TIME(1), minduration);
+            minduration *= REF_SECOND_MULT / 1000;
+            minduration = std::max(REFERENCE_TIME(1), minduration);
             if (subtitle->stop - subtitle->start < minduration) {
-                subtitle->stop = subtitle->start+minduration;
+                subtitle->stop = subtitle->start + minduration;
             }
         }
     }
@@ -175,10 +175,10 @@ void Tsubreader::adjust_subs_time(float subtime)
     }
     timesort();
 
-    int n=0,m=0;
-    iterator sub=begin(),nextsub;
+    int n = 0, m = 0;
+    iterator sub = begin(), nextsub;
     int i = (int)size();
-    REFERENCE_TIME subfms=REFERENCE_TIME(subtime)*REF_SECOND_MULT;
+    REFERENCE_TIME subfms = REFERENCE_TIME(subtime) * REF_SECOND_MULT;
     for (;;) {
         if ((*sub)->stop <= (*sub)->start) {
             (*sub)->stop = (*sub)->start + subfms;
@@ -205,7 +205,7 @@ void Tsubreader::adjust_subs_time(float subtime)
 
 Tstream::ENCODING Tsubreader::getSubEnc(int format)
 {
-    format&=SUB_ENC_MASK;
+    format &= SUB_ENC_MASK;
     switch (format) {
         case SUB_ENC_UTF8:
             return Tstream::ENC_UTF8;
@@ -217,24 +217,24 @@ Tstream::ENCODING Tsubreader::getSubEnc(int format)
             return Tstream::ENC_ASCII;
     }
 }
-void Tsubreader::setSubEnc(int &format,const Tstream &fs)
+void Tsubreader::setSubEnc(int &format, const Tstream &fs)
 {
     switch (fs.encoding) {
         case Tstream::ENC_BE16:
-            format|=SUB_ENC_UNIBE;
+            format |= SUB_ENC_UNIBE;
             break;
         case Tstream::ENC_LE16:
-            format|=SUB_ENC_UNILE;
+            format |= SUB_ENC_UNILE;
             break;
         case Tstream::ENC_UTF8:
-            format|=SUB_ENC_UTF8 ;
+            format |= SUB_ENC_UTF8 ;
             break;
     }
 }
 
 void Tsubreader::dropRendered()
 {
-    foreach (Tsubtitle *subtitle, *this)
+    foreach(Tsubtitle * subtitle, *this)
     subtitle->dropRenderedLines();
 }
 
@@ -281,17 +281,17 @@ void Tsubreader::processOverlap(void)
         return;
     }
     if (!at(0)->isText()) {
-        IsProcessOverlapDone=true;
+        IsProcessOverlapDone = true;
         return;
     }
     processedSubtitleTexts.clear();
-    static const int SUB_MAX_TEXT=INT_MAX/2;
+    static const int SUB_MAX_TEXT = INT_MAX / 2;
     int sub_orig = (int)size();
     int n_first = (int)size();
-    int sub_num =0;
+    int sub_num = 0;
     std::vector<Tsubtitle*> newsubs;
     for (int sub_first = 0; sub_first < n_first; ++sub_first) {
-        REFERENCE_TIME global_start = at(sub_first)->start,global_end = at(sub_first)->stop, local_start, local_end;
+        REFERENCE_TIME global_start = at(sub_first)->start, global_end = at(sub_first)->stop, local_start, local_end;
         int lines_to_add = (int)at(sub_first)->numlines(), sub_to_add = 0;
         int **placeholder = NULL, higher_line = 0, counter, start_block_sub = sub_num;
         char real_block = 1;
@@ -341,7 +341,7 @@ void Tsubreader::processOverlap(void)
             // they keep the same lines, otherwise they get unused lines
             for (int j = 0; j <= sub_to_add; ++j) {
                 if ((at(sub_first + j)->start <= local_end) && (at(sub_first + j)->stop > local_start)) {
-                    unsigned long sub_lines=(unsigned long)at(sub_first + j)->numlines(), fragment_length = lines_to_add + 1,tmp=0;
+                    unsigned long sub_lines = (unsigned long)at(sub_first + j)->numlines(), fragment_length = lines_to_add + 1, tmp = 0;
                     char boolean = 0;
                     int fragment_position = -1;
 
@@ -434,13 +434,13 @@ void Tsubreader::processOverlap(void)
         free(placeholder);
         sub_first += sub_to_add;
     }
-    IsProcessOverlapDone=true;
+    IsProcessOverlapDone = true;
 }
 
 size_t Tsubreader::getMemorySize() const
 {
     size_t memSize = 0;
-    foreach (const Tsubtitle* subtitle, *this)
+    foreach(const Tsubtitle * subtitle, *this)
     memSize += subtitle->getRenderedMemorySize();
     return memSize;
 }

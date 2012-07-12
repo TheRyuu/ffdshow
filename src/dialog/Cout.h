@@ -3,11 +3,11 @@
 
 #include "TconfPageEnc.h"
 
-class ToutPage :public TconfPageEnc
+class ToutPage : public TconfPageEnc
 {
 private:
     TffdshowPageEnc *parentE;
-    void out2dlg(void),debug2dlg(void);
+    void out2dlg(void), debug2dlg(void);
     void onStoreExternal(void);
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

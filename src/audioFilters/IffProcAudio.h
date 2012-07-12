@@ -12,19 +12,19 @@ extern "C" {
     //struct WAVEFORMATEXTENSIBLE; //triggers VC 2003 compiler bug
     DECLARE_INTERFACE_(IffProcAudio, IUnknown)
     {
-        STDMETHOD (setTempPreset)(const char *tempPresetName) PURE;
-        STDMETHOD (setActivePreset)(const char *presetName) PURE;
-        STDMETHOD (loadPreset)(const char *presetName) PURE;
-        STDMETHOD (saveBytestreamConfig)(void *buf,size_t len) PURE; //if len=0, then buf should point to int variable which will be filled with required buffer length
-        STDMETHOD (loadBytestreamConfig)(const void *buf,size_t len) PURE;
-        STDMETHOD (config)(HWND owner) PURE;
-        STDMETHOD (getIffDecoder_)(/*IffdshowBase*/void* *deciPtr) PURE;
-        STDMETHOD (begin)(const WAVEFORMATEX *wfIn,WAVEFORMATEX *wfOut) PURE;
-        STDMETHOD (process)(const WAVEFORMATEX *wfIn,size_t innumsamples,WAVEFORMATEX *wfOut,size_t *outnumsamples,void* *samples) PURE;
-        STDMETHOD (processEx)(const WAVEFORMATEXTENSIBLE *wfIn,size_t innumsamples,WAVEFORMATEXTENSIBLE *wfOut,size_t *outnumsamples,void* *samples) PURE;
-        STDMETHOD (end)(void) PURE;
-        STDMETHOD (putStringParam)(const char *param,char sep) PURE;
-        STDMETHOD (getParamsEnum)(IffdshowParamsEnum* *enumPtr) PURE;
+        STDMETHOD(setTempPreset)(const char * tempPresetName) PURE;
+        STDMETHOD(setActivePreset)(const char * presetName) PURE;
+        STDMETHOD(loadPreset)(const char * presetName) PURE;
+        STDMETHOD(saveBytestreamConfig)(void * buf, size_t len) PURE; //if len=0, then buf should point to int variable which will be filled with required buffer length
+        STDMETHOD(loadBytestreamConfig)(const void * buf, size_t len) PURE;
+        STDMETHOD(config)(HWND owner) PURE;
+        STDMETHOD(getIffDecoder_)(/*IffdshowBase*/void* *deciPtr) PURE;
+        STDMETHOD(begin)(const WAVEFORMATEX * wfIn, WAVEFORMATEX * wfOut) PURE;
+        STDMETHOD(process)(const WAVEFORMATEX * wfIn, size_t innumsamples, WAVEFORMATEX * wfOut, size_t * outnumsamples, void* *samples) PURE;
+        STDMETHOD(processEx)(const WAVEFORMATEXTENSIBLE * wfIn, size_t innumsamples, WAVEFORMATEXTENSIBLE * wfOut, size_t * outnumsamples, void* *samples) PURE;
+        STDMETHOD(end)(void) PURE;
+        STDMETHOD(putStringParam)(const char * param, char sep) PURE;
+        STDMETHOD(getParamsEnum)(IffdshowParamsEnum* *enumPtr) PURE;
     };
 
 #ifdef __cplusplus

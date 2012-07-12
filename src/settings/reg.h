@@ -11,7 +11,7 @@ static bool is_user_SYSTEM(void)
 {
     char_t username[1024];
     ULONG len = 1024;
-    if (GetUserName(username, &len) && strcmp(username,_l("SYSTEM"))==0) {
+    if (GetUserName(username, &len) && strcmp(username, _l("SYSTEM")) == 0) {
         return true;
     }
     return false;
@@ -20,30 +20,30 @@ static bool is_user_SYSTEM(void)
 struct TregOp {
 public:
     virtual ~TregOp() {}
-    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z)=0;
-    virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false)=0;
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z) = 0;
+    virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false) = 0;
 };
-struct TregOpRegRead :public TregOp {
+struct TregOpRegRead : public TregOp {
 private:
     HKEY hKey;
 public:
-    TregOpRegRead(HKEY hive,const char_t *key) {
-        hKey=NULL;
+    TregOpRegRead(HKEY hive, const char_t *key) {
+        hKey = NULL;
         if (is_user_SYSTEM()) {
-            RegOpenKeyEx(HKEY_LOCAL_MACHINE,key,0,KEY_READ,&hKey);
+            RegOpenKeyEx(HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hKey);
             return;
         }
-        RegOpenKeyEx(hive,key,0,KEY_READ,&hKey);
+        RegOpenKeyEx(hive, key, 0, KEY_READ, &hKey);
     }
     virtual ~TregOpRegRead() {
         if (hKey) {
             RegCloseKey(hKey);
         }
     }
-    virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z) {
-        DWORD size=sizeof(int);
-        if (!hKey || RegQueryValueEx(hKey,X,0,0,(LPBYTE)&Y,&size)!=ERROR_SUCCESS) {
-            Y=Z;
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z) {
+        DWORD size = sizeof(int);
+        if (!hKey || RegQueryValueEx(hKey, X, 0, 0, (LPBYTE)&Y, &size) != ERROR_SUCCESS) {
+            Y = Z;
             return false;
         } else {
             return true;
@@ -54,27 +54,27 @@ public:
 #else
     // for ff_acm. No multiple lines support.
     virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false) {
-        DWORD size=(DWORD)(buflen*sizeof(char_t));
-        if ((!hKey || RegQueryValueEx(hKey,X,0,0,(LPBYTE)Y,&size)!=ERROR_SUCCESS) && Z) {
-            strcpy(Y,Z);
+        DWORD size = (DWORD)(buflen * sizeof(char_t));
+        if ((!hKey || RegQueryValueEx(hKey, X, 0, 0, (LPBYTE)Y, &size) != ERROR_SUCCESS) && Z) {
+            strcpy(Y, Z);
         }
     }
 #endif
 };
-struct TregOpRegWrite :public TregOp {
+struct TregOpRegWrite : public TregOp {
 private:
     HKEY hKey;
 public:
-    TregOpRegWrite(HKEY hive,const char_t *key) {
+    TregOpRegWrite(HKEY hive, const char_t *key) {
         DWORD dispo;
         if (is_user_SYSTEM()) {
-            if (RegCreateKeyEx(HKEY_LOCAL_MACHINE,key,0,FFDSHOW_REG_CLASS,REG_OPTION_NON_VOLATILE,KEY_WRITE,0,&hKey,&dispo)!=ERROR_SUCCESS) {
-                hKey=NULL;
+            if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, key, 0, FFDSHOW_REG_CLASS, REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, &hKey, &dispo) != ERROR_SUCCESS) {
+                hKey = NULL;
             }
             return;
         }
-        if (RegCreateKeyEx(hive,key,0,FFDSHOW_REG_CLASS,REG_OPTION_NON_VOLATILE,KEY_WRITE,0,&hKey,&dispo)!=ERROR_SUCCESS) {
-            hKey=NULL;
+        if (RegCreateKeyEx(hive, key, 0, FFDSHOW_REG_CLASS, REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, &hKey, &dispo) != ERROR_SUCCESS) {
+            hKey = NULL;
         }
     }
     virtual ~TregOpRegWrite() {
@@ -82,9 +82,9 @@ public:
             RegCloseKey(hKey);
         }
     }
-    virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int) {
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int) {
         if (hKey) {
-            RegSetValueEx(hKey,X,0,REG_DWORD,(LPBYTE)&Y,sizeof(int));
+            RegSetValueEx(hKey, X, 0, REG_DWORD, (LPBYTE)&Y, sizeof(int));
         }
         return true; // write always returns true
     }
@@ -93,82 +93,82 @@ public:
 
 #ifndef REG_REG_ONLY
 
-struct TregOpFileStreamReadBase :public TregOp {
+struct TregOpFileStreamReadBase : public TregOp {
 protected:
     void processMultipleLines(char_t *Y, size_t buflen, char_t *bufMULTI_SZ, size_t buflenMULTI_SZ);
 };
 
-struct TregOpFileStreamWriteBase :public TregOp {
+struct TregOpFileStreamWriteBase : public TregOp {
 protected:
     ffstring outString;
     void processMultipleLines(char_t *Y, size_t buflen, char_t *bufMULTI_SZ, size_t buflenMULTI_SZ);
 };
 
-struct TregOpFileRead :public TregOpFileStreamReadBase {
+struct TregOpFileRead : public TregOpFileStreamReadBase {
 private:
     Tinifile ini;
-    char_t flnm[MAX_PATH],section[260];
-    char_t pomS[256],propS[256];
+    char_t flnm[MAX_PATH], section[260];
+    char_t pomS[256], propS[256];
 public:
-    TregOpFileRead(const char_t *Iflnm,const char_t *Isection):ini(Iflnm) {
-        strcpy(section,Isection);
+    TregOpFileRead(const char_t *Iflnm, const char_t *Isection): ini(Iflnm) {
+        strcpy(section, Isection);
     }
-    virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z) {
-        ini.getPrivateProfileString(section,X,_itoa(Z,pomS,10),propS,255);
-        Y=atoi(propS);
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z) {
+        ini.getPrivateProfileString(section, X, _itoa(Z, pomS, 10), propS, 255);
+        Y = atoi(propS);
         return true; // TODO: detect if default has been used
     }
     virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
 };
 
-struct TregOpFileWrite :public TregOpFileStreamWriteBase {
+struct TregOpFileWrite : public TregOpFileStreamWriteBase {
 private:
     Tinifile ini;
     char_t section[260];
     char_t pomS[256];
 public:
-    TregOpFileWrite(const char_t *Iflnm,const char_t *Isection):ini(Iflnm) {
-        strcpy(section,Isection);
+    TregOpFileWrite(const char_t *Iflnm, const char_t *Isection): ini(Iflnm) {
+        strcpy(section, Isection);
     }
-    virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int) {
-        ini.writePrivateProfileString(section,X,_itoa(Y,pomS,10));
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int) {
+        ini.writePrivateProfileString(section, X, _itoa(Y, pomS, 10));
         return true;
     }
     virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *, bool multipleLines = false);
 };
 
-struct TregOpStreamRead :public TregOpFileStreamReadBase {
+struct TregOpStreamRead : public TregOpFileStreamReadBase {
 private:
-    typedef std::map<ffstring,ffstring,ffstring_iless> Tstrs;
+    typedef std::map<ffstring, ffstring, ffstring_iless> Tstrs;
     Tstrs strs;
     bool loaddef;
 public:
-    TregOpStreamRead(const void *buf,size_t len,char_t sep='\0',bool Iloaddef=true);
-    virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z) {
-        Tstrs::const_iterator i=strs.find(X);
-        if (i==strs.end()) {
+    TregOpStreamRead(const void *buf, size_t len, char_t sep = '\0', bool Iloaddef = true);
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z) {
+        Tstrs::const_iterator i = strs.find(X);
+        if (i == strs.end()) {
             if (loaddef) {
-                Y=Z;
+                Y = Z;
             }
             return false;
         } else {
-            Y=atoi(i->second.c_str());
+            Y = atoi(i->second.c_str());
             return true;
         }
     }
     virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
 };
 
-struct TregOpStreamWrite :public TregOpFileStreamWriteBase {
+struct TregOpStreamWrite : public TregOpFileStreamWriteBase {
 private:
     char_t sep;
 public:
-    TregOpStreamWrite(char_t Isep='\0'):sep(Isep) {}
+    TregOpStreamWrite(char_t Isep = '\0'): sep(Isep) {}
     TbyteBuffer buf;
-    virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int) {
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int) {
         char_t pomS[1024];
-        tsnprintf_s(pomS,countof(pomS), _TRUNCATE, _l("%s=%i"), X, Y);
-        buf.append(pomS,strlen(pomS)*sizeof(char_t));
+        tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%s=%i"), X, Y);
+        buf.append(pomS, strlen(pomS)*sizeof(char_t));
         buf.append(sep);
         return true;
     }
@@ -183,29 +183,29 @@ public:
 
 struct Tval {
     Tval(void) {}
-    Tval(const char_t *Is):s(Is),i(0) {}
-    Tval(int Ii):i(Ii) {}
+    Tval(const char_t *Is): s(Is), i(0) {}
+    Tval(int Ii): i(Ii) {}
     ffstring s;
     int i;
 };
 
 struct TregOpIDstreamRead: public TregOpFileStreamReadBase {
-    typedef stdext::hash_map<int,Tval> Tvals;
+    typedef stdext::hash_map<int, Tval> Tvals;
     Tvals vals;
 public:
-    TregOpIDstreamRead(const void *buf,size_t len,const void* *last=NULL);
-    virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z);
+    TregOpIDstreamRead(const void *buf, size_t len, const void* *last = NULL);
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z);
     virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
 };
 
-struct TregOpIDstreamWrite :public TregOpFileStreamWriteBase, public TbyteBuffer {
+struct TregOpIDstreamWrite : public TregOpFileStreamWriteBase, public TbyteBuffer {
 public:
-    virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int);
+    virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int);
     virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
 };
 
 struct Tstream;
-bool regExport(Tstream &f,HKEY hive,const char_t *key,bool unicode);
+bool regExport(Tstream &f, HKEY hive, const char_t *key, bool unicode);
 
 #endif //REG_REG_ONLY
 

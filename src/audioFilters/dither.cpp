@@ -105,17 +105,17 @@ unsigned int Tdither::Trandom::__r1 = 1;
 unsigned int Tdither::Trandom::__r2 = 1;
 
 const  unsigned char    Tdither::Trandom::Parity [256] = {  // parity
-    0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,
-    1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,
-    1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,
-    0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,
-    1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,
-    0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,
-    0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,
-    1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0
+    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
 };
 
-unsigned int Tdither::Trandom::random_int ( void )
+unsigned int Tdither::Trandom::random_int(void)
 {
     unsigned int  t1, t2, t3, t4;
 
@@ -128,22 +128,22 @@ unsigned int Tdither::Trandom::random_int ( void )
     t1 <<= 31;
     t2   = Parity [t2];
 
-    return (__r1 = (t3 >> 1) | t1 ) ^ (__r2 = (t4 + t4) | t2 );
+    return (__r1 = (t3 >> 1) | t1) ^ (__r2 = (t4 + t4) | t2);
 }
 
-double Tdither::Trandom::Random_Equi ( double mult )                     // gives a equal distributed random number
+double Tdither::Trandom::Random_Equi(double mult)                        // gives a equal distributed random number
 {
     // between -2^31*mult and +2^31*mult
-    return mult * (int) random_int ();
+    return mult * (int) random_int();
 }
 
-double Tdither::Trandom::Random_Triangular ( double mult )               // gives a triangular distributed random number
+double Tdither::Trandom::Random_Triangular(double mult)                  // gives a triangular distributed random number
 {
     // between -2^32*mult and +2^32*mult
-    return mult * ( (double) (int) random_int () + (double) (int) random_int () );
+    return mult * ((double)(int) random_int() + (double)(int) random_int());
 }
 
-Tdither::Tdither( int bits, int Ishapingtype ):shapingtype(Ishapingtype)
+Tdither::Tdither(int bits, int Ishapingtype): shapingtype(Ishapingtype)
 {
     static const unsigned char default_dither [] = { 92, 92, 88, 84, 81, 78, 74, 67,  0,  0 };
     static const float*                     F [] = { F44_0, F44_1, F44_2, F44_3 };
@@ -163,28 +163,28 @@ Tdither::Tdither( int bits, int Ishapingtype ):shapingtype(Ishapingtype)
         index = 9;
     }
 
-    memset ( ErrorHistory , 0, sizeof (ErrorHistory ) );
-    memset ( DitherHistory, 0, sizeof (DitherHistory) );
+    memset(ErrorHistory , 0, sizeof(ErrorHistory));
+    memset(DitherHistory, 0, sizeof(DitherHistory));
 
     FilterCoeff = F [shapingtype];
-    Mask   = ((uint64_t)-1) << (32 - bits);
+    Mask   = ((uint64_t) - 1) << (32 - bits);
     Add    = 0.5     * ((1L << (32 - bits)) - 1);
-    Dither = 0.01f*default_dither[index] / (((int64_t)1) << bits);
+    Dither = 0.01f * default_dither[index] / (((int64_t)1) << bits);
 }
 
-double Tdither::scalar16 ( const float* x, const float* y )
+double Tdither::scalar16(const float* x, const float* y)
 {
-    return x[ 0]*y[ 0] + x[ 1]*y[ 1] + x[ 2]*y[ 2] + x[ 3]*y[ 3]
-           + x[ 4]*y[ 4] + x[ 5]*y[ 5] + x[ 6]*y[ 6] + x[ 7]*y[ 7]
-           + x[ 8]*y[ 8] + x[ 9]*y[ 9] + x[10]*y[10] + x[11]*y[11]
-           + x[12]*y[12] + x[13]*y[13] + x[14]*y[14] + x[15]*y[15];
+    return x[ 0] * y[ 0] + x[ 1] * y[ 1] + x[ 2] * y[ 2] + x[ 3] * y[ 3]
+           + x[ 4] * y[ 4] + x[ 5] * y[ 5] + x[ 6] * y[ 6] + x[ 7] * y[ 7]
+           + x[ 8] * y[ 8] + x[ 9] * y[ 9] + x[10] * y[10] + x[11] * y[11]
+           + x[12] * y[12] + x[13] * y[13] + x[14] * y[14] + x[15] * y[15];
 }
 
 int64_t Tdither::ROUND64(double x)
 {
     // double doubletmp=x + Add + 0x001FFFFD80000000LL;
     // return *(int64_t*)(&doubletmp) - 0x433FFFFD80000000LL;
-    return int64_t(x+Add);
+    return int64_t(x + Add);
 }
 
 /* Dither output */
@@ -192,51 +192,51 @@ int64_t Tdither::dither_output(int dithering, long i, double Sum, int k)
 {
     double Sum2;
     int64_t val;
-    if(dithering) {
-        if(!shapingtype) {
-            double  tmp = Trandom::Random_Equi ( Dither );
+    if (dithering) {
+        if (!shapingtype) {
+            double  tmp = Trandom::Random_Equi(Dither);
             Sum2 = tmp - LastRandomNumber [k];
             LastRandomNumber [k] = (int)tmp;
             Sum2 = Sum += Sum2;
-            val = ROUND64 (Sum2)  &  Mask;
+            val = ROUND64(Sum2)  &  Mask;
         } else {
-            Sum2  = Trandom::Random_Triangular ( Dither ) - scalar16 ( DitherHistory[k], FilterCoeff + i );
-            Sum  += DitherHistory [k] [(-1-i)&15] = (float)Sum2;
-            Sum2  = Sum + scalar16 ( ErrorHistory [k], FilterCoeff + i );
-            val = ROUND64 (Sum2)  &  Mask;
-            ErrorHistory [k] [(-1-i)&15] = (float)(Sum - val);
+            Sum2  = Trandom::Random_Triangular(Dither) - scalar16(DitherHistory[k], FilterCoeff + i);
+            Sum  += DitherHistory [k] [(-1 - i) & 15] = (float)Sum2;
+            Sum2  = Sum + scalar16(ErrorHistory [k], FilterCoeff + i);
+            val = ROUND64(Sum2)  &  Mask;
+            ErrorHistory [k] [(-1 - i) & 15] = (float)(Sum - val);
         }
         return (val);
     } else {
-        return (ROUND64 (Sum));
+        return (ROUND64(Sum));
     }
 }
 
-template<class Tout,int conv> Tout* Tdither::ditherSamples(const float *bufIn,Tout * const bufOut,unsigned int nchannels,size_t numsamples,int dithering)
+template<class Tout, int conv> Tout* Tdither::ditherSamples(const float *bufIn, Tout * const bufOut, unsigned int nchannels, size_t numsamples, int dithering)
 {
-    for (unsigned int k=0; k<nchannels; k++) {
-        const float *bufInF=bufIn+k;
-        Tout *bufOutF=bufOut+k;
-        long i=0;
-        for (size_t j=0; j<numsamples; j++,i++,bufInF+=nchannels,bufOutF+=nchannels) {
-            if (i>31) {
-                i=0;
+    for (unsigned int k = 0; k < nchannels; k++) {
+        const float *bufInF = bufIn + k;
+        Tout *bufOutF = bufOut + k;
+        long i = 0;
+        for (size_t j = 0; j < numsamples; j++, i++, bufInF += nchannels, bufOutF += nchannels) {
+            if (i > 31) {
+                i = 0;
             }
-            int64_t val=dither_output(dithering,i,*bufInF*_I32_MAX,k)>>conv;
-            *bufOutF=TsampleFormatInfo<Tout>::limit(val);
+            int64_t val = dither_output(dithering, i, *bufInF * _I32_MAX, k) >> conv;
+            *bufOutF = TsampleFormatInfo<Tout>::limit(val);
         }
     }
     return bufOut;
 }
-int16_t* Tdither::process(const float *bufIn,int16_t * const bufOut,unsigned int nchannels,size_t numsamples,int dithering)
+int16_t* Tdither::process(const float *bufIn, int16_t * const bufOut, unsigned int nchannels, size_t numsamples, int dithering)
 {
-    return ditherSamples<int16_t,16>(bufIn,bufOut,nchannels,numsamples,dithering);
+    return ditherSamples<int16_t, 16>(bufIn, bufOut, nchannels, numsamples, dithering);
 }
-int24_t* Tdither::process(const float *bufIn,int24_t * const bufOut,unsigned int nchannels,size_t numsamples,int dithering)
+int24_t* Tdither::process(const float *bufIn, int24_t * const bufOut, unsigned int nchannels, size_t numsamples, int dithering)
 {
-    return ditherSamples<int24_t,8>(bufIn,bufOut,nchannels,numsamples,dithering);
+    return ditherSamples<int24_t, 8>(bufIn, bufOut, nchannels, numsamples, dithering);
 }
-int32_t* Tdither::process(const float *bufIn,int32_t * const bufOut,unsigned int nchannels,size_t numsamples,int dithering)
+int32_t* Tdither::process(const float *bufIn, int32_t * const bufOut, unsigned int nchannels, size_t numsamples, int dithering)
 {
-    return ditherSamples<int32_t,0>(bufIn,bufOut,nchannels,numsamples,dithering);
+    return ditherSamples<int32_t, 0>(bufIn, bufOut, nchannels, numsamples, dithering);
 }

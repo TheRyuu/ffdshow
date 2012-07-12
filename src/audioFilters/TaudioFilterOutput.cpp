@@ -29,13 +29,13 @@
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "ffmpeg/libavutil/audioconvert.h"
 
-TaudioFilterOutput::TaudioFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
+TaudioFilterOutput::TaudioFilterOutput(IffdshowBase *Ideci, Tfilters *Iparent): TaudioFilter(Ideci, Iparent)
 {
-    libavcodec=NULL;
-    avctx=NULL;
-    oldsf.freq=0;
-    ac3inited=false;
-    ac3buf=(uint8_t*)malloc(AC3_MAX_CODED_FRAME_SIZE);
+    libavcodec = NULL;
+    avctx = NULL;
+    oldsf.freq = 0;
+    ac3inited = false;
+    ac3buf = (uint8_t*)malloc(AC3_MAX_CODED_FRAME_SIZE);
 }
 TaudioFilterOutput::~TaudioFilterOutput()
 {
@@ -52,16 +52,16 @@ void TaudioFilterOutput::done(void)
             libavcodec->avcodec_close(avctx);
         }
         libavcodec->av_free(avctx);
-        avctx=NULL;
+        avctx = NULL;
     }
     ac3inputbuf.clear();
-    ac3inited=false;
+    ac3inited = false;
 }
 
-int TaudioFilterOutput::getSupportedFormats(const TfilterSettingsAudio *cfg0,bool *honourPreferred,const TsampleFormat &sf) const
+int TaudioFilterOutput::getSupportedFormats(const TfilterSettingsAudio *cfg0, bool *honourPreferred, const TsampleFormat &sf) const
 {
-    *honourPreferred=false;
-    const ToutputAudioSettings *cfg=(ToutputAudioSettings*)cfg0;
+    *honourPreferred = false;
+    const ToutputAudioSettings *cfg = (ToutputAudioSettings*)cfg0;
     if (cfg->outsfs & TsampleFormat::SF_AC3) {
         if (cfg->outAC3EncodeMode) {
             if (sf.nchannels == 6) {
@@ -77,45 +77,45 @@ int TaudioFilterOutput::getSupportedFormats(const TfilterSettingsAudio *cfg0,boo
             return TsampleFormat::SF_PCM16;
         }
     }
-    if (cfg->outsfs==TsampleFormat::SF_LPCM16) {
+    if (cfg->outsfs == TsampleFormat::SF_LPCM16) {
         return TsampleFormat::SF_PCM16;
     } else {
         return cfg->outsfs;
     }
 }
 
-bool TaudioFilterOutput::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg0)
+bool TaudioFilterOutput::getOutputFmt(TsampleFormat &fmt, const TfilterSettingsAudio *cfg0)
 {
-    const ToutputAudioSettings *cfg=(ToutputAudioSettings*)cfg0;
-    if (cfg->outsfs==TsampleFormat::SF_LPCM16) {
-        fmt.sf=TsampleFormat::SF_LPCM16;
+    const ToutputAudioSettings *cfg = (ToutputAudioSettings*)cfg0;
+    if (cfg->outsfs == TsampleFormat::SF_LPCM16) {
+        fmt.sf = TsampleFormat::SF_LPCM16;
     } else if (cfg->outsfs & TsampleFormat::SF_AC3) {
         if (cfg->outAC3EncodeMode && fmt.nchannels != 6) {
             int outsfs = cfg->outsfs & ~TsampleFormat::SF_AC3;
             if (outsfs == 0) {
                 outsfs = TsampleFormat::SF_PCM16 | TsampleFormat::SF_PCM24 | TsampleFormat::SF_PCM32;
             }
-            if ((fmt.sf & outsfs)==0) {
+            if ((fmt.sf & outsfs) == 0) {
                 fmt.sf = TsampleFormat::sf_bestMatch(fmt.sf, outsfs);
             }
         } else {
             fmt.sf = TsampleFormat::SF_AC3;
         }
-    } else if ((fmt.sf & cfg->outsfs)==0) {
-        fmt.sf=TsampleFormat::sf_bestMatch(fmt.sf,cfg->outsfs);
+    } else if ((fmt.sf & cfg->outsfs) == 0) {
+        fmt.sf = TsampleFormat::sf_bestMatch(fmt.sf, cfg->outsfs);
     }
     return true;
 }
 
-HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
+HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples, size_t numsamples, const TfilterSettingsAudio *cfg0)
 {
-    const ToutputAudioSettings *cfg=(ToutputAudioSettings*)cfg0;
-    samples=init(cfg,fmt,samples,numsamples);
+    const ToutputAudioSettings *cfg = (ToutputAudioSettings*)cfg0;
+    samples = init(cfg, fmt, samples, numsamples);
 
     // Change to PCM format if AC3 encode is requested only for multichannel streams and codec is not AC3/DTS
     bool changeFormat = false;
     const TffdshowDecAudioInputPin *pin =  deciA->GetCurrentPin();
-    if (   pin
+    if (pin
             && pin->audio
             && cfg->outAC3EncodeMode == 1
             && (cfg->outsfs & TsampleFormat::SF_AC3)
@@ -124,83 +124,83 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
         changeFormat = true;
     }
 
-    if (cfg->outsfs==TsampleFormat::SF_LPCM16) {
-        fmt.sf=TsampleFormat::SF_LPCM16;
-        int16_t *samples16=(int16_t*)samples;
-        for (size_t i=0; i<numsamples*fmt.nchannels; i++) {
+    if (cfg->outsfs == TsampleFormat::SF_LPCM16) {
+        fmt.sf = TsampleFormat::SF_LPCM16;
+        int16_t *samples16 = (int16_t*)samples;
+        for (size_t i = 0; i < numsamples * fmt.nchannels; i++) {
             bswap(samples16[i]);
         }
     } else if ((cfg->outsfs & TsampleFormat::SF_AC3) && parent->config->isDecoder[IDFF_MOVIE_LAVC]  && !changeFormat) {
         if (!libavcodec) {
             deci->getLibavcodec(&libavcodec);
         }
-        if (oldsf!=fmt) {
+        if (oldsf != fmt) {
             done();
-            oldsf=fmt;
-            DWORD channelmask=fmt.makeChannelMask();
+            oldsf = fmt;
+            DWORD channelmask = fmt.makeChannelMask();
             struct Tac3channels {
                 int ac3mode;
                 int speakers[6];
                 int mask;
             };
-            static const Tac3channels ac3channels[]= {
-                AV_CH_LAYOUT_MONO        ,SPEAKER_FRONT_CENTER,0                   ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_CENTER,
-                AV_CH_LAYOUT_STEREO      ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT,
-                AV_CH_LAYOUT_SURROUND    ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER,
-                AV_CH_LAYOUT_2_1         ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,SPEAKER_BACK_CENTER,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER,
-                AV_CH_LAYOUT_4POINT0     ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_CENTER,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_CENTER,
-                AV_CH_LAYOUT_QUAD        ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,SPEAKER_BACK_LEFT  ,SPEAKER_BACK_RIGHT ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT,
-                AV_CH_LAYOUT_5POINT0_BACK,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_LEFT  ,SPEAKER_BACK_RIGHT,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT,
+            static const Tac3channels ac3channels[] = {
+                AV_CH_LAYOUT_MONO        , SPEAKER_FRONT_CENTER, 0                   , 0                  , 0                  , 0                 , 0, SPEAKER_FRONT_CENTER,
+                AV_CH_LAYOUT_STEREO      , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_RIGHT , 0                  , 0                  , 0                 , 0, SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT,
+                AV_CH_LAYOUT_SURROUND    , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_CENTER, SPEAKER_FRONT_RIGHT, 0                  , 0                 , 0, SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER,
+                AV_CH_LAYOUT_2_1         , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_RIGHT , SPEAKER_BACK_CENTER, 0                  , 0                 , 0, SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_BACK_CENTER,
+                AV_CH_LAYOUT_4POINT0     , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_CENTER, SPEAKER_FRONT_RIGHT, SPEAKER_BACK_CENTER, 0                 , 0, SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_BACK_CENTER,
+                AV_CH_LAYOUT_QUAD        , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_RIGHT , SPEAKER_BACK_LEFT  , SPEAKER_BACK_RIGHT , 0                 , 0, SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT,
+                AV_CH_LAYOUT_5POINT0_BACK, SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_CENTER, SPEAKER_FRONT_RIGHT, SPEAKER_BACK_LEFT  , SPEAKER_BACK_RIGHT, 0, SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT,
 
-                AV_CH_LAYOUT_MONO|AV_CH_LOW_FREQUENCY    ,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,0                    ,SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY,
-                AV_CH_LAYOUT_STEREO|AV_CH_LOW_FREQUENCY  ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_LOW_FREQUENCY,
-                AV_CH_LAYOUT_SURROUND|AV_CH_LOW_FREQUENCY,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY,
-                AV_CH_LAYOUT_2_1|AV_CH_LOW_FREQUENCY     ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_CENTER  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER|SPEAKER_LOW_FREQUENCY,
-                AV_CH_LAYOUT_4POINT0|AV_CH_LOW_FREQUENCY ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_CENTER  ,SPEAKER_LOW_FREQUENCY,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_CENTER|SPEAKER_LOW_FREQUENCY,
-                AV_CH_LAYOUT_QUAD|AV_CH_LOW_FREQUENCY    ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_LEFT    ,SPEAKER_BACK_RIGHT   ,SPEAKER_LOW_FREQUENCY,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_LOW_FREQUENCY,
-                AV_CH_LAYOUT_5POINT1_BACK                ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_LEFT    ,SPEAKER_BACK_RIGHT   ,SPEAKER_LOW_FREQUENCY,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_MONO | AV_CH_LOW_FREQUENCY    , SPEAKER_FRONT_CENTER, SPEAKER_LOW_FREQUENCY, 0                    , 0                    , 0                    , 0                    , SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_STEREO | AV_CH_LOW_FREQUENCY  , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_RIGHT  , SPEAKER_LOW_FREQUENCY, 0                    , 0                    , 0                    , SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_SURROUND | AV_CH_LOW_FREQUENCY, SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_CENTER , SPEAKER_FRONT_RIGHT  , SPEAKER_LOW_FREQUENCY, 0                    , 0                    , SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_2_1 | AV_CH_LOW_FREQUENCY     , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_RIGHT  , SPEAKER_BACK_CENTER  , SPEAKER_LOW_FREQUENCY, 0                    , 0                    , SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_BACK_CENTER | SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_4POINT0 | AV_CH_LOW_FREQUENCY , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_CENTER , SPEAKER_FRONT_RIGHT  , SPEAKER_BACK_CENTER  , SPEAKER_LOW_FREQUENCY, 0                    , SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_BACK_CENTER | SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_QUAD | AV_CH_LOW_FREQUENCY    , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_RIGHT  , SPEAKER_BACK_LEFT    , SPEAKER_BACK_RIGHT   , SPEAKER_LOW_FREQUENCY, 0                    , SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT | SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_5POINT1_BACK                , SPEAKER_FRONT_LEFT  , SPEAKER_FRONT_CENTER , SPEAKER_FRONT_RIGHT  , SPEAKER_BACK_LEFT    , SPEAKER_BACK_RIGHT   , SPEAKER_LOW_FREQUENCY, SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT | SPEAKER_LOW_FREQUENCY,
             };
-            for (int i=0; i<countof(ac3channels); i++)
-                if (channelmask==ac3channels[i].mask) {
+            for (int i = 0; i < countof(ac3channels); i++)
+                if (channelmask == ac3channels[i].mask) {
                     AVCodec *avcodec = libavcodec->avcodec_find_encoder(CODEC_ID_AC3);
                     avctx = libavcodec->avcodec_alloc_context(avcodec);
-                    
+
                     avctx->sample_rate = fmt.freq;
                     avctx->channels = fmt.nchannels;
-                    avctx->bit_rate = cfg->outAC3bitrate*1000;
+                    avctx->bit_rate = cfg->outAC3bitrate * 1000;
                     avctx->channel_layout = ac3channels[i].ac3mode;
-										
+
                     /* custom channel mapping */
-                    for (unsigned int j=0; j<fmt.nchannels; j++) {
+                    for (unsigned int j = 0; j < fmt.nchannels; j++) {
                         avctx->ac3channels[j] = fmt.findSpeaker(ac3channels[i].speakers[j]);
                     }
-                    
-                    ac3inited=libavcodec->avcodec_open(avctx,avcodec)>=0;
+
+                    ac3inited = libavcodec->avcodec_open(avctx, avcodec) >= 0;
                     break;
                 }
         }
         if (ac3inited) {
-            ac3inputbuf.append(samples,numsamples*fmt.blockAlign());
-            TbyteBuffer::iterator inputsamples=ac3inputbuf.begin();
-            int inputsize=(int)ac3inputbuf.size();
-            int ac3framesize=avctx->frame_size*fmt.blockAlign();
-            while (inputsize>=ac3framesize) {
-                int ret=libavcodec->avcodec_encode_audio(avctx,ac3buf,AC3_MAX_CODED_FRAME_SIZE,(const short*)&*inputsamples);
+            ac3inputbuf.append(samples, numsamples * fmt.blockAlign());
+            TbyteBuffer::iterator inputsamples = ac3inputbuf.begin();
+            int inputsize = (int)ac3inputbuf.size();
+            int ac3framesize = avctx->frame_size * fmt.blockAlign();
+            while (inputsize >= ac3framesize) {
+                int ret = libavcodec->avcodec_encode_audio(avctx, ac3buf, AC3_MAX_CODED_FRAME_SIZE, (const short*)&*inputsamples);
                 HRESULT hr;
-                if ((hr=deciA->deliverSampleSPDIF(ac3buf,ret,avctx->bit_rate, avctx->sample_rate,false))!=S_OK) {
-                    numsamples=0;
+                if ((hr = deciA->deliverSampleSPDIF(ac3buf, ret, avctx->bit_rate, avctx->sample_rate, false)) != S_OK) {
+                    numsamples = 0;
                     return hr;
                 }
-                inputsamples+=ac3framesize;
-                inputsize-=ac3framesize;
+                inputsamples += ac3framesize;
+                inputsize -= ac3framesize;
             }
-            if (inputsamples!=ac3inputbuf.begin()) {
-                ac3inputbuf.erase(ac3inputbuf.begin(),inputsamples);
+            if (inputsamples != ac3inputbuf.begin()) {
+                ac3inputbuf.erase(ac3inputbuf.begin(), inputsamples);
             }
-            numsamples=0;
+            numsamples = 0;
         }
     }
-    return parent->deliverSamples(++it,fmt,samples,numsamples);
+    return parent->deliverSamples(++it, fmt, samples, numsamples);
 }
 
 void TaudioFilterOutput::onSeek(void)

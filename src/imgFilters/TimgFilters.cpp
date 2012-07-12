@@ -36,7 +36,7 @@
 #include "TresizeAspectSettings.h"
 
 //================================================= TimgFilters =================================================
-TimgFilters::TimgFilters(IffdshowBase *Ideci,IprocVideoSink *Isink):
+TimgFilters::TimgFilters(IffdshowBase *Ideci, IprocVideoSink *Isink):
     Tfilters(Ideci),
     sink(Isink),
     deciV(Ideci),
@@ -46,29 +46,29 @@ TimgFilters::TimgFilters(IffdshowBase *Ideci,IprocVideoSink *Isink):
     grab(NULL),
     stopAtSubtitles(false)
 {
-    subtitles=getFilter<TimgFilterSubtitles>();
+    subtitles = getFilter<TimgFilterSubtitles>();
     getFilter<TimgFilterHWoverlay>();
-    output=getFilter<TimgFilterOutput>();
+    output = getFilter<TimgFilterOutput>();
 }
 TimgFilters::~TimgFilters()
 {
 }
 
-HRESULT TimgFilters::process(TffPict &pict,const TpresetVideo *cfg)
+HRESULT TimgFilters::process(TffPict &pict, const TpresetVideo *cfg)
 {
     deciV->lockCSReceive();
 
-    csp_vflip(pict.csp,&pict.cspInfo,pict.data,pict.stride,pict.rectFull.dy);
+    csp_vflip(pict.csp, &pict.cspInfo, pict.data, pict.stride, pict.rectFull.dy);
     if (firstprocess) {
-        firstprocess=false;
+        firstprocess = false;
         onFirstProcess(cfg);
     }
 
     deci->lock(IDFF_lockPresetPtr);
     if (queueChanged) {
-        makeQueue(cfg,queue);
-        if (queryFilterInterface(IID_IimgFilterGrab,(void**)&grab)!=S_OK) {
-            grab=NULL;
+        makeQueue(cfg, queue);
+        if (queryFilterInterface(IID_IimgFilterGrab, (void**)&grab) != S_OK) {
+            grab = NULL;
         }
         InterlockedDecrement((LONG*)&queueChanged);
         deciD->sendOnNewFiltersMsg();
@@ -76,11 +76,11 @@ HRESULT TimgFilters::process(TffPict &pict,const TpresetVideo *cfg)
     queue.copyCfg(cfg);
     deci->unlock(IDFF_lockPresetPtr);
 
-    if (cfg->isDyInterlaced && pict.rectFull.dy>(unsigned int)cfg->dyInterlaced) {
-        pict.csp|=FF_CSP_FLAGS_INTERLACED;
+    if (cfg->isDyInterlaced && pict.rectFull.dy > (unsigned int)cfg->dyInterlaced) {
+        pict.csp |= FF_CSP_FLAGS_INTERLACED;
     }
 
-    HRESULT ret=processSample(queue.begin(),pict);
+    HRESULT ret = processSample(queue.begin(), pict);
 
     deciV->unlockCSReceive();
 
@@ -88,23 +88,23 @@ HRESULT TimgFilters::process(TffPict &pict,const TpresetVideo *cfg)
 
 }
 
-HRESULT TimgFilters::processSample(TfilterQueue::iterator it,TffPict &pict)
+HRESULT TimgFilters::processSample(TfilterQueue::iterator it, TffPict &pict)
 {
-    if (it==queue.end()) {
-        if (dirtyBorder==1) {
+    if (it == queue.end()) {
+        if (dirtyBorder == 1) {
             //static int cnt=0;DEBUGS1("clearBorder",cnt++);
             int brightness = deciV->getBordersBrightness();
             pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness, pict.video_full_range_flag));
-            dirtyBorder=2;
+            dirtyBorder = 2;
         }
         return S_OK;
     } else {
-        TimgFilter *filter=(TimgFilter*)it->filter;
-        const TfilterSettingsVideo *cfg=(const TfilterSettingsVideo*)it->getCfg();
-        if (pict.csp!=FF_CSP_NULL) {
-            return filter->process(it,pict,cfg);
+        TimgFilter *filter = (TimgFilter*)it->filter;
+        const TfilterSettingsVideo *cfg = (const TfilterSettingsVideo*)it->getCfg();
+        if (pict.csp != FF_CSP_NULL) {
+            return filter->process(it, pict, cfg);
         } else {
-            return filter->flush(it,pict,cfg);
+            return filter->flush(it, pict, cfg);
         }
     }
 }
@@ -114,7 +114,7 @@ HRESULT TimgFilters::deliverSample(TffPict &pict)
     return sink->deliverProcessedSample(pict);
 }
 
-HRESULT TimgFilters::processAndDeliverSample(TfilterQueue::iterator it,TffPict &pict)
+HRESULT TimgFilters::processAndDeliverSample(TfilterQueue::iterator it, TffPict &pict)
 {
     HRESULT hr = processSample(it, pict);
     if (hr == S_OK) {
@@ -124,15 +124,15 @@ HRESULT TimgFilters::processAndDeliverSample(TfilterQueue::iterator it,TffPict &
 }
 
 // draw DVD subtitles and menu before resize, if it is not done.
-void TimgFilters::adhocDVDsub(TfilterQueue::iterator it0,TffPict &pict)
+void TimgFilters::adhocDVDsub(TfilterQueue::iterator it0, TffPict &pict)
 {
     TfilterQueue::iterator it = it0;
-    while (it!=queue.end()) {
-        TimgFilter *filter=(TimgFilter*)it->filter;
+    while (it != queue.end()) {
+        TimgFilter *filter = (TimgFilter*)it->filter;
         if (filter->getImgFilterID() == TimgFilter::IMGFILTER_SUBTITLES) {
-            const TfilterSettingsVideo *cfg=(const TfilterSettingsVideo*)it->getCfg();
+            const TfilterSettingsVideo *cfg = (const TfilterSettingsVideo*)it->getCfg();
             if (((TimgFilterSubtitles*)filter)->enterAdhocMode()) {
-                filter->process(it0,pict,cfg);
+                filter->process(it0, pict, cfg);
             }
             break;
         }
@@ -142,7 +142,7 @@ void TimgFilters::adhocDVDsub(TfilterQueue::iterator it0,TffPict &pict)
 
 void TimgFilters::onEndOfStream(void)
 {
-    for (iterator f=begin(); f!=end(); f++) {
+    for (iterator f = begin(); f != end(); f++) {
         TimgFilter *filter = (TimgFilter*)f->second;
         filter->onEndOfStream();
     }
@@ -161,9 +161,9 @@ bool TimgFilters::pullImageFromSubtitlesFilter(TfilterQueue::iterator from)
 bool TimgFilters::isAnyActiveDownstreamFilter(TfilterQueue::iterator it)
 {
     it++;
-    while (it!=queue.end()) {
-        TimgFilter *filter=(TimgFilter*)it->filter;
-        const TfilterSettingsVideo *cfg=(const TfilterSettingsVideo*)it->getCfg();
+    while (it != queue.end()) {
+        TimgFilter *filter = (TimgFilter*)it->filter;
+        const TfilterSettingsVideo *cfg = (const TfilterSettingsVideo*)it->getCfg();
         if (cfg->is) {
             if (!filter->acceptRandomYV12andRGB32()) {
                 return true;
@@ -174,28 +174,28 @@ bool TimgFilters::isAnyActiveDownstreamFilter(TfilterQueue::iterator it)
     return false;
 }
 
-HRESULT TimgFilters::convertOutputSample(TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
+HRESULT TimgFilters::convertOutputSample(TffPict &pict, uint64_t dstcsp, unsigned char *dst[4], int dstStride[4], LONG &dstSize, const ToutputVideoSettings *cfg)
 {
-    return output->process(pict,dstcsp,dst,dstStride,dstSize,cfg);
+    return output->process(pict, dstcsp, dst, dstStride, dstSize, cfg);
 }
 
-void TimgFilters::getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg)
+void TimgFilters::getOutputFmt(TffPictBase &pict, const TpresetVideo *cfg)
 {
     TfilterQueue queue(true);
-    makeQueue(cfg,queue);
+    makeQueue(cfg, queue);
     queue.copyCfg(cfg);
-    for (TfilterQueue::iterator f=queue.begin(); f!=queue.end(); f++) {
-        ((TimgFilter*)f->filter)->getOutputFmt(pict,(const TfilterSettingsVideo*)f->getCfg());
+    for (TfilterQueue::iterator f = queue.begin(); f != queue.end(); f++) {
+        ((TimgFilter*)f->filter)->getOutputFmt(pict, (const TfilterSettingsVideo*)f->getCfg());
     }
 }
 
-bool TimgFilters::initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen)
+bool TimgFilters::initSubtitles(int id, int type, const unsigned char *extradata, unsigned int extradatalen)
 {
-    return subtitles->initSubtitles(id,type,extradata,extradatalen);
+    return subtitles->initSubtitles(id, type, extradata, extradatalen);
 }
-void TimgFilters::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
+void TimgFilters::addSubtitle(int id, REFERENCE_TIME start, REFERENCE_TIME stop, const unsigned char *data, unsigned int datalen, const TsubtitlesSettings *cfg, bool utf8)
 {
-    subtitles->addSubtitle(id,start,stop,data,datalen,cfg,utf8);
+    subtitles->addSubtitle(id, start, stop, data, datalen, cfg, utf8);
 }
 void TimgFilters::resetSubtitles(int id)
 {
@@ -207,9 +207,9 @@ HANDLE TimgFilters::getGlyphThreadHandle()
     return subtitles->getGlyphThreadHandle();
 }
 
-bool TimgFilters::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
+bool TimgFilters::ctlSubtitles(int id, int type, unsigned int ctl_id, const void *ctl_data, unsigned int ctl_datalen)
 {
-    return subtitles->ctlSubtitles(id,type,ctl_id,ctl_data,ctl_datalen);
+    return subtitles->ctlSubtitles(id, type, ctl_id, ctl_data, ctl_datalen);
 }
 
 const char_t* TimgFilters::getCurrentSubFlnm(void) const
@@ -225,14 +225,14 @@ void TimgFilters::grabNow(void)
 }
 
 //============================================== TimgFiltersPlayer ==============================================
-TimgFiltersPlayer::TimgFiltersPlayer(IffdshowBase *Ideci,IprocVideoSink *Isink,bool &IallowOutChange):
-    TimgFilters(Ideci,Isink),
-    resizeSettingsDV(NULL),resizeDV(NULL),
+TimgFiltersPlayer::TimgFiltersPlayer(IffdshowBase *Ideci, IprocVideoSink *Isink, bool &IallowOutChange):
+    TimgFilters(Ideci, Isink),
+    resizeSettingsDV(NULL), resizeDV(NULL),
     expand(NULL),
     allowOutChange(IallowOutChange)
 {
     deci->getGlobalSettings((TglobalSettingsBase**)&globalCfg);
-    osd=getFilter<TimgFilterOSD>();
+    osd = getFilter<TimgFilterOSD>();
 }
 TimgFiltersPlayer::~TimgFiltersPlayer()
 {
@@ -244,39 +244,39 @@ TimgFiltersPlayer::~TimgFiltersPlayer()
     }
 }
 
-void TimgFiltersPlayer::makeQueue(const Tpreset *cfg,TfilterQueue &queue)
+void TimgFiltersPlayer::makeQueue(const Tpreset *cfg, TfilterQueue &queue)
 {
-    TimgFilters::makeQueue(cfg,queue);
+    TimgFilters::makeQueue(cfg, queue);
     if (expand) {
-        queue.add(expand,&expandSettings);
+        queue.add(expand, &expandSettings);
     }
     if (resizeDV) {
-        queue.add(resizeDV,resizeSettingsDV);
+        queue.add(resizeDV, resizeSettingsDV);
     }
 }
 
 void TimgFiltersPlayer::onFirstProcess(const TpresetVideo *cfg)
 {
     if (!allowOutChange && !isdvdproc) {
-        expandSettings.full=true;
-        deciV->getOutputDimensions(&expandSettings.newrect.dx,&expandSettings.newrect.dy);
-        expand=getFilter<TimgFilterExpand>();
+        expandSettings.full = true;
+        deciV->getOutputDimensions(&expandSettings.newrect.dx, &expandSettings.newrect.dy);
+        expand = getFilter<TimgFilterExpand>();
     }
 }
 
-void TimgFiltersPlayer::getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg)
+void TimgFiltersPlayer::getOutputFmt(TffPictBase &pict, const TpresetVideo *cfg)
 {
-    TimgFilters::getOutputFmt(pict,cfg);
+    TimgFilters::getOutputFmt(pict, cfg);
 }
 
-bool TimgFiltersPlayer::shortOSDmessage(const char_t *msg,unsigned int duration)
+bool TimgFiltersPlayer::shortOSDmessage(const char_t *msg, unsigned int duration)
 {
-    return osd->shortOSDmessage(msg,duration);
+    return osd->shortOSDmessage(msg, duration);
 }
 
-bool TimgFiltersPlayer::shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY)
+bool TimgFiltersPlayer::shortOSDmessageAbsolute(const char_t *msg, unsigned int duration, unsigned int posX, unsigned int posY)
 {
-    return osd->shortOSDmessageAbsolute(msg,duration,posX,posY);
+    return osd->shortOSDmessageAbsolute(msg, duration, posX, posY);
 }
 
 bool TimgFiltersPlayer::cleanShortOSDmessages(void)
@@ -284,18 +284,18 @@ bool TimgFiltersPlayer::cleanShortOSDmessages(void)
     return osd->cleanShortOSDmessages();
 }
 
-HRESULT TimgFiltersPlayer::registerOSDprovider(IOSDprovider *provider,const char *name)
+HRESULT TimgFiltersPlayer::registerOSDprovider(IOSDprovider *provider, const char *name)
 {
-    return osd->registerOSDprovider(provider,name);
+    return osd->registerOSDprovider(provider, name);
 }
 HRESULT TimgFiltersPlayer::unregisterOSDprovider(IOSDprovider *provider)
 {
     return osd->unregisterOSDprovider(provider);
 }
 
-HRESULT TimgFiltersPlayer::process(TffPict &pict,const TpresetVideo *cfg)
+HRESULT TimgFiltersPlayer::process(TffPict &pict, const TpresetVideo *cfg)
 {
-    return TimgFilters::process(pict,cfg);
+    return TimgFilters::process(pict, cfg);
 }
 
 HRESULT TimgFiltersPlayer::addClosedCaption(const wchar_t *line)

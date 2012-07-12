@@ -1,10 +1,10 @@
 #ifndef _MEM_ALIGN_H_
 #define _MEM_ALIGN_H_
 
-void *aligned_malloc(size_t size,size_t alignment=0);
-void *aligned_calloc(size_t size1,size_t size2,size_t alignment=0);
-template <class T> T* aligned_calloc3(size_t width,size_t height,size_t pading=0,size_t alignment=16);
-void *aligned_realloc(void *memblock,size_t size,size_t alignment=0);
+void *aligned_malloc(size_t size, size_t alignment = 0);
+void *aligned_calloc(size_t size1, size_t size2, size_t alignment = 0);
+template <class T> T* aligned_calloc3(size_t width, size_t height, size_t pading = 0, size_t alignment = 16);
+void *aligned_realloc(void *memblock, size_t size, size_t alignment = 0);
 void aligned_free(void *mem_ptr);
 
 #ifdef __cplusplus
@@ -43,12 +43,12 @@ public:
     }
 
     aligned_allocator() throw() {}
-    template <class U> aligned_allocator(const aligned_allocator<U>& ) throw() {}
+    template <class U> aligned_allocator(const aligned_allocator<U>&) throw() {}
     ~aligned_allocator() throw() {}
 
     //Space for n Ts
     pointer allocate(size_type n, typename aligned_allocator<void>::const_pointer = 0) {
-        return (T*)aligned_malloc(n*sizeof(T));
+        return (T*)aligned_malloc(n * sizeof(T));
     }
     void deallocate(pointer p, size_type) {
         aligned_free(p);
@@ -63,7 +63,7 @@ public:
     }
 
     size_type max_size() const throw() {
-        return size_t(-1)/sizeof(T);
+        return size_t(-1) / sizeof(T);
     }
     template<class U> struct rebind {
         typedef aligned_allocator<U> other;

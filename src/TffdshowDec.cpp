@@ -44,71 +44,71 @@ template<> interfaces<tchar_traits<char_t>::other_char_t>::IffdshowDec* Tffdshow
     return &dec_char;
 }
 
-STDMETHODIMP TffdshowDec::NonDelegatingQueryInterface(REFIID riid,void **ppv)
+STDMETHODIMP TffdshowDec::NonDelegatingQueryInterface(REFIID riid, void **ppv)
 {
-    if (globalSettings->isBlacklist && (riid==IID_IBaseFilter || riid==IID_IMediaFilter) && globalSettings->inBlacklist(getExeflnm())) {
+    if (globalSettings->isBlacklist && (riid == IID_IBaseFilter || riid == IID_IMediaFilter) && globalSettings->inBlacklist(getExeflnm())) {
         return E_NOINTERFACE;
     }
-    if (globalSettings->isWhitelist && (riid==IID_IBaseFilter || riid==IID_IMediaFilter) && !globalSettings->inWhitelist(getExeflnm(),this)) {
+    if (globalSettings->isWhitelist && (riid == IID_IBaseFilter || riid == IID_IMediaFilter) && !globalSettings->inWhitelist(getExeflnm(), this)) {
         return E_NOINTERFACE;
     }
-    if (riid==IID_IffdshowBaseA) {
-        return GetInterface<IffdshowBaseA>(getBaseInterface<IffdshowBaseA>(),ppv);
+    if (riid == IID_IffdshowBaseA) {
+        return GetInterface<IffdshowBaseA>(getBaseInterface<IffdshowBaseA>(), ppv);
     }
-    if (riid==IID_IffdshowBaseW) {
-        return GetInterface<IffdshowBaseW>(getBaseInterface<IffdshowBaseW>(),ppv);
-    } else if (riid==IID_IffdshowDecA) {
-        return GetInterface<IffdshowDecA>(getDecInterface<IffdshowDecA>(),ppv);
-    } else if (riid==IID_IffdshowDecW) {
-        return GetInterface<IffdshowDecW>(getDecInterface<IffdshowDecW>(),ppv);
-    } else if (riid==IID_ISpecifyPropertyPages) {
-        return GetInterface<ISpecifyPropertyPages>(this,ppv);
-    } else if (riid==IID_IAMStreamSelect) {
-        return GetInterface<IAMStreamSelect>(this,ppv);
-    } else if (riid==IID_IffdshowParamsEnum) {
-        return GetInterface<IffdshowParamsEnum>(this,ppv);
+    if (riid == IID_IffdshowBaseW) {
+        return GetInterface<IffdshowBaseW>(getBaseInterface<IffdshowBaseW>(), ppv);
+    } else if (riid == IID_IffdshowDecA) {
+        return GetInterface<IffdshowDecA>(getDecInterface<IffdshowDecA>(), ppv);
+    } else if (riid == IID_IffdshowDecW) {
+        return GetInterface<IffdshowDecW>(getDecInterface<IffdshowDecW>(), ppv);
+    } else if (riid == IID_ISpecifyPropertyPages) {
+        return GetInterface<ISpecifyPropertyPages>(this, ppv);
+    } else if (riid == IID_IAMStreamSelect) {
+        return GetInterface<IAMStreamSelect>(this, ppv);
+    } else if (riid == IID_IffdshowParamsEnum) {
+        return GetInterface<IffdshowParamsEnum>(this, ppv);
     } else {
-        return CTransformFilter::NonDelegatingQueryInterface(riid,ppv);
+        return CTransformFilter::NonDelegatingQueryInterface(riid, ppv);
     }
 }
 
-TffdshowDec::TffdshowDec(TintStrColl *Ioptions,const TCHAR *name,LPUNKNOWN punk,REFCLSID clsid,TglobalSettingsDec *IglobalSettings,TdialogSettingsDec *IdialogSettings,Tpresets *Ipresets,Tpreset* &IpresetSettings,CmyTransformFilter *Imfilter,TinputPin* &Iminput,CTransformOutputPin* &Imoutput,IFilterGraph* &Igraph,Tfilters* &Ifilters,const CLSID &Iproppageid,int IcfgDlgCaptionId,int IiconId,DWORD IdefaultMerit):
+TffdshowDec::TffdshowDec(TintStrColl *Ioptions, const TCHAR *name, LPUNKNOWN punk, REFCLSID clsid, TglobalSettingsDec *IglobalSettings, TdialogSettingsDec *IdialogSettings, Tpresets *Ipresets, Tpreset* &IpresetSettings, CmyTransformFilter *Imfilter, TinputPin* &Iminput, CTransformOutputPin* &Imoutput, IFilterGraph* &Igraph, Tfilters* &Ifilters, const CLSID &Iproppageid, int IcfgDlgCaptionId, int IiconId, DWORD IdefaultMerit):
     presets(Ipresets),
     presetSettings(IpresetSettings),
     filters(Ifilters),
-    CmyTransformFilter(name,punk,clsid),
+    CmyTransformFilter(name, punk, clsid),
     TffdshowBase(
         punk,
         Ioptions,
-        globalSettings=IglobalSettings,
-        dialogSettings=IdialogSettings,
+        globalSettings = IglobalSettings,
+        dialogSettings = IdialogSettings,
         Imfilter,
         Iminput,
         Imoutput,
         Igraph,
-        IcfgDlgCaptionId,IiconId,
+        IcfgDlgCaptionId, IiconId,
         IdefaultMerit),
     proppageid(Iproppageid),
-    dec_char(punk,this),
+    dec_char(punk, this),
     m_dirtyStop(false),
     m_isCounting(false)
 {
-    static const TintOptionT<TffdshowDec> iopts[]= {
-        IDFF_movieDuration ,&TffdshowDec::moviesecs,-1,-1,_l(""),0,NULL,0,
+    static const TintOptionT<TffdshowDec> iopts[] = {
+        IDFF_movieDuration , &TffdshowDec::moviesecs, -1, -1, _l(""), 0, NULL, 0,
         0
     };
     addOptions(iopts);
 
-    keys=NULL;
-    mouse=NULL;
-    remote=NULL;
-    hereSeek=false;
-    presetSettings=NULL;
-    firsttransform=true;
-    discontinuity=true;
-    filters=NULL;
-    onNewFiltersWnd=NULL;
-    onNewFiltersMsg=0;
+    keys = NULL;
+    mouse = NULL;
+    remote = NULL;
+    hereSeek = false;
+    presetSettings = NULL;
+    firsttransform = true;
+    discontinuity = true;
+    filters = NULL;
+    onNewFiltersWnd = NULL;
+    onNewFiltersMsg = 0;
 }
 TffdshowDec::~TffdshowDec()
 {
@@ -139,7 +139,7 @@ HRESULT TffdshowDec::onInitDialog(void)
 {
     initPresets();
     if (!presetSettings) {
-        setActivePreset(globalSettings->defaultPreset,false);
+        setActivePreset(globalSettings->defaultPreset, false);
     }
     return TffdshowBase::onInitDialog();
 }
@@ -173,7 +173,7 @@ STDMETHODIMP TffdshowDec::getDuration(int *duration)
 STDMETHODIMP TffdshowDec::initKeys(void)
 {
     if (!keys) {
-        keys=new Tkeyboard(options,this);
+        keys = new Tkeyboard(options, this);
     }
     return S_OK;
 }
@@ -195,47 +195,47 @@ STDMETHODIMP TffdshowDec::loadKeysSettings(void)
 }
 STDMETHODIMP_(int) TffdshowDec::getKeyParamCount2(void)
 {
-    return keys?(int)keys->keysParams.size():0;
+    return keys ? (int)keys->keysParams.size() : 0;
 }
-STDMETHODIMP TffdshowDec::getKeyParamDescr(unsigned int i,const char_t **descr)
+STDMETHODIMP TffdshowDec::getKeyParamDescr(unsigned int i, const char_t **descr)
 {
-    if (!keys || i>=keys->keysParams.size()) {
-        *descr=_l("");
+    if (!keys || i >= keys->keysParams.size()) {
+        *descr = _l("");
         return S_FALSE;
     };
-    *descr=keys->keysParams[i].descr;
+    *descr = keys->keysParams[i].descr;
     return S_OK;
 }
 STDMETHODIMP_(int) TffdshowDec::getKeyParamKey2(unsigned int i)
 {
-    if (!keys || i>=keys->keysParams.size()) {
+    if (!keys || i >= keys->keysParams.size()) {
         return 0;
     }
     return keys->keysParams[i].key;
 }
-STDMETHODIMP TffdshowDec::setKeyParamKey(unsigned int i,int key)
+STDMETHODIMP TffdshowDec::setKeyParamKey(unsigned int i, int key)
 {
-    if (!keys || i>=keys->keysParams.size()) {
+    if (!keys || i >= keys->keysParams.size()) {
         return S_FALSE;
     }
-    keys->keysParams[i].key=key;
-    sendOnChange(IDFF_keysSeek1/*just not to send 0*/,key);
+    keys->keysParams[i].key = key;
+    sendOnChange(IDFF_keysSeek1/*just not to send 0*/, key);
     return S_OK;
 }
-STDMETHODIMP TffdshowDec::setKeyParamKeyCheck(unsigned int i,int key,int *prev,const char_t* *prevDescr)
+STDMETHODIMP TffdshowDec::setKeyParamKeyCheck(unsigned int i, int key, int *prev, const char_t* *prevDescr)
 {
-    if (key!=0 && (prev || prevDescr))
-        for (unsigned int previ=0; previ<keys->keysParams.size(); previ++)
-            if (previ!=i && keys->keysParams[previ].key==key) {
+    if (key != 0 && (prev || prevDescr))
+        for (unsigned int previ = 0; previ < keys->keysParams.size(); previ++)
+            if (previ != i && keys->keysParams[previ].key == key) {
                 if (prev) {
-                    *prev=previ;
+                    *prev = previ;
                 }
                 if (prevDescr) {
-                    *prevDescr=keys->keysParams[previ].descr;
+                    *prevDescr = keys->keysParams[previ].descr;
                 }
                 return E_INVALIDARG;
             }
-    return setKeyParamKey(i,key);
+    return setKeyParamKey(i, key);
 }
 
 STDMETHODIMP TffdshowDec::resetKeys(void)
@@ -248,13 +248,13 @@ STDMETHODIMP TffdshowDec::resetKeys(void)
 }
 STDMETHODIMP TffdshowDec::exportKeysToGML(const char_t *flnm)
 {
-    return keys->exportToGML(flnm)?S_OK:E_FAIL;
+    return keys->exportToGML(flnm) ? S_OK : E_FAIL;
 }
 
 STDMETHODIMP TffdshowDec::initMouse(void)
 {
     if (!mouse) {
-        mouse=new Tmouse(options,this);
+        mouse = new Tmouse(options, this);
     }
     return S_OK;
 }
@@ -262,7 +262,7 @@ STDMETHODIMP TffdshowDec::initMouse(void)
 STDMETHODIMP TffdshowDec::initRemote(void)
 {
     if (!remote) {
-        remote=new Tremote(options,this);
+        remote = new Tremote(options, this);
     }
     return S_OK;
 }
@@ -283,10 +283,10 @@ STDMETHODIMP TffdshowDec::loadRemoteSettings(void)
     return S_OK;
 }
 
-void TffdshowDec::onTrayIconChange(int id,int newval)
+void TffdshowDec::onTrayIconChange(int id, int newval)
 {
-    if (!firsttransform && (globalSettings->filtermode&IDFF_FILTERMODE_PROC)==0) {
-        TffdshowBase::onTrayIconChange(id,newval);
+    if (!firsttransform && (globalSettings->filtermode & IDFF_FILTERMODE_PROC) == 0) {
+        TffdshowBase::onTrayIconChange(id, newval);
     }
 }
 
@@ -295,24 +295,24 @@ STDMETHODIMP TffdshowDec::getNumPresets(unsigned int *value)
     if (!value) {
         return E_POINTER;
     }
-    *value=(unsigned int)presets->size();
+    *value = (unsigned int)presets->size();
     return S_OK;
 }
-STDMETHODIMP TffdshowDec::getPresetName(unsigned int i,char_t *buf,size_t len)
+STDMETHODIMP TffdshowDec::getPresetName(unsigned int i, char_t *buf, size_t len)
 {
     if (!buf) {
         return E_POINTER;
     }
-    if (i>=presets->size()) {
+    if (i >= presets->size()) {
         return S_FALSE;
     }
-    if (len<strlen((*presets)[i]->presetName)+1) {
+    if (len < strlen((*presets)[i]->presetName) + 1) {
         return E_OUTOFMEMORY;
     }
-    strcpy(buf,(*presets)[i]->presetName);
+    strcpy(buf, (*presets)[i]->presetName);
     return S_OK;
 }
-STDMETHODIMP TffdshowDec::getActivePresetName(char_t *buf,size_t len)
+STDMETHODIMP TffdshowDec::getActivePresetName(char_t *buf, size_t len)
 {
     if (!buf) {
         return E_POINTER;
@@ -320,23 +320,23 @@ STDMETHODIMP TffdshowDec::getActivePresetName(char_t *buf,size_t len)
     if (!presetSettings) {
         return S_FALSE;
     }
-    if (len<strlen(presetSettings->presetName)+1) {
+    if (len < strlen(presetSettings->presetName) + 1) {
         return E_OUTOFMEMORY;
     }
-    strcpy(buf,presetSettings->presetName);
+    strcpy(buf, presetSettings->presetName);
     return S_OK;
 }
 STDMETHODIMP_(const char_t*) TffdshowDec::getActivePresetName2(void)
 {
-    return presetSettings?presetSettings->presetName:NULL;
+    return presetSettings ? presetSettings->presetName : NULL;
 }
 
-STDMETHODIMP TffdshowDec::setActivePreset(const char_t *name,int create)
+STDMETHODIMP TffdshowDec::setActivePreset(const char_t *name, int create)
 {
     if (!name) {
         return S_FALSE;
     }
-    Tpreset *preset=presets->getPreset(name,!!create);
+    Tpreset *preset = presets->getPreset(name, !!create);
     if (preset) {
         setPresetPtr(preset);
         return S_OK;
@@ -349,7 +349,7 @@ STDMETHODIMP TffdshowDec::saveActivePreset(const char_t *name)
     if (!presetSettings) {
         return E_INVALIDARG;
     }
-    presets->savePreset(presetSettings,name);
+    presets->savePreset(presetSettings, name);
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::saveActivePresetToFile(const char_t *flnm)
@@ -357,7 +357,7 @@ STDMETHODIMP TffdshowDec::saveActivePresetToFile(const char_t *flnm)
     if (!flnm || !presetSettings) {
         return E_INVALIDARG;
     }
-    return presets->savePresetFile(presetSettings,flnm)?S_OK:E_FAIL;
+    return presets->savePresetFile(presetSettings, flnm) ? S_OK : E_FAIL;
 }
 STDMETHODIMP TffdshowDec::loadActivePresetFromFile(const char_t *flnm)
 {
@@ -365,7 +365,7 @@ STDMETHODIMP TffdshowDec::loadActivePresetFromFile(const char_t *flnm)
         return E_INVALIDARG;
     }
     if (!presetSettings) {
-        presetSettings=presets->newPreset();
+        presetSettings = presets->newPreset();
     }
     if (presetSettings->loadFile(flnm)) {
         presets->storePreset(presetSettings);
@@ -375,7 +375,7 @@ STDMETHODIMP TffdshowDec::loadActivePresetFromFile(const char_t *flnm)
         return E_FAIL;
     }
 }
-STDMETHODIMP TffdshowDec::savePresetMem(void *buf,size_t len)
+STDMETHODIMP TffdshowDec::savePresetMem(void *buf, size_t len)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
@@ -386,29 +386,29 @@ STDMETHODIMP TffdshowDec::savePresetMem(void *buf,size_t len)
     TregOpIDstreamWrite t;
     presetSettings->reg_op(t);
 
-    if (len==0) {
-        *(int*)buf=(int)t.size();
+    if (len == 0) {
+        *(int*)buf = (int)t.size();
     } else {
-        memcpy(buf,&*t.begin(),std::min(size_t(len),t.size()));
+        memcpy(buf, &*t.begin(), std::min(size_t(len), t.size()));
     }
     return S_OK;
 }
-STDMETHODIMP TffdshowDec::loadPresetMem(const void *buf,size_t len)
+STDMETHODIMP TffdshowDec::loadPresetMem(const void *buf, size_t len)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
     }
-    TregOpIDstreamRead t(buf,len);
+    TregOpIDstreamRead t(buf, len);
     presetSettings->reg_op(t);
     return 0;
 }
 
 STDMETHODIMP TffdshowDec::removePreset(const char_t *name)
 {
-    if (stricmp(presetSettings->presetName,globalSettings->defaultPreset)==0) {
-        putParamStr(IDFF_defaultPreset,(*presets)[0]->presetName);
+    if (stricmp(presetSettings->presetName, globalSettings->defaultPreset) == 0) {
+        putParamStr(IDFF_defaultPreset, (*presets)[0]->presetName);
     }
-    return presets->removePreset(name)?S_OK:S_FALSE;
+    return presets->removePreset(name) ? S_OK : S_FALSE;
 }
 STDMETHODIMP TffdshowDec::getPresets(Tpresets *presets2)
 {
@@ -416,7 +416,7 @@ STDMETHODIMP TffdshowDec::getPresets(Tpresets *presets2)
         return E_INVALIDARG;
     }
     presets2->done();
-    for (Tpresets::iterator i=presets->begin(); i!=presets->end(); i++) {
+    for (Tpresets::iterator i = presets->begin(); i != presets->end(); i++) {
         presets2->push_back((*i)->copy());
     }
     return S_OK;
@@ -429,10 +429,10 @@ STDMETHODIMP TffdshowDec::setPresets(const Tpresets *presets2)
     }
 
     // copy every thing preset in presets2 (src).
-    foreach (const Tpreset* src ,*presets2) {
+    foreach(const Tpreset * src , *presets2) {
         bool copied;
         copied = false;
-        foreach (Tpreset* dst, *presets) {
+        foreach(Tpreset * dst, *presets) {
             if (strncmp(dst->presetName, src->presetName, countof(dst->presetName)) == 0) {
                 *dst = *src;
                 copied = true;
@@ -445,9 +445,9 @@ STDMETHODIMP TffdshowDec::setPresets(const Tpresets *presets2)
     }
 
     // remove from presets (dst) what does not exist in presets2 (src).
-    for (Tpresets::iterator dst = presets->begin() ; dst != presets->end() ; ) {
+    for (Tpresets::iterator dst = presets->begin() ; dst != presets->end() ;) {
         bool found = false;
-        foreach (const Tpreset* src, *presets2) {
+        foreach(const Tpreset * src, *presets2) {
             if (strncmp((*dst)->presetName, src->presetName, countof((*dst)->presetName)) == 0) {
                 found = true;
                 break;
@@ -472,12 +472,12 @@ STDMETHODIMP TffdshowDec::setPresetPtr(Tpreset *preset)
     if (!preset) {
         return E_POINTER;
     }
-    if (presetSettings!=preset) {
+    if (presetSettings != preset) {
         lock(IDFF_lockPresetPtr);
-        presetSettings=preset;
-        presetSettings->options->setSendOnChange(fastdelegate::MakeDelegate(this,&TffdshowDec::sendOnChange));
+        presetSettings = preset;
+        presetSettings->options->setSendOnChange(fastdelegate::MakeDelegate(this, &TffdshowDec::sendOnChange));
         notifyParamsChanged();
-        sendOnChange(0,0);
+        sendOnChange(0, 0);
         unlock(IDFF_lockPresetPtr);
     }
     return S_OK;
@@ -487,7 +487,7 @@ STDMETHODIMP TffdshowDec::getPresetPtr(Tpreset**preset)
     if (!preset) {
         return E_POINTER;
     }
-    *preset=presetSettings;
+    *preset = presetSettings;
     return S_OK;
 }
 void TffdshowDec::getColls(TintStrColls &colls)
@@ -498,68 +498,68 @@ void TffdshowDec::getColls(TintStrColls &colls)
     TffdshowBase::getColls(colls);
 }
 
-STDMETHODIMP TffdshowDec::getParam(unsigned int paramID,int* value)
+STDMETHODIMP TffdshowDec::getParam(unsigned int paramID, int* value)
 {
     if (!value) {
         return S_FALSE;
     }
-    if (presetSettings && presetSettings->options->get(paramID,value)) {
+    if (presetSettings && presetSettings->options->get(paramID, value)) {
         return S_OK;
     } else {
-        return TffdshowBase::getParam(paramID,value);
+        return TffdshowBase::getParam(paramID, value);
     }
 }
-STDMETHODIMP TffdshowDec::putParam(unsigned int paramID,int val)
+STDMETHODIMP TffdshowDec::putParam(unsigned int paramID, int val)
 {
-    return presetSettings && presetSettings->options->set(paramID,val)?S_OK:TffdshowBase::putParam(paramID,val);
+    return presetSettings && presetSettings->options->set(paramID, val) ? S_OK : TffdshowBase::putParam(paramID, val);
 }
 STDMETHODIMP TffdshowDec::invParam(unsigned int paramID)
 {
-    return presetSettings && presetSettings->options->inv(paramID)?S_OK:TffdshowBase::invParam(paramID);
+    return presetSettings && presetSettings->options->inv(paramID) ? S_OK : TffdshowBase::invParam(paramID);
 }
 STDMETHODIMP TffdshowDec::resetParam(unsigned int paramID)
 {
-    return presetSettings && presetSettings->options->reset(paramID)?S_OK:TffdshowBase::resetParam(paramID);
+    return presetSettings && presetSettings->options->reset(paramID) ? S_OK : TffdshowBase::resetParam(paramID);
 }
 
-STDMETHODIMP TffdshowDec::getParamStr3(unsigned int paramID,const char_t* *value)
+STDMETHODIMP TffdshowDec::getParamStr3(unsigned int paramID, const char_t* *value)
 {
     if (!value) {
         return S_FALSE;
     }
-    if (presetSettings && presetSettings->options->get(paramID,value)) {
+    if (presetSettings && presetSettings->options->get(paramID, value)) {
         return S_OK;
     } else {
-        return TffdshowBase::getParamStr3(paramID,value);
+        return TffdshowBase::getParamStr3(paramID, value);
     }
 }
-STDMETHODIMP TffdshowDec::putParamStr(unsigned int paramID,const char_t *buf)
+STDMETHODIMP TffdshowDec::putParamStr(unsigned int paramID, const char_t *buf)
 {
     if (!buf) {
         return S_FALSE;
     }
-    return presetSettings && presetSettings->options->set(paramID,buf)?S_OK:TffdshowBase::putParamStr(paramID,buf);
+    return presetSettings && presetSettings->options->set(paramID, buf) ? S_OK : TffdshowBase::putParamStr(paramID, buf);
 }
-STDMETHODIMP TffdshowDec::getParamInfo(unsigned int paramID,TffdshowParamInfo *paramPtr)
+STDMETHODIMP TffdshowDec::getParamInfo(unsigned int paramID, TffdshowParamInfo *paramPtr)
 {
     if (!paramPtr) {
         return E_POINTER;
     }
-    return presetSettings && presetSettings->options->getInfo(paramID,paramPtr)?S_OK:TffdshowBase::getParamInfo(paramID,paramPtr);
+    return presetSettings && presetSettings->options->getInfo(paramID, paramPtr) ? S_OK : TffdshowBase::getParamInfo(paramID, paramPtr);
 }
-STDMETHODIMP TffdshowDec::notifyParam(int id,int val)
+STDMETHODIMP TffdshowDec::notifyParam(int id, int val)
 {
-    return presetSettings && presetSettings->options->notifyParam(id,val)?S_OK:TffdshowBase::notifyParam(id,val);
+    return presetSettings && presetSettings->options->notifyParam(id, val) ? S_OK : TffdshowBase::notifyParam(id, val);
 }
-STDMETHODIMP TffdshowDec::notifyParamStr(int id,const char_t *val)
+STDMETHODIMP TffdshowDec::notifyParamStr(int id, const char_t *val)
 {
-    return presetSettings && presetSettings->options->notifyParam(id,val)?S_OK:TffdshowBase::notifyParamStr(id,val);
+    return presetSettings && presetSettings->options->notifyParam(id, val) ? S_OK : TffdshowBase::notifyParamStr(id, val);
 }
 
 STDMETHODIMP TffdshowDec::notifyParamsChanged(void)
 {
     if (filters) {
-        filters->onQueueChange(0,0);
+        filters->onQueueChange(0, 0);
     }
     return TffdshowBase::notifyParamsChanged();
 }
@@ -569,20 +569,20 @@ STDMETHODIMP TffdshowDec::renameActivePreset(const char_t *newName)
     if (!newName) {
         return E_POINTER;
     }
-    if (strlen(newName)>MAX_PATH) {
+    if (strlen(newName) > MAX_PATH) {
         return E_OUTOFMEMORY;
     }
-    int res=stricmp(presetSettings->presetName,globalSettings->defaultPreset);
-    strcpy(presetSettings->presetName,newName);
-    if (res==0) {
-        putParamStr(IDFF_defaultPreset,newName);
+    int res = stricmp(presetSettings->presetName, globalSettings->defaultPreset);
+    strcpy(presetSettings->presetName, newName);
+    if (res == 0) {
+        putParamStr(IDFF_defaultPreset, newName);
     }
-    sendOnChange(0,0);
+    sendOnChange(0, 0);
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::isDefaultPreset(const char_t *presetName)
 {
-    return stricmp(globalSettings->defaultPreset,presetName)==0?1:0;
+    return stricmp(globalSettings->defaultPreset, presetName) == 0 ? 1 : 0;
 }
 STDMETHODIMP TffdshowDec::initPresets(void)
 {
@@ -604,11 +604,11 @@ void TffdshowDec::initPreset(void)
     getSourceName();
 
     if (globalSettings->autoPreset)
-        if (Tpreset *preset=presets->getAutoPreset(this,!!globalSettings->autoPresetFileFirst)) {
+        if (Tpreset *preset = presets->getAutoPreset(this, !!globalSettings->autoPresetFileFirst)) {
             setPresetPtr(preset);
             return;
         }
-    setActivePreset(globalSettings->defaultPreset,false);
+    setActivePreset(globalSettings->defaultPreset, false);
 }
 
 STDMETHODIMP TffdshowDec::createTempPreset(const char_t *presetName)
@@ -616,14 +616,14 @@ STDMETHODIMP TffdshowDec::createTempPreset(const char_t *presetName)
     if (presets->empty()) {
         return E_UNEXPECTED;
     }
-    Tpreset *preset=presets->newPreset(presetName);
-    preset->autoLoadedFromFile=true;
+    Tpreset *preset = presets->newPreset(presetName);
+    preset->autoLoadedFromFile = true;
     preset->loadReg();
     presets->push_back(preset);
     return S_OK;
 }
 
-STDMETHODIMP TffdshowDec::putStringParams(const char_t *params,char_t sep,int loaddef)
+STDMETHODIMP TffdshowDec::putStringParams(const char_t *params, char_t sep, int loaddef)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
@@ -631,7 +631,7 @@ STDMETHODIMP TffdshowDec::putStringParams(const char_t *params,char_t sep,int lo
     if (!params) {
         return E_POINTER;
     }
-    TregOpStreamRead t(params,strlen(params),sep,!!loaddef);
+    TregOpStreamRead t(params, strlen(params), sep, !!loaddef);
     presetSettings->reg_op(t);
     notifyParamsChanged();
     return S_OK;
@@ -639,40 +639,40 @@ STDMETHODIMP TffdshowDec::putStringParams(const char_t *params,char_t sep,int lo
 
 STDMETHODIMP TffdshowDec::resetFilter(unsigned int filterID)
 {
-    return resetFilterEx(filterID,0);
+    return resetFilterEx(filterID, 0);
 }
-STDMETHODIMP TffdshowDec::resetFilterEx(unsigned int filterID,unsigned int filterPageId)
+STDMETHODIMP TffdshowDec::resetFilterEx(unsigned int filterID, unsigned int filterPageId)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
     }
-    TfilterSettings *fs=presetSettings->getSettings(filterID);
+    TfilterSettings *fs = presetSettings->getSettings(filterID);
     if (!fs) {
         return E_INVALIDARG;
     }
-    return fs->reset(filterPageId)?S_OK:S_FALSE;
+    return fs->reset(filterPageId) ? S_OK : S_FALSE;
 }
 STDMETHODIMP TffdshowDec::filterHasReset(unsigned int filterID)
 {
-    return filterHasResetEx(filterID,0);
+    return filterHasResetEx(filterID, 0);
 }
-STDMETHODIMP TffdshowDec::filterHasResetEx(unsigned int filterID,unsigned int filterPageId)
+STDMETHODIMP TffdshowDec::filterHasResetEx(unsigned int filterID, unsigned int filterPageId)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
     }
-    TfilterSettings *fs=presetSettings->getSettings(filterID);
+    TfilterSettings *fs = presetSettings->getSettings(filterID);
     if (!fs) {
         return E_INVALIDARG;
     }
-    return fs->hasReset(filterPageId)?S_OK:S_FALSE;
+    return fs->hasReset(filterPageId) ? S_OK : S_FALSE;
 }
 
-STDMETHODIMP TffdshowDec::getFilterTip(unsigned int filterID,char_t *buf,size_t buflen)
+STDMETHODIMP TffdshowDec::getFilterTip(unsigned int filterID, char_t *buf, size_t buflen)
 {
-    return getFilterTipEx(filterID,0,buf,buflen);
+    return getFilterTipEx(filterID, 0, buf, buflen);
 }
-STDMETHODIMP TffdshowDec::getFilterTipEx(unsigned int filterID,unsigned int filterPageId,char_t *buf,size_t buflen)
+STDMETHODIMP TffdshowDec::getFilterTipEx(unsigned int filterID, unsigned int filterPageId, char_t *buf, size_t buflen)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
@@ -680,11 +680,11 @@ STDMETHODIMP TffdshowDec::getFilterTipEx(unsigned int filterID,unsigned int filt
     if (!buf) {
         return E_POINTER;
     }
-    TfilterSettings *fs=presetSettings->getSettings(filterID);
+    TfilterSettings *fs = presetSettings->getSettings(filterID);
     if (!fs) {
         return E_INVALIDARG;
     }
-    return fs->getTip(filterPageId,buf,buflen)?S_OK:S_FALSE;
+    return fs->getTip(filterPageId, buf, buflen) ? S_OK : S_FALSE;
 }
 
 STDMETHODIMP TffdshowDec::getPresetsPtr(Tpresets* *presetsPtr)
@@ -692,7 +692,7 @@ STDMETHODIMP TffdshowDec::getPresetsPtr(Tpresets* *presetsPtr)
     if (!presetsPtr) {
         return E_POINTER;
     }
-    *presetsPtr=presets;
+    *presetsPtr = presets;
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::cyclePresets(int step)
@@ -700,21 +700,21 @@ STDMETHODIMP TffdshowDec::cyclePresets(int step)
     if (!presets || !presetSettings) {
         return E_UNEXPECTED;
     }
-    Tpreset* preset=presets->getPreset(presetSettings->presetName,false);
-    Tpresets::const_iterator pi=std::find(presets->begin(),presets->end(),preset);
-    if (pi==presets->end()) {
+    Tpreset* preset = presets->getPreset(presetSettings->presetName, false);
+    Tpresets::const_iterator pi = std::find(presets->begin(), presets->end(), preset);
+    if (pi == presets->end()) {
         return E_FAIL;
     }
-    for (int i=0; i!=step; i+=sign(step)) {
-        if (sign(step)==-1 && pi==presets->begin()) {
-            pi=presets->end()-1;
-        } else if (sign(step)==1 && pi==presets->end()-1) {
-            pi=presets->begin();
+    for (int i = 0; i != step; i += sign(step)) {
+        if (sign(step) == -1 && pi == presets->begin()) {
+            pi = presets->end() - 1;
+        } else if (sign(step) == 1 && pi == presets->end() - 1) {
+            pi = presets->begin();
         } else {
-            pi+=sign(step);
+            pi += sign(step);
         }
     }
-    setActivePreset((*pi)->presetName,false);
+    setActivePreset((*pi)->presetName, false);
     return S_OK;
 }
 
@@ -724,9 +724,9 @@ STDMETHODIMP TffdshowDec::newSample(IMediaSample* *samplePtr)
 }
 
 
-STDMETHODIMP TffdshowDec::JoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName)
+STDMETHODIMP TffdshowDec::JoinFilterGraph(IFilterGraph *pGraph, LPCWSTR pName)
 {
-    return onJoinFilterGraph(pGraph,pName);
+    return onJoinFilterGraph(pGraph, pName);
 }
 
 HRESULT TffdshowDec::BreakConnect(PIN_DIRECTION dir)
@@ -743,15 +743,15 @@ HRESULT TffdshowDec::onGraphRemove(void)
     if (keys) {
         delete keys;
     }
-    keys=NULL;
+    keys = NULL;
     if (mouse) {
         delete mouse;
     }
-    mouse=NULL;
+    mouse = NULL;
     if (remote) {
         delete remote;
     }
-    remote=NULL;
+    remote = NULL;
     return TffdshowBase::onGraphRemove();
 }
 
@@ -783,40 +783,40 @@ STDMETHODIMP TffdshowDec::resetOrder(void)
         return E_FAIL;
     }
     if (presetSettings->resetOrder()) {
-        sendOnChange(0,0);
+        sendOnChange(0, 0);
     }
     if (filters) {
-        filters->onQueueChange(0,0);
+        filters->onQueueChange(0, 0);
     }
     return S_OK;
 }
-STDMETHODIMP TffdshowDec::setFilterOrder(unsigned int filterID,unsigned int newOrder)
+STDMETHODIMP TffdshowDec::setFilterOrder(unsigned int filterID, unsigned int newOrder)
 {
     if (!presetSettings) {
         return S_FALSE;
     }
-    return presetSettings->setFilterOrder(filterID,newOrder)?S_OK:S_FALSE;
+    return presetSettings->setFilterOrder(filterID, newOrder) ? S_OK : S_FALSE;
 }
 
 STDMETHODIMP TffdshowDec::get_ExSeekCapabilities(long * pExCapabilities)
 {
-    *pExCapabilities=AM_EXSEEK_BUFFERING|AM_EXSEEK_NOSTANDARDREPAINT|AM_EXSEEK_CANSEEK|AM_EXSEEK_CANSCAN;//|AM_EXSEEK_SCANWITHOUTCLOCK;
+    *pExCapabilities = AM_EXSEEK_BUFFERING | AM_EXSEEK_NOSTANDARDREPAINT | AM_EXSEEK_CANSEEK | AM_EXSEEK_CANSCAN; //|AM_EXSEEK_SCANWITHOUTCLOCK;
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::get_MarkerCount(long * pMarkerCount)
 {
-    *pMarkerCount=TffdshowBase::getDuration();
+    *pMarkerCount = TffdshowBase::getDuration();
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::get_CurrentMarker(long * pCurrentMarker)
 {
-    *pCurrentMarker=getCurTime2();
+    *pCurrentMarker = getCurTime2();
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::GetMarkerTime(long MarkerNum, double * pMarkerTime)
 {
-    DPRINTF(_l("GetMarkerTime :%i"),MarkerNum);
-    *pMarkerTime=MarkerNum;
+    DPRINTF(_l("GetMarkerTime :%i"), MarkerNum);
+    *pMarkerTime = MarkerNum;
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerName)
@@ -825,7 +825,7 @@ STDMETHODIMP TffdshowDec::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerName)
 }
 STDMETHODIMP TffdshowDec::put_PlaybackSpeed(double Speed)
 {
-    if (comptrQ<IMediaSeeking> seek=graph) {
+    if (comptrQ<IMediaSeeking> seek = graph) {
         return seek->SetRate(Speed);
     } else {
         return E_NOINTERFACE;
@@ -833,7 +833,7 @@ STDMETHODIMP TffdshowDec::put_PlaybackSpeed(double Speed)
 }
 STDMETHODIMP TffdshowDec::get_PlaybackSpeed(double * pSpeed)
 {
-    if (comptrQ<IMediaSeeking> seek=graph) {
+    if (comptrQ<IMediaSeeking> seek = graph) {
         return seek->GetRate(pSpeed);
     } else {
         return E_NOINTERFACE;
@@ -845,9 +845,9 @@ AM_MEDIA_TYPE* TffdshowDec::getInputMediaType(int lIndex)
     return CreateMediaType(&m_pInput->CurrentMediaType());
 }
 
-bool TffdshowDec::streamsSort(const Tstream *s1,const Tstream *s2)
+bool TffdshowDec::streamsSort(const Tstream *s1, const Tstream *s2)
 {
-    return s2->order>s1->order;
+    return s2->order > s1->order;
 }
 
 STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
@@ -856,14 +856,14 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
         return E_POINTER;
     }
     if (cfgDlgHwnd || !presetSettings || m_isCounting) {
-        *pcStreams=0;
+        *pcStreams = 0;
         return S_OK;
     }
-    *pcStreams=0;
+    *pcStreams = 0;
 
     m_isCounting = true; // To avoid self call
 
-    for (Tstreams::iterator s=streams.begin(); s!=streams.end(); s++) {
+    for (Tstreams::iterator s = streams.begin(); s != streams.end(); s++) {
         delete *s;
     }
     streams.clear();
@@ -871,31 +871,31 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
     getTranslator(&tr);
 
     if (isStreamsMenu()) {
-        for (unsigned int i=0; i<presets->size(); i++) {
-            streams.push_back(new TstreamPreset(this,-200+i,0,(*presets)[i]->presetName));
+        for (unsigned int i = 0; i < presets->size(); i++) {
+            streams.push_back(new TstreamPreset(this, -200 + i, 0, (*presets)[i]->presetName));
         }
-        const char_t *activepresetname=getActivePresetName2();
+        const char_t *activepresetname = getActivePresetName2();
         if (activepresetname) {
             const TfilterIDFFs *filters;
-            getFilterIDFFs(activepresetname,&filters);
-            for (TfilterIDFFs::const_iterator f=filters->begin(); f!=filters->end(); f++) {
-                if (f->idff->is && (f->idff->show==0 || getParam2(f->idff->show)))
+            getFilterIDFFs(activepresetname, &filters);
+            for (TfilterIDFFs::const_iterator f = filters->begin(); f != filters->end(); f++) {
+                if (f->idff->is && (f->idff->show == 0 || getParam2(f->idff->show)))
                     // 10 is the group of the stream. 1 is for audio stream so should not be used
                 {
-                    streams.push_back(new TstreamFilter(this,getParam2(f->idff->order),10,f->idff,tr));
+                    streams.push_back(new TstreamFilter(this, getParam2(f->idff->order), 10, f->idff, tr));
                 }
             }
-            std::sort(streams.begin(),streams.end(),streamsSort);
+            std::sort(streams.begin(), streams.end(), streamsSort);
         }
-        for (const TfilterIDFF *f=getNextFilterIDFF(); f && f->name; f++) {
-            if (f->show==0 || getParam2(f->show))
+        for (const TfilterIDFF *f = getNextFilterIDFF(); f && f->name; f++) {
+            if (f->show == 0 || getParam2(f->show))
                 // Group 1 or 2 should not be used : for audio (1) and subtitle (2) streams
             {
-                streams.push_back(new TstreamFilter(this,f->order?getParam2(f->order):1000,f->order?10:20,f,tr));
+                streams.push_back(new TstreamFilter(this, f->order ? getParam2(f->order) : 1000, f->order ? 10 : 20, f, tr));
             }
         }
         addOwnStreams();
-        *pcStreams=(DWORD)streams.size();
+        *pcStreams = (DWORD)streams.size();
     }
     tr->release();
 
@@ -925,20 +925,27 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
 {
     // Initialize
-    if (ppmt)
+    if (ppmt) {
         *ppmt = NULL;
-    if (pdwFlags)
+    }
+    if (pdwFlags) {
         *pdwFlags = 0;
-    if (plcid)
+    }
+    if (plcid) {
         *plcid = 0;
-    if (pdwGroup)
+    }
+    if (pdwGroup) {
         *pdwGroup = 0;
-    if (ppszName)
+    }
+    if (ppszName) {
         *ppszName = NULL;
-    if (ppObject)
+    }
+    if (ppObject) {
         *ppObject = NULL;
-    if (ppUnk)
+    }
+    if (ppUnk) {
         *ppUnk = NULL;
+    }
 
     // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
     long internalStreams = (long)(isStreamsMenu() ? streams.size() : 0);
@@ -946,42 +953,42 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
     long firstFilterIndex = (long)(externalSubtitleStreams.size() + externalAudioStreams.size() + externalEditionStreams.size());
     long firstSubFileIndex = firstFilterIndex + internalStreams;
     long count = firstSubFileIndex + subFiles;
-    if (lIndex<0 || lIndex>= count || !presetSettings) {
+    if (lIndex < 0 || lIndex >= count || !presetSettings) {
         return E_INVALIDARG;
     }
-    if (internalStreams > 0 && lIndex >= firstFilterIndex && lIndex<firstSubFileIndex) {
-        lIndex-=firstFilterIndex;
+    if (internalStreams > 0 && lIndex >= firstFilterIndex && lIndex < firstSubFileIndex) {
+        lIndex -= firstFilterIndex;
         if (ppmt) {
-            *ppmt=getInputMediaType(lIndex);
+            *ppmt = getInputMediaType(lIndex);
         }
         if (pdwFlags) {
-            *pdwFlags=streams[lIndex]->getFlags();
+            *pdwFlags = streams[lIndex]->getFlags();
         }
         if (pdwGroup) {
-            *pdwGroup=streams[lIndex]->group;
+            *pdwGroup = streams[lIndex]->group;
         }
         if (ppszName) {
-            ffstring name=streams[lIndex]->getName();//stringreplace(ffstring(streams[lIndex]->getName()),"&","&&",rfReplaceAll);
-            size_t len=(name.size()+1);
-            *ppszName=(WCHAR*)CoTaskMemAlloc(len * sizeof(WCHAR));
-            memset(*ppszName,0,len * sizeof(WCHAR));
+            ffstring name = streams[lIndex]->getName(); //stringreplace(ffstring(streams[lIndex]->getName()),"&","&&",rfReplaceAll);
+            size_t len = (name.size() + 1);
+            *ppszName = (WCHAR*)CoTaskMemAlloc(len * sizeof(WCHAR));
+            memset(*ppszName, 0, len * sizeof(WCHAR));
             ff_strncpy(*ppszName, name.c_str(), len);
         }
         return S_OK;
     }
 
     if (ppmt) {
-        *ppmt=getInputMediaType(lIndex);
+        *ppmt = getInputMediaType(lIndex);
     }
     if (plcid) {
-        *plcid=0;
+        *plcid = 0;
     }
 
 
     // Subtitles files
     if (lIndex >= firstSubFileIndex) {
         if (ppmt) {
-            (*ppmt)->majortype=MEDIATYPE_Text;
+            (*ppmt)->majortype = MEDIATYPE_Text;
         }
         lIndex -= firstSubFileIndex;
         if (pdwGroup) {
@@ -989,10 +996,10 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         }
         const wchar_t *subtitleFilename = subtitleFiles[lIndex].c_str();
         if (ppszName) {
-            size_t wlen=(subtitleFiles[lIndex].size()+1)*sizeof(WCHAR);
-            *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);
-            memset(*ppszName,0,wlen);
-            nCopyAnsiToWideChar(*ppszName,subtitleFilename);
+            size_t wlen = (subtitleFiles[lIndex].size() + 1) * sizeof(WCHAR);
+            *ppszName = (WCHAR*)CoTaskMemAlloc(wlen);
+            memset(*ppszName, 0, wlen);
+            nCopyAnsiToWideChar(*ppszName, subtitleFilename);
         }
         if (pdwFlags) {
             char_t *curSubflnm = NULL;
@@ -1001,16 +1008,16 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
             }
 
             // Current subtitle file : can be a custom subtitle file (IDFF_subTempFilename) or (if null) call getCurrentSubtitlesFile
-            const char_t *curCustomSubflnm=getParamStr2(IDFF_subTempFilename);
+            const char_t *curCustomSubflnm = getParamStr2(IDFF_subTempFilename);
             if (curCustomSubflnm && strcmp(curCustomSubflnm, _l("")) != 0) {
-                if (getParam2(IDFF_subShowEmbedded)==0 && curCustomSubflnm != NULL && stricmp(subtitleFilename,curCustomSubflnm)==0) {
-                    *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+                if (getParam2(IDFF_subShowEmbedded) == 0 && curCustomSubflnm != NULL && stricmp(subtitleFilename, curCustomSubflnm) == 0) {
+                    *pdwFlags = AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE;
                 } else {
                     *pdwFlags = 0;
                 }
             } else {
-                if (getParam2(IDFF_subShowEmbedded)==0 && curSubflnm != NULL && stricmp(subtitleFilename,curSubflnm)==0) {
-                    *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+                if (getParam2(IDFF_subShowEmbedded) == 0 && curSubflnm != NULL && stricmp(subtitleFilename, curSubflnm) == 0) {
+                    *pdwFlags = AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE;
                 } else {
                     *pdwFlags = 0;
                 }
@@ -1026,15 +1033,15 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
     TexternalStream stream;
     if (lIndex < (long)externalAudioStreams.size()) {
         if (ppmt && *ppmt) {
-            (*ppmt)->majortype=MEDIATYPE_Audio;
+            (*ppmt)->majortype = MEDIATYPE_Audio;
         }
         if (pdwGroup) {
             *pdwGroup = 1;    // Audio stream
         }
         stream = externalAudioStreams[lIndex];
-    } else if (lIndex < (long) (externalAudioStreams.size() + externalSubtitleStreams.size())) {
+    } else if (lIndex < (long)(externalAudioStreams.size() + externalSubtitleStreams.size())) {
         if (ppmt && *ppmt) {
-            (*ppmt)->majortype=MEDIATYPE_Text;
+            (*ppmt)->majortype = MEDIATYPE_Text;
         }
         lIndex -= (long)externalAudioStreams.size();
         if (pdwGroup) {
@@ -1043,7 +1050,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         stream = externalSubtitleStreams[lIndex];
     } else { // Editions
         if (ppmt && *ppmt) {
-            (*ppmt)->majortype=MEDIATYPE_Video;
+            (*ppmt)->majortype = MEDIATYPE_Video;
         }
         lIndex -= (long)externalAudioStreams.size();
         lIndex -= (long)externalSubtitleStreams.size();
@@ -1055,12 +1062,12 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
     // DPRINTF(_l("TffdshowDec::Info Stream #%d %s [%s] (%ld)"), lIndex, stream.streamName.c_str(), stream.streamLanguageName.c_str(), stream.langId);
 
     if (plcid) {
-        *plcid=stream.langId;
+        *plcid = stream.langId;
     }
 
     if (pdwFlags) {
         if (stream.enabled) {
-            *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+            *pdwFlags = AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE;
         } else {
             *pdwFlags = 0;
         }
@@ -1072,8 +1079,8 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         } else if (stream.langId == 0 && stream.streamLanguageName.length() > 0) {
             streamName += _l(" [") + stream.streamLanguageName + _l("]");
         }
-        size_t len=(streamName.length()+1);
-        *ppszName=(WCHAR*)CoTaskMemAlloc(len * sizeof(WCHAR));
+        size_t len = (streamName.length() + 1);
+        *ppszName = (WCHAR*)CoTaskMemAlloc(len * sizeof(WCHAR));
         memset(*ppszName, 0, len * sizeof(WCHAR));
         ff_strncpy(*ppszName, streamName.c_str(), len);
     }
@@ -1087,16 +1094,16 @@ STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
     long firstSubFileIndex = firstFilterIndex + internalStreams;
     long count = firstSubFileIndex + (long)subtitleFiles.size();
 
-    if (lIndex<0 || lIndex >=count) {
+    if (lIndex < 0 || lIndex >= count) {
         return E_INVALIDARG;
     }
-    if (internalStreams > 0 && lIndex >= firstFilterIndex && lIndex<firstSubFileIndex) {
+    if (internalStreams > 0 && lIndex >= firstFilterIndex && lIndex < firstSubFileIndex) {
         lIndex -= firstFilterIndex;
         DPRINTF(_l("TffdshowDec::Enable postprocessing stream n°%ld"), lIndex);
         if (firsttransform) {
             return S_OK;
         }
-        if (/*!(dwFlags&AMSTREAMSELECTENABLE_ENABLE)*/dwFlags!=AMSTREAMSELECTENABLE_ENABLE) {
+        if (/*!(dwFlags&AMSTREAMSELECTENABLE_ENABLE)*/dwFlags != AMSTREAMSELECTENABLE_ENABLE) {
             return E_NOTIMPL;
         }
 
@@ -1136,9 +1143,9 @@ STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
     }
 }
 
-TffdshowDec::TstreamFilter::TstreamFilter(TffdshowDec *Iself,int Iorder,int Igroup,const TfilterIDFF *If,Ttranslate *Itr):Tstream(Iself,Iorder,Igroup),f(If)
+TffdshowDec::TstreamFilter::TstreamFilter(TffdshowDec *Iself, int Iorder, int Igroup, const TfilterIDFF *If, Ttranslate *Itr): Tstream(Iself, Iorder, Igroup), f(If)
 {
-    tr=Itr;
+    tr = Itr;
     tr->addref();
 }
 TffdshowDec::TstreamFilter::~TstreamFilter()
@@ -1147,12 +1154,12 @@ TffdshowDec::TstreamFilter::~TstreamFilter()
 }
 DWORD TffdshowDec::TstreamFilter::getFlags(void)
 {
-    return ((f->is==IDFF_isKeys && !self->keys) || self->getParam2(f->is)==0)?0:AMSTREAMSELECTINFO_ENABLED;
+    return ((f->is == IDFF_isKeys && !self->keys) || self->getParam2(f->is) == 0) ? 0 : AMSTREAMSELECTINFO_ENABLED;
 }
 const char_t* TffdshowDec::TstreamFilter::getName(void)
 {
-    const char_t *ret=tr->translate(NULL,f->dlgId,0,f->name);
-    if (strcmp(ret,_l("Subtitles"))==0) {
+    const char_t *ret = tr->translate(NULL, f->dlgId, 0, f->name);
+    if (strcmp(ret, _l("Subtitles")) == 0) {
         return _l("Subtitles ");
     } else {
         return ret;
@@ -1166,7 +1173,7 @@ bool TffdshowDec::TstreamFilter::action(void)
 
 DWORD TffdshowDec::TstreamPreset::getFlags(void)
 {
-    return stricmp(preset,self->presetSettings->presetName)==0?AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE:0;
+    return stricmp(preset, self->presetSettings->presetName) == 0 ? AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE : 0;
 }
 const char_t* TffdshowDec::TstreamPreset::getName(void)
 {
@@ -1174,47 +1181,47 @@ const char_t* TffdshowDec::TstreamPreset::getName(void)
 }
 bool TffdshowDec::TstreamPreset::action(void)
 {
-    self->setActivePreset(preset,0);
+    self->setActivePreset(preset, 0);
     return true;
 }
 
-STDMETHODIMP TffdshowDec::getShortDescription(char_t *buf,int buflen)
+STDMETHODIMP TffdshowDec::getShortDescription(char_t *buf, int buflen)
 {
     if (!buf) {
         return E_POINTER;
     }
-    const char_t *activepresetname=getActivePresetName2();
+    const char_t *activepresetname = getActivePresetName2();
     if (!activepresetname) {
-        buf[0]='\0';
+        buf[0] = '\0';
         return E_UNEXPECTED;
     }
-    int len = tsnprintf_s(buf, buflen, _TRUNCATE, _l("ffdshow %s: "),FFDSHOW_VER);
-    buf+=len;
-    buflen-=len;
+    int len = tsnprintf_s(buf, buflen, _TRUNCATE, _l("ffdshow %s: "), FFDSHOW_VER);
+    buf += len;
+    buflen -= len;
     const TfilterIDFFs *filters;
-    getFilterIDFFs(activepresetname,&filters);
-    for (TfilterIDFFs::const_iterator f=filters->begin(); f!=filters->end() && buflen>0; f++)
+    getFilterIDFFs(activepresetname, &filters);
+    for (TfilterIDFFs::const_iterator f = filters->begin(); f != filters->end() && buflen > 0; f++)
         if (f->idff->is && getParam2(f->idff->is)) {
-            len=tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s "),f->idff->name);
-            buf+=len;
-            buflen-=len;
+            len = tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s "), f->idff->name);
+            buf += len;
+            buflen -= len;
         }
-    for (const TfilterIDFF *f=getNextFilterIDFF(); f && f->name && buflen>0; f++)
+    for (const TfilterIDFF *f = getNextFilterIDFF(); f && f->name && buflen > 0; f++)
         if (f->is && getParam2(f->is)) {
-            len=tsnprintf_s(buf, buflen, _TRUNCATE,_l("%s "),f->name);
-            buf+=len;
-            buflen-=len;
+            len = tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s "), f->name);
+            buf += len;
+            buflen -= len;
         }
-    buf[-1]='\0';
+    buf[-1] = '\0';
     return true;
 }
 
-STDMETHODIMP TffdshowDec::createPresetPages(const char_t *presetname,TffdshowPageDec *pages)
+STDMETHODIMP TffdshowDec::createPresetPages(const char_t *presetname, TffdshowPageDec *pages)
 {
     if (!presetname) {
         return S_FALSE;
     }
-    Tpreset *preset=presets->getPreset(presetname,false);
+    Tpreset *preset = presets->getPreset(presetname, false);
     if (preset) {
         preset->createPages(pages);
         return S_OK;
@@ -1223,54 +1230,54 @@ STDMETHODIMP TffdshowDec::createPresetPages(const char_t *presetname,TffdshowPag
     }
 }
 
-STDMETHODIMP TffdshowDec::getFilterIDFFs(const char_t *presetname,const TfilterIDFFs* *filters)
+STDMETHODIMP TffdshowDec::getFilterIDFFs(const char_t *presetname, const TfilterIDFFs* *filters)
 {
     if (!filters) {
         return E_POINTER;
     }
-    Tpreset *preset=presets->getPreset(presetname,false);
+    Tpreset *preset = presets->getPreset(presetname, false);
     if (preset) {
-        *filters=preset->getFilters();
+        *filters = preset->getFilters();
         return S_OK;
     } else {
         return S_FALSE;
     }
 }
 
-HRESULT TffdshowDec::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate)
+HRESULT TffdshowDec::NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
-    if ((tStop&0xfffffffffffffffLL)==0xfffffffffffffffLL) {
-        moviesecs=1;    //tStop is most probably wrong, but don't risk getDuration
+    if ((tStop & 0xfffffffffffffffLL) == 0xfffffffffffffffLL) {
+        moviesecs = 1;  //tStop is most probably wrong, but don't risk getDuration
     } else {
-        moviesecs=int(tStop/REF_SECOND_MULT);
+        moviesecs = int(tStop / REF_SECOND_MULT);
     }
     if (filters) {
         filters->onSeek();
     }
     m_dirtyStop = false;
-    return CTransformFilter::NewSegment(tStart,tStop,dRate);
+    return CTransformFilter::NewSegment(tStart, tStop, dRate);
 }
 
 STDMETHODIMP TffdshowDec::GetPages(CAUUID *pPages)
 {
     DPRINTF(_l("TffdshowDec::GetPages"));
     initDialog();
-    onTrayIconChange(0,0);
+    onTrayIconChange(0, 0);
 
-    pPages->cElems=1;
-    pPages->pElems=(GUID*)CoTaskMemAlloc(pPages->cElems*sizeof(GUID));
-    if (pPages->pElems==NULL) {
+    pPages->cElems = 1;
+    pPages->pElems = (GUID*)CoTaskMemAlloc(pPages->cElems * sizeof(GUID));
+    if (pPages->pElems == NULL) {
         return E_OUTOFMEMORY;
     }
-    pPages->pElems[0]=proppageid;
+    pPages->pElems[0] = proppageid;
     return S_OK;
 }
 
 STDMETHODIMP_(unsigned int) TffdshowDec::getPresetAutoloadItemsCount2(void)
 {
-    return presetSettings?(unsigned int)presetSettings->getAutoPresetItemsCount():0;
+    return presetSettings ? (unsigned int)presetSettings->getAutoPresetItemsCount() : 0;
 }
-STDMETHODIMP TffdshowDec::getPresetAutoloadItemInfo(unsigned int index,const char_t* *name,const char_t* *hint,int *allowWildcard,int *is,int *isVal,char_t *val,size_t vallen,int *isList,int *isHelp)
+STDMETHODIMP TffdshowDec::getPresetAutoloadItemInfo(unsigned int index, const char_t* *name, const char_t* *hint, int *allowWildcard, int *is, int *isVal, char_t *val, size_t vallen, int *isList, int *isHelp)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
@@ -1278,13 +1285,13 @@ STDMETHODIMP TffdshowDec::getPresetAutoloadItemInfo(unsigned int index,const cha
     if (!name || !allowWildcard || !is || !val || !vallen) {
         return E_POINTER;
     }
-    if (index>=presetSettings->getAutoPresetItemsCount()) {
+    if (index >= presetSettings->getAutoPresetItemsCount()) {
         return E_INVALIDARG;
     }
-    presetSettings->getAutoPresetItemInfo(index,name,hint,allowWildcard,is,isVal,val,vallen,isList,isHelp);
+    presetSettings->getAutoPresetItemInfo(index, name, hint, allowWildcard, is, isVal, val, vallen, isList, isHelp);
     return S_OK;
 }
-STDMETHODIMP TffdshowDec::setPresetAutoloadItem(unsigned int index,int is,const char_t *val)
+STDMETHODIMP TffdshowDec::setPresetAutoloadItem(unsigned int index, int is, const char_t *val)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
@@ -1292,13 +1299,13 @@ STDMETHODIMP TffdshowDec::setPresetAutoloadItem(unsigned int index,int is,const 
     if (!val) {
         return E_POINTER;
     }
-    if (index>=presetSettings->getAutoPresetItemsCount()) {
+    if (index >= presetSettings->getAutoPresetItemsCount()) {
         return E_INVALIDARG;
     }
-    presetSettings->setAutoPresetItem(index,is,val);
+    presetSettings->setAutoPresetItem(index, is, val);
     return S_OK;
 }
-STDMETHODIMP TffdshowDec::getPresetAutoloadItemHelp(unsigned int index,const char_t* *helpPtr)
+STDMETHODIMP TffdshowDec::getPresetAutoloadItemHelp(unsigned int index, const char_t* *helpPtr)
 {
     if (!presetSettings) {
         return E_UNEXPECTED;
@@ -1306,16 +1313,16 @@ STDMETHODIMP TffdshowDec::getPresetAutoloadItemHelp(unsigned int index,const cha
     if (!helpPtr) {
         return E_POINTER;
     }
-    if (index>=presetSettings->getAutoPresetItemsCount()) {
+    if (index >= presetSettings->getAutoPresetItemsCount()) {
         return E_INVALIDARG;
     }
-    presetSettings->getAutoPresetItemHelp(index,helpPtr);
-    return *helpPtr?S_OK:S_FALSE;
+    presetSettings->getAutoPresetItemHelp(index, helpPtr);
+    return *helpPtr ? S_OK : S_FALSE;
 }
 
-STDMETHODIMP_(const char_t*) TffdshowDec::getPresetAutoloadItemList(unsigned int paramIndex,unsigned int listIndex)
+STDMETHODIMP_(const char_t*) TffdshowDec::getPresetAutoloadItemList(unsigned int paramIndex, unsigned int listIndex)
 {
-    return presetSettings && paramIndex<presetSettings->getAutoPresetItemsCount()?presetSettings->getAutoPresetItemList(this,paramIndex,listIndex):NULL;
+    return presetSettings && paramIndex < presetSettings->getAutoPresetItemsCount() ? presetSettings->getAutoPresetItemList(this, paramIndex, listIndex) : NULL;
 }
 STDMETHODIMP_(const char_t**) TffdshowDec::getSupportedFOURCCs(void)
 {
@@ -1329,7 +1336,7 @@ STDMETHODIMP_(const Tstrptrs*) TffdshowDec::getCodecsList(void)
     return &codecs;
 }
 
-STDMETHODIMP TffdshowDec::queryFilterInterface(const IID &iid,void **ptr)
+STDMETHODIMP TffdshowDec::queryFilterInterface(const IID &iid, void **ptr)
 {
     if (!ptr) {
         return E_POINTER;
@@ -1338,20 +1345,20 @@ STDMETHODIMP TffdshowDec::queryFilterInterface(const IID &iid,void **ptr)
         return E_UNEXPECTED;
     }
     lock(IDFF_lockPresetPtr);
-    HRESULT res=filters->queryFilterInterface(iid,ptr);
+    HRESULT res = filters->queryFilterInterface(iid, ptr);
     unlock(IDFF_lockPresetPtr);
     return res;
 }
-STDMETHODIMP TffdshowDec::setOnNewFiltersMsg(HWND wnd,unsigned int msg)
+STDMETHODIMP TffdshowDec::setOnNewFiltersMsg(HWND wnd, unsigned int msg)
 {
-    onNewFiltersWnd=wnd;
-    onNewFiltersMsg=msg;
+    onNewFiltersWnd = wnd;
+    onNewFiltersMsg = msg;
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::sendOnNewFiltersMsg(void)
 {
     if (onNewFiltersMsg) {
-        PostMessage(onNewFiltersWnd,onNewFiltersMsg,0,0);
+        PostMessage(onNewFiltersWnd, onNewFiltersMsg, 0, 0);
         return S_OK;
     } else {
         return S_FALSE;
@@ -1370,9 +1377,9 @@ STDMETHODIMP_(CTransformOutputPin*) TffdshowDec::getOutputPin()
 
 STDMETHODIMP TffdshowDec::getExternalStreams(void **pAudioStreams, void **pSubtitleStreams, void **pEditionStreams)
 {
-    *pAudioStreams=&externalAudioStreams;
-    *pSubtitleStreams=&externalSubtitleStreams;
-    *pEditionStreams=&externalEditionStreams;
+    *pAudioStreams = &externalAudioStreams;
+    *pSubtitleStreams = &externalSubtitleStreams;
+    *pEditionStreams = &externalEditionStreams;
     return S_OK;
 }
 
@@ -1384,7 +1391,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     comptr<IEnumFilters> eff;
     IFilterGraph    *m_pGraph = NULL;
     comptr<IffdshowDecVideo> deciV;
-    this->NonDelegatingQueryInterface(getGUID<IffdshowDecVideo>(),(void**) &deciV);
+    this->NonDelegatingQueryInterface(getGUID<IffdshowDecVideo>(), (void**) &deciV);
     Ttranslate *tr = NULL;
     getTranslator(&tr);
 
@@ -1393,12 +1400,12 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     int internalSubPinId = -1;
 
     // Retrieve the first connected subtitle PIN (used by Haali)
-    int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
+    int textpinconnectedCnt = deciV->getConnectedTextPinCnt();
     if (textpinconnectedCnt > 0) {
         const char_t *trackName = NULL, *langName = NULL;
-        int found,id;
+        int found, id;
         LCID langId = 0;
-        deciV->getConnectedTextPinInfo(0,&trackName,&langName,&langId,&id,&found);
+        deciV->getConnectedTextPinInfo(0, &trackName, &langName, &langId, &id, &found);
         internalSubPinId = id;
     }
 
@@ -1408,10 +1415,10 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
         return E_FAIL;
     }
     bool foundHaali = false;
-    if (m_pGraph->EnumFilters(&eff)==S_OK) {
+    if (m_pGraph->EnumFilters(&eff) == S_OK) {
         eff->Reset();
         const char_t *fileName = getSourceName();
-        for (comptr<IBaseFilter> bff; eff->Next(1,&bff,NULL)==S_OK; bff=NULL) {
+        for (comptr<IBaseFilter> bff; eff->Next(1, &bff, NULL) == S_OK; bff = NULL) {
             // Look for FFDShowVideo (we may be inside FFDShowAudio here)
             if (deciV == NULL) {
                 bff->QueryInterface(getGUID<IffdshowDecVideo>(), (void**)&deciV);
@@ -1426,8 +1433,8 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
                 continue;
             }
 
-            char_t name[MAX_PATH],filtername[MAX_PATH];
-            getFilterName(bff,name,filtername,countof(filtername));
+            char_t name[MAX_PATH], filtername[MAX_PATH];
+            getFilterName(bff, name, filtername, countof(filtername));
 
             if (is_ffdshow_video_family(bff)) {
                 continue;
@@ -1457,7 +1464,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
             pAMStreamSelect->Count(&cStreams);
             TexternalStreams localAudioStreams;
 
-            for (long streamNb=0; streamNb<(long)cStreams; streamNb++) {
+            for (long streamNb = 0; streamNb < (long)cStreams; streamNb++) {
                 DWORD streamSelect = 0;
                 LCID streamLanguageId = 0;
                 DWORD streamGroup = 0;
@@ -1533,7 +1540,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
             // Only one filter may handle audio streams switching
             if (externalAudioStreams.size() < localAudioStreams.size()) {
                 externalAudioStreams.clear();
-                for (unsigned int i=0; i<localAudioStreams.size(); i++) {
+                for (unsigned int i = 0; i < localAudioStreams.size(); i++) {
                     externalAudioStreams.push_back(localAudioStreams[i]);
                 }
             }
@@ -1556,11 +1563,11 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     }
 
     int currentEmbeddedStream = getParam2(IDFF_subShowEmbedded);
-    for (int i=0; i<textpinconnectedCnt; i++) {
+    for (int i = 0; i < textpinconnectedCnt; i++) {
         const char_t *trackName = NULL, *langName = NULL;
-        int found,id;
+        int found, id;
         LCID langId = 0;
-        deciV->getConnectedTextPinInfo(i,&trackName,&langName,&langId,&id,&found);
+        deciV->getConnectedTextPinInfo(i, &trackName, &langName, &langId, &id, &found);
         if (found) {
             char_t s[256] = _l("");
             if (trackName[0]) {
@@ -1618,7 +1625,7 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
         pStreams = &externalEditionStreams;
     }
 
-    for (long l = 0; l<(long)pStreams->size(); l++) {
+    for (long l = 0; l < (long)pStreams->size(); l++) {
         if ((*pStreams)[l].streamNb == streamNb) {
             pStream = &(*pStreams)[l];
             break;
@@ -1632,19 +1639,19 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
     // Embedded subtitles within FFDShow
     if (!strcmp(pStream->filterName.c_str(), _l("FFDSHOW"))) {
         DPRINTF(_l("TffdshowDec::setExternalStream set internal ffdshow stream %ld"), streamNb);
-        int oldId=getParam2(IDFF_subShowEmbedded);
-        putParam(IDFF_subShowEmbedded,streamNb);
-        putParam(IDFF_subForceEmbedded,1);
+        int oldId = getParam2(IDFF_subShowEmbedded);
+        putParam(IDFF_subShowEmbedded, streamNb);
+        putParam(IDFF_subForceEmbedded, 1);
     } else {
         comptr<IEnumFilters> eff;
         IFilterGraph    *m_pGraph = NULL;
         getGraph(&m_pGraph); // Graph we belong to
-        if (m_pGraph->EnumFilters(&eff)==S_OK) {
+        if (m_pGraph->EnumFilters(&eff) == S_OK) {
             eff->Reset();
             const char_t *fileName = getSourceName();
-            for (comptr<IBaseFilter> bff; eff->Next(1,&bff,NULL)==S_OK; bff=NULL) {
-                char_t name[MAX_PATH],filtername[MAX_PATH];
-                getFilterName(bff,name,filtername,countof(filtername));
+            for (comptr<IBaseFilter> bff; eff->Next(1, &bff, NULL) == S_OK; bff = NULL) {
+                char_t name[MAX_PATH], filtername[MAX_PATH];
+                getFilterName(bff, name, filtername, countof(filtername));
 
                 if (strcmp(pStream->filterName.c_str(), filtername)) {
                     continue;
@@ -1667,8 +1674,8 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
 
                 // Lastly, enable the FFDShow subtitle text PIN
                 if (pStream->internalStreamNb >= 0) {
-                    putParam(IDFF_subShowEmbedded,pStream->internalStreamNb);
-                    putParam(IDFF_subForceEmbedded,1);
+                    putParam(IDFF_subShowEmbedded, pStream->internalStreamNb);
+                    putParam(IDFF_subForceEmbedded, 1);
                 }
                 break;
             }
@@ -1681,9 +1688,9 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
 // IAMStreamSelect testing code
 void TffdshowDec::debug_print_IAMStreamSelect()
 {
-    DWORD cStreams=50;
+    DWORD cStreams = 50;
     Count(&cStreams);
-    DPRINTF(L"IAMStreamSelect Count %d",cStreams);
+    DPRINTF(L"IAMStreamSelect Count %d", cStreams);
     for (int i = 0 ; i < cStreams ; i++) {
         AM_MEDIA_TYPE *pmt;
         DWORD dwFlags;
@@ -1695,14 +1702,18 @@ void TffdshowDec::debug_print_IAMStreamSelect()
         Info(i, &pmt, &dwFlags, &lcid, &dwGroup, &pszName, &pObject, &pUnk);
         DPRINTF(L"IAMStreamSelect::Info Stream #%d Grounp %d %s", i, dwGroup, pszName);
 
-        if (pmt)
+        if (pmt) {
             DeleteMediaType(pmt);
-        if (pszName)
+        }
+        if (pszName) {
             CoTaskMemFree(pszName);
-        if (pObject)
+        }
+        if (pObject) {
             pObject->Release();
-        if (pUnk)
+        }
+        if (pUnk) {
             pUnk->Release();
+        }
     }
 }
 #endif

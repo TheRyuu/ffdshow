@@ -5,13 +5,13 @@
 #include "IffdshowDecAudio.h"
 
 class TffdshowPageDec;
-class TconfPageDecAudio :public TconfPageDec
+class TconfPageDecAudio : public TconfPageDec
 {
 protected:
     comptrQ<IffdshowDecAudio> deciA;
 public:
-    TconfPageDecAudio(TffdshowPageDec *Iparent,const TfilterIDFF *idff=NULL,int IfilterPageId=0):TconfPageDec(Iparent,idff,IfilterPageId) {
-        deciA=deci;
+    TconfPageDecAudio(TffdshowPageDec *Iparent, const TfilterIDFF *idff = NULL, int IfilterPageId = 0): TconfPageDec(Iparent, idff, IfilterPageId) {
+        deciA = deci;
     }
 };
 

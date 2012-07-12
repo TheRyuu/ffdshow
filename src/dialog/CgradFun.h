@@ -3,10 +3,10 @@
 
 #include "TconfPageDecVideo.h"
 
-class TgradFunPage :public TconfPageDecVideo
+class TgradFunPage : public TconfPageDecVideo
 {
 public:
-    TgradFunPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TgradFunPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void init(void);
     virtual void cfg2dlg(void);
 };

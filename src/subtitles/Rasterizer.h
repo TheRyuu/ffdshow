@@ -71,7 +71,7 @@ private:
     void _EvaluateLine(int pt1idx, int pt2idx);
     void _EvaluateLine(int x0, int y0, int x1, int y1);
     static void _OverlapRegion(tSpanBuffer& dst, tSpanBuffer& src, int dx, int dy);
-    template <bool fCheckRange> inline void RasterizeCore(int xsub, int ysub, bool hqBorder, int rightcut=0, int bottomcut=0);
+    template <bool fCheckRange> inline void RasterizeCore(int xsub, int ysub, bool hqBorder, int rightcut = 0, int bottomcut = 0);
 
 public:
     Rasterizer();

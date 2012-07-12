@@ -3,7 +3,7 @@
 
 #include "TpresetSettings.h"
 
-struct TaudioAutoPresetProps :TautoPresetProps {
+struct TaudioAutoPresetProps : TautoPresetProps {
 private:
     comptrQ<IffdshowDecAudio> deciA;
     char_t nchannels[10];
@@ -12,13 +12,13 @@ public:
     TaudioAutoPresetProps(IffdshowBase *Ideci);
     const char_t* getNchannels(void);
     const char_t *getFreq(void);
-    bool freqMatch(const char_t *mask,const char_t *flnm);
+    bool freqMatch(const char_t *mask, const char_t *flnm);
 };
 
 struct ToutputAudioSettings;
-struct TpresetAudio :public Tpreset {
+struct TpresetAudio : public Tpreset {
 public:
-    TpresetAudio(const char_t *IpresetName, const char_t *Ireg_child, int filtermode=0);
+    TpresetAudio(const char_t *IpresetName, const char_t *Ireg_child, int filtermode = 0);
     virtual ~TpresetAudio() {}
     virtual Tpreset& operator=(const Tpreset &src0);
     virtual Tpreset* copy(void) const {
@@ -26,13 +26,13 @@ public:
     }
 
     int preferredsfs;
-    int dithering,noiseShaping,decoderDRC,decoderDRCLevel,jitterCorrection,audioDelay;
+    int dithering, noiseShaping, decoderDRC, decoderDRCLevel, jitterCorrection, audioDelay;
 
     ToutputAudioSettings *output;
 };
 
-struct TpresetAudioRaw :public TpresetAudio {
-    TpresetAudioRaw(const char_t *IpresetName):TpresetAudio(IpresetName,FFDSHOWDECAUDIORAW) {}
+struct TpresetAudioRaw : public TpresetAudio {
+    TpresetAudioRaw(const char_t *IpresetName): TpresetAudio(IpresetName, FFDSHOWDECAUDIORAW) {}
 };
 
 #endif

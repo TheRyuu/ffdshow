@@ -7,7 +7,7 @@
 
 //struct IffdshowBase;
 struct IPropertyPageFF;
-class TpageSite :public IPropertyPageSite,public CUnknown,public TdlgWindow, public IPropertyPageSiteFF
+class TpageSite : public IPropertyPageSite, public CUnknown, public TdlgWindow, public IPropertyPageSiteFF
 {
 private:
     int idcaption;
@@ -27,12 +27,12 @@ private:
     HWND htab;
     HICON hicon;
 protected:
-    virtual INT_PTR msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam);
+    virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
-    TpageSite(int Iidff_multiplePages=0);
+    TpageSite(int Iidff_multiplePages = 0);
     virtual ~TpageSite();
     DECLARE_IUNKNOWN
-    STDMETHODIMP NonDelegatingQueryInterface(REFIID riid,void **ppv);
+    STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void **ppv);
     virtual HRESULT STDMETHODCALLTYPE OnStatusChange(DWORD dwFlags);
     virtual HRESULT STDMETHODCALLTYPE GetLocaleID(LCID *pLocaleID);
     virtual HRESULT STDMETHODCALLTYPE GetPageContainer(IUnknown **ppUnk);
@@ -40,8 +40,8 @@ public:
 
     STDMETHODIMP onTranslate(void);
 
-    INT_PTR show(IffdshowBase *deci,HWND parent,int Iidcaption=0,int Iicon=0);
-    INT_PTR show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon,CAUUID &pages,IUnknown *unk);
+    INT_PTR show(IffdshowBase *deci, HWND parent, int Iidcaption = 0, int Iicon = 0);
+    INT_PTR show(IffdshowBase *deci, HWND parent, int Iidcaption, int Iicon, CAUUID &pages, IUnknown *unk);
 };
 
 #endif

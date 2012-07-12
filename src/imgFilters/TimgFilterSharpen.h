@@ -6,14 +6,14 @@
 #include "TsharpenSettings.h"
 #include "libswscale/swscale.h"
 
-DECLARE_FILTER(TimgFilterAsharp,public,TimgFilter)
+DECLARE_FILTER(TimgFilterAsharp, public, TimgFilter)
 private:
-int asharpCfgT,asharpCfgD,asharpCfgB,asharpCfgB2;
-int oldAsharpT,oldAsharpD,oldAsharpB,oldAsharpHQBF;
+int asharpCfgT, asharpCfgD, asharpCfgB, asharpCfgB2;
+int oldAsharpT, oldAsharpD, oldAsharpB, oldAsharpHQBF;
 unsigned char *aline;
 asharp_run_fct *asharp_run;
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
@@ -23,20 +23,20 @@ virtual void onSizeChange(void)
     done();
 }
 public:
-TimgFilterAsharp(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterAsharp(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 struct Tlibavcodec;
-DECLARE_FILTER(TimgFilterLibavcodecSharp,public,TimgFilter)
+DECLARE_FILTER(TimgFilterLibavcodecSharp, public, TimgFilter)
 private:
 Tlibavcodec *libavcodec;
 SwsContext *swsc;
 SwsFilter *swsf;
-int oldavcodecsharpenluma,oldavcodecsharpenchroma;
+int oldavcodecsharpenluma, oldavcodecsharpenchroma;
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return SWS_IN_CSPS;
@@ -50,21 +50,21 @@ virtual void onSizeChange(void)
     done();
 }
 public:
-TimgFilterLibavcodecSharp(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterLibavcodecSharp(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual ~TimgFilterLibavcodecSharp();
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 struct TsharpenSettings;
-DECLARE_FILTER(TimgFilterUnsharp,public,TimgFilter)
+DECLARE_FILTER(TimgFilterUnsharp, public, TimgFilter)
 private:
 unsigned short *Ysum;
 stride_t minStride;
-void (TimgFilterUnsharp::*unsharpFc)(const TsharpenSettings *cfg,const unsigned char *src,unsigned char *dst,unsigned short *sum);
-template<class _mm> void unsharp(const TsharpenSettings *cfg,const unsigned char *src,unsigned char *dst,unsigned short *sum);
+void (TimgFilterUnsharp::*unsharpFc)(const TsharpenSettings *cfg, const unsigned char *src, unsigned char *dst, unsigned short *sum);
+template<class _mm> void unsharp(const TsharpenSettings *cfg, const unsigned char *src, unsigned char *dst, unsigned short *sum);
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
@@ -74,19 +74,19 @@ virtual void onSizeChange(void)
     done();
 }
 public:
-TimgFilterUnsharp(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterUnsharp(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
-DECLARE_FILTER(TimgFilterXsharp,public,TimgFilter)
+DECLARE_FILTER(TimgFilterXsharp, public, TimgFilter)
 private:
-unsigned char *Ymin,*Ymax;
+unsigned char *Ymin, *Ymax;
 stride_t minStride;
-void (TimgFilterXsharp::*xsharpenFc)(unsigned int dx1,unsigned int dy1,const TsharpenSettings *cfg,const unsigned char *srcY,stride_t stride1,unsigned char *dstY,stride_t stride2);
-template<class _mm> void xsharpen(unsigned int dx1,unsigned int dy1,const TsharpenSettings *cfg,const unsigned char *srcY,stride_t stride1,unsigned char *dstY,stride_t stride2);
+void (TimgFilterXsharp::*xsharpenFc)(unsigned int dx1, unsigned int dy1, const TsharpenSettings *cfg, const unsigned char *srcY, stride_t stride1, unsigned char *dstY, stride_t stride2);
+template<class _mm> void xsharpen(unsigned int dx1, unsigned int dy1, const TsharpenSettings *cfg, const unsigned char *srcY, stride_t stride1, unsigned char *dstY, stride_t stride2);
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
@@ -96,19 +96,19 @@ virtual void onSizeChange(void)
     done();
 }
 public:
-TimgFilterXsharp(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterXsharp(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 class T3x3blurSWS;
-DECLARE_FILTER(TimgFilterMsharp,public,TimgFilter)
+DECLARE_FILTER(TimgFilterMsharp, public, TimgFilter)
 private:
 stride_t stride;
-unsigned char *blur,*work;
+unsigned char *blur, *work;
 T3x3blurSWS *blur3x3;
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
@@ -118,9 +118,9 @@ virtual void onSizeChange(void)
     done();
 }
 public:
-TimgFilterMsharp(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterMsharp(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 #endif

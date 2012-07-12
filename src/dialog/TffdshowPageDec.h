@@ -7,28 +7,28 @@
 class TconfPageDec;
 class Tpresets;
 struct TfilterSettings;
-class TffdshowPageDec :public TffdshowPageBase
+class TffdshowPageDec : public TffdshowPageBase
 {
 private:
     void setFullHalf(void);
     bool hasFull;
-    int tvx,tvy;
+    int tvx, tvy;
     TconfPageBase *dragpage;
     void swap(int direction);
-    void swap(TconfPageBase *page1,TconfPageBase *page2);
-    struct TwidgetTv :TwindowWidget {
+    void swap(TconfPageBase *page1, TconfPageBase *page2);
+    struct TwidgetTv : TwindowWidget {
     private:
         TffdshowPageDec *self;
     protected:
-        virtual LRESULT onKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
-        virtual LRESULT onKeyUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
+        virtual LRESULT onKeyDown(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT onKeyUp(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     public:
-        TwidgetTv(HWND h,TffdshowPageDec *Iself):TwindowWidget(h,Iself),self(Iself) {
+        TwidgetTv(HWND h, TffdshowPageDec *Iself): TwindowWidget(h, Iself), self(Iself) {
             allowOwnProc();
         }
     };
-    void onReset(void),onResetOrder(void);
-    enum {WM_FFONNEWFILTERS=WM_APP+5};
+    void onReset(void), onResetOrder(void);
+    enum {WM_FFONNEWFILTERS = WM_APP + 5};
 protected:
     comptrQ<IffdshowDec> deciD;
 
@@ -44,21 +44,21 @@ protected:
 
     HTREEITEM htiBeforeShowHide;
     ThtiPages filterPages;
-    static int CALLBACK orderCompareFunc(LPARAM lParam1, LPARAM lParam2,LPARAM lParamSort);
+    static int CALLBACK orderCompareFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
     void sortOrder(void);
 
-    virtual Twidget* createDlgItem(int id,HWND h);
-    virtual INT_PTR msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam);
+    virtual Twidget* createDlgItem(int id, HWND h);
+    virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    bool invInter(TconfPageBase *page=NULL,RECT *r=NULL);
+    bool invInter(TconfPageBase *page = NULL, RECT *r = NULL);
 
     virtual void selectPage(TconfPageBase *Ipage);
 public:
-    TffdshowPageDec(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr,bool IhasFull);
+    TffdshowPageDec(LPUNKNOWN pUnk, HRESULT *phr, const wchar_t *ItitleW, const char_t *name, int dialogId, int resstr, bool IhasFull);
     virtual ~TffdshowPageDec();
 
     template<class Tpage> void addFilterPage(const TfilterIDFF *idff) {
-        filterPages.push_back(addTI(NULL,new Tpage(this,idff)));
+        filterPages.push_back(addTI(NULL, new Tpage(this, idff)));
     }
 
     virtual HRESULT OnConnect(IUnknown *pUnk);
@@ -67,7 +67,7 @@ public:
 
     void presetChanged(const char_t *presetName);
     void drawInter(void);
-    virtual void showShowHide(int previd=0,int prevVisId=0);
+    virtual void showShowHide(int previd = 0, int prevVisId = 0);
 };
 
 #endif

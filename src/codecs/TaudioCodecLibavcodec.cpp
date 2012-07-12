@@ -48,7 +48,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             return false;
         }
 
-        if (codecId==CODEC_ID_AMR_NB) {
+        if (codecId == CODEC_ID_AMR_NB) {
             fmt.setChannels(1);
             fmt.freq = 8000;
         }
@@ -63,19 +63,20 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
         }
 
         // Disable AAC parser, as of 03/2011 ffmpeg returns "More than one AAC RDB per ADTS frame is not implemented. Update your FFmpeg..."
-        if (codecId != CODEC_ID_AAC && codecId != CODEC_ID_AAC_LATM)
+        if (codecId != CODEC_ID_AAC && codecId != CODEC_ID_AAC_LATM) {
             parser = ffmpeg->av_parser_init(codecId);
+        }
 
         if (mt.formattype == FORMAT_WaveFormatEx) {
             const WAVEFORMATEX *wfex = (const WAVEFORMATEX*)mt.pbFormat;
-            avctx->bit_rate = wfex->nAvgBytesPerSec*8;
+            avctx->bit_rate = wfex->nAvgBytesPerSec * 8;
             avctx->bits_per_coded_sample = wfex->wBitsPerSample;
             if (wfex->wBitsPerSample == 0 && codecId == CODEC_ID_COOK) {
                 avctx->bits_per_coded_sample = 16;
             }
             avctx->block_align = wfex->nBlockAlign;
         } else {
-            avctx->bit_rate = fmt.avgBytesPerSec()*8;
+            avctx->bit_rate = fmt.avgBytesPerSec() * 8;
             avctx->bits_per_coded_sample = fmt.bitsPerSample();
             avctx->block_align = fmt.blockAlign();
         }
@@ -91,8 +92,8 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             DWORD cbSize = ((const WAVEFORMATEX*)mt.pbFormat)->cbSize;
             BYTE* fmt = mt.Format() + sizeof(WAVEFORMATEX) + cbSize;
 
-            for(int i = 0, len = mt.FormatLength() - (sizeof(WAVEFORMATEX) + cbSize); i < len-4; i++, fmt++) {
-                if(fmt[0] == '.' || fmt[1] == 'r' || fmt[2] == 'a') {
+            for (int i = 0, len = mt.FormatLength() - (sizeof(WAVEFORMATEX) + cbSize); i < len - 4; i++, fmt++) {
+                if (fmt[0] == '.' || fmt[1] == 'r' || fmt[2] == 'a') {
                     break;
                 }
             }
@@ -101,18 +102,18 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             m_realAudioInfo.bswap();
 
             BYTE* p = NULL;
-            if(m_realAudioInfo.version2 == 4) {
+            if (m_realAudioInfo.version2 == 4) {
                 // Skip the TrealAudioInfo4 data
-                p = (BYTE*)((TrealAudioInfo4*)fmt+1);
+                p = (BYTE*)((TrealAudioInfo4*)fmt + 1);
                 int len = *p++;
                 p += len;
                 len = *p++;
                 p += len;
                 ASSERT(len == 4);
                 //DPRINTF(_l("TaudioCodecLibavcodec cook version 4"));
-            } else if(m_realAudioInfo.version2 == 5) {
+            } else if (m_realAudioInfo.version2 == 5) {
                 // Skip the TrealAudioInfo5 data
-                p = (BYTE*)((TrealAudioInfo5*)fmt+1);
+                p = (BYTE*)((TrealAudioInfo5*)fmt + 1);
                 //DPRINTF(_l("TaudioCodecLibavcodec cook version 5"));
             } else {
                 return false; //VFW_E_TYPE_NOT_ACCEPTED;
@@ -130,7 +131,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             // Skip the 3 unknown bytes
             p += 3;
             // + skip 1 byte if version 5
-            if(m_realAudioInfo.version2 == 5) {
+            if (m_realAudioInfo.version2 == 5) {
                 p++;
             }
 
@@ -155,7 +156,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             return false;
         }
 
-        codecInited=true;
+        codecInited = true;
 
         switch (avctx->sample_fmt) {
             case AV_SAMPLE_FMT_S16:
@@ -175,7 +176,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
         ffmpeg->av_log_set_level(AV_LOG_QUIET);
 
         // Handle truncated streams
-        if(avctx->codec->capabilities & CODEC_CAP_TRUNCATED) {
+        if (avctx->codec->capabilities & CODEC_CAP_TRUNCATED) {
             avctx->flags |= CODEC_FLAG_TRUNCATED;
         }
 
@@ -245,32 +246,36 @@ void TaudioCodecLibavcodec::getInputDescr1(char_t *buf, size_t buflen) const
         } else if (!strcmp(text<char_t>(avcodec->name), _l("cook"))) {
             ff_strncpy(buf, _l("COOK"), buflen);
         } else {
-            ff_strncpy(buf,(const char_t *)text<char_t>(avcodec->name),buflen);
+            ff_strncpy(buf, (const char_t *)text<char_t>(avcodec->name), buflen);
         }
     }
-    buf[buflen-1] = '\0';
+    buf[buflen - 1] = '\0';
 }
 
 static DWORD get_lav_channel_layout(uint64_t layout)
 {
-  if (layout > _UI32_MAX) {
-    if (layout & AV_CH_WIDE_LEFT)
-      layout = (layout & ~AV_CH_WIDE_LEFT) | AV_CH_FRONT_LEFT_OF_CENTER;
-    if (layout & AV_CH_WIDE_RIGHT)
-      layout = (layout & ~AV_CH_WIDE_RIGHT) | AV_CH_FRONT_RIGHT_OF_CENTER;
+    if (layout > _UI32_MAX) {
+        if (layout & AV_CH_WIDE_LEFT) {
+            layout = (layout & ~AV_CH_WIDE_LEFT) | AV_CH_FRONT_LEFT_OF_CENTER;
+        }
+        if (layout & AV_CH_WIDE_RIGHT) {
+            layout = (layout & ~AV_CH_WIDE_RIGHT) | AV_CH_FRONT_RIGHT_OF_CENTER;
+        }
 
-    if (layout & AV_CH_SURROUND_DIRECT_LEFT)
-      layout = (layout & ~AV_CH_SURROUND_DIRECT_LEFT) | AV_CH_SIDE_LEFT;
-    if (layout & AV_CH_SURROUND_DIRECT_RIGHT)
-      layout = (layout & ~AV_CH_SURROUND_DIRECT_RIGHT) | AV_CH_SIDE_RIGHT;
-  }
+        if (layout & AV_CH_SURROUND_DIRECT_LEFT) {
+            layout = (layout & ~AV_CH_SURROUND_DIRECT_LEFT) | AV_CH_SIDE_LEFT;
+        }
+        if (layout & AV_CH_SURROUND_DIRECT_RIGHT) {
+            layout = (layout & ~AV_CH_SURROUND_DIRECT_RIGHT) | AV_CH_SIDE_RIGHT;
+        }
+    }
 
-  // correct libavcodec layouts for AC3 and DTS
-  if (layout == 0x60f) {
-    layout = 0x3f;
-  }
+    // correct libavcodec layouts for AC3 and DTS
+    if (layout == 0x60f) {
+        layout = 0x3f;
+    }
 
-  return (DWORD)layout;
+    return (DWORD)layout;
 }
 
 
@@ -292,27 +297,27 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
         int w = m_realAudioInfo.coded_frame_size;
         int h = m_realAudioInfo.sub_packet_h;
         int sps = m_realAudioInfo.sub_packet_size;
-        size_t len = w*h;
+        size_t len = w * h;
         avctx->block_align = m_realAudioInfo.sub_packet_size;
 
-        BYTE *pBuf = (BYTE*)srcBuf.resize(len*2);
-        memcpy(pBuf+buflen, &*src0.begin(), src0.size());
+        BYTE *pBuf = (BYTE*)srcBuf.resize(len * 2);
+        memcpy(pBuf + buflen, &*src0.begin(), src0.size());
 
         buflen += src0.size();
 
         if (buflen >= len) {
             srcBuffer = (BYTE*) pBuf;
-            BYTE *src_end = pBuf+len;
+            BYTE *src_end = pBuf + len;
 
-            if(sps > 0) {
-                for(int y = 0; y < h; y++) {
-                    for(int x = 0, w2 = w / sps; x < w2; x++) {
-                        memcpy(src_end + sps*(h*x+((h+1)/2)*(y&1)+(y>>1)), srcBuffer, sps);
+            if (sps > 0) {
+                for (int y = 0; y < h; y++) {
+                    for (int x = 0, w2 = w / sps; x < w2; x++) {
+                        memcpy(src_end + sps * (h * x + ((h + 1) / 2) * (y & 1) + (y >> 1)), srcBuffer, sps);
                         srcBuffer += sps;
                     }
                 }
                 srcBuffer = pBuf + len;
-                src_end = pBuf + len*2;
+                src_end = pBuf + len * 2;
             }
             srcBufferLength = (int)(src_end - srcBuffer);
             buflen = 0;
@@ -337,7 +342,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
         if (parser) {
             // Parse the input buffer srcBuffer and put the parsed data in parserBuffer
             parsed_bytes = ffmpeg->av_parser_parse2(parser, avctx, &parserBuffer, &parserBufferLength, srcBuffer, srcBufferLength, AV_NOPTS_VALUE, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
-            
+
             // If parserBufferLength = 0, nothing could be parsed
             if (parsed_bytes < 0 || (parsed_bytes == 0 && parserBufferLength == 0)) {
                 break;
@@ -369,7 +374,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 
             if (decoded_bytes < 0 || (decoded_bytes == 0 && dstBufferLength == 0)) {
                 DPRINTF(_l("ffmpeg was unable to decode this frame"));
-                TaudioParser *pAudioParser=NULL;
+                TaudioParser *pAudioParser = NULL;
                 this->sinkA->getAudioParser(&pAudioParser);
                 if (pAudioParser != NULL) {
                     pAudioParser->NewSegment();

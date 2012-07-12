@@ -39,13 +39,13 @@
 
 inline int LNKO(int a, int b)
 {
-    if(a == 0 || b == 0) {
+    if (a == 0 || b == 0) {
         return(1);
     }
-    while(a != b) {
-        if(a < b) {
+    while (a != b) {
+        if (a < b) {
             b -= a;
-        } else if(a > b) {
+        } else if (a > b) {
             a -= b;
         }
     }
@@ -98,26 +98,26 @@ DXVA_PARAMS DXVA_VC1 = {
 
 // Static list for DXVA2
 TcspInfo dxva2List[] = {
-    {FF_CSP_NV12,_l("avxd"),1,12,1,{0,0,0,0},{0,1,1,0},{0,128,128,0},'avxd', 'avxd', &MEDIASUBTYPE_NV12},
-    {FF_CSP_NV12,_l("AVXD"),1,12,1,{0,0,0,0},{0,1,1,0},{0,128,128,0},'AVXD', 'AVXD', &MEDIASUBTYPE_NV12},
-    {FF_CSP_NV12,_l("AVxD"),1,12,1,{0,0,0,0},{0,1,1,0},{0,128,128,0},'AVxD', 'AVxD', &MEDIASUBTYPE_NV12},
-    {FF_CSP_NV12,_l("AvXD"),1,12,1,{0,0,0,0},{0,1,1,0},{0,128,128,0},'AvXD', 'AvXD', &MEDIASUBTYPE_NV12}
+    {FF_CSP_NV12, _l("avxd"), 1, 12, 1, {0, 0, 0, 0}, {0, 1, 1, 0}, {0, 128, 128, 0}, 'avxd', 'avxd', &MEDIASUBTYPE_NV12},
+    {FF_CSP_NV12, _l("AVXD"), 1, 12, 1, {0, 0, 0, 0}, {0, 1, 1, 0}, {0, 128, 128, 0}, 'AVXD', 'AVXD', &MEDIASUBTYPE_NV12},
+    {FF_CSP_NV12, _l("AVxD"), 1, 12, 1, {0, 0, 0, 0}, {0, 1, 1, 0}, {0, 128, 128, 0}, 'AVxD', 'AVxD', &MEDIASUBTYPE_NV12},
+    {FF_CSP_NV12, _l("AvXD"), 1, 12, 1, {0, 0, 0, 0}, {0, 1, 1, 0}, {0, 128, 128, 0}, 'AvXD', 'AvXD', &MEDIASUBTYPE_NV12}
 };
 
 
-TvideoCodecLibavcodecDxva::TvideoCodecLibavcodecDxva(IffdshowBase *Ideci,IdecVideoSink *IsinkD,CodecID IcodecId):
-    Tcodec(Ideci),TcodecDec(Ideci,IsinkD),
+TvideoCodecLibavcodecDxva::TvideoCodecLibavcodecDxva(IffdshowBase *Ideci, IdecVideoSink *IsinkD, CodecID IcodecId):
+    Tcodec(Ideci), TcodecDec(Ideci, IsinkD),
     TvideoCodec(Ideci),
-    TvideoCodecLibavcodec(Ideci,IsinkD),
+    TvideoCodecLibavcodec(Ideci, IsinkD),
     isDXVACompatible(true),
     hDevice(INVALID_HANDLE_VALUE),
     initDXVAMode(false),
     pDXVADecoder(NULL)
 {
     TvideoCodecLibavcodec::create();
-    dxvaCodecId=codecId=IcodecId;
+    dxvaCodecId = codecId = IcodecId;
     create();
-    ok=libavcodec?libavcodec->ok:false;
+    ok = libavcodec ? libavcodec->ok : false;
 }
 
 
@@ -125,20 +125,20 @@ TvideoCodecLibavcodecDxva::TvideoCodecLibavcodecDxva(IffdshowBase *Ideci,IdecVid
 
 void TvideoCodecLibavcodecDxva::create(void)
 {
-    nARMode= 1;
+    nARMode = 1;
     inPosB = 1;
     nDXVAMode = MODE_SOFTWARE;
     pDXVADecoder = NULL;
     sar = AVRational();
-    switch(dxvaCodecId) {
+    switch (dxvaCodecId) {
         case CODEC_ID_H264_DXVA:
-            dxvaParamsp=&DXVA_H264;
+            dxvaParamsp = &DXVA_H264;
             if (isVista()) {
-                dxvaParamsp=&DXVA_H264_VISTA;
+                dxvaParamsp = &DXVA_H264_VISTA;
             }
             break;
         case CODEC_ID_VC1_DXVA:
-            dxvaParamsp=&DXVA_VC1;
+            dxvaParamsp = &DXVA_VC1;
             break;
             /*case CODEC_ID_MPEG2_DXVA:dxvaParamsp=&DXVA_Mpeg2;break;
             */
@@ -154,7 +154,7 @@ bool TvideoCodecLibavcodecDxva::checkDXVAMode(IPin *pReceivePin)
 {
     DPRINTF(_l("TvideoCodecLibavcodecDxva::checkDXVAMode Checking for DXVA compatibility"));
     if (isDXVASupported()) {
-        if (pReceivePin==NULL) {
+        if (pReceivePin == NULL) {
             return true;
         }
 
@@ -175,7 +175,7 @@ bool TvideoCodecLibavcodecDxva::checkDXVAMode(IPin *pReceivePin)
             return true;
         }
         // We had a receivePin to check after DXVA and the mode didn't change : this means that it is not compatible
-        if (nDXVAMode==MODE_SOFTWARE) {
+        if (nDXVAMode == MODE_SOFTWARE) {
             return false;    // DXVA not supported
         }
     }
@@ -201,7 +201,7 @@ bool TvideoCodecLibavcodecDxva::onSeek(REFERENCE_TIME segmentStart)
 bool  TvideoCodecLibavcodecDxva::isVista()
 {
     OSVERSIONINFO osver;
-    osver.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+    osver.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     if (GetVersionEx(&osver) && osver.dwPlatformId == VER_PLATFORM_WIN32_NT &&
             (osver.dwMajorVersion >= 6)) {
         return true;
@@ -252,24 +252,24 @@ void TvideoCodecLibavcodecDxva::detectVideoCard(HWND hwnd)
             nPCIVendor = adapterIdentifier.VendorId;
             nPCIDevice = adapterIdentifier.DeviceId;
             videoDriverVersion = adapterIdentifier.DriverVersion;
-            strDeviceDescription=text<char_t>(adapterIdentifier.Description);
-            strDeviceDescription.append(ffstring(_l(" ("))+ffstring::intToStr(nPCIVendor)+ffstring(_l(")")));
+            strDeviceDescription = text<char_t>(adapterIdentifier.Description);
+            strDeviceDescription.append(ffstring(_l(" (")) + ffstring::intToStr(nPCIVendor) + ffstring(_l(")")));
         }
         pD3D9->Release();
     }
 }
 
-BOOL CALLBACK EnumFindProcessWnd (HWND hwnd, LPARAM lParam)
+BOOL CALLBACK EnumFindProcessWnd(HWND hwnd, LPARAM lParam)
 {
     DWORD procid = 0;
     TCHAR WindowClass [40];
-    GetWindowThreadProcessId (hwnd, &procid);
-    GetClassName (hwnd, WindowClass, countof(WindowClass));
+    GetWindowThreadProcessId(hwnd, &procid);
+    GetClassName(hwnd, WindowClass, countof(WindowClass));
 
     if (procid == GetCurrentProcessId() &&
-            (_tcscmp(WindowClass, _l("MediaPlayerClassicW"))==0 || // MPC-HC window
-             _tcscmp(WindowClass, _l("WMPlayerApp"))==0 || // WMPlayer window
-             _tcscmp(WindowClass, _l("eHome Render Window"))==0  // WMC window
+            (_tcscmp(WindowClass, _l("MediaPlayerClassicW")) == 0 || // MPC-HC window
+             _tcscmp(WindowClass, _l("WMPlayerApp")) == 0 || // WMPlayer window
+             _tcscmp(WindowClass, _l("eHome Render Window")) == 0 // WMC window
             )
        ) {
         HWND* pWnd = (HWND*) lParam;
@@ -296,14 +296,14 @@ bool TvideoCodecLibavcodecDxva::isDXVASupported(void)
             nCompat = libavcodec->FFH264CheckCompatibility(pictWidthRounded(), pictHeightRounded(), avctx, (BYTE*)avctx->extradata, avctx->extradata_size, nPCIVendor, nPCIDevice, videoDriverVersion);
         }
 
-        if(nCompat > 0) {
-            int nCompatibilityMode=deci->getParam2(IDFF_dec_DXVA_CompatibilityMode);
+        if (nCompat > 0) {
+            int nCompatibilityMode = deci->getParam2(IDFF_dec_DXVA_CompatibilityMode);
 
             // debug output
-            if(nCompat & DXVA_UNSUPPORTED_LEVEL) {
+            if (nCompat & DXVA_UNSUPPORTED_LEVEL) {
                 DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : unsupported level"));
             }
-            if(nCompat & DXVA_TOO_MUCH_REF_FRAMES) {
+            if (nCompat & DXVA_TOO_MUCH_REF_FRAMES) {
                 DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : too much reference frames"));
             }
 
@@ -314,13 +314,13 @@ bool TvideoCodecLibavcodecDxva::isDXVASupported(void)
                     break;
                 case 1 :
                     // skip level check
-                    if(nCompat != DXVA_UNSUPPORTED_LEVEL) {
+                    if (nCompat != DXVA_UNSUPPORTED_LEVEL) {
                         isDXVACompatible = false;
                     }
                     break;
                 case 2 :
                     // skip reference frame check
-                    if(nCompat != DXVA_TOO_MUCH_REF_FRAMES) {
+                    if (nCompat != DXVA_TOO_MUCH_REF_FRAMES) {
                         isDXVACompatible = false;
                     }
                     break;
@@ -337,30 +337,30 @@ bool TvideoCodecLibavcodecDxva::isDXVASupported(void)
 
 void TvideoCodecLibavcodecDxva::getDXVAOutputFormats(TcspInfos &ocsps)
 {
-    int nVideoOutputCount=0;
-    for (nVideoOutputCount=0; nVideoOutputCount<MAX_SUPPORTED_MODE; nVideoOutputCount++)
+    int nVideoOutputCount = 0;
+    for (nVideoOutputCount = 0; nVideoOutputCount < MAX_SUPPORTED_MODE; nVideoOutputCount++)
         if (dxvaParamsp->Decoder[nVideoOutputCount] == &GUID_NULL) {
             break;
         }
     ocsps.clear();
-    TcspInfo csp= {
-        FF_CSP_NV12,_l("avxd"),
-        1,12, //Bpp
+    TcspInfo csp = {
+        FF_CSP_NV12, _l("avxd"),
+        1, 12, //Bpp
         1, //numplanes
-        {0,0,0,0}, //shiftX
-        {0,1,1,0}, //shiftY
-        {0,128,128,0}, //black
+        {0, 0, 0, 0}, //shiftX
+        {0, 1, 1, 0}, //shiftY
+        {0, 128, 128, 0}, //black
         'avxd', 'avxd', &GUID_NULL
     };
     // Dynamic DXVA media types for DXVA1
-    for (int nPos=0; nPos<nVideoOutputCount; nPos++) {
+    for (int nPos = 0; nPos < nVideoOutputCount; nPos++) {
         TcspInfo *pCsp = new TcspInfo(csp);
-        pCsp->subtype=dxvaParamsp->Decoder[nPos];
+        pCsp->subtype = dxvaParamsp->Decoder[nPos];
         ocsps.push_back(pCsp);
     }
     // Static list for DXVA2
-    nVideoOutputCount=SIZEOF_ARRAY(dxva2List);
-    for (int nPos=0; nPos<nVideoOutputCount; nPos++) {
+    nVideoOutputCount = SIZEOF_ARRAY(dxva2List);
+    for (int nPos = 0; nPos < nVideoOutputCount; nPos++) {
         ocsps.push_back((TcspInfo *)&dxva2List[nPos]);
     }
 }
@@ -388,7 +388,7 @@ BOOL TvideoCodecLibavcodecDxva::isSupportedDecoderConfig(const D3DFORMAT nD3DFor
 
 void TvideoCodecLibavcodecDxva::fillInVideoDescription(DXVA2_VideoDesc *pDesc)
 {
-    memset (pDesc, 0, sizeof(DXVA2_VideoDesc));
+    memset(pDesc, 0, sizeof(DXVA2_VideoDesc));
     pDesc->SampleWidth        = pictWidthRounded();
     pDesc->SampleHeight       = pictHeightRounded();
     pDesc->Format             = D3DFMT_A8R8G8B8;
@@ -499,14 +499,14 @@ HRESULT TvideoCodecLibavcodecDxva::configureDXVA2(IPin *pPin)
     if (SUCCEEDED(hr))
         // Look for the decoder GUIDs we want.
         for (UINT iGuid = 0; iGuid < cDecoderGuids; iGuid++) {
-            bool found=false;
+            bool found = false;
             // Do we support this mode?
-            for (int i=0; i<MAX_SUPPORTED_MODE; i++) {
+            for (int i = 0; i < MAX_SUPPORTED_MODE; i++) {
                 if (*dxvaParamsp->Decoder[i] == GUID_NULL) {
                     break;
                 }
-                if (*dxvaParamsp->Decoder[i]==pDecoderGuids[iGuid]) {
-                    found=true;
+                if (*dxvaParamsp->Decoder[i] == pDecoderGuids[iGuid]) {
+                    found = true;
                     break;
                 }
             }
@@ -521,7 +521,7 @@ HRESULT TvideoCodecLibavcodecDxva::configureDXVA2(IPin *pPin)
 
             // Sandy Bridge crashes with Mode_E on current code, so ignore it
             // known device IDs for SB integrated graphics are: 258, 274, 278, 290, 294
-            if (nPCIVendor == PCIV_Intel && nPCIDevice>=258 && nPCIDevice <=294 && pDecoderGuids[iGuid] == DXVA2_ModeH264_E) {
+            if (nPCIVendor == PCIV_Intel && nPCIDevice >= 258 && nPCIDevice <= 294 && pDecoderGuids[iGuid] == DXVA2_ModeH264_E) {
                 bFoundDXVA2Configuration = false;
             }
 
@@ -572,9 +572,9 @@ HRESULT TvideoCodecLibavcodecDxva::setEVRForDXVA2(IPin *pPin)
                  __uuidof(IDirectXVideoMemoryConfiguration),
                  (void**)&pVideoConfig);
 
-        if (SUCCEEDED (pGetService->GetService(MR_VIDEO_RENDER_SERVICE, __uuidof(IMFVideoDisplayControl), (void**)&pVdc))) {
+        if (SUCCEEDED(pGetService->GetService(MR_VIDEO_RENDER_SERVICE, __uuidof(IMFVideoDisplayControl), (void**)&pVdc))) {
             HWND hWnd;
-            if (SUCCEEDED (pVdc->GetVideoWindow(&hWnd))) {
+            if (SUCCEEDED(pVdc->GetVideoWindow(&hWnd))) {
                 detectVideoCard(hWnd);
             }
         }
@@ -608,17 +608,17 @@ HRESULT TvideoCodecLibavcodecDxva::createDXVA2Decoder(UINT nNumRenderTargets, ID
     pDecoderRenderTarget    = NULL;
 
     if (pDXVADecoder) {
-        pDXVADecoder->SetDirectXVideoDec (NULL);
+        pDXVADecoder->SetDirectXVideoDec(NULL);
     }
 
-    hr = m_pDecoderService->CreateVideoDecoder (dxvaDecoderGUID, &videoDesc, &dxva2Config,
+    hr = m_pDecoderService->CreateVideoDecoder(dxvaDecoderGUID, &videoDesc, &dxva2Config,
             pDecoderRenderTargets, nNumRenderTargets, &pDirectXVideoDec);
 
-    if (SUCCEEDED (hr)) {
+    if (SUCCEEDED(hr)) {
         if (!pDXVADecoder) {
             pDXVADecoder    = TDXVADecoder::CreateDecoder(deciV, pDirectXVideoDec, &dxvaDecoderGUID, getPicEntryNumber(), &dxva2Config);
             if (pDXVADecoder) {
-                pDXVADecoder->SetExtraData ((BYTE*)avctx->extradata, avctx->extradata_size);
+                pDXVADecoder->SetExtraData((BYTE*)avctx->extradata, avctx->extradata_size);
             }
         }
 
@@ -635,16 +635,16 @@ HRESULT TvideoCodecLibavcodecDxva::findDXVA1DecoderConfiguration(IAMVideoAcceler
     DDPIXELFORMAT* pPixelFormats = NULL;
 
 
-    pAMVideoAccelerator->GetUncompFormatsSupported (guidDecoder, &dwFormats, NULL);
+    pAMVideoAccelerator->GetUncompFormatsSupported(guidDecoder, &dwFormats, NULL);
     if (dwFormats > 0) {
         // Find the valid render target formats for this decoder GUID.
         pPixelFormats = new DDPIXELFORMAT[dwFormats];
-        hr = pAMVideoAccelerator->GetUncompFormatsSupported (guidDecoder, &dwFormats, pPixelFormats);
+        hr = pAMVideoAccelerator->GetUncompFormatsSupported(guidDecoder, &dwFormats, pPixelFormats);
         if (SUCCEEDED(hr)) {
             // Look for a format that matches our output format.
             for (DWORD iFormat = 0; iFormat < dwFormats; iFormat++) {
-                if (pPixelFormats[iFormat].dwFourCC == MAKEFOURCC ('N', 'V', '1', '2')) {
-                    memcpy (pPixelFormat, &pPixelFormats[iFormat], sizeof(DDPIXELFORMAT));
+                if (pPixelFormats[iFormat].dwFourCC == MAKEFOURCC('N', 'V', '1', '2')) {
+                    memcpy(pPixelFormat, &pPixelFormats[iFormat], sizeof(DDPIXELFORMAT));
                     SAFE_ARRAYDELETE(pPixelFormats)
                     return S_OK;
                 }
@@ -659,7 +659,7 @@ HRESULT TvideoCodecLibavcodecDxva::findDXVA1DecoderConfiguration(IAMVideoAcceler
 
 HRESULT TvideoCodecLibavcodecDxva::checkDXVA1Decoder(const GUID *pGuid)
 {
-    for (int i=0; i<MAX_SUPPORTED_MODE; i++)
+    for (int i = 0; i < MAX_SUPPORTED_MODE; i++)
         if (*dxvaParamsp->Decoder[i] == *pGuid) {
             return S_OK;
         }
@@ -669,13 +669,13 @@ HRESULT TvideoCodecLibavcodecDxva::checkDXVA1Decoder(const GUID *pGuid)
 void TvideoCodecLibavcodecDxva::setDXVA1Params(const GUID* pGuid, DDPIXELFORMAT* pPixelFormat)
 {
     dxvaDecoderGUID = *pGuid;
-    memcpy (&pixelFormat, pPixelFormat, sizeof (DDPIXELFORMAT));
+    memcpy(&pixelFormat, pPixelFormat, sizeof(DDPIXELFORMAT));
 }
 
 WORD TvideoCodecLibavcodecDxva::getDXVA1RestrictedMode()
 {
-    for (int i=0; i<MAX_SUPPORTED_MODE; i++)
-        if (*dxvaParamsp->Decoder[i]== dxvaDecoderGUID) {
+    for (int i = 0; i < MAX_SUPPORTED_MODE; i++)
+        if (*dxvaParamsp->Decoder[i] == dxvaDecoderGUID) {
             return dxvaParamsp->RestrictedMode[i];
         }
     return DXVA_RESTRICTED_MODE_UNRESTRICTED;
@@ -686,13 +686,13 @@ HRESULT TvideoCodecLibavcodecDxva::createDXVA1Decoder(IAMVideoAccelerator*  pAMV
     // commented because we may want to connect VMR9 after disconnecting overlay mixer (for example), and we have to make sure m_pAMVideoAccelerator is being updated.
     /*if (pDXVADecoder && dxvaDecoderGUID == *pDecoderGuid)
         return S_OK;*/
-    SAFE_DELETE (pDXVADecoder);
+    SAFE_DELETE(pDXVADecoder);
 
     nDXVAMode       = MODE_DXVA1;
     dxvaDecoderGUID = *pDecoderGuid;
-    pDXVADecoder    = TDXVADecoder::CreateDecoder (deciV, pAMVideoAccelerator, &dxvaDecoderGUID, dwSurfaceCount);
+    pDXVADecoder    = TDXVADecoder::CreateDecoder(deciV, pAMVideoAccelerator, &dxvaDecoderGUID, dwSurfaceCount);
     if (pDXVADecoder) {
-        pDXVADecoder->SetExtraData ((BYTE*)avctx->extradata, avctx->extradata_size);
+        pDXVADecoder->SetExtraData((BYTE*)avctx->extradata, avctx->extradata_size);
     }
 
     return S_OK;
@@ -700,7 +700,7 @@ HRESULT TvideoCodecLibavcodecDxva::createDXVA1Decoder(IAMVideoAccelerator*  pAMV
 
 STDMETHODIMP_(GUID*) TvideoCodecLibavcodecDxva::getDXVADecoderGUID(void)
 {
-    IFilterGraph* pGraph=NULL;
+    IFilterGraph* pGraph = NULL;
     deci->getGraph(&pGraph);
     if (pGraph == NULL) {
         return NULL;
@@ -711,8 +711,8 @@ STDMETHODIMP_(GUID*) TvideoCodecLibavcodecDxva::getDXVADecoderGUID(void)
 
 void TvideoCodecLibavcodecDxva::updateAspectRatio(void)
 {
-    if(((nARMode) && (avctx)) && ((avctx->sample_aspect_ratio.num>0) && (avctx->sample_aspect_ratio.den>0))) {
-        sar=avctx->sample_aspect_ratio;
+    if (((nARMode) && (avctx)) && ((avctx->sample_aspect_ratio.num > 0) && (avctx->sample_aspect_ratio.den > 0))) {
+        sar = avctx->sample_aspect_ratio;
         /*TODO : imported from MPCHC, update of aspect ratio
         if(sar != SAR)
         {
@@ -726,7 +726,7 @@ void TvideoCodecLibavcodecDxva::updateAspectRatio(void)
 }
 REFERENCE_TIME TvideoCodecLibavcodecDxva::getAvrTimePerFrame(void)
 {
-    if (avgTimePerFrame==-1) {
+    if (avgTimePerFrame == -1) {
         deciV->getAverageTimePerFrame(&avgTimePerFrame);
     }
     return avgTimePerFrame;
@@ -734,7 +734,7 @@ REFERENCE_TIME TvideoCodecLibavcodecDxva::getAvrTimePerFrame(void)
 
 bool TvideoCodecLibavcodecDxva::isPostProcessingEnabled(void)
 {
-    int nPostProcessingMode=deci->getParam2(IDFF_dec_DXVA_PostProcessingMode);
+    int nPostProcessingMode = deci->getParam2(IDFF_dec_DXVA_PostProcessingMode);
     return (nPostProcessingMode > 0);
 }
 
@@ -743,7 +743,7 @@ void TvideoCodecLibavcodecDxva::PostProcessUSWCFrame(void * pDXVABuffer, UINT pi
     UINT width = pictWidthRounded();
     UINT height = pictHeightRounded();
 
-    int nPostProcessingMode=deci->getParam2(IDFF_dec_DXVA_PostProcessingMode);
+    int nPostProcessingMode = deci->getParam2(IDFF_dec_DXVA_PostProcessingMode);
 
     switch (nPostProcessingMode) {
         case 1: { //overlay subs / OSD on top of the decoded buffer
@@ -761,11 +761,11 @@ void TvideoCodecLibavcodecDxva::PostProcessUSWCFrame(void * pDXVABuffer, UINT pi
 void TvideoCodecLibavcodecDxva::GetProcessedFrame(Tbuffer &processedFrame, UINT width, UINT height)
 {
     int size = width * height * 3 / 2;
-    uint64_t csp = FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ; // we use YV12. there is no native FF_CSP_NV12 processing
+    uint64_t csp = FF_CSP_420P | FF_CSP_FLAGS_YUV_ADJ; // we use YV12. there is no native FF_CSP_NV12 processing
     processedFrame.free = false;
     // process frame over black background:
     TffPict pict;
-    pict.alloc(width,height,csp,processedFrame,0);
+    pict.alloc(width, height, csp, processedFrame, 0);
     ((TffdshowDecVideo*)sinkD)->processDecodedSample(pict);
 }
 
@@ -775,10 +775,10 @@ void TvideoCodecLibavcodecDxva::GetProcessedFrame(Tbuffer &processedFrame, UINT 
 // NV12 - Y,U,V - Y plane, packed Cb, Cr samples
 void TvideoCodecLibavcodecDxva::OverlayYV12OnUSWCFrame(unsigned char * pSrc, unsigned char * pDest, UINT width, UINT height, UINT pitch)
 {
-    unsigned int x,y;
+    unsigned int x, y;
 
-    for(y = 0; y < height; y+=2) {
-        for(x = 0; x < width; x+=2) {
+    for (y = 0; y < height; y += 2) {
+        for (x = 0; x < width; x += 2) {
             int srcY0Offset = y * width + x;
             int srcY1Offset = srcY0Offset + width;
             int srcCrOffset = width * height + y / 2 * width / 2 + x / 2;
@@ -825,11 +825,11 @@ void TvideoCodecLibavcodecDxva::OverlayYV12OnUSWCFrame(unsigned char * pSrc, uns
 #pragma endregion
 
 //------------------------- TvideoCodecLibavcodec overloaded methods -----------------------------
-bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
+bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict, FOURCC fcc, const CMediaType &mt, int sourceFlags)
 {
     dxvaCodecId = codecId;
 
-    bool result = TvideoCodecLibavcodec::beginDecompress(pict,fcc,mt,sourceFlags);
+    bool result = TvideoCodecLibavcodec::beginDecompress(pict, fcc, mt, sourceFlags);
     if (!result) {
         return false;
     }
@@ -837,9 +837,9 @@ bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,con
         bReorderBFrame = true;
     }
 
-    isDXVACompatible=isDXVASupported();
+    isDXVACompatible = isDXVASupported();
 
-	mb_height = avctx->height;
+    mb_height = avctx->height;
     mb_width = avctx->width;
     sar = avctx->sample_aspect_ratio;
     return true;
@@ -850,7 +850,7 @@ int TvideoCodecLibavcodecDxva::useDXVA(void)
     return (nDXVAMode == MODE_DXVA2) ? MODE_DXVA2 : MODE_DXVA1;
 }
 
-HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
+HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src, size_t srcLen0, IMediaSample *pIn)
 {
     HRESULT hr = S_OK;
     TffdshowVideoInputPin::TrateAndFlush *rateInfo = (TffdshowVideoInputPin::TrateAndFlush*)deciV->getRateInfo();
@@ -860,14 +860,14 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
     }
 
     if (pIn) {
-        pIn->GetTime(&rtStart,&rtStop);
+        pIn->GetTime(&rtStart, &rtStop);
     }
 
-    b[inPosB].rtStart=rtStart;
-    b[inPosB].rtStop=rtStop;
-    b[inPosB].srcSize=(unsigned)srcLen0;
+    b[inPosB].rtStart = rtStart;
+    b[inPosB].rtStop = rtStop;
+    b[inPosB].srcSize = (unsigned)srcLen0;
     inPosB++;
-    if(inPosB >= countof(b)) {
+    if (inPosB >= countof(b)) {
         inPosB = 0;
     }
 
@@ -876,19 +876,19 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
     avctx->reordered_opaque3 = srcLen0;
 
     if (avctx->sample_aspect_ratio.num
-            && !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
+            && !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num == 1 && avctx->sample_aspect_ratio.den == 1)
        ) { // With MPC's internal matroska splitter, AR is not reliable.
-        sar=avctx->sample_aspect_ratio;
+        sar = avctx->sample_aspect_ratio;
     } else {
-        sar=containerSar;
+        sar = containerSar;
     }
 
     switch (nDXVAMode) {
         case MODE_SOFTWARE :
-            return TvideoCodecLibavcodec::decompress(src,srcLen0,pIn);
+            return TvideoCodecLibavcodec::decompress(src, srcLen0, pIn);
         case MODE_DXVA1 :
         case MODE_DXVA2 :
-            CheckPointer (pDXVADecoder, E_UNEXPECTED);
+            CheckPointer(pDXVADecoder, E_UNEXPECTED);
             updateAspectRatio();
 
             /* TODO : update picture size
@@ -914,7 +914,7 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
             }
             break;
         default :
-            ASSERT (FALSE);
+            ASSERT(FALSE);
             hr = E_UNEXPECTED;
     }
     return hr;
@@ -945,18 +945,18 @@ const char_t* TvideoCodecLibavcodecDxva::getName(void) const
 // TODO (if possible) : find a way to retrieve the window handle of the player
 UINT TvideoCodecLibavcodecDxva::getAdapter(IDirect3D9* pD3D, HWND hWnd)
 {
-    if(hWnd == NULL || pD3D == NULL) {
+    if (hWnd == NULL || pD3D == NULL) {
         return D3DADAPTER_DEFAULT;
     }
 
     HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
-    if(hMonitor == NULL) {
+    if (hMonitor == NULL) {
         return D3DADAPTER_DEFAULT;
     }
 
-    for(UINT adp = 0, num_adp = pD3D->GetAdapterCount(); adp < num_adp; ++adp) {
+    for (UINT adp = 0, num_adp = pD3D->GetAdapterCount(); adp < num_adp; ++adp) {
         HMONITOR hAdpMon = pD3D->GetAdapterMonitor(adp);
-        if(hAdpMon == hMonitor) {
+        if (hAdpMon == hMonitor) {
             return adp;
         }
     }

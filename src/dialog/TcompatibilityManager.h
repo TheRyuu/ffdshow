@@ -6,13 +6,13 @@
 
 #define TCOMPATIBILITYMANAGER_TIMEOUT 250
 
-class TcompatibilityManager :public TdlgWindow
+class TcompatibilityManager : public TdlgWindow
 {
 private:
     HWND parent;
     int mode;
     bool chbsend;
-    void onModeChange(void),dlg2cfg(void);
+    void onModeChange(void), dlg2cfg(void);
     void onDontAsk(void);
     void onChbSend(void);
     void setcaption(void);
@@ -24,7 +24,7 @@ protected:
     void cfg2dlg(void);
     ffstring filename;
 public:
-    TcompatibilityManager(IffdshowBase *Ideci,HWND parent,const char_t *exe);
+    TcompatibilityManager(IffdshowBase *Ideci, HWND parent, const char_t *exe);
     int show(void);
     static int s_mode;
 };

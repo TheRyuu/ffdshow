@@ -29,14 +29,14 @@
 class TDXVADecoderVC1 : public TDXVADecoder
 {
 public:
-    TDXVADecoderVC1 (IffdshowDecVideo* IdeciV, IAMVideoAccelerator*  pAMVideoAccelerator, DXVAMode nMode, int nPicEntryNumber);
-    TDXVADecoderVC1 (IffdshowDecVideo* IdeciV, IDirectXVideoDecoder* pDirectXVideoDec, DXVAMode nMode, int nPicEntryNumber, DXVA2_ConfigPictureDecode* pDXVA2Config);
+    TDXVADecoderVC1(IffdshowDecVideo* IdeciV, IAMVideoAccelerator*  pAMVideoAccelerator, DXVAMode nMode, int nPicEntryNumber);
+    TDXVADecoderVC1(IffdshowDecVideo* IdeciV, IDirectXVideoDecoder* pDirectXVideoDec, DXVAMode nMode, int nPicEntryNumber, DXVA2_ConfigPictureDecode* pDXVA2Config);
     virtual ~TDXVADecoderVC1(void);
 
     // === Public functions
-    virtual HRESULT DecodeFrame   (BYTE* pDataIn, UINT nSize, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop);
-    virtual void    SetExtraData  (BYTE* pDataIn, UINT nSize);
-    virtual void    CopyBitstream (BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSize);
+    virtual HRESULT DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop);
+    virtual void    SetExtraData(BYTE* pDataIn, UINT nSize);
+    virtual void    CopyBitstream(BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSize);
     virtual void    Flush();
 
     typedef enum {

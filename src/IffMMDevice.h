@@ -307,32 +307,32 @@ typedef struct tagDIRECTX_AUDIO_ACTIVATION_PARAMS *PDIRECTX_AUDIO_ACTIVATION_PAR
 typedef /* [public][public][public][public][public] */
 enum __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0001 {
     eRender = 0,
-    eCapture    = ( eRender + 1 ) ,
-    eAll    = ( eCapture + 1 ) ,
-    EDataFlow_enum_count    = ( eAll + 1 )
+    eCapture    = (eRender + 1) ,
+    eAll    = (eCapture + 1) ,
+    EDataFlow_enum_count    = (eAll + 1)
 }   EDataFlow;
 
 typedef /* [public][public][public] */
 enum __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0002 {
     eConsole    = 0,
-    eMultimedia = ( eConsole + 1 ) ,
-    eCommunications = ( eMultimedia + 1 ) ,
-    ERole_enum_count    = ( eCommunications + 1 )
+    eMultimedia = (eConsole + 1) ,
+    eCommunications = (eMultimedia + 1) ,
+    ERole_enum_count    = (eCommunications + 1)
 }   ERole;
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0003 {
     RemoteNetworkDevice = 0,
-    Speakers    = ( RemoteNetworkDevice + 1 ) ,
-    LineLevel   = ( Speakers + 1 ) ,
-    Headphones  = ( LineLevel + 1 ) ,
-    Microphone  = ( Headphones + 1 ) ,
-    Headset = ( Microphone + 1 ) ,
-    Handset = ( Headset + 1 ) ,
-    UnknownDigitalPassthrough   = ( Handset + 1 ) ,
-    SPDIF   = ( UnknownDigitalPassthrough + 1 ) ,
-    HDMI    = ( SPDIF + 1 ) ,
-    UnknownFormFactor   = ( HDMI + 1 )
+    Speakers    = (RemoteNetworkDevice + 1) ,
+    LineLevel   = (Speakers + 1) ,
+    Headphones  = (LineLevel + 1) ,
+    Microphone  = (Headphones + 1) ,
+    Headset = (Microphone + 1) ,
+    Handset = (Headset + 1) ,
+    UnknownDigitalPassthrough   = (Handset + 1) ,
+    SPDIF   = (UnknownDigitalPassthrough + 1) ,
+    HDMI    = (SPDIF + 1) ,
+    UnknownFormFactor   = (HDMI + 1)
 }   EndpointFormFactor;
 
 
@@ -356,21 +356,21 @@ IPropertyStore :
 public IUnknown {
 public:
     virtual HRESULT STDMETHODCALLTYPE GetCount(
-        /* [out] */ __RPC__out DWORD *cProps) = 0;
+        /* [out] */ __RPC__out DWORD * cProps) = 0;
 
     virtual HRESULT STDMETHODCALLTYPE GetAt(
         /* [in] */ DWORD iProp,
-        /* [out] */ __RPC__out PROPERTYKEY *pkey) = 0;
+        /* [out] */ __RPC__out PROPERTYKEY * pkey) = 0;
 
     virtual HRESULT STDMETHODCALLTYPE GetValue(
         /* [in] */ __RPC__in REFPROPERTYKEY key,
-        /* [out] */ __RPC__out PROPVARIANT *pv) = 0;
+        /* [out] */ __RPC__out PROPVARIANT * pv) = 0;
 
     virtual HRESULT STDMETHODCALLTYPE SetValue(
         /* [in] */ __RPC__in REFPROPERTYKEY key,
         /* [in] */ __RPC__in REFPROPVARIANT propvar) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE Commit( void) = 0;
+    virtual HRESULT STDMETHODCALLTYPE Commit(void) = 0;
 
 };
 
@@ -379,38 +379,38 @@ public:
 typedef struct IPropertyStoreVtbl {
     BEGIN_INTERFACE
 
-    HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(
         IPropertyStore * This,
         /* [in] */ __RPC__in REFIID riid,
         /* [iid_is][out] */
         __RPC__deref_out  void **ppvObject);
 
-    ULONG ( STDMETHODCALLTYPE *AddRef )(
+    ULONG(STDMETHODCALLTYPE *AddRef)(
         IPropertyStore * This);
 
-    ULONG ( STDMETHODCALLTYPE *Release )(
+    ULONG(STDMETHODCALLTYPE *Release)(
         IPropertyStore * This);
 
-    HRESULT ( STDMETHODCALLTYPE *GetCount )(
+    HRESULT(STDMETHODCALLTYPE *GetCount)(
         IPropertyStore * This,
         /* [out] */ __RPC__out DWORD *cProps);
 
-    HRESULT ( STDMETHODCALLTYPE *GetAt )(
+    HRESULT(STDMETHODCALLTYPE *GetAt)(
         IPropertyStore * This,
         /* [in] */ DWORD iProp,
         /* [out] */ __RPC__out PROPERTYKEY *pkey);
 
-    HRESULT ( STDMETHODCALLTYPE *GetValue )(
+    HRESULT(STDMETHODCALLTYPE *GetValue)(
         IPropertyStore * This,
         /* [in] */ __RPC__in REFPROPERTYKEY key,
         /* [out] */ __RPC__out PROPVARIANT *pv);
 
-    HRESULT ( STDMETHODCALLTYPE *SetValue )(
+    HRESULT(STDMETHODCALLTYPE *SetValue)(
         IPropertyStore * This,
         /* [in] */ __RPC__in REFPROPERTYKEY key,
         /* [in] */ __RPC__in REFPROPVARIANT propvar);
 
-    HRESULT ( STDMETHODCALLTYPE *Commit )(
+    HRESULT(STDMETHODCALLTYPE *Commit)(
         IPropertyStore * This);
 
     END_INTERFACE
@@ -508,20 +508,20 @@ public:
 typedef struct IMMNotificationClientVtbl {
     BEGIN_INTERFACE
 
-    HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(
         IMMNotificationClient * This,
         /* [in] */ REFIID riid,
         /* [iid_is][out] */
         __RPC__deref_out  void **ppvObject);
 
-    ULONG ( STDMETHODCALLTYPE *AddRef )(
+    ULONG(STDMETHODCALLTYPE *AddRef)(
         IMMNotificationClient * This);
 
-    ULONG ( STDMETHODCALLTYPE *Release )(
+    ULONG(STDMETHODCALLTYPE *Release)(
         IMMNotificationClient * This);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *OnDeviceStateChanged )(
+    HRESULT(STDMETHODCALLTYPE *OnDeviceStateChanged)(
         IMMNotificationClient * This,
         /* [in] */
         __in  LPCWSTR pwstrDeviceId,
@@ -529,19 +529,19 @@ typedef struct IMMNotificationClientVtbl {
         __in  DWORD dwNewState);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *OnDeviceAdded )(
+    HRESULT(STDMETHODCALLTYPE *OnDeviceAdded)(
         IMMNotificationClient * This,
         /* [in] */
         __in  LPCWSTR pwstrDeviceId);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *OnDeviceRemoved )(
+    HRESULT(STDMETHODCALLTYPE *OnDeviceRemoved)(
         IMMNotificationClient * This,
         /* [in] */
         __in  LPCWSTR pwstrDeviceId);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *OnDefaultDeviceChanged )(
+    HRESULT(STDMETHODCALLTYPE *OnDefaultDeviceChanged)(
         IMMNotificationClient * This,
         /* [in] */
         __in  EDataFlow flow,
@@ -551,7 +551,7 @@ typedef struct IMMNotificationClientVtbl {
         __in  LPCWSTR pwstrDefaultDeviceId);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *OnPropertyValueChanged )(
+    HRESULT(STDMETHODCALLTYPE *OnPropertyValueChanged)(
         IMMNotificationClient * This,
         /* [in] */
         __in  LPCWSTR pwstrDeviceId,
@@ -627,7 +627,7 @@ public:
         /* [in] */
         __in  DWORD dwClsCtx,
         /* [unique][in] */
-        __in_opt  PROPVARIANT *pActivationParams,
+        __in_opt  PROPVARIANT * pActivationParams,
         /* [iid_is][out] */
         __out  void **ppInterface) = 0;
 
@@ -639,11 +639,11 @@ public:
 
     virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE GetId(
         /* [out] */
-        __deref_out  LPWSTR *ppstrId) = 0;
+        __deref_out  LPWSTR * ppstrId) = 0;
 
     virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE GetState(
         /* [out] */
-        __out  DWORD *pdwState) = 0;
+        __out  DWORD * pdwState) = 0;
 
 };
 
@@ -652,20 +652,20 @@ public:
 typedef struct IMMDeviceVtbl {
     BEGIN_INTERFACE
 
-    HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(
         IMMDevice * This,
         /* [in] */ REFIID riid,
         /* [iid_is][out] */
         __RPC__deref_out  void **ppvObject);
 
-    ULONG ( STDMETHODCALLTYPE *AddRef )(
+    ULONG(STDMETHODCALLTYPE *AddRef)(
         IMMDevice * This);
 
-    ULONG ( STDMETHODCALLTYPE *Release )(
+    ULONG(STDMETHODCALLTYPE *Release)(
         IMMDevice * This);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *Activate )(
+    HRESULT(STDMETHODCALLTYPE *Activate)(
         IMMDevice * This,
         /* [in] */
         __in  REFIID iid,
@@ -677,7 +677,7 @@ typedef struct IMMDeviceVtbl {
         __out  void **ppInterface);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *OpenPropertyStore )(
+    HRESULT(STDMETHODCALLTYPE *OpenPropertyStore)(
         IMMDevice * This,
         /* [in] */
         __in  DWORD stgmAccess,
@@ -685,13 +685,13 @@ typedef struct IMMDeviceVtbl {
         __out  IPropertyStore **ppProperties);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *GetId )(
+    HRESULT(STDMETHODCALLTYPE *GetId)(
         IMMDevice * This,
         /* [out] */
         __deref_out  LPWSTR *ppstrId);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *GetState )(
+    HRESULT(STDMETHODCALLTYPE *GetState)(
         IMMDevice * This,
         /* [out] */
         __out  DWORD *pdwState);
@@ -758,7 +758,7 @@ public IUnknown {
 public:
     virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE GetCount(
         /* [out] */
-        __out  UINT *pcDevices) = 0;
+        __out  UINT * pcDevices) = 0;
 
     virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Item(
         /* [in] */
@@ -773,26 +773,26 @@ public:
 typedef struct IMMDeviceCollectionVtbl {
     BEGIN_INTERFACE
 
-    HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(
         IMMDeviceCollection * This,
         /* [in] */ REFIID riid,
         /* [iid_is][out] */
         __RPC__deref_out  void **ppvObject);
 
-    ULONG ( STDMETHODCALLTYPE *AddRef )(
+    ULONG(STDMETHODCALLTYPE *AddRef)(
         IMMDeviceCollection * This);
 
-    ULONG ( STDMETHODCALLTYPE *Release )(
+    ULONG(STDMETHODCALLTYPE *Release)(
         IMMDeviceCollection * This);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *GetCount )(
+    HRESULT(STDMETHODCALLTYPE *GetCount)(
         IMMDeviceCollection * This,
         /* [out] */
         __out  UINT *pcDevices);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *Item )(
+    HRESULT(STDMETHODCALLTYPE *Item)(
         IMMDeviceCollection * This,
         /* [in] */
         __in  UINT nDevice,
@@ -855,7 +855,7 @@ public IUnknown {
 public:
     virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE GetDataFlow(
         /* [out] */
-        __out  EDataFlow *pDataFlow) = 0;
+        __out  EDataFlow * pDataFlow) = 0;
 
 };
 
@@ -864,20 +864,20 @@ public:
 typedef struct IMMEndpointVtbl {
     BEGIN_INTERFACE
 
-    HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(
         IMMEndpoint * This,
         /* [in] */ REFIID riid,
         /* [iid_is][out] */
         __RPC__deref_out  void **ppvObject);
 
-    ULONG ( STDMETHODCALLTYPE *AddRef )(
+    ULONG(STDMETHODCALLTYPE *AddRef)(
         IMMEndpoint * This);
 
-    ULONG ( STDMETHODCALLTYPE *Release )(
+    ULONG(STDMETHODCALLTYPE *Release)(
         IMMEndpoint * This);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *GetDataFlow )(
+    HRESULT(STDMETHODCALLTYPE *GetDataFlow)(
         IMMEndpoint * This,
         /* [out] */
         __out  EDataFlow *pDataFlow);
@@ -957,11 +957,11 @@ public:
 
     virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE RegisterEndpointNotificationCallback(
         /* [in] */
-        __in  IMMNotificationClient *pClient) = 0;
+        __in  IMMNotificationClient * pClient) = 0;
 
     virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE UnregisterEndpointNotificationCallback(
         /* [in] */
-        __in  IMMNotificationClient *pClient) = 0;
+        __in  IMMNotificationClient * pClient) = 0;
 
 };
 
@@ -970,20 +970,20 @@ public:
 typedef struct IMMDeviceEnumeratorVtbl {
     BEGIN_INTERFACE
 
-    HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(
         IMMDeviceEnumerator * This,
         /* [in] */ REFIID riid,
         /* [iid_is][out] */
         __RPC__deref_out  void **ppvObject);
 
-    ULONG ( STDMETHODCALLTYPE *AddRef )(
+    ULONG(STDMETHODCALLTYPE *AddRef)(
         IMMDeviceEnumerator * This);
 
-    ULONG ( STDMETHODCALLTYPE *Release )(
+    ULONG(STDMETHODCALLTYPE *Release)(
         IMMDeviceEnumerator * This);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *EnumAudioEndpoints )(
+    HRESULT(STDMETHODCALLTYPE *EnumAudioEndpoints)(
         IMMDeviceEnumerator * This,
         /* [in] */
         __in  EDataFlow dataFlow,
@@ -993,7 +993,7 @@ typedef struct IMMDeviceEnumeratorVtbl {
         __out  IMMDeviceCollection **ppDevices);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *GetDefaultAudioEndpoint )(
+    HRESULT(STDMETHODCALLTYPE *GetDefaultAudioEndpoint)(
         IMMDeviceEnumerator * This,
         /* [in] */
         __in  EDataFlow dataFlow,
@@ -1003,7 +1003,7 @@ typedef struct IMMDeviceEnumeratorVtbl {
         __out  IMMDevice **ppEndpoint);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *GetDevice )(
+    HRESULT(STDMETHODCALLTYPE *GetDevice)(
         IMMDeviceEnumerator * This,
         /*  */
         __in  LPCWSTR pwstrId,
@@ -1011,13 +1011,13 @@ typedef struct IMMDeviceEnumeratorVtbl {
         __out  IMMDevice **ppDevice);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *RegisterEndpointNotificationCallback )(
+    HRESULT(STDMETHODCALLTYPE *RegisterEndpointNotificationCallback)(
         IMMDeviceEnumerator * This,
         /* [in] */
         __in  IMMNotificationClient *pClient);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *UnregisterEndpointNotificationCallback )(
+    HRESULT(STDMETHODCALLTYPE *UnregisterEndpointNotificationCallback)(
         IMMDeviceEnumerator * This,
         /* [in] */
         __in  IMMNotificationClient *pClient);
@@ -1089,9 +1089,9 @@ public:
         /* [in] */
         __in  REFIID iid,
         /* [in] */
-        __in  IMMDevice *pDevice,
+        __in  IMMDevice * pDevice,
         /* [in] */
-        __in_opt  PROPVARIANT *pActivationParams,
+        __in_opt  PROPVARIANT * pActivationParams,
         /* [iid_is][out] */
         __out  void **ppInterface) = 0;
 
@@ -1102,20 +1102,20 @@ public:
 typedef struct IMMDeviceActivatorVtbl {
     BEGIN_INTERFACE
 
-    HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(
         IMMDeviceActivator * This,
         /* [in] */ REFIID riid,
         /* [iid_is][out] */
         __RPC__deref_out  void **ppvObject);
 
-    ULONG ( STDMETHODCALLTYPE *AddRef )(
+    ULONG(STDMETHODCALLTYPE *AddRef)(
         IMMDeviceActivator * This);
 
-    ULONG ( STDMETHODCALLTYPE *Release )(
+    ULONG(STDMETHODCALLTYPE *Release)(
         IMMDeviceActivator * This);
 
     /* [helpstring][id] */
-    HRESULT ( STDMETHODCALLTYPE *Activate )(
+    HRESULT(STDMETHODCALLTYPE *Activate)(
         IMMDeviceActivator * This,
         /* [in] */
         __in  REFIID iid,

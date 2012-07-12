@@ -29,7 +29,7 @@
 #include "TsubtitlePGS.h"
 #include "TffPict.h"
 
-TsubtitlePGS::TsubtitlePGS(IffdshowBase *Ideci,REFERENCE_TIME Istart, REFERENCE_TIME Istop, TcompositionObject *IpCompositionObject,
+TsubtitlePGS::TsubtitlePGS(IffdshowBase *Ideci, REFERENCE_TIME Istart, REFERENCE_TIME Istop, TcompositionObject *IpCompositionObject,
                            TwindowDefinition *IpWindow,
                            TsubtitleDVDparent *Iparent):
     TsubtitleDVD(Istart, Iparent),
@@ -40,19 +40,19 @@ TsubtitlePGS::TsubtitlePGS(IffdshowBase *Ideci,REFERENCE_TIME Istart, REFERENCE_
     assert(m_pCompositionObject != NULL);
     m_pCompositionObject->m_pSubtitlePGS = this;
     updateTimestamps();
-    videoWidth=m_pCompositionObject->m_pVideoDescriptor->nVideoWidth;
-    videoHeight=m_pCompositionObject->m_pVideoDescriptor->nVideoHeight;
+    videoWidth = m_pCompositionObject->m_pVideoDescriptor->nVideoWidth;
+    videoHeight = m_pCompositionObject->m_pVideoDescriptor->nVideoHeight;
 }
 
 void TsubtitlePGS::updateTimestamps(void)
 {
-    start =_I64_MIN;
+    start = _I64_MIN;
     stop = _I64_MAX;
     if (m_pWindow->m_rtStart != INVALID_TIME) {
-        start=m_pWindow->m_rtStart;
+        start = m_pWindow->m_rtStart;
     }
     if (m_pWindow->m_rtStop != INVALID_TIME) {
-        stop=m_pWindow->m_rtStop;
+        stop = m_pWindow->m_rtStop;
     }
 }
 
@@ -91,28 +91,28 @@ void TsubtitlePGS::print(
                 m_pWindow->m_horizontal_position, m_pWindow->m_vertical_position,
                 rtString, rtString2);
 #endif
-        parent->rectOrig = Trect(0,0,prefs.dx,prefs.dy);
-        if (videoWidth==0) {
-            videoWidth=prefs.dx;
+        parent->rectOrig = Trect(0, 0, prefs.dx, prefs.dy);
+        if (videoWidth == 0) {
+            videoWidth = prefs.dx;
         }
-        if (videoHeight==0) {
-            videoHeight=prefs.dy;
+        if (videoHeight == 0) {
+            videoHeight = prefs.dy;
         }
 
-        int scale100=(int)(100*((float)prefs.dx/videoWidth));
-        scale100=(int)((float)scale100*prefs.subimgscale/256);
+        int scale100 = (int)(100 * ((float)prefs.dx / videoWidth));
+        scale100 = (int)((float)scale100 * prefs.subimgscale / 256);
 
         // size : original size, newSize : size after scaling
         CSize size = CSize(m_pWindow->m_width, m_pWindow->m_height);
 
         // Rectangle of our subtitles with the original size and top left position
-        CRect rc(CPoint(m_pWindow->m_horizontal_position,m_pWindow->m_vertical_position), size);
+        CRect rc(CPoint(m_pWindow->m_horizontal_position, m_pWindow->m_vertical_position), size);
 
         // Real size of out subtitles rectangle after it has been reduced (due to transparent aeras) = cropping rectangle
-        CRect rectReal(INT_MAX/2,INT_MAX/2,INT_MIN/2,INT_MIN/2);
+        CRect rectReal(INT_MAX / 2, INT_MAX / 2, INT_MIN / 2, INT_MIN / 2);
 
         // Allocate the planes with original size and position
-        TspuPlane *planes=parent->allocPlanes(rc, prefs.csp);
+        TspuPlane *planes = parent->allocPlanes(rc, prefs.csp);
 
         Tbitdata bitdata = Tbitdata(&m_pWindow->data[0][0], m_pWindow->data[0].size());
         uint32_t bTemp;
@@ -121,10 +121,10 @@ void TsubtitlePGS::print(
         int nCount = 0; // Repetition count of the pixel
         int pictureIndex = 0;
 
-        CPoint pt=CPoint(rc.left,rc.top);
+        CPoint pt = CPoint(rc.left, rc.top);
 
-        while (pt.y<rc.bottom) {
-            if (bitdata.bitsleft<=0) {
+        while (pt.y < rc.bottom) {
+            if (bitdata.bitsleft <= 0) {
                 pictureIndex++;
                 if (pictureIndex < RLE_ARRAY_SIZE && m_pWindow->data[pictureIndex].size() > 0) {
                     bitdata = Tbitdata(&m_pWindow->data[pictureIndex][0], m_pWindow->data[pictureIndex].size());
@@ -146,7 +146,7 @@ void TsubtitlePGS::print(
                             nPaletteIndex = 0;
                         }
                     } else {
-                        nCount = (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
+                        nCount = (bSwitch & 0x3F) << 8 | (SHORT)bitdata.readByte();
                         nPaletteIndex = 0;
                     }
                 } else {
@@ -154,14 +154,14 @@ void TsubtitlePGS::print(
                         nCount = bSwitch & 0x3F;
                         nPaletteIndex = bitdata.readByte();
                     } else {
-                        nCount = (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
+                        nCount = (bSwitch & 0x3F) << 8 | (SHORT)bitdata.readByte();
                         nPaletteIndex = bitdata.readByte();
                     }
                 }
             } // if bTemp !=0
 
             // 1 or more pixels to fill with the palette index
-            if (nCount>0) { // Fill this series of pixels on this line
+            if (nCount > 0) { // Fill this series of pixels on this line
                 bool nextline = false;
                 if (pt.x + nCount > rc.right) { // Beyond the line (error)
 #if DEBUG_PGS
@@ -172,14 +172,14 @@ void TsubtitlePGS::print(
                     nextline = true;
                 }
 
-                if (nPaletteIndex != 0xFF && nCount>0) { // 255 = Fully transparent
+                if (nPaletteIndex != 0xFF && nCount > 0) { // 255 = Fully transparent
                     uint32_t color = m_pCompositionObject->m_Colors[nPaletteIndex];
                     // There is bug somewhere (in the PGS parsing) : R and B are inversed. Probably due to memory read/write order
-                    unsigned char alpha = (color>>24)&0xFF;
-                    YUVcolorA c(RGB((color)&0xFF,
-                                    (color>>8)&0xFF,
-                                    (color>>16)&0xFF), alpha);
-                    drawPixels(pt,nCount,c,rc,rectReal,planes, true);
+                    unsigned char alpha = (color >> 24) & 0xFF;
+                    YUVcolorA c(RGB((color) & 0xFF,
+                                    (color >> 8) & 0xFF,
+                                    (color >> 16) & 0xFF), alpha);
+                    drawPixels(pt, nCount, c, rc, rectReal, planes, true);
                 }
                 pt.x += nCount;
 
@@ -227,26 +227,26 @@ void TsubtitlePGS::print(
         }
 
         // Now reposition the center of the real rectangle (rcclip) proportionnaly to original size % new size
-        CPoint centerPoint = CPoint(rc.left+rectReal.left+rectReal.Width()/2, rc.top+rectReal.top+rectReal.Height()/2);
+        CPoint centerPoint = CPoint(rc.left + rectReal.left + rectReal.Width() / 2, rc.top + rectReal.top + rectReal.Height() / 2);
 
         // Recalculate the coordinates proportionally
-        centerPoint.x=(int)((float)centerPoint.x*scale100/100);
-        centerPoint.y=(int)((float)centerPoint.y*scale100/100);
+        centerPoint.x = (int)((float)centerPoint.x * scale100 / 100);
+        centerPoint.y = (int)((float)centerPoint.y * scale100 / 100);
 
-        CSize newSize((int)((float)rectReal.Width()*scale100/100), (int)((float)rectReal.Height()*scale100/100));
-        CPoint newTopLeft(centerPoint.x-newSize.cx/2,centerPoint.y-newSize.cy/2);
+        CSize newSize((int)((float)rectReal.Width()*scale100 / 100), (int)((float)rectReal.Height()*scale100 / 100));
+        CPoint newTopLeft(centerPoint.x - newSize.cx / 2, centerPoint.y - newSize.cy / 2);
         /*if (newSize.cx > (long)prefs.dx) newSize.cx= (long)prefs.dx-1;
         if (newSize.cy > (long)prefs.dy) newSize.cy= (long)prefs.dy-1;*/
-        if (newTopLeft.x+newSize.cx > (long)prefs.dx) {
-            newTopLeft.x= (long)prefs.dx-newSize.cx;
+        if (newTopLeft.x + newSize.cx > (long)prefs.dx) {
+            newTopLeft.x = (long)prefs.dx - newSize.cx;
         }
-        if (newTopLeft.y+newSize.cy > (long)prefs.dy) {
-            newTopLeft.y= (long)prefs.dy-newSize.cy;
+        if (newTopLeft.y + newSize.cy > (long)prefs.dy) {
+            newTopLeft.y = (long)prefs.dy - newSize.cy;
         }
-        if (newTopLeft.x <0) {
+        if (newTopLeft.x < 0) {
             newTopLeft.x = 0;
         }
-        if (newTopLeft.y <0) {
+        if (newTopLeft.y < 0) {
             newTopLeft.y = 0;
         }
 
@@ -254,7 +254,7 @@ void TsubtitlePGS::print(
         CRect rcclip(newTopLeft, newSize);
 
         //DPRINTF(_l("TsubtitlePGS::print Build image original(left,right,top,bottom)=(%ld,%ld,%ld,%ld) resized(%ld,%ld,%ld,%ld)"),rectReal.left, rectReal.right, rectReal.top, rectReal.bottom, rcclip.left, rcclip.right, rcclip.top, rcclip.bottom);
-        m_pWindow->ownimage=createNewImage(planes, rc, rectReal,rcclip, prefs);
+        m_pWindow->ownimage = createNewImage(planes, rc, rectReal, rcclip, prefs);
     }
     //DPRINTF(_l("TsubtitlePGS::print Print image"));
     m_pWindow->ownimage->ownprint(prefs, dst, stride);

@@ -8,7 +8,7 @@ namespace libdca
 }
 
 class Tdll;
-class TaudioCodecLibDTS :public TaudioCodec
+class TaudioCodecLibDTS : public TaudioCodec
 {
 private:
     Tdll *dll;
@@ -17,7 +17,7 @@ private:
     void (*dca_free)(libdca::dca_state_t * state);
     int (*dca_syncinfo)(libdca::dca_state_t *state, uint8_t * buf, int * flags, int * sample_rate, int * bit_rate, int *frame_length);
     int (*dca_frame)(libdca::dca_state_t * state, uint8_t * buf, int * flags, libdca::level_t * level, libdca::sample_t bias);
-    void (*dca_dynrng)(libdca::dca_state_t * state, libdca::level_t (* call) (libdca::level_t, void *), void * data);
+    void (*dca_dynrng)(libdca::dca_state_t * state, libdca::level_t (* call)(libdca::level_t, void *), void * data);
     int (*dca_blocks_num)(libdca::dca_state_t * state);
     int (*dca_block)(libdca::dca_state_t * state);
     libdca::sample_t* (*dca_samples)(libdca::dca_state_t * state);
@@ -31,9 +31,9 @@ private:
     int drc;
 protected:
     virtual bool init(const CMediaType &mt);
-    virtual void getInputDescr1(char_t *buf,size_t buflen) const;
+    virtual void getInputDescr1(char_t *buf, size_t buflen) const;
 public:
-    TaudioCodecLibDTS(IffdshowBase *deci,IdecAudioSink *Isink);
+    TaudioCodecLibDTS(IffdshowBase *deci, IdecAudioSink *Isink);
     virtual ~TaudioCodecLibDTS();
     virtual int getType(void) const {
         return IDFF_MOVIE_LIBDTS;

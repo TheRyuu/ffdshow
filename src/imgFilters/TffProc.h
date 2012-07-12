@@ -11,17 +11,17 @@ struct TglobalSettingsDecVideo;
 class Tconvert;
 struct TcspInfo;
 class TffdshowDecVideoProc;
-class TffProcVideo :public CUnknown,
+class TffProcVideo : public CUnknown,
     public TffProcBase,
     public IffProc,
     public IprocVideoSink
 {
 public:
-    static CUnknown* WINAPI CreateInstance(LPUNKNOWN punk,HRESULT *phr);
-    STDMETHODIMP NonDelegatingQueryInterface(REFIID riid,void **ppv);
+    static CUnknown* WINAPI CreateInstance(LPUNKNOWN punk, HRESULT *phr);
+    STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void **ppv);
     DECLARE_IUNKNOWN
 
-    TffProcVideo(LPUNKNOWN punk,HRESULT *phr);
+    TffProcVideo(LPUNKNOWN punk, HRESULT *phr);
     virtual ~TffProcVideo();
 
     STDMETHODIMP setTempPreset(const char *tempPresetName) {
@@ -33,11 +33,11 @@ public:
     STDMETHODIMP loadPreset(const char *presetName) {
         return TffProcBase::loadPreset(presetName);
     }
-    STDMETHODIMP saveBytestreamConfig(void *buf,size_t len) {
-        return TffProcBase::saveBytestreamConfig(buf,len);
+    STDMETHODIMP saveBytestreamConfig(void *buf, size_t len) {
+        return TffProcBase::saveBytestreamConfig(buf, len);
     }
-    STDMETHODIMP loadBytestreamConfig(const void *buf,size_t len) {
-        return TffProcBase::loadBytestreamConfig(buf,len);
+    STDMETHODIMP loadBytestreamConfig(const void *buf, size_t len) {
+        return TffProcBase::loadBytestreamConfig(buf, len);
     }
     STDMETHODIMP config(HWND owner) {
         return TffProcBase::config(owner);
@@ -45,8 +45,8 @@ public:
     STDMETHODIMP getIffDecoder_(/*IffdshowBase*/void* *deciPtr) {
         return TffProcBase::getIffDecoder_(deciPtr);
     }
-    STDMETHODIMP putStringParam(const char *param,char sep) {
-        return TffProcBase::putStringParam(param,sep);
+    STDMETHODIMP putStringParam(const char *param, char sep) {
+        return TffProcBase::putStringParam(param, sep);
     }
     STDMETHODIMP getParamsEnum(IffdshowParamsEnum* *enumPtr) {
         return TffProcBase::getParamsEnum(enumPtr);
@@ -57,27 +57,27 @@ public:
     STDMETHODIMP saveActivePreset(const char *name) {
         return TffProcBase::saveActivePreset(name);
     }
-    STDMETHODIMP putParam(unsigned int paramID,int val) {
-        return TffProcBase::putParam(paramID,val);
+    STDMETHODIMP putParam(unsigned int paramID, int val) {
+        return TffProcBase::putParam(paramID, val);
     }
     STDMETHODIMP setBasePageSite(IPropertyPage *page) {
         return TffProcBase::setBasePageSite(page);
     }
 
-    STDMETHODIMP getNewSize(unsigned int srcDx,unsigned int srcDy,unsigned int *outDx,unsigned int *outDy);
-    STDMETHODIMP begin(unsigned int srcDx,unsigned int srcDy,int FpsNum,int FpsDen);
-    STDMETHODIMP process(unsigned int framenum,uint64_t incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],stride_t dstStride[4]) ;
-    STDMETHODIMP processTime(unsigned int framenum,int64_t ref_start,int64_t ref_stop,uint64_t incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],stride_t dstStride[4]);
+    STDMETHODIMP getNewSize(unsigned int srcDx, unsigned int srcDy, unsigned int *outDx, unsigned int *outDy);
+    STDMETHODIMP begin(unsigned int srcDx, unsigned int srcDy, int FpsNum, int FpsDen);
+    STDMETHODIMP process(unsigned int framenum, uint64_t incsp, const unsigned char *src[4], stride_t srcStride[4], int ro, uint64_t outcsp, unsigned char *dst[4], stride_t dstStride[4]) ;
+    STDMETHODIMP processTime(unsigned int framenum, int64_t ref_start, int64_t ref_stop, uint64_t incsp, const unsigned char *src[4], stride_t srcStride[4], int ro, uint64_t outcsp, unsigned char *dst[4], stride_t dstStride[4]);
     STDMETHODIMP end(void);
     STDMETHODIMP_(const TcspInfo*) getCspInfo(uint64_t csp);
     // IprocVideoSink
     STDMETHODIMP deliverProcessedSample(TffPict &pict);
 
-    HRESULT processPict(unsigned int framenum,TffPict &pict,uint64_t outcsp);
+    HRESULT processPict(unsigned int framenum, TffPict &pict, uint64_t outcsp);
 private:
     Trect srcR;
-    unsigned int srcDx,srcDy;
-    int fpsNum,fpsDen;
+    unsigned int srcDx, srcDy;
+    int fpsNum, fpsDen;
     TffdshowDecVideoProc *proc;
     const TcspInfo *outcspInfo;
     Tconvert *convert;

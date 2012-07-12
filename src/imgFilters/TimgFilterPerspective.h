@@ -5,19 +5,19 @@
 #include "TperspectiveSettings.h"
 #include "TcubicTable.h"
 
-DECLARE_FILTER(TimgFilterPerspective,public,TimgFilter)
+DECLARE_FILTER(TimgFilterPerspective, public, TimgFilter)
 private:
-static const int SUB_PIXEL_BITS=8;
-static const int SUB_PIXELS=1<<SUB_PIXEL_BITS;
-static const int COEFF_BITS=11;
+static const int SUB_PIXEL_BITS = 8;
+static const int SUB_PIXELS = 1 << SUB_PIXEL_BITS;
+static const int COEFF_BITS = 11;
 TperspectiveSettings old;
 double ref[4][2];
 int32_t (*pv)[2];
 int pvStride;
-void initPv(int W, int H,bool src,int border);
-void resampleNone  (uint8_t *dst, stride_t dstStride, const uint8_t *src, stride_t srcStride, int w, int h, int chromaX,int chromaY,unsigned char black);
-void resampleLinear(uint8_t *dst, stride_t dstStride, const uint8_t *src, stride_t srcStride, int w, int h, int chromaX,int chromaY,unsigned char black);
-void resampleCubic (uint8_t *dst, stride_t dstStride, const uint8_t *src, stride_t srcStride, int w, int h, int chromaX,int chromaY,unsigned char black);
+void initPv(int W, int H, bool src, int border);
+void resampleNone(uint8_t *dst, stride_t dstStride, const uint8_t *src, stride_t srcStride, int w, int h, int chromaX, int chromaY, unsigned char black);
+void resampleLinear(uint8_t *dst, stride_t dstStride, const uint8_t *src, stride_t srcStride, int w, int h, int chromaX, int chromaY, unsigned char black);
+void resampleCubic(uint8_t *dst, stride_t dstStride, const uint8_t *src, stride_t srcStride, int w, int h, int chromaX, int chromaY, unsigned char black);
 TcubicTable cubic;
 protected:
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
@@ -26,9 +26,9 @@ virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) c
 }
 virtual void onSizeChange(void);
 public:
-TimgFilterPerspective(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterPerspective(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 #endif

@@ -6,17 +6,17 @@
 struct Tsubtitle;
 struct TsubtitlesSettings;
 struct Tconfig;
-class Tsubtitles :public safe_bool<Tsubtitles>
+class Tsubtitles : public safe_bool<Tsubtitles>
 {
 private:
     Tsubtitle *oldsub;
     unsigned int current_sub;
-    REFERENCE_TIME nosub_range_start,nosub_range_end;
+    REFERENCE_TIME nosub_range_start, nosub_range_end;
 protected:
     IffdshowBase *deci;
     const Tconfig *ffcfg;
     Tsubreader *subs;
-    virtual void checkChange(const TsubtitlesSettings *cfg,bool *forceChange) {}
+    virtual void checkChange(const TsubtitlesSettings *cfg, bool *forceChange) {}
 public:
     int sub_format;
 
@@ -25,11 +25,11 @@ public:
     virtual ~Tsubtitles();
     virtual void done(void);
     bool boolean_test() const {
-        return subs!=NULL;
+        return subs != NULL;
     }
-    virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop, bool *forceChange=NULL);
+    virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop, bool *forceChange = NULL);
     void setModified(void) {
-        subs->IsProcessOverlapDone=false;
+        subs->IsProcessOverlapDone = false;
     };
     bool IsProcessOverlapDone(void) {
         return subs->IsProcessOverlapDone;

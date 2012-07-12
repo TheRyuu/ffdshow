@@ -22,7 +22,7 @@
 #include "IffdshowDec.h"
 #include "TpresetSettings.h"
 
-Tfilter::Tfilter(IffdshowBase *Ideci):deci(Ideci),deciD(Ideci)
+Tfilter::Tfilter(IffdshowBase *Ideci): deci(Ideci), deciD(Ideci)
 {
 }
 Tfilter::~Tfilter()
@@ -31,12 +31,14 @@ Tfilter::~Tfilter()
 
 void TfilterQueueItem::copyCfg(const Tpreset *cfgsrc)
 {
- if (owncfg.size())
-  memcpy(&owncfg[0],cfgsrc->indexGetSettings(index),owncfg.size());
+    if (owncfg.size()) {
+        memcpy(&owncfg[0], cfgsrc->indexGetSettings(index), owncfg.size());
+    }
 }
 
 void TfilterQueue::copyCfg(const Tpreset *cfg)
 {
- for (iterator f=begin();f!=end();f++)
-  f->copyCfg(cfg);
+    for (iterator f = begin(); f != end(); f++) {
+        f->copyCfg(cfg);
+    }
 }

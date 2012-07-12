@@ -25,11 +25,11 @@
 #include "IffdshowDecVideo.h"
 #include "dsutil.h"
 
-TaudioFilterOSD::TaudioFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent):
-    TaudioFilter(Ideci,Iparent),
-    lasttime(-CLOCKS_PER_SEC*10),registered(NULL),
+TaudioFilterOSD::TaudioFilterOSD(IffdshowBase *Ideci, Tfilters *Iparent):
+    TaudioFilter(Ideci, Iparent),
+    lasttime(-CLOCKS_PER_SEC * 10), registered(NULL),
     oldIs(-1),
-    TOSDprovider(deci,deciD),
+    TOSDprovider(deci, deciD),
     sfi(NULL)
 {
 }
@@ -42,52 +42,52 @@ TaudioFilterOSD::~TaudioFilterOSD()
     }
 }
 
-bool TaudioFilterOSD::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg0)
+bool TaudioFilterOSD::is(const TsampleFormat &fmt, const TfilterSettingsAudio *cfg0)
 {
-    const TOSDsettingsAudio *cfg=(const TOSDsettingsAudio*)cfg0;
+    const TOSDsettingsAudio *cfg = (const TOSDsettingsAudio*)cfg0;
     return !!cfg->is;
 }
 
-HRESULT TaudioFilterOSD::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
+HRESULT TaudioFilterOSD::process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples, size_t numsamples, const TfilterSettingsAudio *cfg0)
 {
-    const TOSDsettingsAudio *cfg=(const TOSDsettingsAudio*)cfg0;
-    tempcfg=cfg;
+    const TOSDsettingsAudio *cfg = (const TOSDsettingsAudio*)cfg0;
+    tempcfg = cfg;
 
-    clock_t curtime=-1;
-    if (!registered && (cfg->is && (oldIs!=cfg->is || (curtime=clock())-lasttime>CLOCKS_PER_SEC*10))) { //try every 10 seconds
-        if (curtime==-1) {
-            curtime=clock();
+    clock_t curtime = -1;
+    if (!registered && (cfg->is && (oldIs != cfg->is || (curtime = clock()) - lasttime > CLOCKS_PER_SEC * 10))) { //try every 10 seconds
+        if (curtime == -1) {
+            curtime = clock();
         }
-        lasttime=curtime;
-        IFilterGraph *graph=NULL;
-        if (deci->getGraph(&graph)==S_OK && graph) {
+        lasttime = curtime;
+        IFilterGraph *graph = NULL;
+        if (deci->getGraph(&graph) == S_OK && graph) {
             comptr<IffdshowDecVideo> deciV;
             if (!sfi) {
-                sfi=new TsearchInterfaceInGraph(graph, getGUID<IffdshowDecVideo>(), searchFilterInterface);
+                sfi = new TsearchInterfaceInGraph(graph, getGUID<IffdshowDecVideo>(), searchFilterInterface);
             }
-            if (sfi && sfi->getResult((IUnknown**)&deciV) && deciV && SUCCEEDED(deciV->registerOSDprovider(this,"Audio track:"))) {
-                registered=deciV;
+            if (sfi && sfi->getResult((IUnknown**)&deciV) && deciV && SUCCEEDED(deciV->registerOSDprovider(this, "Audio track:"))) {
+                registered = deciV;
             }
             if (sfi->waitSucceeded()) {
-                oldIs=cfg->is;
+                oldIs = cfg->is;
             }
         }
     }
-    return parent->deliverSamples(++it,fmt,samples,numsamples);
+    return parent->deliverSamples(++it, fmt, samples, numsamples);
 }
 
 void TaudioFilterOSD::unregister(void)
 {
     if (registered) {
-        IFilterGraph *graph=NULL;
-        if (deci->getGraph(&graph)==S_OK && graph) {
+        IFilterGraph *graph = NULL;
+        if (deci->getGraph(&graph) == S_OK && graph) {
             comptr<IffdshowDecVideo> deciV;
             if (sfi && sfi->getResult((IUnknown**)&deciV))
-                if (deciV==registered) {
+                if (deciV == registered) {
                     deciV->unregisterOSDprovider(this);
                 }
         }
-        registered=NULL;
+        registered = NULL;
     }
 }
 
@@ -96,7 +96,7 @@ void TaudioFilterOSD::onDisconnect(PIN_DIRECTION dir)
     unregister();
 }
 
-bool TaudioFilterOSD::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
+bool TaudioFilterOSD::getOutputFmt(TsampleFormat &fmt, const TfilterSettingsAudio *cfg)
 {
     return true;
 }

@@ -28,7 +28,7 @@
 #include "libavcodec/golomb.h"
 #include "ffdshow_constants.h"
 
-const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER) _l(COMPILER_X64) _l(", ") _l(UNICODE_BUILD) _l(COMPILER_INFO) _l(")");
+const char_t *FFDSHOW_VER = _l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER) _l(COMPILER_X64) _l(", ") _l(UNICODE_BUILD) _l(COMPILER_INFO) _l(")");
 #undef COMPILER
 #undef COMPILER_SSE
 #undef COMPILER_SSE2
@@ -52,14 +52,15 @@ REFERENCE_TIME_to_hhmmssmmm::REFERENCE_TIME_to_hhmmssmmm(REFERENCE_TIME reftime)
 
 const wchar_t* filterMode2regkey(int filtermode)
 {
-    if(filtermode & IDFF_FILTERMODE_VIDEODXVA)
+    if (filtermode & IDFF_FILTERMODE_VIDEODXVA) {
         return FFDSHOWDECVIDEODXVA;
-    else if (filtermode & IDFF_FILTERMODE_VFW)
+    } else if (filtermode & IDFF_FILTERMODE_VFW) {
         return FFDSHOWDECVIDEOVFW;
-    else if (filtermode & IDFF_FILTERMODE_VIDEORAW)
+    } else if (filtermode & IDFF_FILTERMODE_VIDEORAW) {
         return FFDSHOWDECVIDEORAW;
-    else
+    } else {
         return FFDSHOWDECVIDEO;
+    }
 }
 
 // override libavcodec code with slower but safer code.
@@ -77,7 +78,8 @@ static void get_bits_print_error()
     }
 }
 
-__forceinline  unsigned int _get_bits(GetBitContext *s, int n){
+__forceinline  unsigned int _get_bits(GetBitContext *s, int n)
+{
     if (s->index + n > s->size_in_bits) {
         get_bits_print_error();
         return 0;
@@ -92,14 +94,15 @@ __forceinline  unsigned int _get_bits(GetBitContext *s, int n){
     return tmp;
 }
 
-__forceinline unsigned int _get_bits1(GetBitContext *s, int default=0){
+__forceinline unsigned int _get_bits1(GetBitContext *s, int default=0)
+{
     unsigned int index = s->index;
     if (index >= s->size_in_bits) {
         get_bits_print_error();
         return default;
     }
 
-    uint8_t result = s->buffer[index>>3];
+    uint8_t result = s->buffer[index >> 3];
     result <<= index & 7;
     result >>= 8 - 1;
     index++;
@@ -117,7 +120,7 @@ __forceinline unsigned _get_ue_golomb(GetBitContext* gb)
 
     int n = 0;
     // count zeros (get log of number)
-    while (0 == get_bits1(gb,1)) ++n;
+    while (0 == get_bits1(gb, 1)) { ++n; }
 
     if (n == 0) {
         return 0;
@@ -133,163 +136,163 @@ __forceinline int _get_se_golomb(GetBitContext* gb)
     // odd - positive, even - negative
     // 0, 1, -1, 2, -2, ...
     return (v & 1)
-        ? (int)((v+1) >> 1)
-        : -(int)((v+1) >> 1);
+           ? (int)((v + 1) >> 1)
+           : -(int)((v + 1) >> 1);
 }
 
-char_t* strncatf(char_t *dst,size_t dstlen,const char_t *fmt,...)
+char_t* strncatf(char_t *dst, size_t dstlen, const char_t *fmt, ...)
 {
     char_t *pomS = (char_t *)_alloca(dstlen * sizeof(char_t));
     va_list va;
-    va_start(va,fmt);
+    va_start(va, fmt);
     vsnprintf_s(pomS, dstlen , _TRUNCATE, fmt, va);
     va_end(va);
     strncat_s(dst, dstlen, pomS, _TRUNCATE);
     return dst;
 }
 
-char_t* strncpyf(char_t *dst,size_t dstlen,const char_t *fmt,...)
+char_t* strncpyf(char_t *dst, size_t dstlen, const char_t *fmt, ...)
 {
     va_list va;
-    va_start(va,fmt);
+    va_start(va, fmt);
     vsnprintf_s(dst, dstlen, _TRUNCATE, fmt, va);
     va_end(va);
     return dst;
 }
 
-template<class tchar,class TlistItem> void strtok(const tchar *s,const tchar *delim,std::vector<TlistItem > &lst,bool add_empty,size_t max_parts)
+template<class tchar, class TlistItem> void strtok(const tchar *s, const tchar *delim, std::vector<TlistItem > &lst, bool add_empty, size_t max_parts)
 {
     typedef typename tchar_traits<tchar>::ffstring ffstring;
     lst.clear();
-    size_t delimLen=strlen(delim);
+    size_t delimLen = strlen(delim);
     const tchar *f;
-    while ((f=strstr(s,delim))!=NULL && lst.size()+1<max_parts) {
-        if (f-s || add_empty) {
-            lst.push_back(TlistItem(s,f-s));
+    while ((f = strstr(s, delim)) != NULL && lst.size() + 1 < max_parts) {
+        if (f - s || add_empty) {
+            lst.push_back(TlistItem(s, f - s));
         }
-        s=f+delimLen;
+        s = f + delimLen;
     }
     if (s[0] || add_empty) {
         lst.push_back(s);
     }
 }
-template<class tchar> void strtok(const tchar *s,const tchar *delim,ints &lst,bool add_empty,size_t max_parts)
+template<class tchar> void strtok(const tchar *s, const tchar *delim, ints &lst, bool add_empty, size_t max_parts)
 {
     typedef typename tchar_traits<tchar>::strings strings;
     strings listS;
-    strtok(s,delim,listS,add_empty,max_parts);
+    strtok(s, delim, listS, add_empty, max_parts);
     lst.clear();
-    for (typename strings::const_iterator i=listS.begin(); i!=listS.end(); i++) {
+    for (typename strings::const_iterator i = listS.begin(); i != listS.end(); i++) {
         tchar *end;
-        int x=strtol(i->c_str(),&end,10);
-        if (*end=='\0') {
+        int x = strtol(i->c_str(), &end, 10);
+        if (*end == '\0') {
             lst.push_back(x);
         }
     }
 }
-void mergetok(char_t *dst,size_t dstlen,const char_t *delim,const strings &list)
+void mergetok(char_t *dst, size_t dstlen, const char_t *delim, const strings &list)
 {
-    size_t pos=0,delimlen=strlen(delim);
-    for (strings::const_iterator l=list.begin(); pos+1<dstlen && l!=list.end(); l++) {
-        size_t strlenl=l->size(),n=std::min(dstlen-pos,strlenl);
-        memcpy(dst+pos,l->c_str(),n*sizeof(char_t));
-        pos+=n;
-        if (l!=list.end()-1) {
-            n=std::min(dstlen-pos,delimlen);
-            memcpy(dst+pos,delim,n*sizeof(char_t));
-            pos+=n;
+    size_t pos = 0, delimlen = strlen(delim);
+    for (strings::const_iterator l = list.begin(); pos + 1 < dstlen && l != list.end(); l++) {
+        size_t strlenl = l->size(), n = std::min(dstlen - pos, strlenl);
+        memcpy(dst + pos, l->c_str(), n * sizeof(char_t));
+        pos += n;
+        if (l != list.end() - 1) {
+            n = std::min(dstlen - pos, delimlen);
+            memcpy(dst + pos, delim, n * sizeof(char_t));
+            pos += n;
         }
     }
-    dst[pos]='\0';
+    dst[pos] = '\0';
 }
 
 //inspired by XBrowseForFolder by Hans Dietrich
-static int CALLBACK dlgGetDirFn(HWND hwnd,UINT uMsg,LPARAM lParam,LPARAM lpData)
+static int CALLBACK dlgGetDirFn(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
 {
     switch (uMsg) {
         case BFFM_INITIALIZED: {
             // remove context help button from dialog caption
-            LONG lStyle=GetWindowLong(hwnd,GWL_STYLE);
-            lStyle&=~DS_CONTEXTHELP;
-            SetWindowLong(hwnd,GWL_STYLE,lStyle);
-            lStyle=GetWindowLong(hwnd,GWL_EXSTYLE);
-            lStyle&=~WS_EX_CONTEXTHELP;
-            SetWindowLong(hwnd,GWL_EXSTYLE,lStyle);
+            LONG lStyle = GetWindowLong(hwnd, GWL_STYLE);
+            lStyle &= ~DS_CONTEXTHELP;
+            SetWindowLong(hwnd, GWL_STYLE, lStyle);
+            lStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            lStyle &= ~WS_EX_CONTEXTHELP;
+            SetWindowLong(hwnd, GWL_EXSTYLE, lStyle);
             // set initial directory
-            SendMessage(hwnd,BFFM_SETSELECTION,TRUE,lpData);
+            SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpData);
             break;
         }
     }
     return 0;
 }
-bool dlgGetDir(HWND owner,char_t *dir,const char_t *capt)
+bool dlgGetDir(HWND owner, char_t *dir, const char_t *capt)
 {
-    bool ret=false;
+    bool ret = false;
     IMalloc *g_pMalloc;
-    CoGetMalloc(1,&g_pMalloc);
-    LPTSTR lpBuffer=(LPTSTR)g_pMalloc->Alloc(MAX_PATH*sizeof(char_t));
-    ff_strncpy(lpBuffer,dir,MAX_PATH);
+    CoGetMalloc(1, &g_pMalloc);
+    LPTSTR lpBuffer = (LPTSTR)g_pMalloc->Alloc(MAX_PATH * sizeof(char_t));
+    ff_strncpy(lpBuffer, dir, MAX_PATH);
     BROWSEINFO bi;
-    bi.hwndOwner=owner;
-    bi.pidlRoot=NULL;
-    bi.pszDisplayName=lpBuffer;
-    bi.lpszTitle=capt;
-    bi.ulFlags=BIF_RETURNONLYFSDIRS/*|BIF_NEWDIALOGSTYLE*/;
-    bi.lpfn=dlgGetDirFn;
-    bi.lParam=LPARAM(dir);
-    LPITEMIDLIST pidlBrowse=SHBrowseForFolder(&bi);
+    bi.hwndOwner = owner;
+    bi.pidlRoot = NULL;
+    bi.pszDisplayName = lpBuffer;
+    bi.lpszTitle = capt;
+    bi.ulFlags = BIF_RETURNONLYFSDIRS/*|BIF_NEWDIALOGSTYLE*/;
+    bi.lpfn = dlgGetDirFn;
+    bi.lParam = LPARAM(dir);
+    LPITEMIDLIST pidlBrowse = SHBrowseForFolder(&bi);
     if (pidlBrowse) {
-        SHGetPathFromIDList(pidlBrowse,lpBuffer);
+        SHGetPathFromIDList(pidlBrowse, lpBuffer);
         g_pMalloc->Free((void*)pidlBrowse);
         if (lpBuffer[0]) {
-            strcpy(dir,lpBuffer);
-            ret=true;
+            strcpy(dir, lpBuffer);
+            ret = true;
         }
     }
     g_pMalloc->Free(lpBuffer);
     return ret;
 }
 
-void findFiles(const char_t *mask,strings &lst,bool fullpaths)
+void findFiles(const char_t *mask, strings &lst, bool fullpaths)
 {
     lst.clear();
-    char_t dsk[MAX_PATH],dir[MAX_PATH];
-    _splitpath_s(mask,dsk,MAX_PATH,dir,MAX_PATH,NULL,0,NULL,0);
+    char_t dsk[MAX_PATH], dir[MAX_PATH];
+    _splitpath_s(mask, dsk, MAX_PATH, dir, MAX_PATH, NULL, 0, NULL, 0);
     WIN32_FIND_DATA ff;
-    HANDLE hFind=FindFirstFile(mask,&ff);
-    BOOL bOk=(hFind!=(HANDLE)-1);
+    HANDLE hFind = FindFirstFile(mask, &ff);
+    BOOL bOk = (hFind != (HANDLE) - 1);
     while (bOk) {
         if (fullpaths) {
             char_t flnm[MAX_PATH];
-            _makepath_s(flnm,MAX_PATH,dsk,dir,ff.cFileName,NULL);
+            _makepath_s(flnm, MAX_PATH, dsk, dir, ff.cFileName, NULL);
             lst.push_back(flnm);
         } else {
             lst.push_back(ff.cFileName);
         }
-        bOk=FindNextFile(hFind,&ff);
+        bOk = FindNextFile(hFind, &ff);
     }
-    if (hFind!=(HANDLE)-1) {
+    if (hFind != (HANDLE) - 1) {
         FindClose(hFind);
     }
 }
 bool fileexists(const char_t *flnm)
 {
-    return GetFileAttributes(flnm)!=INVALID_FILE_ATTRIBUTES;
+    return GetFileAttributes(flnm) != INVALID_FILE_ATTRIBUTES;
 }
 bool directoryexists(const char_t *dir)
 {
-    DWORD r=GetFileAttributes(dir);
-    return r!=INVALID_FILE_ATTRIBUTES && (r&FILE_ATTRIBUTE_DIRECTORY)!=0;
+    DWORD r = GetFileAttributes(dir);
+    return r != INVALID_FILE_ATTRIBUTES && (r & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-void extractfilepath(const char_t *flnm,char_t *path)
+void extractfilepath(const char_t *flnm, char_t *path)
 {
-    char_t dsk[MAX_PATH],dir[MAX_PATH];
-    _splitpath_s(flnm,dsk,MAX_PATH,dir,MAX_PATH,NULL,0,NULL,0);
-    _makepath_s(path,MAX_PATH,dsk,dir,NULL,NULL);
+    char_t dsk[MAX_PATH], dir[MAX_PATH];
+    _splitpath_s(flnm, dsk, MAX_PATH, dir, MAX_PATH, NULL, 0, NULL, 0);
+    _makepath_s(path, MAX_PATH, dsk, dir, NULL, NULL);
 }
 
-void extractfilepath(const char_t *flnm,ffstring &path)
+void extractfilepath(const char_t *flnm, ffstring &path)
 {
     path = _l("");
     if (!flnm || !flnm[0]) {
@@ -303,18 +306,18 @@ void extractfilepath(const char_t *flnm,ffstring &path)
     char_t *dir     = (char_t *)_alloca(len * sizeof(char_t));
     char_t *pathbuf = (char_t *)_alloca(len * sizeof(char_t));
     _splitpath_s(flnm, dsk, len, dir, len, NULL, 0, NULL, 0);
-    _makepath_s(pathbuf, len, dsk,dir,NULL,NULL);
+    _makepath_s(pathbuf, len, dsk, dir, NULL, NULL);
     path = pathbuf;
 }
 
-void extractfilename(const char_t *flnm,char_t *nameext)
+void extractfilename(const char_t *flnm, char_t *nameext)
 {
-    char_t nm[MAX_PATH],ext[MAX_PATH];
-    _splitpath_s(flnm,NULL,0,NULL,0,nm,MAX_PATH,ext,MAX_PATH);
-    _makepath_s(nameext,MAX_PATH,NULL,NULL,nm,ext);
+    char_t nm[MAX_PATH], ext[MAX_PATH];
+    _splitpath_s(flnm, NULL, 0, NULL, 0, nm, MAX_PATH, ext, MAX_PATH);
+    _makepath_s(nameext, MAX_PATH, NULL, NULL, nm, ext);
 }
 
-void extractfilename(const char_t *flnm,ffstring &nameext)
+void extractfilename(const char_t *flnm, ffstring &nameext)
 {
     nameext = _l("");
     if (!flnm || !flnm[0]) {
@@ -332,11 +335,11 @@ void extractfilename(const char_t *flnm,ffstring &nameext)
     nameext = nameextbuf;
 }
 
-void extractfilenameWOext(const char_t *flnm,char_t *name)
+void extractfilenameWOext(const char_t *flnm, char_t *name)
 {
     char_t nm[MAX_PATH];
-    _splitpath_s(flnm,NULL,0,NULL,0,nm,MAX_PATH,NULL,0);
-    _makepath_s(name,MAX_PATH,NULL,NULL,nm,NULL);
+    _splitpath_s(flnm, NULL, 0, NULL, 0, nm, MAX_PATH, NULL, 0);
+    _makepath_s(name, MAX_PATH, NULL, NULL, nm, NULL);
 }
 
 void extractfilenameWOext(const char_t *flnm, ffstring &name)
@@ -351,31 +354,31 @@ void extractfilenameWOext(const char_t *flnm, ffstring &name)
     }
     char_t *nm      = (char_t *)_alloca(len * sizeof(char_t));
     char_t *namebuf = (char_t *)_alloca(len * sizeof(char_t));
-    _splitpath_s(flnm, NULL, 0, NULL,0, nm, len, NULL, 0);
+    _splitpath_s(flnm, NULL, 0, NULL, 0, nm, len, NULL, 0);
     _makepath_s(namebuf, len, NULL, NULL, nm, NULL);
     name = namebuf;
 }
 
-void extractfileext(const char_t *flnm,char_t *ext)
+void extractfileext(const char_t *flnm, char_t *ext)
 {
-    _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,ext,MAX_PATH);
+    _splitpath_s(flnm, NULL, 0, NULL, 0, NULL, 0, ext, MAX_PATH);
     if (ext[0]) {
-        memmove(ext,ext+1,strlen(ext)*sizeof(char_t));
+        memmove(ext, ext + 1, strlen(ext)*sizeof(char_t));
     }
 }
 
-void extractfileext(const char_t *flnm,ffstring &ext)
+void extractfileext(const char_t *flnm, ffstring &ext)
 {
     ext = _l("");
     if (!flnm || !flnm[0]) {
         return;
     }
-    size_t len=strlen(flnm) + 1;
+    size_t len = strlen(flnm) + 1;
     if (len > 4096) {
         return;
     }
     char_t *extbuf = (char_t *)_alloca(len * sizeof(char_t));
-    _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,extbuf,len);
+    _splitpath_s(flnm, NULL, 0, NULL, 0, NULL, 0, extbuf, len);
     if (extbuf[0]) {
         ext = extbuf + 1;
     }
@@ -403,9 +406,9 @@ void changepathext(const char_t *flnm, const char_t *ext, ffstring &path)
 FILETIME fileLastWriteTime(const char_t *flnm)
 {
     WIN32_FIND_DATA fd;
-    HANDLE h=FindFirstFile(flnm,&fd);
-    if (h==INVALID_HANDLE_VALUE) {
-        FILETIME ft= {0,0};
+    HANDLE h = FindFirstFile(flnm, &fd);
+    if (h == INVALID_HANDLE_VALUE) {
+        FILETIME ft = {0, 0};
         return ft;
     } else {
         FindClose(h);
@@ -413,94 +416,94 @@ FILETIME fileLastWriteTime(const char_t *flnm)
     }
 }
 
-int nCopyAnsiToWideChar(WCHAR *pWCStr,PCTSTR pAnsiIn,int cchAnsi)
+int nCopyAnsiToWideChar(WCHAR *pWCStr, PCTSTR pAnsiIn, int cchAnsi)
 {
     if (!cchAnsi) {
         cchAnsi = lstrlen(pAnsiIn) + 1;
     }
 #ifdef UNICODE
-    return (int)strlen(ff_strncpy(pWCStr, pAnsiIn,cchAnsi)) + 1;
+    return (int)strlen(ff_strncpy(pWCStr, pAnsiIn, cchAnsi)) + 1;
 #else
     return MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, pAnsiIn, cchAnsi, pWCStr, cchAnsi) + 1;
 #endif
 }
 
-char *unicode16toAnsi(const WCHAR *data16,int data16len,char *data8)
+char *unicode16toAnsi(const WCHAR *data16, int data16len, char *data8)
 {
-    int data8len=WideCharToMultiByte(CP_ACP,0,data16,data16len,NULL,0,NULL,NULL);
+    int data8len = WideCharToMultiByte(CP_ACP, 0, data16, data16len, NULL, 0, NULL, NULL);
     if (!data8) {
-        data8=(char*)calloc(data8len+1,1);
+        data8 = (char*)calloc(data8len + 1, 1);
     }
     BOOL wasDefChar;
-    WideCharToMultiByte(CP_ACP,0,data16,data16len,data8,data8len,NULL,&wasDefChar);
+    WideCharToMultiByte(CP_ACP, 0, data16, data16len, data8, data8len, NULL, &wasDefChar);
     return data8;
 }
 
-char *utf8toAnsi(const char *data,int datalen,char *data8)
+char *utf8toAnsi(const char *data, int datalen, char *data8)
 {
-    int data16len=MultiByteToWideChar(CP_UTF8,0,data,datalen,NULL,0);
-    LPWSTR data16=(LPWSTR)_alloca(data16len*2);
-    MultiByteToWideChar(CP_UTF8,0,data,-1,data16,data16len);
-    return unicode16toAnsi(data16,data16len,data8);
+    int data16len = MultiByteToWideChar(CP_UTF8, 0, data, datalen, NULL, 0);
+    LPWSTR data16 = (LPWSTR)_alloca(data16len * 2);
+    MultiByteToWideChar(CP_UTF8, 0, data, -1, data16, data16len);
+    return unicode16toAnsi(data16, data16len, data8);
 }
-wchar_t *utf8toUnicode(const char *data,int datalen,wchar_t *data16)
+wchar_t *utf8toUnicode(const char *data, int datalen, wchar_t *data16)
 {
-    int data16len=MultiByteToWideChar(CP_UTF8,0,data,datalen,NULL,0);
+    int data16len = MultiByteToWideChar(CP_UTF8, 0, data, datalen, NULL, 0);
     if (!data16) {
-        data16=(wchar_t*)calloc(data16len+1,1);
+        data16 = (wchar_t*)calloc(data16len + 1, 1);
     }
-    MultiByteToWideChar(CP_UTF8,0,data,-1,data16,data16len);
+    MultiByteToWideChar(CP_UTF8, 0, data, -1, data16, data16len);
     return data16;
 }
 
-bool dlgGetFile(bool save,HWND owner,const char_t *capt,const char_t *filter,const char_t *defext,char_t *flnm,const char_t *initdir,DWORD flags,DWORD *filterIndex)
+bool dlgGetFile(bool save, HWND owner, const char_t *capt, const char_t *filter, const char_t *defext, char_t *flnm, const char_t *initdir, DWORD flags, DWORD *filterIndex)
 {
     OPENFILENAME ofn;
-    memset(&ofn,0,sizeof(ofn));
-    ofn.lStructSize    =sizeof(OPENFILENAME);
-    ofn.hwndOwner      =owner;
-    ofn.lpstrFilter    =filter;
+    memset(&ofn, 0, sizeof(ofn));
+    ofn.lStructSize    = sizeof(OPENFILENAME);
+    ofn.hwndOwner      = owner;
+    ofn.lpstrFilter    = filter;
     if (filterIndex) {
-        ofn.nFilterIndex=*filterIndex;
+        ofn.nFilterIndex = *filterIndex;
     }
-    ofn.lpstrInitialDir=initdir;
-    ofn.lpstrFile      =flnm;
-    ofn.lpstrTitle     =capt;
-    ofn.lpstrDefExt    =defext;
-    ofn.nMaxFile       =MAX_PATH;
-    ofn.Flags          =flags|(save?OFN_PATHMUSTEXIST|OFN_OVERWRITEPROMPT:OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST)|OFN_ENABLESIZING|OFN_HIDEREADONLY;
-    bool ret=(save?GetSaveFileName(&ofn):GetOpenFileName(&ofn))?true:false;
+    ofn.lpstrInitialDir = initdir;
+    ofn.lpstrFile      = flnm;
+    ofn.lpstrTitle     = capt;
+    ofn.lpstrDefExt    = defext;
+    ofn.nMaxFile       = MAX_PATH;
+    ofn.Flags          = flags | (save ? OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT : OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST) | OFN_ENABLESIZING | OFN_HIDEREADONLY;
+    bool ret = (save ? GetSaveFileName(&ofn) : GetOpenFileName(&ofn)) ? true : false;
     if (ret && filterIndex) {
-        *filterIndex=ofn.nFilterIndex;
+        *filterIndex = ofn.nFilterIndex;
     }
     return ret;
 }
-bool dlgOpenFiles(HWND owner,const char_t *capt,const char_t *filter,const char_t *defext,strings &files,const char_t *initdir,DWORD flags)
+bool dlgOpenFiles(HWND owner, const char_t *capt, const char_t *filter, const char_t *defext, strings &files, const char_t *initdir, DWORD flags)
 {
     OPENFILENAME ofn;
-    memset(&ofn,0,sizeof(ofn));
-    ofn.lStructSize    =sizeof(OPENFILENAME);
-    ofn.hwndOwner      =owner;
-    ofn.lpstrFilter    =filter;
-    ofn.lpstrInitialDir=initdir;
-    char_t *flnm=(char_t*)malloc(65536*sizeof(char_t));
+    memset(&ofn, 0, sizeof(ofn));
+    ofn.lStructSize    = sizeof(OPENFILENAME);
+    ofn.hwndOwner      = owner;
+    ofn.lpstrFilter    = filter;
+    ofn.lpstrInitialDir = initdir;
+    char_t *flnm = (char_t*)malloc(65536 * sizeof(char_t));
     if (files.empty()) {
-        flnm[0]='\0';
+        flnm[0] = '\0';
     } else {
         ff_strncpy(flnm, files[0].c_str(), 65536);
     }
-    ofn.lpstrFile      =LPTSTR(flnm);
-    ofn.lpstrTitle     =capt;
-    ofn.lpstrDefExt    =defext;
-    ofn.nMaxFile       =MAX_PATH;
-    ofn.Flags          =flags|OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST|OFN_ENABLESIZING|OFN_HIDEREADONLY|OFN_ALLOWMULTISELECT|OFN_EXPLORER;
-    BOOL ret=GetOpenFileName(&ofn);
+    ofn.lpstrFile      = LPTSTR(flnm);
+    ofn.lpstrTitle     = capt;
+    ofn.lpstrDefExt    = defext;
+    ofn.nMaxFile       = MAX_PATH;
+    ofn.Flags          = flags | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+    BOOL ret = GetOpenFileName(&ofn);
     if (ret) {
-        const char_t *dir=ofn.lpstrFile;
+        const char_t *dir = ofn.lpstrFile;
         if (directoryexists(dir))
-            while ((ofn.lpstrFile=strchr(ofn.lpstrFile,'\0')+1)!=NULL && ofn.lpstrFile[0]) {
+            while ((ofn.lpstrFile = strchr(ofn.lpstrFile, '\0') + 1) != NULL && ofn.lpstrFile[0]) {
                 char_t flnm1[MAX_PATH];
-                _makepath_s(flnm1,MAX_PATH,NULL,dir,ofn.lpstrFile,NULL);
+                _makepath_s(flnm1, MAX_PATH, NULL, dir, ofn.lpstrFile, NULL);
                 files.push_back(flnm1);
             }
         else {
@@ -517,25 +520,25 @@ bool dlgOpenFiles(HWND owner,const char_t *capt,const char_t *filter,const char_
 // copied from ffmpeg
 // (c) Michael Niedermayer
 
-static const unsigned char ff_sqrt_tab[128]= {
+static const unsigned char ff_sqrt_tab[128] = {
     0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5,
     5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
     8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-    9, 9, 9, 9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11
+    9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11
 };
 unsigned int ff_sqrt(unsigned int a)
 {
-    if (a<128) {
+    if (a < 128) {
         return ff_sqrt_tab[a];
     }
 
-    unsigned int ret=0;
-    unsigned int ret_sq=0;
-    for(int s=15; s>=0; s--) {
-        unsigned int b= ret_sq + (1<<(s*2)) + (ret<<s)*2;
-        if (b<=a) {
-            ret_sq=b;
-            ret+= 1<<s;
+    unsigned int ret = 0;
+    unsigned int ret_sq = 0;
+    for (int s = 15; s >= 0; s--) {
+        unsigned int b = ret_sq + (1 << (s * 2)) + (ret << s) * 2;
+        if (b <= a) {
+            ret_sq = b;
+            ret += 1 << s;
         }
     }
     return ret;
@@ -543,8 +546,8 @@ unsigned int ff_sqrt(unsigned int a)
 
 int64_t lavc_gcd(int64_t a, int64_t b)
 {
-    if(b) {
-        return lavc_gcd(b, a%b);
+    if (b) {
+        return lavc_gcd(b, a % b);
     } else {
         return a;
     }
@@ -603,54 +606,54 @@ int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t ma
 
         return exact;
     */
-    AVRational a0= {0,1}, a1= {1,0};
-    int sign= (nom<0) ^ (den<0);
-    int64_t gcd= lavc_gcd(ff_abs(nom), ff_abs(den));
+    AVRational a0 = {0, 1}, a1 = {1, 0};
+    int sign = (nom < 0) ^ (den < 0);
+    int64_t gcd = lavc_gcd(ff_abs(nom), ff_abs(den));
 
-    if(gcd) {
-        nom = ff_abs(nom)/gcd;
-        den = ff_abs(den)/gcd;
+    if (gcd) {
+        nom = ff_abs(nom) / gcd;
+        den = ff_abs(den) / gcd;
     }
-    if(nom<=max && den<=max) {
-        a1.num=(int)nom;
-        a1.den=(int)den;//= (AVRational){nom, den};
-        den=0;
+    if (nom <= max && den <= max) {
+        a1.num = (int)nom;
+        a1.den = (int)den; //= (AVRational){nom, den};
+        den = 0;
     }
 
-    while(den) {
+    while (den) {
         int64_t x       = nom / den;
-        int64_t next_den= nom - den*x;
-        int64_t a2n= x*a1.num + a0.num;
-        int64_t a2d= x*a1.den + a0.den;
+        int64_t next_den = nom - den * x;
+        int64_t a2n = x * a1.num + a0.num;
+        int64_t a2d = x * a1.den + a0.den;
 
-        if(a2n > max || a2d > max) {
+        if (a2n > max || a2d > max) {
             break;
         }
 
-        a0= a1;
-        a1.num=(int)a2n;
-        a1.den=(int)a2d;//= (AVRational){a2n, a2d};
-        nom= den;
-        den= next_den;
+        a0 = a1;
+        a1.num = (int)a2n;
+        a1.den = (int)a2d; //= (AVRational){a2n, a2d};
+        nom = den;
+        den = next_den;
     }
     assert(lavc_gcd(a1.num, a1.den) == 1U);
 
     *dst_nom = sign ? -a1.num : a1.num;
     *dst_den = a1.den;
 
-    return den==0;
+    return den == 0;
 
 }
 
-static const uint8_t ff_log2_tab[256]= {
-    0,0,1,1,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
-    5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
-    6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
-    6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
-    7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-    7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-    7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-    7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7
+static const uint8_t ff_log2_tab[256] = {
+    0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+    6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
 };
 
 int av_log2(unsigned int v)
@@ -671,54 +674,54 @@ int av_log2(unsigned int v)
     return n;
 }
 
-static int sync_video_packet(const uint8_t *videobuf_code,size_t len)
+static int sync_video_packet(const uint8_t *videobuf_code, size_t len)
 {
-    if (len<4) {
+    if (len < 4) {
         return 0;
     }
-    int skipped=0;
-    while(1) {
-        if(videobuf_code[0]==0 &&
-                videobuf_code[1]==0 &&
-                videobuf_code[2]==1) {
+    int skipped = 0;
+    while (1) {
+        if (videobuf_code[0] == 0 &&
+                videobuf_code[1] == 0 &&
+                videobuf_code[2] == 1) {
             break;    // synced
         }
         // shift buffer, drop first byte
         ++skipped;
         videobuf_code++;
         len--;
-        if (len==0) {
+        if (len == 0) {
             return 0;    //EOF
         }
     }
     //if(skipped) DPRINTF("videobuf: %d bytes skipped  (next: 0x1%02X)\n",skipped,videobuf_code[3]);
-    return 0x100|videobuf_code[3];
+    return 0x100 | videobuf_code[3];
 }
 
-bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,TffPictBase &pict,bool *isH264)
+bool decodeMPEGsequenceHeader(bool mpeg2, const unsigned char *hdr, size_t len, TffPictBase &pict, bool *isH264)
 {
-    int sync=sync_video_packet(hdr,len);
-    if((sync&~0x60) == 0x107 && sync != 0x107) { // H.264
-        *isH264=true;
-        return decodeH264SPS(hdr+2,len,pict);
+    int sync = sync_video_packet(hdr, len);
+    if ((sync&~0x60) == 0x107 && sync != 0x107) { // H.264
+        *isH264 = true;
+        return decodeH264SPS(hdr + 2, len, pict);
     }
-    *isH264=false;
+    *isH264 = false;
 
-    len*=8;
-    if (!hdr || len<12+12+4) {
+    len *= 8;
+    if (!hdr || len < 12 + 12 + 4) {
         return false;
     }
     GetBitContext gb;
     init_get_bits(&gb, hdr, (int)len);
-    int id=get_bits(&gb,32);
-    if (id!=0x01b3) {
+    int id = get_bits(&gb, 32);
+    if (id != 0x01b3) {
         return false;
     }
-    int dx=get_bits(&gb,12),dy=get_bits(&gb,12);
-    pict.setSize(dx,dy);
-    int aspect_ratio_info=get_bits(&gb, 4);
-    if(!mpeg2) {
-        static const float mpeg1_aspect[16]= {
+    int dx = get_bits(&gb, 12), dy = get_bits(&gb, 12);
+    pict.setSize(dx, dy);
+    int aspect_ratio_info = get_bits(&gb, 4);
+    if (!mpeg2) {
+        static const float mpeg1_aspect[16] = {
             0.0000f,
             1.0000f,
             0.6735f,
@@ -738,11 +741,11 @@ bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,Tff
             1.1575f,
             1.2015f,
         };
-        float aspect1=mpeg1_aspect[aspect_ratio_info];
-        if(aspect1!=0.0) {
-            pict.setSar(Rational(1/aspect1,16384));
+        float aspect1 = mpeg1_aspect[aspect_ratio_info];
+        if (aspect1 != 0.0) {
+            pict.setSar(Rational(1 / aspect1, 16384));
         } else {
-            pict.setSar(Rational(1,1));
+            pict.setSar(Rational(1, 1));
         }
     } else {
         /*
@@ -757,19 +760,19 @@ bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,Tff
         */
         switch (aspect_ratio_info) {
             case 1:
-                pict.setSar(Rational(1,1));
+                pict.setSar(Rational(1, 1));
                 break;
             case 2:
-                pict.setDar(Rational(4,3));
+                pict.setDar(Rational(4, 3));
                 break;
             case 3:
-                pict.setDar(Rational(16,9));
+                pict.setDar(Rational(16, 9));
                 break;
             case 4:
-                pict.setDar(Rational(221,100));
+                pict.setDar(Rational(221, 100));
                 break;
             default:
-                pict.setSar(Rational(1,1));
+                pict.setSar(Rational(1, 1));
                 break;
         }
         /*
@@ -785,14 +788,15 @@ static inline bool decode_hrd_parameters(GetBitContext &gb)
 {
     int cpb_count, i;
     cpb_count = get_ue_golomb(&gb) + 1;
-    
+
     // max allowed is 32
-    if (cpb_count > 32)
+    if (cpb_count > 32) {
         return false;
+    }
 
     get_bits(&gb, 4); /* bit_rate_scale */
     get_bits(&gb, 4); /* cpb_size_scale */
-    for(i=0; i<cpb_count; i++) {
+    for (i = 0; i < cpb_count; i++) {
         get_ue_golomb_long(&gb); /* bit_rate_value_minus1 */
         get_ue_golomb_long(&gb); /* cpb_size_value_minus1 */
         get_bits1(&gb);     /* cbr_flag */
@@ -808,40 +812,40 @@ static inline bool decode_hrd_parameters(GetBitContext &gb)
 static void decode_scaling_list(GetBitContext &gb, uint8_t *factors, int size/*, const uint8_t *default_list*/)
 {
     int i, last = 8, next = 8;
-    static const uint8_t zigzag_scan8x8[64]= {
-        0+0*8, 1+0*8, 0+1*8, 0+2*8,
-        1+1*8, 2+0*8, 3+0*8, 2+1*8,
-        1+2*8, 0+3*8, 0+4*8, 1+3*8,
-        2+2*8, 3+1*8, 4+0*8, 5+0*8,
-        4+1*8, 3+2*8, 2+3*8, 1+4*8,
-        0+5*8, 0+6*8, 1+5*8, 2+4*8,
-        3+3*8, 4+2*8, 5+1*8, 6+0*8,
-        7+0*8, 6+1*8, 5+2*8, 4+3*8,
-        3+4*8, 2+5*8, 1+6*8, 0+7*8,
-        1+7*8, 2+6*8, 3+5*8, 4+4*8,
-        5+3*8, 6+2*8, 7+1*8, 7+2*8,
-        6+3*8, 5+4*8, 4+5*8, 3+6*8,
-        2+7*8, 3+7*8, 4+6*8, 5+5*8,
-        6+4*8, 7+3*8, 7+4*8, 6+5*8,
-        5+6*8, 4+7*8, 5+7*8, 6+6*8,
-        7+5*8, 7+6*8, 6+7*8, 7+7*8,
+    static const uint8_t zigzag_scan8x8[64] = {
+        0 + 0 * 8, 1 + 0 * 8, 0 + 1 * 8, 0 + 2 * 8,
+        1 + 1 * 8, 2 + 0 * 8, 3 + 0 * 8, 2 + 1 * 8,
+        1 + 2 * 8, 0 + 3 * 8, 0 + 4 * 8, 1 + 3 * 8,
+        2 + 2 * 8, 3 + 1 * 8, 4 + 0 * 8, 5 + 0 * 8,
+        4 + 1 * 8, 3 + 2 * 8, 2 + 3 * 8, 1 + 4 * 8,
+        0 + 5 * 8, 0 + 6 * 8, 1 + 5 * 8, 2 + 4 * 8,
+        3 + 3 * 8, 4 + 2 * 8, 5 + 1 * 8, 6 + 0 * 8,
+        7 + 0 * 8, 6 + 1 * 8, 5 + 2 * 8, 4 + 3 * 8,
+        3 + 4 * 8, 2 + 5 * 8, 1 + 6 * 8, 0 + 7 * 8,
+        1 + 7 * 8, 2 + 6 * 8, 3 + 5 * 8, 4 + 4 * 8,
+        5 + 3 * 8, 6 + 2 * 8, 7 + 1 * 8, 7 + 2 * 8,
+        6 + 3 * 8, 5 + 4 * 8, 4 + 5 * 8, 3 + 6 * 8,
+        2 + 7 * 8, 3 + 7 * 8, 4 + 6 * 8, 5 + 5 * 8,
+        6 + 4 * 8, 7 + 3 * 8, 7 + 4 * 8, 6 + 5 * 8,
+        5 + 6 * 8, 4 + 7 * 8, 5 + 7 * 8, 6 + 6 * 8,
+        7 + 5 * 8, 7 + 6 * 8, 6 + 7 * 8, 7 + 7 * 8,
     };
-    static const uint8_t zigzag_scan[16]= {
-        0+0*4, 1+0*4, 0+1*4, 0+2*4,
-        1+1*4, 2+0*4, 3+0*4, 2+1*4,
-        1+2*4, 0+3*4, 1+3*4, 2+2*4,
-        3+1*4, 3+2*4, 2+3*4, 3+3*4,
+    static const uint8_t zigzag_scan[16] = {
+        0 + 0 * 4, 1 + 0 * 4, 0 + 1 * 4, 0 + 2 * 4,
+        1 + 1 * 4, 2 + 0 * 4, 3 + 0 * 4, 2 + 1 * 4,
+        1 + 2 * 4, 0 + 3 * 4, 1 + 3 * 4, 2 + 2 * 4,
+        3 + 1 * 4, 3 + 2 * 4, 2 + 3 * 4, 3 + 3 * 4,
     };
 
     const uint8_t *scan = size == 16 ? zigzag_scan : zigzag_scan8x8;
-    if(!get_bits1(&gb)) { /* matrix not written, we use the default one */
+    if (!get_bits1(&gb)) { /* matrix not written, we use the default one */
         ;    //memcpy(factors, default_list, size*sizeof(uint8_t));
     } else
-        for(i=0; i<size; i++) {
-            if(next) {
+        for (i = 0; i < size; i++) {
+            if (next) {
                 next = (last + get_se_golomb(&gb)) & 0xff;
             }
-            if(!i && !next) { /* matrix not written, we use the default one */
+            if (!i && !next) { /* matrix not written, we use the default one */
                 ;//memcpy(factors, default_list, size*sizeof(uint8_t));
                 break;
             }
@@ -849,17 +853,17 @@ static void decode_scaling_list(GetBitContext &gb, uint8_t *factors, int size/*,
         }
 }
 
-bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_SPS* sps)
+bool decodeH264SPS(const unsigned char *hdr, size_t len, TffPictBase &pict, H264_SPS* sps)
 {
     int i, sps_id;
-    int sync=sync_video_packet(hdr,len);
-    if((sync&~0x60) == 0x107 && sync != 0x107) { // H.264
-        hdr+=2;
-        len-=2;
+    int sync = sync_video_packet(hdr, len);
+    if ((sync&~0x60) == 0x107 && sync != 0x107) { // H.264
+        hdr += 2;
+        len -= 2;
     }
 
-    static const int NAL_SPS=7;
-    if ((hdr[2]&0x1F)!=NAL_SPS) {
+    static const int NAL_SPS = 7;
+    if ((hdr[2] & 0x1F) != NAL_SPS) {
         return false;
     }
 
@@ -875,44 +879,44 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
     int sps_size = (hdr[0] << 8) + hdr[1];
     int count003 = 0;
     sps_size = std::min(sps_size, int(len) - 3);
-    for (int i = 0 ; i+2 < sps_size ; i++) {
-        if (src[i] == 0 && src[i+1] == 0 && src[i+2] == 3) {
+    for (int i = 0 ; i + 2 < sps_size ; i++) {
+        if (src[i] == 0 && src[i + 1] == 0 && src[i + 2] == 3) {
             if (!buf.get()) {
-                buf.reset((uint8_t*)calloc(1, sps_size -1 + 16));
-                memcpy(buf.get(), src, i+2);
+                buf.reset((uint8_t*)calloc(1, sps_size - 1 + 16));
+                memcpy(buf.get(), src, i + 2);
             }
-            memcpy(buf.get()+i+2-count003, src+i+3, sps_size-i-4);
+            memcpy(buf.get() + i + 2 - count003, src + i + 3, sps_size - i - 4);
             count003++;
         }
     }
 
     GetBitContext gb;
-    init_get_bits(&gb,buf.get() ? buf.get() : hdr + 3,(int)(sps_size - count003)*8);
+    init_get_bits(&gb, buf.get() ? buf.get() : hdr + 3, (int)(sps_size - count003) * 8);
 
     // SPS
-    sps->profile_idc= get_bits(&gb, 8);
+    sps->profile_idc = get_bits(&gb, 8);
     get_bits1(&gb);   //constraint_set0_flag
     get_bits1(&gb);   //constraint_set1_flag
     get_bits1(&gb);   //constraint_set2_flag
     get_bits1(&gb);   //constraint_set3_flag
     get_bits(&gb, 4); // reserved
-    sps->level_idc= get_bits(&gb, 8);
-    sps_id= get_ue_golomb_31(&gb);
+    sps->level_idc = get_bits(&gb, 8);
+    sps_id = get_ue_golomb_31(&gb);
 
-    if(sps->profile_idc >= 100) { //high profile
+    if (sps->profile_idc >= 100) { //high profile
         sps->chroma_format_idc = get_ue_golomb_31(&gb);
-        if(sps->chroma_format_idc == 3) { //chroma_format_idc
+        if (sps->chroma_format_idc == 3) { //chroma_format_idc
             get_bits1(&gb);    //residual_color_transform_flag
         }
         sps->bit_depth_luma = get_ue_golomb(&gb) + 8;  //bit_depth_luma_minus8
         sps->bit_depth_chroma = get_ue_golomb(&gb) + 8;  //bit_depth_chroma_minus8
         pict.csp = FF_CSP_UNSUPPORTED;
-        if (sps->chroma_format_idc == 1 && sps->bit_depth_luma == 8) pict.csp = FF_CSP_420P;
-        if (sps->chroma_format_idc == 1 && sps->bit_depth_luma == 10) pict.csp = FF_CSP_420P10;
-        if (sps->chroma_format_idc == 2 && sps->bit_depth_luma == 8) pict.csp = FF_CSP_422P;
-        if (sps->chroma_format_idc == 2 && sps->bit_depth_luma == 10) pict.csp = FF_CSP_422P10;
-        if (sps->chroma_format_idc == 3 && sps->bit_depth_luma == 8) pict.csp = FF_CSP_444P;
-        if (sps->chroma_format_idc == 3 && sps->bit_depth_luma == 10) pict.csp = FF_CSP_444P10;
+        if (sps->chroma_format_idc == 1 && sps->bit_depth_luma == 8) { pict.csp = FF_CSP_420P; }
+        if (sps->chroma_format_idc == 1 && sps->bit_depth_luma == 10) { pict.csp = FF_CSP_420P10; }
+        if (sps->chroma_format_idc == 2 && sps->bit_depth_luma == 8) { pict.csp = FF_CSP_422P; }
+        if (sps->chroma_format_idc == 2 && sps->bit_depth_luma == 10) { pict.csp = FF_CSP_422P10; }
+        if (sps->chroma_format_idc == 3 && sps->bit_depth_luma == 8) { pict.csp = FF_CSP_444P; }
+        if (sps->chroma_format_idc == 3 && sps->bit_depth_luma == 10) { pict.csp = FF_CSP_444P10; }
         if (sps->bit_depth_chroma != sps->bit_depth_luma) {
             pict.csp = FF_CSP_UNSUPPORTED;
         }
@@ -921,28 +925,28 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
         }
 
         sps->transform_bypass = get_bits1(&gb);
-        if(get_bits1(&gb)) { //seq_scaling_matrix_present_flag
+        if (get_bits1(&gb)) { //seq_scaling_matrix_present_flag
             //decode_scaling_matrices(h, sps, NULL, 1, sps->scaling_matrix4, sps->scaling_matrix8);
-            if(get_bits1(&gb)) {
+            if (get_bits1(&gb)) {
                 sps->scaling_matrix_present = 1;
                 uint8_t scaling_matrix4[6][16];
                 uint8_t scaling_matrix8[6][64];
-                decode_scaling_list(gb,scaling_matrix4[0],16); // Intra, Y
-                decode_scaling_list(gb,scaling_matrix4[1],16); // Intra, Cr
-                decode_scaling_list(gb,scaling_matrix4[2],16); // Intra, Cb
-                decode_scaling_list(gb,scaling_matrix4[3],16); // Inter, Y
-                decode_scaling_list(gb,scaling_matrix4[4],16); // Inter, Cr
-                decode_scaling_list(gb,scaling_matrix4[5],16); // Inter, Cb
-                if(/*is_sps*/1) {
-                    decode_scaling_list(gb,scaling_matrix8[0],64);  // Intra, Y
-                    if(sps->chroma_format_idc == 3){
-                        decode_scaling_list(gb,scaling_matrix8[1],64);  // Intra, Cr
-                        decode_scaling_list(gb,scaling_matrix8[2],64);  // Intra, Cb
+                decode_scaling_list(gb, scaling_matrix4[0], 16); // Intra, Y
+                decode_scaling_list(gb, scaling_matrix4[1], 16); // Intra, Cr
+                decode_scaling_list(gb, scaling_matrix4[2], 16); // Intra, Cb
+                decode_scaling_list(gb, scaling_matrix4[3], 16); // Inter, Y
+                decode_scaling_list(gb, scaling_matrix4[4], 16); // Inter, Cr
+                decode_scaling_list(gb, scaling_matrix4[5], 16); // Inter, Cb
+                if (/*is_sps*/1) {
+                    decode_scaling_list(gb, scaling_matrix8[0], 64); // Intra, Y
+                    if (sps->chroma_format_idc == 3) {
+                        decode_scaling_list(gb, scaling_matrix8[1], 64); // Intra, Cr
+                        decode_scaling_list(gb, scaling_matrix8[2], 64); // Intra, Cb
                     }
-                    decode_scaling_list(gb,scaling_matrix8[3],64);  // Inter, Y
-                    if(sps->chroma_format_idc == 3){
-                        decode_scaling_list(gb,scaling_matrix8[4],64);  // Intra, Cr
-                        decode_scaling_list(gb,scaling_matrix8[5],64);  // Intra, Cb
+                    decode_scaling_list(gb, scaling_matrix8[3], 64); // Inter, Y
+                    if (sps->chroma_format_idc == 3) {
+                        decode_scaling_list(gb, scaling_matrix8[4], 64); // Intra, Cr
+                        decode_scaling_list(gb, scaling_matrix8[5], 64); // Intra, Cb
                     }
                 }
             }
@@ -954,80 +958,80 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
         sps->scaling_matrix_present = 0;
     }
 
-    sps->log2_max_frame_num= get_ue_golomb(&gb) + 4;
-    sps->poc_type= get_ue_golomb_31(&gb);
+    sps->log2_max_frame_num = get_ue_golomb(&gb) + 4;
+    sps->poc_type = get_ue_golomb_31(&gb);
 
-    if(sps->poc_type == 0) { //FIXME #define
-        sps->log2_max_poc_lsb= get_ue_golomb(&gb) + 4;
-    } else if(sps->poc_type == 1) { //FIXME #define
-        sps->delta_pic_order_always_zero_flag= get_bits1(&gb);
-        sps->offset_for_non_ref_pic= get_se_golomb(&gb);
-        sps->offset_for_top_to_bottom_field= get_se_golomb(&gb);
-        sps->poc_cycle_length= get_ue_golomb(&gb);
+    if (sps->poc_type == 0) { //FIXME #define
+        sps->log2_max_poc_lsb = get_ue_golomb(&gb) + 4;
+    } else if (sps->poc_type == 1) { //FIXME #define
+        sps->delta_pic_order_always_zero_flag = get_bits1(&gb);
+        sps->offset_for_non_ref_pic = get_se_golomb(&gb);
+        sps->offset_for_top_to_bottom_field = get_se_golomb(&gb);
+        sps->poc_cycle_length = get_ue_golomb(&gb);
 
-        if(sps->poc_cycle_length >= sizeof(sps->offset_for_ref_frame) / sizeof(sps->offset_for_ref_frame[0])) {
+        if (sps->poc_cycle_length >= sizeof(sps->offset_for_ref_frame) / sizeof(sps->offset_for_ref_frame[0])) {
             DPRINTF(_l("poc_cycle_length overflow %u\n"), sps->poc_cycle_length);
             return false;
         }
 
-        for(i=0; i<sps->poc_cycle_length; i++) {
-            sps->offset_for_ref_frame[i]= short(get_se_golomb(&gb));
+        for (i = 0; i < sps->poc_cycle_length; i++) {
+            sps->offset_for_ref_frame[i] = short(get_se_golomb(&gb));
         }
-    } else if(sps->poc_type != 2) {
+    } else if (sps->poc_type != 2) {
         DPRINTF(_l("illegal POC type %d\n"), sps->poc_type);
         return false;
     }
 
-    static const int MAX_PICTURE_COUNT=32;
-    sps->ref_frame_count= get_ue_golomb_31(&gb);
-    if(sps->ref_frame_count > MAX_PICTURE_COUNT-2) {
+    static const int MAX_PICTURE_COUNT = 32;
+    sps->ref_frame_count = get_ue_golomb_31(&gb);
+    if (sps->ref_frame_count > MAX_PICTURE_COUNT - 2) {
         DPRINTF(_l("too many reference frames\n"));
     }
-    sps->gaps_in_frame_num_allowed_flag= get_bits1(&gb);
-    sps->mb_width= get_ue_golomb(&gb) + 1;
-    sps->mb_height= get_ue_golomb(&gb) + 1;
-    if((unsigned)sps->mb_width >= INT_MAX/16 || (unsigned)sps->mb_height >= INT_MAX/16 /*||
+    sps->gaps_in_frame_num_allowed_flag = get_bits1(&gb);
+    sps->mb_width = get_ue_golomb(&gb) + 1;
+    sps->mb_height = get_ue_golomb(&gb) + 1;
+    if ((unsigned)sps->mb_width >= INT_MAX / 16 || (unsigned)sps->mb_height >= INT_MAX / 16 /*||
        av_image_check_size(16*sps->mb_width, 16*sps->mb_height, 0, NULL)*/) {
         return false;
     }
 
-    sps->frame_mbs_only_flag= get_bits1(&gb);
-    if(!sps->frame_mbs_only_flag) {
-        sps->mb_aff= get_bits1(&gb);
+    sps->frame_mbs_only_flag = get_bits1(&gb);
+    if (!sps->frame_mbs_only_flag) {
+        sps->mb_aff = get_bits1(&gb);
     } else {
-        sps->mb_aff= 0;
+        sps->mb_aff = 0;
     }
 
-    sps->direct_8x8_inference_flag= get_bits1(&gb);
+    sps->direct_8x8_inference_flag = get_bits1(&gb);
 
-    sps->crop= get_bits1(&gb);
-    if(sps->crop) {
+    sps->crop = get_bits1(&gb);
+    if (sps->crop) {
         sps->crop_left  = get_ue_golomb(&gb);
         sps->crop_right = get_ue_golomb(&gb);
         sps->crop_top   = get_ue_golomb(&gb);
-        sps->crop_bottom= get_ue_golomb(&gb);
-        if(sps->crop_left || sps->crop_top) {
+        sps->crop_bottom = get_ue_golomb(&gb);
+        if (sps->crop_left || sps->crop_top) {
             //DPRINTF(_l("insane cropping not completely supported, this could look slightly wrong ...\n"));
         }
     } else {
         sps->crop_left = sps->crop_right = sps->crop_top = sps->crop_bottom = 0;
     }
 
-    sps->vui_parameters_present_flag= get_bits1(&gb);
-    if( sps->vui_parameters_present_flag ) {
+    sps->vui_parameters_present_flag = get_bits1(&gb);
+    if (sps->vui_parameters_present_flag) {
         int aspect_ratio_info_present_flag, aspect_ratio_idc;
         int nal_hrd_parameters_present_flag, vcl_hrd_parameters_present_flag;
 
-        aspect_ratio_info_present_flag= get_bits1(&gb);
+        aspect_ratio_info_present_flag = get_bits1(&gb);
 
-        if( aspect_ratio_info_present_flag ) {
-            aspect_ratio_idc= get_bits(&gb, 8);
-            static const int EXTENDED_SAR=255;
-            if( aspect_ratio_idc == EXTENDED_SAR ) {
-                sps->sar.num= get_bits(&gb, 16);
-                sps->sar.den= get_bits(&gb, 16);
-            } else if(aspect_ratio_idc < 14) {
-                static const AVRational pixel_aspect[14]= {
+        if (aspect_ratio_info_present_flag) {
+            aspect_ratio_idc = get_bits(&gb, 8);
+            static const int EXTENDED_SAR = 255;
+            if (aspect_ratio_idc == EXTENDED_SAR) {
+                sps->sar.num = get_bits(&gb, 16);
+                sps->sar.den = get_bits(&gb, 16);
+            } else if (aspect_ratio_idc < 14) {
+                static const AVRational pixel_aspect[14] = {
                     {0, 1},
                     {1, 1},
                     {12, 11},
@@ -1041,7 +1045,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
                     {18, 11},
                     {15, 11},
                     {64, 33},
-                    {160,99},
+                    {160, 99},
                 };
                 sps->sar.den =  pixel_aspect[aspect_ratio_idc].den;
                 sps->sar.num =  pixel_aspect[aspect_ratio_idc].num;
@@ -1053,52 +1057,54 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
                 pict.setSar(Rational(sps->sar.num, sps->sar.den));
             }
         } else {
-            sps->sar.num= sps->sar.den= 0;
+            sps->sar.num = sps->sar.den = 0;
         }
 
-        if(get_bits1(&gb)) {     /* overscan_info_present_flag */
+        if (get_bits1(&gb)) {    /* overscan_info_present_flag */
             get_bits1(&gb);      /* overscan_appropriate_flag */
         }
 
-        if(get_bits1(&gb)) {     /* video_signal_type_present_flag */
+        if (get_bits1(&gb)) {    /* video_signal_type_present_flag */
             get_bits(&gb, 3);    /* video_format */
             get_bits1(&gb);      /* video_full_range_flag */
-            if(get_bits1(&gb)) { /* colour_description_present_flag */
+            if (get_bits1(&gb)) { /* colour_description_present_flag */
                 get_bits(&gb, 8); /* colour_primaries */
                 get_bits(&gb, 8); /* transfer_characteristics */
                 sps->colorspace = get_bits(&gb, 8); /* matrix_coefficients */
             }
         }
 
-        if(get_bits1(&gb)) {     /* chroma_location_info_present_flag */
+        if (get_bits1(&gb)) {    /* chroma_location_info_present_flag */
             get_ue_golomb(&gb);  /* chroma_sample_location_type_top_field */
             get_ue_golomb(&gb);  /* chroma_sample_location_type_bottom_field */
         }
 
         sps->timing_info_present_flag = get_bits1(&gb);
-        if(sps->timing_info_present_flag) {
+        if (sps->timing_info_present_flag) {
             sps->num_units_in_tick = get_bits_long(&gb, 32);
             sps->time_scale = get_bits_long(&gb, 32);
             sps->fixed_frame_rate_flag = get_bits1(&gb);
         }
 
         nal_hrd_parameters_present_flag = get_bits1(&gb);
-        if(nal_hrd_parameters_present_flag) {
-            if (!decode_hrd_parameters(gb))
+        if (nal_hrd_parameters_present_flag) {
+            if (!decode_hrd_parameters(gb)) {
                 return false;
+            }
         }
         vcl_hrd_parameters_present_flag = get_bits1(&gb);
-        if(vcl_hrd_parameters_present_flag) {
-            if (!decode_hrd_parameters(gb))
+        if (vcl_hrd_parameters_present_flag) {
+            if (!decode_hrd_parameters(gb)) {
                 return false;
+            }
         }
-        if(nal_hrd_parameters_present_flag || vcl_hrd_parameters_present_flag) {
+        if (nal_hrd_parameters_present_flag || vcl_hrd_parameters_present_flag) {
             get_bits1(&gb);    /* low_delay_hrd_flag */
         }
         get_bits1(&gb);         /* pic_struct_present_flag */
 
         sps->bitstream_restriction_flag = get_bits1(&gb);
-        if(sps->bitstream_restriction_flag) {
+        if (sps->bitstream_restriction_flag) {
             get_bits1(&gb);     /* motion_vectors_over_pic_boundaries_flag */
             get_ue_golomb(&gb); /* max_bytes_per_pic_denom */
             get_ue_golomb(&gb); /* max_bits_per_mb_denom */
@@ -1109,12 +1115,13 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
         }
     }
 
-    if(!sps->sar.den)
-        sps->sar.den= 1;
+    if (!sps->sar.den) {
+        sps->sar.den = 1;
+    }
 
     return true;
 }
-void* memsetd(void *dest,uint32_t c,size_t bytes)
+void* memsetd(void *dest, uint32_t c, size_t bytes)
 {
 #if !defined(__GNUC__) && !defined(WIN64)
     __asm {
@@ -1127,59 +1134,59 @@ void* memsetd(void *dest,uint32_t c,size_t bytes)
     }
     return dest;
 #else
-    uint32_t *dest2=(uint32_t*)dest;
-    for (; bytes>=sizeof(uint32_t); dest2++,bytes-=sizeof(uint32_t)) {
-        *dest2=c;
+    uint32_t *dest2 = (uint32_t*)dest;
+    for (; bytes >= sizeof(uint32_t); dest2++, bytes -= sizeof(uint32_t)) {
+        *dest2 = c;
     }
     return dest2;
 #endif
 }
 
-void saveFrame(unsigned int num,const unsigned char *buf,size_t len)
+void saveFrame(unsigned int num, const unsigned char *buf, size_t len)
 {
     char_t flnm[MAX_PATH];
-    tsprintf(flnm,_l("c:\\ffdshow_frame_%06u.raw"),num);
-    FILE *f=fopen(flnm,_l("wb"));
-    fwrite(buf,1,len,f);
+    tsprintf(flnm, _l("c:\\ffdshow_frame_%06u.raw"), num);
+    FILE *f = fopen(flnm, _l("wb"));
+    fwrite(buf, 1, len, f);
     fclose(f);
 }
-void dumpBytes(const char_t *flnm,const unsigned char *buf,size_t len)
+void dumpBytes(const char_t *flnm, const unsigned char *buf, size_t len)
 {
-    FILE *f=fopen(flnm,_l("wb"));
-    fwrite(buf,1,len,f);
+    FILE *f = fopen(flnm, _l("wb"));
+    fwrite(buf, 1, len, f);
     fflush(f);
     fclose(f);
 }
 
 char_t *readTextFile(const char_t *filename)
 {
-    int b_error=0;
+    int b_error = 0;
     char_t *buf;
-    TstreamFile fh(filename,false,false);
+    TstreamFile fh(filename, false, false);
     if (!fh) {
         return NULL;
     }
-    b_error|=fh.seek( 0, SEEK_END )<0;
+    b_error |= fh.seek(0, SEEK_END) < 0;
     long i_size;
-    b_error|=(i_size=fh.tell())<=0;
-    b_error|=fh.seek( 0, SEEK_SET )<0;
+    b_error |= (i_size = fh.tell()) <= 0;
+    b_error |= fh.seek(0, SEEK_SET) < 0;
     if (b_error) {
         return NULL;
     }
-    buf=(char_t*)malloc((i_size+2)*sizeof(char_t));
-    if (buf==NULL) {
+    buf = (char_t*)malloc((i_size + 2) * sizeof(char_t));
+    if (buf == NULL) {
         return NULL;
     }
-    char_t *buf1=buf;
-    while (fh.fgets(buf1,i_size)) {
-        buf1=strchr(buf1,'\0');
+    char_t *buf1 = buf;
+    while (fh.fgets(buf1, i_size)) {
+        buf1 = strchr(buf1, '\0');
     }
 
     //b_error|=fh.read(buf,1,i_size)!=i_size;
-    if (buf[i_size-1]!='\n') {
-        buf[i_size++]='\n';
+    if (buf[i_size - 1] != '\n') {
+        buf[i_size++] = '\n';
     }
-    buf[i_size]=0;
+    buf[i_size] = 0;
     //fclose(fh);
     if (b_error) {
         free(buf);
@@ -1188,15 +1195,15 @@ char_t *readTextFile(const char_t *filename)
     return buf;
 }
 
-static BOOL CALLBACK getChildWindowsEnum(HWND h,LPARAM lst)
+static BOOL CALLBACK getChildWindowsEnum(HWND h, LPARAM lst)
 {
     ((THWNDs*)lst)->push_back(h);
     return TRUE;
 }
-void getChildWindows(HWND h,THWNDs &lst)
+void getChildWindows(HWND h, THWNDs &lst)
 {
     lst.clear();
-    EnumChildWindows(h,getChildWindowsEnum,LPARAM(&lst));
+    EnumChildWindows(h, getChildWindowsEnum, LPARAM(&lst));
 }
 
 void randomize(void)
@@ -1207,10 +1214,10 @@ void randomize(void)
 struct MPEG4context {
     int vo_type;
     int aspect_ratio_info;
-    int aspected_width,aspected_height;
+    int aspected_width, aspected_height;
 };
 
-static const uint16_t pixel_aspect[16][2]= {
+static const uint16_t pixel_aspect[16][2] = {
     {0, 0},
     {1, 1},
     {12, 11},
@@ -1237,7 +1244,7 @@ static int decode_vol_header(MPEG4context *s, GetBitContext *gb)
 
     /* vol header */
     skip_bits(gb, 1); /* random access */
-    s->vo_type= get_bits(gb, 8);
+    s->vo_type = get_bits(gb, 8);
     if (get_bits1(gb) != 0) { /* is_ol_id */
         vo_ver_id = get_bits(gb, 4); /* vo_ver_id */
         skip_bits(gb, 3); /* vo_priority */
@@ -1245,45 +1252,45 @@ static int decode_vol_header(MPEG4context *s, GetBitContext *gb)
         vo_ver_id = 1;
     }
     //printf("vo type:%d\n",s->vo_type);
-    s->aspect_ratio_info= get_bits(gb, 4);
-    if(s->aspect_ratio_info == FF_ASPECT_EXTENDED) {
+    s->aspect_ratio_info = get_bits(gb, 4);
+    if (s->aspect_ratio_info == FF_ASPECT_EXTENDED) {
         s->aspected_width = get_bits(gb, 8); // par_width
         s->aspected_height = get_bits(gb, 8); // par_height
     } else {
         s->aspected_width = pixel_aspect[s->aspect_ratio_info][0];
-        s->aspected_height= pixel_aspect[s->aspect_ratio_info][1];
+        s->aspected_height = pixel_aspect[s->aspect_ratio_info][1];
     }
     return 0;
 }
 
-bool decodeMPEG4pictureHeader(const unsigned char *hdr,size_t len,TffPictBase &pict)
+bool decodeMPEG4pictureHeader(const unsigned char *hdr, size_t len, TffPictBase &pict)
 {
     int startcode, v;
     GetBitContext gb;
     MPEG4context s;
-    init_get_bits(&gb, hdr, (int)len*8);
+    init_get_bits(&gb, hdr, (int)len * 8);
 
     /* search next start code */
     align_get_bits(&gb);
     startcode = 0xff;
-    for(;;) {
+    for (;;) {
         v = get_bits(&gb, 8);
         startcode = ((startcode << 8) | v) & 0xffffffff;
 
-        if(get_bits_count(&gb) >= gb.size_in_bits) {
+        if (get_bits_count(&gb) >= gb.size_in_bits) {
             return false; //end of stream
         }
 
-        if((startcode&0xFFFFFF00) != 0x100) {
+        if ((startcode & 0xFFFFFF00) != 0x100) {
             continue;    //no startcode
         }
 
-        switch(startcode) {
+        switch (startcode) {
             case 0x120:
-                    if(decode_vol_header(&s, &gb) < 0) {
+                    if (decode_vol_header(&s, &gb) < 0) {
                         return false;
                     } else {
-                        pict.setSar(Rational(s.aspected_width,s.aspected_height));
+                        pict.setSar(Rational(s.aspected_width, s.aspected_height));
                         return true;
                     }
                 /*
@@ -1310,7 +1317,7 @@ bool decodeMPEG4pictureHeader(const unsigned char *hdr,size_t len,TffPictBase &p
 }
 
 // encoding
-const char_t *encQuantTypes[]= {
+const char_t *encQuantTypes[] = {
     _l("H.263"),
     _l("MPEG"),
     _l("Modulated"),
@@ -1319,46 +1326,46 @@ const char_t *encQuantTypes[]= {
     _l("JVT")
 };
 
-const Taspect displayAspects[]= {
-	{_l("1:1")   , 1.0f,1.0f},
-	{_l("4:3")   , 4.0f,3.0f},
-	{_l("16:9")  ,16.0f,9.0f},
-	{_l("2.21:1"),2.21f,1.0f},
-	{NULL,0,0},
+const Taspect displayAspects[] = {
+    {_l("1:1")   , 1.0f, 1.0f},
+    {_l("4:3")   , 4.0f, 3.0f},
+    {_l("16:9")  , 16.0f, 9.0f},
+    {_l("2.21:1"), 2.21f, 1.0f},
+    {NULL, 0, 0},
 };
-const Taspect sampleAspects[]= {
-	{_l("Square")   , 1.0f, 1.0f},
-	{_l("4:3 PAL")  ,12.0f,11.0f},
-	{_l("4:3 NTSC") ,10.0f,11.0f},
-	{_l("16:9 PAL") ,16.0f,11.0f},
-	{_l("16:9 NTSC"),40.0f,33.0f},
-	{NULL,0,0},
+const Taspect sampleAspects[] = {
+    {_l("Square")   , 1.0f, 1.0f},
+    {_l("4:3 PAL")  , 12.0f, 11.0f},
+    {_l("4:3 NTSC") , 10.0f, 11.0f},
+    {_l("16:9 PAL") , 16.0f, 11.0f},
+    {_l("16:9 NTSC"), 40.0f, 33.0f},
+    {NULL, 0, 0},
 };
 
 //======================== YUVcolor ==========================
 YUVcolor::YUVcolor(COLORREF rgb)
 {
-    r=GetRValue(rgb),g=GetGValue(rgb),b=GetBValue(rgb);
-    Y=(uint8_t)((((uint16_t) ((0.299)   * (1L << 8) + 0.5)) * r +
-                 ((uint16_t) ((0.587)   * (1L << 8) + 0.5)) * g +
-                 ((uint16_t) ((0.114)   * (1L << 8) + 0.5)) * b) >> 8);
-    U=(int8_t)((-((int16_t)  ((0.16874) * (1L << 8) + 0.5)) * r -
-                ((int16_t)  ((0.33126) * (1L << 8) + 0.5)) * g +
-                ((int16_t)  ((0.50000) * (1L << 8) + 0.5)) * b) >> 9);// + 128;
-    V=(int8_t)(( ((int16_t)  ((0.50000) * (1L << 8) + 0.5)) * r -
-                 ((int16_t)  ((0.41869) * (1L << 8) + 0.5)) * g -
-                 ((int16_t)  ((0.08131) * (1L << 8) + 0.5)) * b) >> 9);// + 128;
+    r = GetRValue(rgb), g = GetGValue(rgb), b = GetBValue(rgb);
+    Y = (uint8_t)((((uint16_t)((0.299)   * (1L << 8) + 0.5)) * r +
+                   ((uint16_t)((0.587)   * (1L << 8) + 0.5)) * g +
+                   ((uint16_t)((0.114)   * (1L << 8) + 0.5)) * b) >> 8);
+    U = (int8_t)((-((int16_t)((0.16874) * (1L << 8) + 0.5)) * r -
+                  ((int16_t)((0.33126) * (1L << 8) + 0.5)) * g +
+                  ((int16_t)((0.50000) * (1L << 8) + 0.5)) * b) >> 9);  // + 128;
+    V = (int8_t)((((int16_t)((0.50000) * (1L << 8) + 0.5)) * r -
+                  ((int16_t)((0.41869) * (1L << 8) + 0.5)) * g -
+                  ((int16_t)((0.08131) * (1L << 8) + 0.5)) * b) >> 9);  // + 128;
 }
 
 //======================== YUVcolorA ==========================
 YUVcolorA::YUVcolorA()
 {
-    Y=0;
-    U=V=128;
-    A=256;
-    r=g=b=0;
-    m_rgb=0;
-    m_aaa64=0x00404040;
+    Y = 0;
+    U = V = 128;
+    A = 256;
+    r = g = b = 0;
+    m_rgb = 0;
+    m_aaa64 = 0x00404040;
 }
 
 YUVcolorA::YUVcolorA(COLORREF rgb, vobsubWeirdCsp_t)
@@ -1372,46 +1379,46 @@ YUVcolorA::YUVcolorA(COLORREF rgb, vobsubWeirdCsp_t)
     double y = limit<double>((0.1494   * double(r) + 0.6061 * double(g) + 0.2445 * b) * 219.0 / 255.0 + 16, 0, 255);
     double u = limit<double>((0.6066   * double(r) - 0.4322 * double(g) - 0.1744 * b) + 128, 0, 255);
     double v = limit<double>((-0.08435 * double(r) - 0.3422 * double(g) + 0.4266 * b) + 128, 0, 255);
-    Y = (uint8_t) (y + 0.5);
-    U = (uint8_t)  (u + 0.5);
-    V = (uint8_t)  (v + 0.5);
+    Y = (uint8_t)(y + 0.5);
+    U = (uint8_t)(u + 0.5);
+    V = (uint8_t)(v + 0.5);
     r = limit<int>(1.164 * (y - 16)                     + 1.596 * (v - 128), 0, 255);
-    g = limit<int>(1.164 * (y - 16) - 0.391 * (u - 128) - 0.813 * (v -128), 0, 255);
+    g = limit<int>(1.164 * (y - 16) - 0.391 * (u - 128) - 0.813 * (v - 128), 0, 255);
     b = limit<int>(1.164 * (y - 16) + 2.018 * (u - 128), 0, 255);
     m_aaa64 = (64 << 16) | (64 << 8) | 64;
     m_rgb = rgb;
 }
 
-YUVcolorA::YUVcolorA(YUVcolor yuv,unsigned int alpha)
+YUVcolorA::YUVcolorA(YUVcolor yuv, unsigned int alpha)
 {
-    A=alpha;
-    Y=(unsigned int)(0.257*yuv.r+0.504*yuv.g+0.098*yuv.b+16.0);
-    U=(unsigned int)(-0.148*yuv.r-0.291*yuv.g+0.439*yuv.b+128.0);
-    V=(unsigned int)(0.439*yuv.r-0.368*yuv.g-0.071*yuv.b+128.0);
-    r=yuv.r;
-    g=yuv.g;
-    b=yuv.b;
+    A = alpha;
+    Y = (unsigned int)(0.257 * yuv.r + 0.504 * yuv.g + 0.098 * yuv.b + 16.0);
+    U = (unsigned int)(-0.148 * yuv.r - 0.291 * yuv.g + 0.439 * yuv.b + 128.0);
+    V = (unsigned int)(0.439 * yuv.r - 0.368 * yuv.g - 0.071 * yuv.b + 128.0);
+    r = yuv.r;
+    g = yuv.g;
+    b = yuv.b;
     m_rgb = (b << 16) | (g << 8) | r;
     setAlpha(A);
 }
 
-YUVcolorA::YUVcolorA(COLORREF rgb,unsigned int alpha)
+YUVcolorA::YUVcolorA(COLORREF rgb, unsigned int alpha)
 {
-    r=GetRValue(rgb);
-    g=GetGValue(rgb);
-    b=GetBValue(rgb);
+    r = GetRValue(rgb);
+    g = GetGValue(rgb);
+    b = GetBValue(rgb);
     m_rgb = rgb;
-    Y=(unsigned int)(0.257*r+0.504*g+0.098*b+16.0);
-    U=(unsigned int)(-0.148*r-0.291*g+0.439*b+128.0);
-    V=(unsigned int)(0.439*r-0.368*g-0.071*b+128.0);
-    A=alpha;
+    Y = (unsigned int)(0.257 * r + 0.504 * g + 0.098 * b + 16.0);
+    U = (unsigned int)(-0.148 * r - 0.291 * g + 0.439 * b + 128.0);
+    V = (unsigned int)(0.439 * r - 0.368 * g - 0.071 * b + 128.0);
+    A = alpha;
     setAlpha(A);
 }
 
 void YUVcolorA::setAlpha(uint32_t alpha)
 {
     A = alpha;
-    int a64= int(A * 4.32);
+    int a64 = int(A * 4.32);
     m_aaa64 = (a64 << 16) | (a64 << 8) | a64;
 }
 
@@ -1432,7 +1439,7 @@ YUVcolorA& YUVcolorA::operator =(const _AM_DVD_YUV &rt)
 // Copyright (C) 1995,1998,1999 DJ Delorie
 static bool isslash(char_t c)
 {
-    return c=='\\' || c=='/';
+    return c == '\\' || c == '/';
 }
 static const char_t *find_slash(const char_t *s)
 {
@@ -1454,7 +1461,7 @@ static const char_t *rangematch(const char_t *pattern, char_t test, int nocase)
     char_t c, c2;
     int negate, ok;
 
-    if ((negate = (*pattern == '!'))!=NULL) {
+    if ((negate = (*pattern == '!')) != NULL) {
         ++pattern;
     }
 
@@ -1495,8 +1502,8 @@ bool fnmatch(const char_t *pattern, const char_t *string, int flags)
             case '*':
                     c = *pattern;
                 // collapse multiple stars
-                while (c=='*') {
-                    c=*++pattern;
+                while (c == '*') {
+                    c = *++pattern;
                 }
                 // optimize for pattern with * at end or before /
                 if (c == 0) {
@@ -1561,16 +1568,16 @@ bool fnmatch(const char_t *pattern, const char_t *string, int flags)
         }
 }
 
-template<class tchar> const tchar* stristr(const tchar *haystack,const tchar *needle)
+template<class tchar> const tchar* stristr(const tchar *haystack, const tchar *needle)
 {
     if (!(haystack && needle)) {
         return NULL;
     }
 
-    size_t len=strlen(needle);
-    const tchar *p=haystack;
+    size_t len = strlen(needle);
+    const tchar *p = haystack;
     while (*p != '\0') {
-        if (_strnicmp(p,needle,len)==0) {
+        if (_strnicmp(p, needle, len) == 0) {
             return p;
         }
         p++;
@@ -1578,17 +1585,17 @@ template<class tchar> const tchar* stristr(const tchar *haystack,const tchar *ne
     return NULL;
 }
 
-template<class tchar> const tchar* strnistr(const tchar *haystack,size_t n,const tchar *needle)
+template<class tchar> const tchar* strnistr(const tchar *haystack, size_t n, const tchar *needle)
 {
     if (!(haystack && needle)) {
         return NULL;
     }
 
-    size_t len=strlen(needle);
-    n-=len-1;
-    const tchar *p=haystack;
+    size_t len = strlen(needle);
+    n -= len - 1;
+    const tchar *p = haystack;
     while (*p && n--) {
-        if (_strnicmp(p,needle,len)==0) {
+        if (_strnicmp(p, needle, len) == 0) {
             return (tchar*)p;
         }
         p++;
@@ -1596,17 +1603,17 @@ template<class tchar> const tchar* strnistr(const tchar *haystack,size_t n,const
     return NULL;
 }
 
-template<class tchar> const tchar* strnstr(const tchar *haystack,size_t n,const tchar *needle)
+template<class tchar> const tchar* strnstr(const tchar *haystack, size_t n, const tchar *needle)
 {
     if (!(haystack && needle)) {
         return NULL;
     }
 
-    size_t len=strlen(needle);
-    n-=len-1;
-    const tchar *p=haystack;
+    size_t len = strlen(needle);
+    n -= len - 1;
+    const tchar *p = haystack;
     while (*p && n--) {
-        if (strncmp(p,needle,len)==0) {
+        if (strncmp(p, needle, len) == 0) {
             return (tchar*)p;
         }
         p++;
@@ -1614,72 +1621,72 @@ template<class tchar> const tchar* strnstr(const tchar *haystack,size_t n,const 
     return NULL;
 }
 
-template<class tchar> const void* memnstr(const void *haystack,size_t n,const tchar *needle)
+template<class tchar> const void* memnstr(const void *haystack, size_t n, const tchar *needle)
 {
     if (!(haystack && needle)) {
         return NULL;
     }
 
-    int step=sizeof(tchar);
-    size_t len=strlen(needle)*step;
-    n-=len-step;
-    const tchar *p=(const tchar*)haystack;
-    while (n-=step) {
-        if (memcmp(p,needle,len)==0) {
+    int step = sizeof(tchar);
+    size_t len = strlen(needle) * step;
+    n -= len - step;
+    const tchar *p = (const tchar*)haystack;
+    while (n -= step) {
+        if (memcmp(p, needle, len) == 0) {
             return p;
         }
-        p+=step;
+        p += step;
     }
     return NULL;
 }
 
-template<class tchar> const tchar *strnchr(const tchar *s,size_t n,int c)
+template<class tchar> const tchar *strnchr(const tchar *s, size_t n, int c)
 {
     while (n-- && *s)
-        if (*s==c) {
+        if (*s == c) {
             return s;
         } else {
             s++;
         }
     return NULL;
 }
-template<class char_t> char_t* strrmchar(char_t *s,int c)
+template<class char_t> char_t* strrmchar(char_t *s, int c)
 {
-    char_t *p1=s;
-    for (const char_t *p2=p1; *p2; *p1=*p2,p2++,p1+=*p1!=c) {
+    char_t *p1 = s;
+    for (const char_t *p2 = p1; *p2; *p1 = *p2, p2++, p1 += *p1 != c) {
         ;
     }
-    *p1='\0';
+    *p1 = '\0';
     return s;
 }
 
 int countbits(uint32_t x)
 {
-    static const int numbits[256]= {
-        0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,
-        1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,
-        1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,
-        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-        1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,
-        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-        3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
-        1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,
-        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-        3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
-        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-        3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
-        3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
-        4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8,
+    static const int numbits[256] = {
+        0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
+        1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+        1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+        2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+        1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+        2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+        2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+        3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+        1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+        2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+        2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+        3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+        2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+        3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+        3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+        4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8,
     };
-    return numbits[((uint8_t*)&x)[0]]+
-           numbits[((uint8_t*)&x)[1]]+
-           numbits[((uint8_t*)&x)[2]]+
+    return numbits[((uint8_t*)&x)[0]] +
+           numbits[((uint8_t*)&x)[1]] +
+           numbits[((uint8_t*)&x)[2]] +
            numbits[((uint8_t*)&x)[3]];
 }
 
-void setThreadName(DWORD dwThreadID,LPCSTR szThreadName)
+void setThreadName(DWORD dwThreadID, LPCSTR szThreadName)
 {
 #ifdef DEBUG
     struct THREADNAME_INFO {
@@ -1688,44 +1695,43 @@ void setThreadName(DWORD dwThreadID,LPCSTR szThreadName)
         DWORD dwThreadID; // thread ID (-1=caller thread)
         DWORD dwFlags;    // reserved for future use, must be zero
     } info;
-    info.dwType=0x1000;
-    info.szName=szThreadName;
-    info.dwThreadID=dwThreadID;
-    info.dwFlags=0;
+    info.dwType = 0x1000;
+    info.szName = szThreadName;
+    info.dwThreadID = dwThreadID;
+    info.dwFlags = 0;
     __try {
-        RaiseException(0x406D1388,0,sizeof(info)/sizeof(DWORD),(ULONG_PTR*)&info);
-    }
-    __except(EXCEPTION_CONTINUE_EXECUTION) {
+        RaiseException(0x406D1388, 0, sizeof(info) / sizeof(DWORD), (ULONG_PTR*)&info);
+    } __except (EXCEPTION_CONTINUE_EXECUTION) {
     }
 #endif
 }
 
-char_t *guid2str(const GUID &riid,char_t *dest,int bufsize)
+char_t *guid2str(const GUID &riid, char_t *dest, int bufsize)
 {
     LPOLESTR str;
-    StringFromIID(riid,&str);
+    StringFromIID(riid, &str);
     text<char_t>(str, -1, dest, bufsize);
     CoTaskMemFree(str);
     return dest;
 }
 
-FOURCC hdr2fourcc(const BITMAPINFOHEADER *hdr,const GUID *subtype)
+FOURCC hdr2fourcc(const BITMAPINFOHEADER *hdr, const GUID *subtype)
 {
-    if (subtype && *subtype==MEDIASUBTYPE_QTRle) {
+    if (subtype && *subtype == MEDIASUBTYPE_QTRle) {
         return FOURCC_QRLE;
     }
-    if ((subtype && *subtype==MEDIASUBTYPE_QTRpza) || (subtype && *subtype==MEDIASUBTYPE_AZPR)) {
+    if ((subtype && *subtype == MEDIASUBTYPE_QTRpza) || (subtype && *subtype == MEDIASUBTYPE_AZPR)) {
         return FOURCC_RPZA;
     }
-    if (hdr->biCompression==0) {
+    if (hdr->biCompression == 0) {
         if (subtype) {
-            if      (*subtype==MEDIASUBTYPE_RGB555) {
+            if (*subtype == MEDIASUBTYPE_RGB555) {
                 return FOURCC_RGB5;
-            } else if (*subtype==MEDIASUBTYPE_RGB565) {
+            } else if (*subtype == MEDIASUBTYPE_RGB565) {
                 return FOURCC_RGB6;
-            } else if (*subtype==MEDIASUBTYPE_RGB24 ) {
+            } else if (*subtype == MEDIASUBTYPE_RGB24) {
                 return FOURCC_RGB2;
-            } else if (*subtype==MEDIASUBTYPE_RGB32 || *subtype==MEDIASUBTYPE_ARGB32) {
+            } else if (*subtype == MEDIASUBTYPE_RGB32 || *subtype == MEDIASUBTYPE_ARGB32) {
                 return FOURCC_RGB3;
             }
         }
@@ -1756,82 +1762,82 @@ FOURCC hdr2fourcc(const BITMAPINFOHEADER *hdr,const GUID *subtype)
     return hdr->biCompression;
 }
 
-const char_t *fourcc2str(FOURCC fcc,char_t *name,size_t namelength)
+const char_t *fourcc2str(FOURCC fcc, char_t *name, size_t namelength)
 {
     switch (fcc) {
         case FOURCC_PAL1:
-                ff_strncpy(name,_l("2 colors"),namelength);
+                ff_strncpy(name, _l("2 colors"), namelength);
             break;
         case FOURCC_PAL4:
-                ff_strncpy(name,_l("16 colors"),namelength);
+                ff_strncpy(name, _l("16 colors"), namelength);
             break;
         case FOURCC_PAL8:
-                ff_strncpy(name,_l("256 colors"),namelength);
+                ff_strncpy(name, _l("256 colors"), namelength);
             break;
         case FOURCC_RGB5:
-                ff_strncpy(name,_l("RGB555"),namelength);
+                ff_strncpy(name, _l("RGB555"), namelength);
             break;
         case FOURCC_RGB6:
-                ff_strncpy(name,_l("RGB565"),namelength);
+                ff_strncpy(name, _l("RGB565"), namelength);
             break;
         case FOURCC_RGB2:
-                ff_strncpy(name,_l("RGB24") ,namelength);
+                ff_strncpy(name, _l("RGB24") , namelength);
             break;
         case FOURCC_RGB3:
-                ff_strncpy(name,_l("RGB32") ,namelength);
+                ff_strncpy(name, _l("RGB32") , namelength);
             break;
         case FOURCC_RLE4:
-                ff_strncpy(name,_l("MSRLE4"),namelength);
+                ff_strncpy(name, _l("MSRLE4"), namelength);
             break;
         case FOURCC_RLE8:
-                ff_strncpy(name,_l("MSRLE8"),namelength);
+                ff_strncpy(name, _l("MSRLE8"), namelength);
             break;
         case FOURCC_1001:
-                ff_strncpy(name,_l("MPEG1") ,namelength);
+                ff_strncpy(name, _l("MPEG1") , namelength);
             break;
         case FOURCC_1002:
-                ff_strncpy(name,_l("MPEG2") ,namelength);
+                ff_strncpy(name, _l("MPEG2") , namelength);
             break;
         case FOURCC_BITFIELDS:
-                ff_strncpy(name,_l("bitfields"),namelength);
+                ff_strncpy(name, _l("bitfields"), namelength);
             break;
         default: {
                 char nameA[5];
-                memcpy(nameA,&fcc,std::min(namelength,(size_t)4));
-                nameA[std::min(namelength,(size_t)4)]='\0';
-                text<char_t>(nameA,name);
+                memcpy(nameA, &fcc, std::min(namelength, (size_t)4));
+                nameA[std::min(namelength, (size_t)4)] = '\0';
+                text<char_t>(nameA, name);
                 break;
             }
             }
-    name[namelength-1]='\0';
+    name[namelength - 1] = '\0';
     return name;
 }
 
 void fixMPEGinAVI(FOURCC &fcc)
 {
-    FOURCC fccu=FCCupper(fcc);
-    if (fccu==FOURCC_1001 || fccu==FOURCC_1002 || fccu==FOURCC_MPG1 || fccu==FOURCC_MPG2) {
-        fcc=FOURCC_MPEG;
+    FOURCC fccu = FCCupper(fcc);
+    if (fccu == FOURCC_1001 || fccu == FOURCC_1002 || fccu == FOURCC_MPG1 || fccu == FOURCC_MPG2) {
+        fcc = FOURCC_MPEG;
     }
 }
 
-HWND createInvisibleWindow(HINSTANCE hi,const char_t *classname,const char_t *windowname,WNDPROC wndproc,void* lparam,ATOM *atom)
+HWND createInvisibleWindow(HINSTANCE hi, const char_t *classname, const char_t *windowname, WNDPROC wndproc, void* lparam, ATOM *atom)
 {
     if (!atom || !*atom) {
         WNDCLASS wndclass;
-        wndclass.style        =0;
-        wndclass.lpfnWndProc  =wndproc;
-        wndclass.cbClsExtra   =0;
-        wndclass.cbWndExtra   =0;
-        wndclass.hInstance    =hi;
-        wndclass.hIcon        =NULL;
-        wndclass.hCursor      =NULL;
-        wndclass.hbrBackground=NULL;
-        wndclass.lpszMenuName =NULL;
-        wndclass.lpszClassName=classname;
-        ATOM at=RegisterClass(&wndclass);
+        wndclass.style        = 0;
+        wndclass.lpfnWndProc  = wndproc;
+        wndclass.cbClsExtra   = 0;
+        wndclass.cbWndExtra   = 0;
+        wndclass.hInstance    = hi;
+        wndclass.hIcon        = NULL;
+        wndclass.hCursor      = NULL;
+        wndclass.hbrBackground = NULL;
+        wndclass.lpszMenuName = NULL;
+        wndclass.lpszClassName = classname;
+        ATOM at = RegisterClass(&wndclass);
         if (atom) {
-            *atom=at;
+            *atom = at;
         }
     }
 
@@ -1848,46 +1854,46 @@ HWND createInvisibleWindow(HINSTANCE hi,const char_t *classname,const char_t *wi
                         lparam);
 }
 
-void getCLSIDname(const CLSID &clsid,char_t *buf,size_t buflen)
+void getCLSIDname(const CLSID &clsid, char_t *buf, size_t buflen)
 {
     LPOLESTR sclsidW;
-    StringFromIID(clsid,&sclsidW);
+    StringFromIID(clsid, &sclsidW);
     char_t reg[MAX_PATH];
-    tsnprintf_s(reg, countof(reg), _TRUNCATE,_l("\\CLSID\\%s"),(const char_t*)text<char_t>(sclsidW));
+    tsnprintf_s(reg, countof(reg), _TRUNCATE, _l("\\CLSID\\%s"), (const char_t*)text<char_t>(sclsidW));
     CoTaskMemFree(sclsidW);
-    TregOpRegRead t(HKEY_CLASSES_ROOT,reg);
-    t._REG_OP_S(0,_l(""),buf,buflen,_l(""));
+    TregOpRegRead t(HKEY_CLASSES_ROOT, reg);
+    t._REG_OP_S(0, _l(""), buf, buflen, _l(""));
 }
 void *getAlignedPtr(void *ptr)
 {
     ptrdiff_t p = intptr_t(ptr);
-    return (void*)((p+15) & ~0x0f);
+    return (void*)((p + 15) & ~0x0f);
 }
 
-const TmultipleInstances multipleInstances[]= {
-    {0,_l("no limitations")},
-    {1,_l("only one - check previous filter only")},
-    {3,_l("only one - check all previous filters")},
-    {2,_l("only one - check all filters in graph")},
-    {4,_l("none - disabled")},
-    {0,NULL},
+const TmultipleInstances multipleInstances[] = {
+    {0, _l("no limitations")},
+    {1, _l("only one - check previous filter only")},
+    {3, _l("only one - check all previous filters")},
+    {2, _l("only one - check all filters in graph")},
+    {4, _l("none - disabled")},
+    {0, NULL},
 };
 
-template const char* stristr(const char *haystack,const char *needle);
-template const char* strnstr(const char *haystack,size_t n,const char *needle);
-template const char* strnistr(const char *haystack,size_t n,const char *needle);
-template const char *strnchr(const char *s,size_t n,int c);
-template char* strrmchar(char *s,int c);
-template void strtok(const char *s,const char *delim,std::vector<DwString<char> > &lst,bool add_empty,size_t max_parts);
-template void strtok(const char *s,const char *delim,ints &lst,bool add_empty,size_t max_parts);
-template const void* memnstr(const void *haystachk,size_t n,const char *needle);
+template const char* stristr(const char *haystack, const char *needle);
+template const char* strnstr(const char *haystack, size_t n, const char *needle);
+template const char* strnistr(const char *haystack, size_t n, const char *needle);
+template const char *strnchr(const char *s, size_t n, int c);
+template char* strrmchar(char *s, int c);
+template void strtok(const char *s, const char *delim, std::vector<DwString<char> > &lst, bool add_empty, size_t max_parts);
+template void strtok(const char *s, const char *delim, ints &lst, bool add_empty, size_t max_parts);
+template const void* memnstr(const void *haystachk, size_t n, const char *needle);
 
-template const wchar_t* stristr(const wchar_t *haystack,const wchar_t *needle);
-template const wchar_t* strnstr(const wchar_t *haystack,size_t n,const wchar_t *needle);
-template const wchar_t* strnistr(const wchar_t *haystack,size_t n,const wchar_t *needle);
-template const wchar_t *strnchr(const wchar_t *s,size_t n,int c);
-template void strtok(const wchar_t *s,const wchar_t *delim,std::vector<DwString<wchar_t> > &lst,bool add_empty,size_t max_parts);
-template void strtok(const wchar_t *s,const wchar_t *delim,std::vector<Tstrpart> &lst,bool add_empty,size_t max_parts);
-template void strtok(const wchar_t *s,const wchar_t *delim,ints &lst,bool add_empty,size_t max_parts);
-template wchar_t* strrmchar(wchar_t *s,int c);
-template const void* memnstr(const void *haystachk,size_t n,const wchar_t *needle);
+template const wchar_t* stristr(const wchar_t *haystack, const wchar_t *needle);
+template const wchar_t* strnstr(const wchar_t *haystack, size_t n, const wchar_t *needle);
+template const wchar_t* strnistr(const wchar_t *haystack, size_t n, const wchar_t *needle);
+template const wchar_t *strnchr(const wchar_t *s, size_t n, int c);
+template void strtok(const wchar_t *s, const wchar_t *delim, std::vector<DwString<wchar_t> > &lst, bool add_empty, size_t max_parts);
+template void strtok(const wchar_t *s, const wchar_t *delim, std::vector<Tstrpart> &lst, bool add_empty, size_t max_parts);
+template void strtok(const wchar_t *s, const wchar_t *delim, ints &lst, bool add_empty, size_t max_parts);
+template wchar_t* strrmchar(wchar_t *s, int c);
+template const void* memnstr(const void *haystachk, size_t n, const wchar_t *needle);

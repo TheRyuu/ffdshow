@@ -27,29 +27,29 @@
 #include "ffdshowRemoteAPIimpl.h"
 
 //============================ TdirectInput ============================
-TdirectInput::TdirectInput(TintStrColl *Icoll,const char_t *Iname,const GUID &IdeviceId,const DIDATAFORMAT &IdeviceFormat,void *Istate,void *Istateprev,size_t Istatesize,IffdshowBase *Ideci):
+TdirectInput::TdirectInput(TintStrColl *Icoll, const char_t *Iname, const GUID &IdeviceId, const DIDATAFORMAT &IdeviceFormat, void *Istate, void *Istateprev, size_t Istatesize, IffdshowBase *Ideci):
     Toptions(Icoll),
     name(Iname),
     state(Istate),
     stateprev(Istateprev),
     statesize(Istatesize),
     deci(Ideci),
-    deviceId(IdeviceId),deviceFormat(IdeviceFormat)
+    deviceId(IdeviceId), deviceFormat(IdeviceFormat)
 {
-    tsnprintf_s(classname, countof(classname), _TRUNCATE, _l("ffdshow_%s_%i"), name, rand()%1000);
-    di=NULL;
-    did=NULL;
-    event=NULL;
-    h=NULL;
-    thr=0;
-    inExplorer=deci->inExplorer()==S_OK;
+    tsnprintf_s(classname, countof(classname), _TRUNCATE, _l("ffdshow_%s_%i"), name, rand() % 1000);
+    di = NULL;
+    did = NULL;
+    event = NULL;
+    h = NULL;
+    thr = 0;
+    inExplorer = deci->inExplorer() == S_OK;
 }
 
-void TdirectInput::onChange(int id,int newval)
+void TdirectInput::onChange(int id, int newval)
 {
     if (is && !inExplorer) {
-        int mode=deci->getParam2(IDFF_filterMode);
-        if ((mode&IDFF_FILTERMODE_PLAYER) && !(mode&IDFF_FILTERMODE_VFW)) {
+        int mode = deci->getParam2(IDFF_filterMode);
+        if ((mode & IDFF_FILTERMODE_PLAYER) && !(mode & IDFF_FILTERMODE_VFW)) {
             if (!di) {
                 hook();
             }
@@ -63,12 +63,12 @@ void TdirectInput::onChange(int id,int newval)
 
 void TdirectInput::load(void)
 {
-    TregOpRegRead t(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEO);
+    TregOpRegRead t(HKEY_CURRENT_USER, FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEO);
     reg_op(t);
 }
 void TdirectInput::save(void)
 {
-    TregOpRegWrite t(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEO);
+    TregOpRegWrite t(HKEY_CURRENT_USER, FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEO);
     reg_op(t);
 }
 
@@ -78,39 +78,39 @@ void TdirectInput::hook(void)
         unhook();
     }
     DPRINTF(_l("hook"));
-    DirectInputCreate(0,DIRECTINPUT_VERSION,&di,NULL);
+    DirectInputCreate(0, DIRECTINPUT_VERSION, &di, NULL);
     if (!di) {
         return;
     }
-    di->CreateDevice(deviceId,&did,NULL);
+    di->CreateDevice(deviceId, &did, NULL);
     if (!did) {
         return;
     }
 
-    h=createInvisibleWindow(0,classname,classname,DefWindowProc,0,NULL);
+    h = createInvisibleWindow(0, classname, classname, DefWindowProc, 0, NULL);
     if (!h) {
         return;
     }
-    if (did->SetCooperativeLevel(h,DISCL_BACKGROUND|DISCL_NONEXCLUSIVE)!=S_OK) {
+    if (did->SetCooperativeLevel(h, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE) != S_OK) {
         return;
     }
-    if (did->SetDataFormat(&deviceFormat)!=S_OK) {
+    if (did->SetDataFormat(&deviceFormat) != S_OK) {
         return;
     }
     char_t eventname[50];
     tsnprintf_s(eventname, countof(eventname), _TRUNCATE, _l("ffdshow %s event"), name);
-    event=CreateEvent(NULL,FALSE,FALSE,eventname);
+    event = CreateEvent(NULL, FALSE, FALSE, eventname);
     if (!event) {
         return;
     }
-    if (did->SetEventNotification(event)!=S_OK) {
+    if (did->SetEventNotification(event) != S_OK) {
         return;
     }
-    if (did->Acquire()!=S_OK) {
+    if (did->Acquire() != S_OK) {
         return;
     }
-    terminate=false;
-    thr=_beginthread(thread,16384,this);
+    terminate = false;
+    thr = _beginthread(thread, 16384, this);
 }
 void TdirectInput::unhook(void)
 {
@@ -119,7 +119,7 @@ void TdirectInput::unhook(void)
     }
     DPRINTF(_l("unhook"));
     if (thr) {
-        terminate=true;
+        terminate = true;
         while (terminate) {
             ;
         }
@@ -130,44 +130,44 @@ void TdirectInput::unhook(void)
         if (event) {
             CloseHandle(event);
         }
-        event=NULL;
+        event = NULL;
         did->Release();
-        did=NULL;
+        did = NULL;
     }
     if (di) {
         di->Release();
     }
-    di=NULL;
+    di = NULL;
     if (h) {
         DestroyWindow(h);
     }
     HINSTANCE hi;
     deci->getInstance(&hi);
-    UnregisterClass(classname,hi);
+    UnregisterClass(classname, hi);
 }
 void TdirectInput::thread(void *self0)
 {
-    TdirectInput *self=(TdirectInput*)self0;
-    setThreadName(DWORD(-1),text<char>(self->name));
-    self->did->GetDeviceState((DWORD)self->statesize,self->stateprev);
+    TdirectInput *self = (TdirectInput*)self0;
+    setThreadName(DWORD(-1), text<char>(self->name));
+    self->did->GetDeviceState((DWORD)self->statesize, self->stateprev);
     while (!self->terminate) {
-        HRESULT res=WaitForSingleObject(self->event,100);
-        if (res==WAIT_OBJECT_0 || res==WAIT_TIMEOUT) {
-            self->did->GetDeviceState((DWORD)self->statesize,self->state);
+        HRESULT res = WaitForSingleObject(self->event, 100);
+        if (res == WAIT_OBJECT_0 || res == WAIT_TIMEOUT) {
+            self->did->GetDeviceState((DWORD)self->statesize, self->state);
             self->processState();
-            memcpy(self->stateprev,self->state,self->statesize);
+            memcpy(self->stateprev, self->state, self->statesize);
         }
     }
-    self->terminate=false;
+    self->terminate = false;
 }
 
 bool TdirectInput::windowActive(void)
 {
-    HWND tw=GetForegroundWindow();
-    DWORD tpid=0;
-    GetWindowThreadProcessId(tw,&tpid);
-    DWORD cpid=GetCurrentProcessId();
-    return cpid==tpid;
+    HWND tw = GetForegroundWindow();
+    DWORD tpid = 0;
+    GetWindowThreadProcessId(tw, &tpid);
+    DWORD cpid = GetCurrentProcessId();
+    return cpid == tpid;
 }
 
 //============================== Tkeyboard =============================
@@ -175,74 +175,74 @@ void Tkeyboard::reg_op(TregOp &t)
 {
     TdirectInput::reg_op(t);
     char_t pomS[256];
-    for (TkeysParams::iterator i=keysParams.begin(); i!=keysParams.end(); i++) {
-        t._REG_OP_N(0,strncpyf(pomS, countof(pomS),_l("key %s"),i->descr),i->key,i->key);
+    for (TkeysParams::iterator i = keysParams.begin(); i != keysParams.end(); i++) {
+        t._REG_OP_N(0, strncpyf(pomS, countof(pomS), _l("key %s"), i->descr), i->key, i->key);
     }
 }
 
 void Tkeyboard::initKeysParam(void)
 {
-    keysParams.push_back(TkeyParam(_l("Activation key 1"),VK_CONTROL));
-    i_key_act1=0;
-    keysParams.push_back(TkeyParam(_l("Activation key 2"),VK_MENU));
-    i_key_act2=1;
-    keysParams.push_back(TkeyParam(_l("Second function") ,VK_SHIFT));
-    i_key_mod=2;
+    keysParams.push_back(TkeyParam(_l("Activation key 1"), VK_CONTROL));
+    i_key_act1 = 0;
+    keysParams.push_back(TkeyParam(_l("Activation key 2"), VK_MENU));
+    i_key_act2 = 1;
+    keysParams.push_back(TkeyParam(_l("Second function") , VK_SHIFT));
+    i_key_mod = 2;
 
-    keysParams.push_back(TkeyParam(_l("Seek forward") ,VK_RIGHT,idff_forward ));
-    keysParams.push_back(TkeyParam(_l("Seek backward"),VK_LEFT ,idff_backward));
+    keysParams.push_back(TkeyParam(_l("Seek forward") , VK_RIGHT, idff_forward));
+    keysParams.push_back(TkeyParam(_l("Seek backward"), VK_LEFT , idff_backward));
 
-    keysParams.push_back(TkeyParam(_l("Toggle OSD"),'O',IDFF_isOSD));
-    keysParams.push_back(TkeyParam(_l("Toggle visualizations"),'V',IDFF_isVis));
-    keysParams.push_back(TkeyParam(_l("Toggle crop/zoom"),'C',IDFF_isCropNzoom));
-    keysParams.push_back(TkeyParam(_l("Toggle deinterlace"),'D',IDFF_isDeinterlace));
-    keysParams.push_back(TkeyParam(_l("Toggle levels"),'L',IDFF_isLevels));
-    keysParams.push_back(TkeyParam(_l("Toggle noise"),'N',IDFF_isNoise));
-    keysParams.push_back(TkeyParam(_l("Toggle picture properties"),'I',IDFF_isPictProp));
-    keysParams.push_back(TkeyParam(_l("Toggle postprocessing"),'P',IDFF_isPostproc));
-    keysParams.push_back(TkeyParam(_l("Toggle blur"),'B',IDFF_isBlur));
-    keysParams.push_back(TkeyParam(_l("Toggle resize"),'R',IDFF_isResize));
-    keysParams.push_back(TkeyParam(_l("Toggle sharpen"),'H',IDFF_isSharpen));
-    keysParams.push_back(TkeyParam(_l("Toggle flip"),'F',IDFF_flip));
-    keysParams.push_back(TkeyParam(_l("Toggle avisynth"),'A',IDFF_isAvisynth));
-    keysParams.push_back(TkeyParam(_l("Toggle warpsharp"),'W',IDFF_isWarpsharp));
+    keysParams.push_back(TkeyParam(_l("Toggle OSD"), 'O', IDFF_isOSD));
+    keysParams.push_back(TkeyParam(_l("Toggle visualizations"), 'V', IDFF_isVis));
+    keysParams.push_back(TkeyParam(_l("Toggle crop/zoom"), 'C', IDFF_isCropNzoom));
+    keysParams.push_back(TkeyParam(_l("Toggle deinterlace"), 'D', IDFF_isDeinterlace));
+    keysParams.push_back(TkeyParam(_l("Toggle levels"), 'L', IDFF_isLevels));
+    keysParams.push_back(TkeyParam(_l("Toggle noise"), 'N', IDFF_isNoise));
+    keysParams.push_back(TkeyParam(_l("Toggle picture properties"), 'I', IDFF_isPictProp));
+    keysParams.push_back(TkeyParam(_l("Toggle postprocessing"), 'P', IDFF_isPostproc));
+    keysParams.push_back(TkeyParam(_l("Toggle blur"), 'B', IDFF_isBlur));
+    keysParams.push_back(TkeyParam(_l("Toggle resize"), 'R', IDFF_isResize));
+    keysParams.push_back(TkeyParam(_l("Toggle sharpen"), 'H', IDFF_isSharpen));
+    keysParams.push_back(TkeyParam(_l("Toggle flip"), 'F', IDFF_flip));
+    keysParams.push_back(TkeyParam(_l("Toggle avisynth"), 'A', IDFF_isAvisynth));
+    keysParams.push_back(TkeyParam(_l("Toggle warpsharp"), 'W', IDFF_isWarpsharp));
 
-    keysParams.push_back(TkeyParam(_l("Grab frame"),'G',idff_grab));
+    keysParams.push_back(TkeyParam(_l("Grab frame"), 'G', idff_grab));
 
-    keysParams.push_back(TkeyParam(_l("Subtitles delay/size decrease"),0x6d,idff_subdelaySub));
-    keysParams.push_back(TkeyParam(_l("Subtitles delay/size increase"),0x6b,idff_subdelayAdd));
-    keysParams.push_back(TkeyParam(_l("Subtitles position decrease"),0x21,idff_subposSub));
-    keysParams.push_back(TkeyParam(_l("Subtitles position increase"),0x22,idff_subposAdd));
+    keysParams.push_back(TkeyParam(_l("Subtitles delay/size decrease"), 0x6d, idff_subdelaySub));
+    keysParams.push_back(TkeyParam(_l("Subtitles delay/size increase"), 0x6b, idff_subdelayAdd));
+    keysParams.push_back(TkeyParam(_l("Subtitles position decrease"), 0x21, idff_subposSub));
+    keysParams.push_back(TkeyParam(_l("Subtitles position increase"), 0x22, idff_subposAdd));
 
-    keysParams.push_back(TkeyParam(_l("Decrease video delay"),0xbc,idff_videodelaySub));
-    keysParams.push_back(TkeyParam(_l("Increase video delay"),0xbe,idff_videodelayAdd));
+    keysParams.push_back(TkeyParam(_l("Decrease video delay"), 0xbc, idff_videodelaySub));
+    keysParams.push_back(TkeyParam(_l("Increase video delay"), 0xbe, idff_videodelayAdd));
 
-    keysParams.push_back(TkeyParam(_l("Previous preset"),0xdb,idff_presetPrev));
-    keysParams.push_back(TkeyParam(_l("Next preset"),0xdd,idff_presetNext));
+    keysParams.push_back(TkeyParam(_l("Previous preset"), 0xdb, idff_presetPrev));
+    keysParams.push_back(TkeyParam(_l("Next preset"), 0xdd, idff_presetNext));
 
-    keysParams.push_back(TkeyParam(_l("Fast forward"),0x26,idff_fastForward));
-    keysParams.push_back(TkeyParam(_l("Rewind"),0x28,idff_rewind));
-    keysParams.push_back(TkeyParam(_l("Next subtitles file"),'S',IDFF_isSubtitles));
-    keysParams.push_back(TkeyParam(_l("Next subtitles stream"),'s',idff_subStreamNext));
-    keysParams.push_back(TkeyParam(_l("Next audio stream"),'a',idff_audioStreamNext));
+    keysParams.push_back(TkeyParam(_l("Fast forward"), 0x26, idff_fastForward));
+    keysParams.push_back(TkeyParam(_l("Rewind"), 0x28, idff_rewind));
+    keysParams.push_back(TkeyParam(_l("Next subtitles file"), 'S', IDFF_isSubtitles));
+    keysParams.push_back(TkeyParam(_l("Next subtitles stream"), 's', idff_subStreamNext));
+    keysParams.push_back(TkeyParam(_l("Next audio stream"), 'a', idff_audioStreamNext));
 }
-void Tkeyboard::keyProc(int code,bool remote)
+void Tkeyboard::keyProc(int code, bool remote)
 {
-    dkeys[DIK_LCONTROL]|=dkeys[DIK_RCONTROL];
-    dkeys[DIK_LALT]|=dkeys[DIK_RALT];
-    dkeys[DIK_LSHIFT]|=dkeys[DIK_RSHIFT];
-    dkeys[DIK_LMENU]|=dkeys[DIK_RMENU];
-    if (code==DIK_RCONTROL) {
-        code=DIK_LCONTROL;
-    } else if (code==DIK_RALT) {
-        code=DIK_LALT;
-    } else if (code==DIK_RSHIFT) {
-        code=DIK_LSHIFT;
-    } else if (code==DIK_RMENU) {
-        code=DIK_LMENU;
+    dkeys[DIK_LCONTROL] |= dkeys[DIK_RCONTROL];
+    dkeys[DIK_LALT] |= dkeys[DIK_RALT];
+    dkeys[DIK_LSHIFT] |= dkeys[DIK_RSHIFT];
+    dkeys[DIK_LMENU] |= dkeys[DIK_RMENU];
+    if (code == DIK_RCONTROL) {
+        code = DIK_LCONTROL;
+    } else if (code == DIK_RALT) {
+        code = DIK_LALT;
+    } else if (code == DIK_RSHIFT) {
+        code = DIK_LSHIFT;
+    } else if (code == DIK_RMENU) {
+        code = DIK_LMENU;
     }
 
-    DPRINTF(_l("keyProc:%x"),code);
+    DPRINTF(_l("keyProc:%x"), code);
     if ((keysParams[i_key_act1].key && !dkeys[vk2dik[keysParams[i_key_act1].key]]) ||
             (keysParams[i_key_act2].key && !dkeys[vk2dik[keysParams[i_key_act2].key]])) {
         return;
@@ -250,28 +250,28 @@ void Tkeyboard::keyProc(int code,bool remote)
     if (!always && !remote && !windowActive()) {
         return;
     }
-    clock_t t1=clock();
-    bool isPress=((long)t1-(long)prevT)>(long)CLOCKS_PER_SEC/5;
-    DPRINTF(_l("prev:%i, now:%i, isPress:%i"),prevT,t1,isPress);
-    clock_t prevT0=prevT;
-    prevT=t1;
+    clock_t t1 = clock();
+    bool isPress = ((long)t1 - (long)prevT) > (long)CLOCKS_PER_SEC / 5;
+    DPRINTF(_l("prev:%i, now:%i, isPress:%i"), prevT, t1, isPress);
+    clock_t prevT0 = prevT;
+    prevT = t1;
     if (isPress) {
         comptrQ<IffdshowDec> deciD(deci);
         comptrQ<IffdshowDecVideo> deciV(deci);
-        bool isMod=keysParams[i_key_mod].key && dkeys[vk2dik[keysParams[i_key_mod].key]];
-        for (TkeysParams::const_iterator i=keysParams.begin(); i!=keysParams.end(); i++)
-            if (code==vk2dik[i->key])
-                if (i->idff>0 && !deci->getCfgDlgHwnd()) {
+        bool isMod = keysParams[i_key_mod].key && dkeys[vk2dik[keysParams[i_key_mod].key]];
+        for (TkeysParams::const_iterator i = keysParams.begin(); i != keysParams.end(); i++)
+            if (code == vk2dik[i->key])
+                if (i->idff > 0 && !deci->getCfgDlgHwnd()) {
                     switch (i->idff) {
                         case IDFF_isSubtitles:
                             if (isMod) {
-                                if (deciV->cycleSubLanguages(+1)==S_OK && shortosd) {
+                                if (deciV->cycleSubLanguages(+1) == S_OK && shortosd) {
                                     const char_t *lang;
-                                    deciV->getSubtitleLanguageDesc(deci->getParam2(IDFF_subCurLang),&lang);
+                                    deciV->getSubtitleLanguageDesc(deci->getParam2(IDFF_subCurLang), &lang);
                                     if (lang && lang[0]) {
                                         char_t msg[256];
                                         tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles language: %s")), lang);
-                                        deciV->shortOSDmessage(msg,30);
+                                        deciV->shortOSDmessage(msg, 30);
                                     }
                                 }
                                 return;
@@ -283,28 +283,28 @@ void Tkeyboard::keyProc(int code,bool remote)
                     deciD->saveActivePreset(NULL);
                     if (shortosd) {
                         char_t msg[200];
-                        tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %s"), i->descr,deci->getParam2(i->idff) ? _l("on") : _l("off"));
-                        deciV->shortOSDmessage(msg,30);
+                        tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %s"), i->descr, deci->getParam2(i->idff) ? _l("on") : _l("off"));
+                        deciV->shortOSDmessage(msg, 30);
                     }
                     return;
                 } else
                     switch (i->idff) {
                         case idff_forward:
                         case idff_backward: {
-                            if (deci->getState2()==State_Paused) {
-                                deciV->frameStep((i->idff==idff_backward?-1:1)*(isMod?10:1));
+                            if (deci->getState2() == State_Paused) {
+                                deciV->frameStep((i->idff == idff_backward ? -1 : 1) * (isMod ? 10 : 1));
                             } else {
                                 int pos;
                                 deciD->tell(&pos);
-                                if (pos!=-1) {
-                                    int sec=isMod?seek2:seek1;
-                                    if (i->idff==idff_backward) {
-                                        sec*=-1;
+                                if (pos != -1) {
+                                    int sec = isMod ? seek2 : seek1;
+                                    if (i->idff == idff_backward) {
+                                        sec *= -1;
                                     }
-                                    if (SUCCEEDED(deciD->seek(pos+sec)) && shortosd) {
+                                    if (SUCCEEDED(deciD->seek(pos + sec)) && shortosd) {
                                         char_t msg[100];
                                         tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("fast %s %i seconds"), sec < 0 ? _l("backward") : _l("forward"), abs(sec));
-                                        deciV->shortOSDmessage(msg,30);
+                                        deciV->shortOSDmessage(msg, 30);
                                     }
                                 }
                             }
@@ -314,168 +314,168 @@ void Tkeyboard::keyProc(int code,bool remote)
                             deciV->grabNow();
                             return;
                         case idff_subdelaySub: {
-                            int idff=isMod?(deci->getParam2(IDFF_fontAutosize)?IDFF_fontSizeA:IDFF_fontSizeP):IDFF_subDelay;
-                            deci->putParam(idff,deci->getParam2(idff)-(isMod?2:100));
+                            int idff = isMod ? (deci->getParam2(IDFF_fontAutosize) ? IDFF_fontSizeA : IDFF_fontSizeP) : IDFF_subDelay;
+                            deci->putParam(idff, deci->getParam2(idff) - (isMod ? 2 : 100));
                             if (shortosd) {
                                 char_t msg[256];
                                 tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles %s: %i")), isMod ? tr->translate(_l("size")) : tr->translate(_l("delay")), deci->getParam2(idff));
-                                deciV->shortOSDmessage(msg,30);
+                                deciV->shortOSDmessage(msg, 30);
                             }
                             return;
                         }
                         case idff_subdelayAdd: {
-                            int idff=isMod?(deci->getParam2(IDFF_fontAutosize)?IDFF_fontSizeA:IDFF_fontSizeP):IDFF_subDelay;
-                            deci->putParam(idff,deci->getParam2(idff)+(isMod?2:100));
+                            int idff = isMod ? (deci->getParam2(IDFF_fontAutosize) ? IDFF_fontSizeA : IDFF_fontSizeP) : IDFF_subDelay;
+                            deci->putParam(idff, deci->getParam2(idff) + (isMod ? 2 : 100));
                             if (shortosd) {
                                 char_t msg[256];
                                 tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles %s: %i")), isMod ? tr->translate(_l("size")) : tr->translate(_l("delay")), deci->getParam2(idff));
-                                deciV->shortOSDmessage(msg,30);
+                                deciV->shortOSDmessage(msg, 30);
                             }
                             return;
                         }
                         case idff_subposSub: {
-                            int idff=isMod?IDFF_subPosX:IDFF_subPosY;
-                            deci->putParam(idff,deci->getParam2(idff)-5);
+                            int idff = isMod ? IDFF_subPosX : IDFF_subPosY;
+                            deci->putParam(idff, deci->getParam2(idff) - 5);
                             if (shortosd) {
                                 char_t msg[256];
                                 tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles %s position : %i")), isMod ? tr->translate(_l("horizontal")) : tr->translate(_l("vertical")), deci->getParam2(idff));
-                                deciV->shortOSDmessage(msg,30);
+                                deciV->shortOSDmessage(msg, 30);
                             }
                             return;
                         }
                         case idff_subposAdd: {
-                            int idff=isMod?IDFF_subPosX:IDFF_subPosY;
-                            deci->putParam(idff,deci->getParam2(idff)+5);
+                            int idff = isMod ? IDFF_subPosX : IDFF_subPosY;
+                            deci->putParam(idff, deci->getParam2(idff) + 5);
                             if (shortosd) {
                                 char_t msg[256];
                                 tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles %s position : %i")), isMod ? tr->translate(_l("horizontal")) : tr->translate(_l("vertical")), deci->getParam2(idff));
-                                deciV->shortOSDmessage(msg,30);
+                                deciV->shortOSDmessage(msg, 30);
                             }
                             return;
                         }
                         case idff_videodelayAdd:
                         case idff_videodelaySub: {
                             //deci->putParam(IDFF_isVideoDelayEnd,0);
-                            int delay=deci->getParam2(IDFF_videoDelay)+(i->idff==idff_videodelayAdd?20:-20);
-                            deci->putParam(IDFF_videoDelay,delay);
+                            int delay = deci->getParam2(IDFF_videoDelay) + (i->idff == idff_videodelayAdd ? 20 : -20);
+                            deci->putParam(IDFF_videoDelay, delay);
                             if (shortosd) {
                                 char_t msg[256];
                                 tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("video delay: %i ms")), delay);
-                                deciV->shortOSDmessage(msg,30);
+                                deciV->shortOSDmessage(msg, 30);
                             }
                             return;
                         }
                         case idff_presetPrev:
                         case idff_presetNext: {
-                            deciD->cyclePresets(i->idff==idff_presetNext?1:-1);
+                            deciD->cyclePresets(i->idff == idff_presetNext ? 1 : -1);
                             if (shortosd) {
-                                char_t msg[256],preset[256];
-                                deciD->getActivePresetName(preset,256);
+                                char_t msg[256], preset[256];
+                                deciD->getActivePresetName(preset, 256);
                                 tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("preset: %s")), preset);
-                                deciV->shortOSDmessage(msg,30);
+                                deciV->shortOSDmessage(msg, 30);
                             }
                             return;
                         }
                         case idff_subStreamNext:
-                            deci->putParam(IDFF_remoteSubStream,deci->getParam2(IDFF_remoteSubStream)+1);
+                            deci->putParam(IDFF_remoteSubStream, deci->getParam2(IDFF_remoteSubStream) + 1);
                             return;
                         case idff_audioStreamNext:
-                            deci->putParam(IDFF_remoteAudioStream,deci->getParam2(IDFF_remoteAudioStream)+1);
+                            deci->putParam(IDFF_remoteAudioStream, deci->getParam2(IDFF_remoteAudioStream) + 1);
                             return;
                         case idff_fastForward: {
                             ffrwMode fMode = (ffrwMode)deci->getParam2(IDFF_remoteFastForwardMode);
                             int fSeconds = deci->getParam2(IDFF_remoteFastForward);
                             if (fMode == REWIND_MODE) {
-                                if (fSeconds>=240) {
+                                if (fSeconds >= 240) {
                                     fSeconds = 40;
-                                } else if (fSeconds>=40) {
+                                } else if (fSeconds >= 40) {
                                     fSeconds = 6;
                                 } else {
                                     fSeconds = 0;
                                     fMode = FAST_FORWARD_MODE;
                                 }
                             } else {
-                                if (fSeconds>=40) {
+                                if (fSeconds >= 40) {
                                     fSeconds = 240;
-                                } else if (fSeconds>=6) {
+                                } else if (fSeconds >= 6) {
                                     fSeconds = 40;
                                 } else {
                                     fSeconds = 6;
                                 }
                             }
-                            fSeconds*= ((fMode == FAST_FORWARD_MODE) ? 1 : -1);
-                            deci->putParam(IDFF_remoteFastForward,fSeconds);
+                            fSeconds *= ((fMode == FAST_FORWARD_MODE) ? 1 : -1);
+                            deci->putParam(IDFF_remoteFastForward, fSeconds);
                             return;
                         }
                         case idff_rewind: {
                             ffrwMode fMode = (ffrwMode)deci->getParam2(IDFF_remoteFastForwardMode);
                             int fSeconds = deci->getParam2(IDFF_remoteFastForward);
                             if (fMode == REWIND_MODE) {
-                                if (fSeconds>=40) {
+                                if (fSeconds >= 40) {
                                     fSeconds = 240;
-                                } else if (fSeconds>=6) {
+                                } else if (fSeconds >= 6) {
                                     fSeconds = 40;
                                 } else {
                                     fSeconds = 6;
                                 }
                             } else {
-                                if (fSeconds>=240) {
+                                if (fSeconds >= 240) {
                                     fSeconds = 40;
-                                } else if (fSeconds>=40) {
+                                } else if (fSeconds >= 40) {
                                     fSeconds = 6;
-                                } else if (fSeconds >0) {
+                                } else if (fSeconds > 0) {
                                     fSeconds = 0;
                                 } else {
                                     fSeconds = 6;
                                     fMode = REWIND_MODE;
                                 }
                             }
-                            fSeconds*= ((fMode == FAST_FORWARD_MODE) ? 1 : -1);
-                            deci->putParam(IDFF_remoteFastForward,fSeconds);
+                            fSeconds *= ((fMode == FAST_FORWARD_MODE) ? 1 : -1);
+                            deci->putParam(IDFF_remoteFastForward, fSeconds);
                             return;
                         }
                     }
     }
-    prevT=prevT0;
+    prevT = prevT0;
 }
 void Tkeyboard::processState(void)
 {
-    for (int k=0; k<256; k++)
-        if (dprevkeys[k]!=dkeys[k])
+    for (int k = 0; k < 256; k++)
+        if (dprevkeys[k] != dkeys[k])
             if (dkeys[k]) {
-                keydown=k;
-            } else if (k==keydown) {
-                keydown=-1;
+                keydown = k;
+            } else if (k == keydown) {
+                keydown = -1;
             }
-    if (keydown!=-1) {
-        keyProc(keydown,false);
+    if (keydown != -1) {
+        keyProc(keydown, false);
     }
 }
 
-Tkeyboard::Tkeyboard(TintStrColl *Icoll,IffdshowBase *Ideci):TdirectInput(Icoll,_l("keys"),GUID_SysKeyboard,c_dfDIKeyboard,dkeys,dprevkeys,sizeof(dkeys),Ideci)
+Tkeyboard::Tkeyboard(TintStrColl *Icoll, IffdshowBase *Ideci): TdirectInput(Icoll, _l("keys"), GUID_SysKeyboard, c_dfDIKeyboard, dkeys, dprevkeys, sizeof(dkeys), Ideci)
 {
-    static const TintOptionT<Tkeyboard> iopts[]= {
-        IDFF_isKeys       ,&Tkeyboard::is       ,0,0,_l(""),0,
-        _l("keyboard"),0,
-        IDFF_keysAlways   ,&Tkeyboard::always   ,0,0,_l(""),0,
-        _l("keysAlways"),0,
-        IDFF_keysShortOsd ,&Tkeyboard::shortosd ,0,0,_l(""),0,
-        _l("showKeysMessages"),1,
-        IDFF_keysSeek1    ,&Tkeyboard::seek1    ,1,10000,_l(""),0,
-        _l("keysSeek1"),15,
-        IDFF_keysSeek2    ,&Tkeyboard::seek2    ,1,10000,_l(""),0,
-        _l("keysSeek2"),60,
+    static const TintOptionT<Tkeyboard> iopts[] = {
+        IDFF_isKeys       , &Tkeyboard::is       , 0, 0, _l(""), 0,
+        _l("keyboard"), 0,
+        IDFF_keysAlways   , &Tkeyboard::always   , 0, 0, _l(""), 0,
+        _l("keysAlways"), 0,
+        IDFF_keysShortOsd , &Tkeyboard::shortosd , 0, 0, _l(""), 0,
+        _l("showKeysMessages"), 1,
+        IDFF_keysSeek1    , &Tkeyboard::seek1    , 1, 10000, _l(""), 0,
+        _l("keysSeek1"), 15,
+        IDFF_keysSeek2    , &Tkeyboard::seek2    , 1, 10000, _l(""), 0,
+        _l("keysSeek2"), 60,
         0
     };
     addOptions(iopts);
     deci->getTranslator(&tr);
-    setOnChange(IDFF_isKeys,this,&Tkeyboard::onChange);
+    setOnChange(IDFF_isKeys, this, &Tkeyboard::onChange);
 
-    prevT=0;
+    prevT = 0;
     initKeysParam();
     load();
-    memset(dkeys,0,sizeof(dkeys));
-    memset(dprevkeys,0,sizeof(dprevkeys));
+    memset(dkeys, 0, sizeof(dkeys));
+    memset(dprevkeys, 0, sizeof(dprevkeys));
 }
 Tkeyboard::~Tkeyboard()
 {
@@ -487,104 +487,104 @@ Tkeyboard::~Tkeyboard()
 
 void Tkeyboard::reset(void)
 {
-    always=0;
-    shortosd=1;
-    seek1=15;
-    seek2=60;
+    always = 0;
+    shortosd = 1;
+    seek1 = 15;
+    seek2 = 60;
     keysParams.clear();
     initKeysParam();
 }
 void Tkeyboard::hook(void)
 {
-    keydown=-1;
+    keydown = -1;
     TdirectInput::hook();
 }
 
 void Tkeyboard::keyDown(int key)
 {
-    dkeys[vk2dik[key&255]]=1;
-    keyProc(vk2dik[key&255],true);
+    dkeys[vk2dik[key & 255]] = 1;
+    keyProc(vk2dik[key & 255], true);
 }
 void Tkeyboard::keyUp(int key)
 {
-    dkeys[vk2dik[key&255]]=0;
+    dkeys[vk2dik[key & 255]] = 0;
 }
 
-void Tkeyboard::exportGMLkey(int &id,FILE *f,TkeysParams::const_iterator k,const char *second)
+void Tkeyboard::exportGMLkey(int &id, FILE *f, TkeysParams::const_iterator k, const char *second)
 {
-    fprintf(f,"    <Command Name=\"%s\" Identifier=\"%i\" Enabled=\"TRUE\">\n",second?second:(const char*)text<char>(k->descr),id++);
-    fprintf(f,"      <StateCount>1</StateCount>\n");
-    fprintf(f,"      <StateBegin>1</StateBegin>\n");
-    fprintf(f,"      <StateCurrent>1</StateCurrent>\n");
-    fprintf(f,"      <StateInvert>FALSE</StateInvert>\n");
-    fprintf(f,"      <OSD>FALSE</OSD>\n");
-    fprintf(f,"      <Target_class>ffdshow_remote_class</Target_class>\n");
-    fprintf(f,"      <Submatch>FALSE</Submatch>\n");
-    fprintf(f,"      <Topmost>FALSE</Topmost>\n");
-    fprintf(f,"      <MatchBy>2</MatchBy>\n");
-    fprintf(f,"      <OneMatch>FALSE</OneMatch>\n");
-    fprintf(f,"      <UseVar>TRUE</UseVar>\n");
-    fprintf(f,"      <MatchHidden>TRUE</MatchHidden>\n");
-    fprintf(f,"      <MatchNum>1</MatchNum>\n");
-    fprintf(f,"      <ActionType>6</ActionType>\n");
-    fprintf(f,"      <ActionSubType>1</ActionSubType>\n");
-    if (keyInfo[k->key&255].girderok) {
-        fprintf(f,"      <sValue1>%s</sValue1>\n",(const char*)text<char>(keyInfo[k->key&255].keyname));
+    fprintf(f, "    <Command Name=\"%s\" Identifier=\"%i\" Enabled=\"TRUE\">\n", second ? second : (const char*)text<char>(k->descr), id++);
+    fprintf(f, "      <StateCount>1</StateCount>\n");
+    fprintf(f, "      <StateBegin>1</StateBegin>\n");
+    fprintf(f, "      <StateCurrent>1</StateCurrent>\n");
+    fprintf(f, "      <StateInvert>FALSE</StateInvert>\n");
+    fprintf(f, "      <OSD>FALSE</OSD>\n");
+    fprintf(f, "      <Target_class>ffdshow_remote_class</Target_class>\n");
+    fprintf(f, "      <Submatch>FALSE</Submatch>\n");
+    fprintf(f, "      <Topmost>FALSE</Topmost>\n");
+    fprintf(f, "      <MatchBy>2</MatchBy>\n");
+    fprintf(f, "      <OneMatch>FALSE</OneMatch>\n");
+    fprintf(f, "      <UseVar>TRUE</UseVar>\n");
+    fprintf(f, "      <MatchHidden>TRUE</MatchHidden>\n");
+    fprintf(f, "      <MatchNum>1</MatchNum>\n");
+    fprintf(f, "      <ActionType>6</ActionType>\n");
+    fprintf(f, "      <ActionSubType>1</ActionSubType>\n");
+    if (keyInfo[k->key & 255].girderok) {
+        fprintf(f, "      <sValue1>%s</sValue1>\n", (const char*)text<char>(keyInfo[k->key & 255].keyname));
     } else {
-        fprintf(f,"      <iValue1>%i</iValue1>\n",k->key);
+        fprintf(f, "      <iValue1>%i</iValue1>\n", k->key);
     }
-    fprintf(f,"      <sValue2>FALSE</sValue2>\n");
-    fprintf(f,"      <bValue1>TRUE</bValue1>\n");
-    fprintf(f,"      <bValue2>%s</bValue2>\n",second?"TRUE":"FALSE");
-    fprintf(f,"      <bValue3>TRUE</bValue3>\n");
-    fprintf(f,"    </Command>\n");
+    fprintf(f, "      <sValue2>FALSE</sValue2>\n");
+    fprintf(f, "      <bValue1>TRUE</bValue1>\n");
+    fprintf(f, "      <bValue2>%s</bValue2>\n", second ? "TRUE" : "FALSE");
+    fprintf(f, "      <bValue3>TRUE</bValue3>\n");
+    fprintf(f, "    </Command>\n");
 }
 bool Tkeyboard::exportToGML(const char_t *flnm)
 {
-    FILE *f=fopen(flnm,_l("wt"));
+    FILE *f = fopen(flnm, _l("wt"));
     if (!f) {
         return false;
     }
-    fprintf(f,"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-    fprintf(f,"<Girder>\n");
-    int id=2;
-    fprintf(f,"  <Group Name=\"ffdshow\" Identifier=\"%i\" Enabled=\"TRUE\">\n",id++);
-    for (TkeysParams::const_iterator k=keysParams.begin()+3; k!=keysParams.end(); k++) {
-        exportGMLkey(id,f,k);
-        switch(k->idff) {
+    fprintf(f, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+    fprintf(f, "<Girder>\n");
+    int id = 2;
+    fprintf(f, "  <Group Name=\"ffdshow\" Identifier=\"%i\" Enabled=\"TRUE\">\n", id++);
+    for (TkeysParams::const_iterator k = keysParams.begin() + 3; k != keysParams.end(); k++) {
+        exportGMLkey(id, f, k);
+        switch (k->idff) {
             case idff_forward:
-                exportGMLkey(id,f,k,"Long seek forward");
+                exportGMLkey(id, f, k, "Long seek forward");
                 break;
             case idff_backward:
-                exportGMLkey(id,f,k,"Long seek backward");
+                exportGMLkey(id, f, k, "Long seek backward");
                 break;
             case IDFF_isOSD:
-                exportGMLkey(id,f,k,"Cycle OSD presets");
+                exportGMLkey(id, f, k, "Cycle OSD presets");
                 break;
             case IDFF_isSubtitles:
-                exportGMLkey(id,f,k,"Cycle subtitle languages");
+                exportGMLkey(id, f, k, "Cycle subtitle languages");
                 break;
             case idff_subdelaySub:
-                exportGMLkey(id,f,k,"Descrease subtitles font size");
+                exportGMLkey(id, f, k, "Descrease subtitles font size");
                 break;
             case idff_subdelayAdd:
-                exportGMLkey(id,f,k,"Increase subtitles font size");
+                exportGMLkey(id, f, k, "Increase subtitles font size");
                 break;
             case idff_subposSub:
-                exportGMLkey(id,f,k,"Subtitles horizontal position decrease");
+                exportGMLkey(id, f, k, "Subtitles horizontal position decrease");
                 break;
             case idff_subposAdd:
-                exportGMLkey(id,f,k,"Subtitles horizontal position increase");
+                exportGMLkey(id, f, k, "Subtitles horizontal position increase");
                 break;
         }
     }
-    fprintf(f,"  </Group>\n");
-    fprintf(f,"</Girder>\n");
+    fprintf(f, "  </Group>\n");
+    fprintf(f, "</Girder>\n");
     fclose(f);
     return true;
 }
 
-const Tkeyboard::TkeyInfo Tkeyboard::keyInfo[256]= {
+const Tkeyboard::TkeyInfo Tkeyboard::keyInfo[256] = {
     false,/*00*/_l("none"),
     false,/*01*/_l("VK_LBUTTON"),
     false,/*02*/_l("VK_RBUTTON"),
@@ -843,7 +843,7 @@ const Tkeyboard::TkeyInfo Tkeyboard::keyInfo[256]= {
     false,/*FF*/_l("")
 };
 
-const unsigned char Tkeyboard::vk2dik[256]= {
+const unsigned char Tkeyboard::vk2dik[256] = {
     /*00                        */ 0,
     /*01 VK_LBUTTON             */ 0,
     /*02 VK_RBUTTON             */ 0,
@@ -1104,21 +1104,21 @@ const unsigned char Tkeyboard::vk2dik[256]= {
 
 const char_t* Tkeyboard::getKeyName(int key)
 {
-    return keyInfo[key&255].keyname;
+    return keyInfo[key & 255].keyname;
 }
 
 //=============================== Tmouse ===============================
-Tmouse::Tmouse(TintStrColl *Icoll,IffdshowBase *Ideci):TdirectInput(Icoll,_l("mouse"),GUID_SysMouse,c_dfDIMouse,&state,&prevstate,sizeof(state),Ideci)
+Tmouse::Tmouse(TintStrColl *Icoll, IffdshowBase *Ideci): TdirectInput(Icoll, _l("mouse"), GUID_SysMouse, c_dfDIMouse, &state, &prevstate, sizeof(state), Ideci)
 {
-    static const TintOptionT<Tmouse> iopts[]= {
-        IDFF_isMouse     ,&Tmouse::is      ,0,0,_l(""),0,
-        _l("mouse"),0,
-        IDFF_mouseAlways ,&Tmouse::always  ,0,0,_l(""),0,
-        _l("mouseAlways"),0,
+    static const TintOptionT<Tmouse> iopts[] = {
+        IDFF_isMouse     , &Tmouse::is      , 0, 0, _l(""), 0,
+        _l("mouse"), 0,
+        IDFF_mouseAlways , &Tmouse::always  , 0, 0, _l(""), 0,
+        _l("mouseAlways"), 0,
         0
     };
     addOptions(iopts);
-    setOnChange(IDFF_isMouse,this,&Tmouse::onChange);
+    setOnChange(IDFF_isMouse, this, &Tmouse::onChange);
 
     load();
 }
@@ -1134,5 +1134,5 @@ void Tmouse::processState(void)
     if (!always && !windowActive()) {
         return;
     }
-    DPRINTF(_l("%i %i %i  %i %i %i %i"),state.lX,state.lY,state.lZ,(int)state.rgbButtons[0],(int)state.rgbButtons[1],(int)state.rgbButtons[2],(int)state.rgbButtons[3]);
+    DPRINTF(_l("%i %i %i  %i %i %i %i"), state.lX, state.lY, state.lZ, (int)state.rgbButtons[0], (int)state.rgbButtons[1], (int)state.rgbButtons[2], (int)state.rgbButtons[3]);
 }

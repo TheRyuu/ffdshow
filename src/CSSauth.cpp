@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-static void CSSengine(int varient,unsigned char const *input,unsigned char *output);
+static void CSSengine(int varient, unsigned char const *input, unsigned char *output);
 
-void CSSkey1(int varient,unsigned char const *challenge,unsigned char *key)
+void CSSkey1(int varient, unsigned char const *challenge, unsigned char *key)
 {
-    static unsigned char perm_challenge[] = {1,3,0,7,5, 2,9,6,4,8};
+    static unsigned char perm_challenge[] = {1, 3, 0, 7, 5, 2, 9, 6, 4, 8};
 
     unsigned char scratch[10];
     int i;
@@ -16,9 +16,9 @@ void CSSkey1(int varient,unsigned char const *challenge,unsigned char *key)
     CSSengine(varient, scratch, key);
 }
 
-void CSSkey2(int varient,unsigned char const *challenge,unsigned char *key)
+void CSSkey2(int varient, unsigned char const *challenge, unsigned char *key)
 {
-    static const unsigned char perm_challenge[] = {6,1,9,3,8, 5,7,4,0,2};
+    static const unsigned char perm_challenge[] = {6, 1, 9, 3, 8, 5, 7, 4, 0, 2};
 
     static const unsigned char perm_varient[] = {
         0x0a, 0x08, 0x0e, 0x0c, 0x0b, 0x09, 0x0f, 0x0d,
@@ -37,9 +37,9 @@ void CSSkey2(int varient,unsigned char const *challenge,unsigned char *key)
     CSSengine(perm_varient[varient], scratch, key);
 }
 
-void CSSbuskey(int varient,unsigned char const *challenge,unsigned char *key)
+void CSSbuskey(int varient, unsigned char const *challenge, unsigned char *key)
 {
-    static const unsigned char perm_challenge[] = {4,0,3,5,7, 2,8,6,1,9};
+    static const unsigned char perm_challenge[] = {4, 0, 3, 5, 7, 2, 8, 6, 1, 9};
     static const unsigned char perm_varient[] = {
         0x12, 0x1a, 0x16, 0x1e, 0x02, 0x0a, 0x06, 0x0e,
         0x10, 0x18, 0x14, 0x1c, 0x00, 0x08, 0x04, 0x0c,
@@ -57,7 +57,7 @@ void CSSbuskey(int varient,unsigned char const *challenge,unsigned char *key)
     CSSengine(perm_varient[varient], scratch, key);
 }
 
-static void CSSgenbits(unsigned char *output, int len,unsigned char const *s)
+static void CSSgenbits(unsigned char *output, int len, unsigned char const *s)
 {
     unsigned long lfsr0, lfsr1;
     unsigned char b1_combined; /* Save the old value of bit 1 for feedback */
@@ -253,7 +253,7 @@ static const unsigned char CSStable3[] = {
     0xC3, 0x82, 0xC9, 0x15, 0x57, 0x16, 0x5D, 0x81
 };
 
-static void CSSengine(int varient, unsigned char const *input,unsigned char *output)
+static void CSSengine(int varient, unsigned char const *input, unsigned char *output)
 {
     unsigned char cse, term, index;
     unsigned char temp1[5];
@@ -266,7 +266,7 @@ static void CSSengine(int varient, unsigned char const *input,unsigned char *out
      * we alter the seed to the LFSR's used above,  then
      * generate the bits to play with.
      */
-    for (i = 5; --i >= 0; ) {
+    for (i = 5; --i >= 0;) {
         temp1[i] = (unsigned char)(input[5 + i] ^ CSSsecret[i] ^ CSStable2[i]);
     }
 

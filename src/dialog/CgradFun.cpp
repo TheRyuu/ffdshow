@@ -21,23 +21,23 @@
 
 void TgradFunPage::init(void)
 {
-    tbrSetRange(IDC_TBR_GRADFUN_THRESHOLD,51,2000);
-    tbrSetRange(IDC_TBR_GRADFUN_RADIUS,4,32);
+    tbrSetRange(IDC_TBR_GRADFUN_THRESHOLD, 51, 2000);
+    tbrSetRange(IDC_TBR_GRADFUN_RADIUS, 4, 32);
 }
 
 void TgradFunPage::cfg2dlg(void)
 {
-    tbrSet(IDC_TBR_GRADFUN_THRESHOLD,cfgGet(IDFF_gradFunThreshold),IDC_LBL_GRADFUN_THRESHOLD,NULL,100.0f);
-    tbrSet(IDC_TBR_GRADFUN_RADIUS,cfgGet(IDFF_gradFunRadius),IDC_LBL_GRADFUN_RADIUS,NULL,0);
+    tbrSet(IDC_TBR_GRADFUN_THRESHOLD, cfgGet(IDFF_gradFunThreshold), IDC_LBL_GRADFUN_THRESHOLD, NULL, 100.0f);
+    tbrSet(IDC_TBR_GRADFUN_RADIUS, cfgGet(IDFF_gradFunRadius), IDC_LBL_GRADFUN_RADIUS, NULL, 0);
 }
 
-TgradFunPage::TgradFunPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)
+TgradFunPage::TgradFunPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff): TconfPageDecVideo(Iparent, idff)
 {
-    resInter=IDC_CHB_GRADFUN;
-    static const TbindTrackbar<TgradFunPage> htbr[]= {
-        IDC_TBR_GRADFUN_THRESHOLD,IDFF_gradFunThreshold,&TgradFunPage::cfg2dlg,
-        IDC_TBR_GRADFUN_RADIUS,IDFF_gradFunRadius,&TgradFunPage::cfg2dlg,
-        0,0,NULL
+    resInter = IDC_CHB_GRADFUN;
+    static const TbindTrackbar<TgradFunPage> htbr[] = {
+        IDC_TBR_GRADFUN_THRESHOLD, IDFF_gradFunThreshold, &TgradFunPage::cfg2dlg,
+        IDC_TBR_GRADFUN_RADIUS, IDFF_gradFunRadius, &TgradFunPage::cfg2dlg,
+        0, 0, NULL
     };
     bindHtracks(htbr);
 }

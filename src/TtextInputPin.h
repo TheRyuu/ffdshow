@@ -4,12 +4,12 @@
 #include "DeCSSInputPin.h"
 
 class TffdshowDecVideo;
-class TtextInputPin :public CDeCSSInputPin
+class TtextInputPin : public CDeCSSInputPin
 {
 private:
     TffdshowDecVideo *filter;
     int id;
-    bool firsttime,found;
+    bool firsttime, found;
     int type;
     REFERENCE_TIME segmentStart;
     unsigned char *extradata;
@@ -21,15 +21,15 @@ protected:
     virtual HRESULT SetMediaType(const CMediaType* mtIn);
     virtual HRESULT CompleteConnect(IPin *pReceivePin);
     STDMETHODIMP ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt);
-    STDMETHODIMP QuerySupported(REFGUID PropSet,ULONG Id,ULONG *pTypeSupport);
-    STDMETHODIMP Set(REFGUID PropSet,ULONG Id,LPVOID pInstanceData,ULONG InstanceLength,LPVOID pPropertyData,ULONG DataLength);
+    STDMETHODIMP QuerySupported(REFGUID PropSet, ULONG Id, ULONG *pTypeSupport);
+    STDMETHODIMP Set(REFGUID PropSet, ULONG Id, LPVOID pInstanceData, ULONG InstanceLength, LPVOID pPropertyData, ULONG DataLength);
     STDMETHODIMP EndOfStream(void);
     STDMETHODIMP BeginFlush(void);
     STDMETHODIMP EndFlush(void);
     virtual HRESULT Transform(IMediaSample* pSample);
     STDMETHODIMP Disconnect(void);
 public:
-    TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_t *pinname,int Iid);
+    TtextInputPin(TffdshowDecVideo* pFilter, HRESULT* phr, const wchar_t *pinname, int Iid);
     virtual ~TtextInputPin();
     STDMETHODIMP Receive(IMediaSample * pSample);
     bool needSegment;
@@ -37,8 +37,8 @@ public:
     char_t trackName[512];
     char_t langName[512];
     LCID langId;
-    STDMETHODIMP NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
-    HRESULT getInfo(const char_t* *name,int *id,int *found);
+    STDMETHODIMP NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
+    HRESULT getInfo(const char_t* *name, int *id, int *found);
     HRESULT getInfo(const char_t* *trackNamePtr, const char_t* *langNamePtr, LCID *langIdPtr, int *idPtr, int *foundPtr);
 };
 

@@ -9,7 +9,7 @@ class TsubtitlesTextpinPGS : public TsubtitlesTextpin, public TsubtitleDVDparent
 protected:
     TsubtitlePGSParser *pSubtitlePGSParser;
     TcompositionObjects m_compositionObjects;
-    struct Tsubtitles :public Tsubtitle,public std::vector<Tsubtitle*> {
+    struct Tsubtitles : public Tsubtitle, public std::vector<Tsubtitle*> {
         virtual void print(REFERENCE_TIME time,
                            bool wasseek,
                            Tfont &f,
@@ -25,8 +25,8 @@ protected:
 public:
     TsubtitlesTextpinPGS(int Itype, IffdshowBase *Ideci);
     virtual ~TsubtitlesTextpinPGS(void);
-    virtual bool ctlSubtitles(unsigned int id,const void *data,unsigned int datalen);
-    virtual void addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
+    virtual bool ctlSubtitles(unsigned int id, const void *data, unsigned int datalen);
+    virtual void addSubtitle(REFERENCE_TIME start, REFERENCE_TIME stop, const unsigned char *data, unsigned int datalen, const TsubtitlesSettings *cfg, bool utf8);
     virtual void resetSubtitles(void);
-    virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME rtStart,REFERENCE_TIME rtStop,bool *forceChange=NULL);
+    virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop, bool *forceChange = NULL);
 };

@@ -5,15 +5,15 @@
 #include "avisynth/Tavisynth.h"
 
 struct Textradata;
-class TaudioCodecAvisynth :public TaudioCodec
+class TaudioCodecAvisynth : public TaudioCodec
 {
 private:
     TavisynthAudio *avisynth;
 protected:
     virtual bool init(const CMediaType &mt);
-    virtual void getInputDescr1(char_t *buf,size_t buflen) const;
+    virtual void getInputDescr1(char_t *buf, size_t buflen) const;
 public:
-    TaudioCodecAvisynth(IffdshowBase *deci,IdecAudioSink *Isink);
+    TaudioCodecAvisynth(IffdshowBase *deci, IdecAudioSink *Isink);
     virtual ~TaudioCodecAvisynth();
     virtual int getType(void) const {
         return IDFF_MOVIE_AVIS;

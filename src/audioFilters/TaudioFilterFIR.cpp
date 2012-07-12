@@ -22,17 +22,17 @@
 #include "IffdshowDecAudio.h"
 #include "fftsg.h"
 
-TaudioFilterFir::TaudioFilterFir(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
+TaudioFilterFir::TaudioFilterFir(IffdshowBase *Ideci, Tfilters *Iparent): TaudioFilter(Ideci, Iparent)
 {
-    old.type=-1;
-    ip[0]=0;
-    oldfreq=oldchannels=0;
-    fir=NULL;
-    memset(filterbuf,0,sizeof(filterbuf));
-    tapes=0;
+    old.type = -1;
+    ip[0] = 0;
+    oldfreq = oldchannels = 0;
+    fir = NULL;
+    memset(filterbuf, 0, sizeof(filterbuf));
+    tapes = 0;
 }
 
-bool TaudioFilterFir::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
+bool TaudioFilterFir::is(const TsampleFormat &fmt, const TfilterSettingsAudio *cfg)
 {
     return !!cfg->is;
 }
@@ -42,114 +42,114 @@ void TaudioFilterFir::done(void)
     if (fir) {
         aligned_free(fir);
     }
-    fir=NULL;
-    for (int i=0; i<8; i++)
+    fir = NULL;
+    for (int i = 0; i < 8; i++)
         if (filterbuf[i]) {
             delete []filterbuf[i];
-            filterbuf[i]=NULL;
+            filterbuf[i] = NULL;
         }
 }
 
-HRESULT TaudioFilterFir::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
+HRESULT TaudioFilterFir::process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples0, size_t numsamples, const TfilterSettingsAudio *cfg0)
 {
-    float *samples=NULL;
-    const TfirSettings *cfg=(const TfirSettings*)cfg0;
-    if (is(fmt,cfg)) {
-        samples=(float*)(samples0=init(cfg,fmt,samples0,numsamples));
-        if (!cfg->equal(old) || oldfreq!=fmt.freq || oldchannels!=fmt.nchannels) {
+    float *samples = NULL;
+    const TfirSettings *cfg = (const TfirSettings*)cfg0;
+    if (is(fmt, cfg)) {
+        samples = (float*)(samples0 = init(cfg, fmt, samples0, numsamples));
+        if (!cfg->equal(old) || oldfreq != fmt.freq || oldchannels != fmt.nchannels) {
             done();
-            old=*cfg;
-            oldfreq=fmt.freq;
-            oldchannels=fmt.nchannels;
+            old = *cfg;
+            oldfreq = fmt.freq;
+            oldchannels = fmt.nchannels;
             TfirFilter::_ftype_t freq[2];
-            TfirFilter::_ftype_t allfreq=fmt.freq/2.0f;
-            if (cfg->type==TfirSettings::BANDPASS || cfg->type==TfirSettings::BANDSTOP) {
-                freq[0]=(cfg->freq-cfg->width/2)/allfreq;
-                freq[1]=(cfg->freq+cfg->width/2)/allfreq;
+            TfirFilter::_ftype_t allfreq = fmt.freq / 2.0f;
+            if (cfg->type == TfirSettings::BANDPASS || cfg->type == TfirSettings::BANDSTOP) {
+                freq[0] = (cfg->freq - cfg->width / 2) / allfreq;
+                freq[1] = (cfg->freq + cfg->width / 2) / allfreq;
             } else {
-                freq[0]=cfg->freq/allfreq;
+                freq[0] = cfg->freq / allfreq;
             }
-            tapes=cfg->taps;
-            fir=TfirFilter::design_fir(&tapes,freq,cfg->type,cfg->window,cfg->kaiserbeta/1000.0f);
-            for (unsigned int i=0; i<fmt.nchannels; i++) {
-                filterbuf[i]=new float[tapes];
-                memset(filterbuf[i],0,sizeof(float)*tapes);
+            tapes = cfg->taps;
+            fir = TfirFilter::design_fir(&tapes, freq, cfg->type, cfg->window, cfg->kaiserbeta / 1000.0f);
+            for (unsigned int i = 0; i < fmt.nchannels; i++) {
+                filterbuf[i] = new float[tapes];
+                memset(filterbuf[i], 0, sizeof(float)*tapes);
             }
-            filterpos=0;
+            filterpos = 0;
         }
 
-        unsigned int pos=0;
-        for (unsigned int ch=0; ch<fmt.nchannels; ch++) {
-            float *sch=samples+ch;
-            pos=filterpos;
-            for (unsigned int i=0; i<numsamples; i++,sch+=fmt.nchannels) {
-                filterbuf[ch][pos]=*sch;
-                *sch=TfirFilter::firfilter(filterbuf[ch],pos,tapes,tapes,fir);
+        unsigned int pos = 0;
+        for (unsigned int ch = 0; ch < fmt.nchannels; ch++) {
+            float *sch = samples + ch;
+            pos = filterpos;
+            for (unsigned int i = 0; i < numsamples; i++, sch += fmt.nchannels) {
+                filterbuf[ch][pos] = *sch;
+                *sch = TfirFilter::firfilter(filterbuf[ch], pos, tapes, tapes, fir);
                 pos++;
-                if (pos==tapes) {
-                    pos=0;
+                if (pos == tapes) {
+                    pos = 0;
                 }
             }
         }
-        filterpos=pos;
+        filterpos = pos;
     }
 
-    if (numsamples>1) {
-        storedfft.freq=fmt.freq;
+    if (numsamples > 1) {
+        storedfft.freq = fmt.freq;
         if (deci->getParam2(IDFF_showCurrentFFT) && deci->getCfgDlgHwnd()) {
             //float *samples=_alloca(numsamples*fmt.bitsPerSample()>>3);
-            TsampleFormat oldfmt=fmt;
+            TsampleFormat oldfmt = fmt;
             if (!samples) {
-                samples=(float*)init(cfg,fmt,samples0,numsamples);
+                samples = (float*)init(cfg, fmt, samples0, numsamples);
             }
-            fmt=oldfmt;
-            int num=1<<av_log2((unsigned int)numsamples);
-            float *fftsamples=(float*)_alloca(num*sizeof(float));
-            memset(fftsamples,0,num*sizeof(float));
-            for (unsigned int ch=0; ch<fmt.nchannels; ch++) {
-                float *sch=samples+ch;
-                for (int i=0; i<num; i++,sch+=fmt.nchannels) {
-                    fftsamples[i]+=*sch;
+            fmt = oldfmt;
+            int num = 1 << av_log2((unsigned int)numsamples);
+            float *fftsamples = (float*)_alloca(num * sizeof(float));
+            memset(fftsamples, 0, num * sizeof(float));
+            for (unsigned int ch = 0; ch < fmt.nchannels; ch++) {
+                float *sch = samples + ch;
+                for (int i = 0; i < num; i++, sch += fmt.nchannels) {
+                    fftsamples[i] += *sch;
                 }
             }
-            for (int i=0; i<num; i++) {
-                fftsamples[i]/=fmt.nchannels;
+            for (int i = 0; i < num; i++) {
+                fftsamples[i] /= fmt.nchannels;
             }
-            rdft(num,1,fftsamples,ip,w);
+            rdft(num, 1, fftsamples, ip, w);
             //ddct(num,-1,fftsamples,ip,w);
-            for (int i=0; i<num/2; i++) {
-                fftsamples[i]=(float)_hypot(fftsamples[2*i+2],fftsamples[2*i+2+1]);
+            for (int i = 0; i < num / 2; i++) {
+                fftsamples[i] = (float)_hypot(fftsamples[2 * i + 2], fftsamples[2 * i + 2 + 1]);
             }
-            fftsamples[num/2-1]/=4;
+            fftsamples[num / 2 - 1] /= 4;
             CAutoLock lock(&csFFT);
-            num/=2;
-            if (storedfft.datalen<num*sizeof(float)) {
-                storedfft.data=(float*)realloc(storedfft.data,storedfft.datalen=num*sizeof(float));
+            num /= 2;
+            if (storedfft.datalen < num * sizeof(float)) {
+                storedfft.data = (float*)realloc(storedfft.data, storedfft.datalen = num * sizeof(float));
             }
-            storedfft.num=num;
-            memcpy(storedfft.data,fftsamples,num*sizeof(float));
-            storedfft.have=true;
+            storedfft.num = num;
+            memcpy(storedfft.data, fftsamples, num * sizeof(float));
+            storedfft.have = true;
         }
     }
 
-    return parent->deliverSamples(++it,fmt,samples0,numsamples);
+    return parent->deliverSamples(++it, fmt, samples0, numsamples);
 }
 
 void TaudioFilterFir::onSeek(void)
 {
     if (tapes) {
-        for (unsigned int i=0; i<8; i++)
+        for (unsigned int i = 0; i < 8; i++)
             if (filterbuf[i]) {
-                memset(filterbuf[i],0,sizeof(float)*tapes);
+                memset(filterbuf[i], 0, sizeof(float)*tapes);
             }
-        filterpos=0;
+        filterpos = 0;
     }
 }
 
-HRESULT TaudioFilterFir::queryInterface(const IID &iid,void **ptr) const
+HRESULT TaudioFilterFir::queryInterface(const IID &iid, void **ptr) const
 {
-    if (iid==IID_IaudioFilterFir) {
-        *ptr=(IaudioFilterFir*)this;
+    if (iid == IID_IaudioFilterFir) {
+        *ptr = (IaudioFilterFir*)this;
         return S_OK;
     } else {
         return E_NOINTERFACE;
@@ -158,7 +158,7 @@ HRESULT TaudioFilterFir::queryInterface(const IID &iid,void **ptr) const
 
 STDMETHODIMP_(int) TaudioFilterFir::getFFTdataNum(void)
 {
-    return storedfft.have?storedfft.num:0;
+    return storedfft.have ? storedfft.num : 0;
 }
 STDMETHODIMP TaudioFilterFir::getFFTdata(float *fftdata)
 {
@@ -169,7 +169,7 @@ STDMETHODIMP TaudioFilterFir::getFFTdata(float *fftdata)
         return E_UNEXPECTED;
     }
     CAutoLock lock(&csFFT);
-    memcpy(fftdata,storedfft.data,storedfft.num*sizeof(float));
+    memcpy(fftdata, storedfft.data, storedfft.num * sizeof(float));
     return S_OK;
 }
 STDMETHODIMP_(int) TaudioFilterFir::getFFTfreq(void)

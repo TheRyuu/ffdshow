@@ -23,15 +23,15 @@ struct TSubtitleMixedProps: public TSubtitleProps {
     bool autoSize;
     Rational sar;
     int gdi_font_scale;
-    int dx,dy,clipdy;
+    int dx, dy, clipdy;
     int blurStrength;
     bool hqBorder;  // use MPC's createWidenedRegion
     LONG lfWeight;  // LOGFONT::lfWeight for GDI
     int calculated_spacing;
 
     CPoint get_rotationAxis() const;
-    double get_marginR(double lineWidth=0) const;
-    double get_marginL(double lineWidth=0) const;
+    double get_marginR(double lineWidth = 0) const;
+    double get_marginL(double lineWidth = 0) const;
     double get_marginTop() const;
     double get_marginBottom() const;
     double getScrollStart() const;

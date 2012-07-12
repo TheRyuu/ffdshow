@@ -38,9 +38,9 @@
 #include "Tconvert.h"
 
 // Chapters
-DEFINE_GUID(IID_IAMExtendedSeeking,0xFA2AA8F9L,0x8B62,0x11D0,0xA5,0x20,0x00,0x00,0x00,0x00,0x00,0x00);
+DEFINE_GUID(IID_IAMExtendedSeeking, 0xFA2AA8F9L, 0x8B62, 0x11D0, 0xA5, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 // Chapters MPC
-DEFINE_GUID(IID_IDSMChapterBag,0x2D0EBE73,0xBA82,0x4E90,0x85,0x9B,0xC7,0xC4,0x8E,0xDE,0x65,0x0F);
+DEFINE_GUID(IID_IDSMChapterBag, 0x2D0EBE73, 0xBA82, 0x4E90, 0x85, 0x9B, 0xC7, 0xC4, 0x8E, 0xDE, 0x65, 0x0F);
 
 // {8E9922F0-B775-45b8-B650-941BEA790EEB}
 DEFINE_GUID(CLSID_DWSTRINGA, 0x8e9922f0, 0xb775, 0x45b8, 0xb6, 0x50, 0x94, 0x1b, 0xea, 0x79, 0x0e, 0xeb);
@@ -168,8 +168,8 @@ DEFINE_GUID_FOURCC(AMVV)
 DEFINE_GUID_FOURCC(SP5X)
 
 /* the number of mediatypes should not exceed 115 */
-const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
-	/* This is a 'catch-all' mediatype for all video subtypes. Other subtypes are included purely for enumeration purposes. They are not essential for the operation of ffdshow. */
+const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[] = {
+    /* This is a 'catch-all' mediatype for all video subtypes. Other subtypes are included purely for enumeration purposes. They are not essential for the operation of ffdshow. */
     { &MEDIATYPE_Video,              &MEDIASUBTYPE_NULL   },
     { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_NULL   },
     { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_MPEG2_VIDEO   },
@@ -273,7 +273,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB565 }
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowDecVideoRaw::inputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowDecVideoRaw::inputMediaTypes[] = {
     // explicitly register for raw video types for easier enumeration
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },
@@ -287,7 +287,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideoRaw::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB565 }
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowDecVideoSubtitles::inputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowDecVideoSubtitles::inputMediaTypes[] = {
     // explicitly register for raw video types for easier enumeration
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },
@@ -301,7 +301,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideoSubtitles::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB565 }
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowDecVideoDXVA::inputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowDecVideoDXVA::inputMediaTypes[] = {
     { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_AVC1   },
     { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_WVC1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_H264   },
@@ -313,11 +313,11 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideoDXVA::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_wvc1   },
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::outputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::outputMediaTypes[] = {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL   }
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[] = {
     { &MEDIATYPE_Audio              , &MEDIASUBTYPE_MP3               },
     { &MEDIATYPE_Audio              , &MEDIASUBTYPE_MPEG1AudioPayload },
     { &MEDIATYPE_Audio              , &MEDIASUBTYPE_MPEG1Payload      },
@@ -414,25 +414,25 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]= {
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IEEE_FLOAT }
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::outputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::outputMediaTypes[] = {
     { &MEDIATYPE_Audio, &MEDIASUBTYPE_PCM }
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowDecAudioRaw::inputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowDecAudioRaw::inputMediaTypes[] = {
     { &MEDIATYPE_Audio, &MEDIASUBTYPE_NULL }
 };
-const AMOVIESETUP_MEDIATYPE TffdshowDecAudioRaw::outputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowDecAudioRaw::outputMediaTypes[] = {
     { &MEDIATYPE_Audio, &MEDIASUBTYPE_NULL }
 };
 
-const AMOVIESETUP_MEDIATYPE inputTextMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE inputTextMediaTypes[] = {
     { &MEDIATYPE_Text    , &MEDIASUBTYPE_NULL           },
     { &MEDIATYPE_Subtitle, &MEDIASUBTYPE_NULL           },
     { &MEDIATYPE_Subtitle, &MEDIASUBTYPE_HDMV_PGS       },
     { &MEDIATYPE_Video   , &MEDIASUBTYPE_DVD_SUBPICTURE }
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowEnc::inputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowEnc::inputMediaTypes[] = {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YUY2   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB32  },
@@ -441,12 +441,12 @@ const AMOVIESETUP_MEDIATYPE TffdshowEnc::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB565 },
 };
 
-const AMOVIESETUP_MEDIATYPE TffdshowEnc::outputMediaTypes[]= {
+const AMOVIESETUP_MEDIATYPE TffdshowEnc::outputMediaTypes[] = {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL },
-    { &MEDIATYPE_Stream,&MEDIASUBTYPE_NULL }
+    { &MEDIATYPE_Stream, &MEDIASUBTYPE_NULL }
 };
 
-AMOVIESETUP_PIN TffdshowDecVideo::pins[]= {
+AMOVIESETUP_PIN TffdshowDecVideo::pins[] = {
     {
         L"Input",                                                  // String pin name
         FALSE,                                                     // Is it rendered
@@ -482,7 +482,7 @@ AMOVIESETUP_PIN TffdshowDecVideo::pins[]= {
     }
 };
 
-AMOVIESETUP_PIN TffdshowDecVideoRaw::pins[]= {
+AMOVIESETUP_PIN TffdshowDecVideoRaw::pins[] = {
     {
         L"Input",                                                  // String pin name
         FALSE,                                                     // Is it rendered
@@ -518,44 +518,7 @@ AMOVIESETUP_PIN TffdshowDecVideoRaw::pins[]= {
     }
 };
 
-AMOVIESETUP_PIN TffdshowDecVideoSubtitles::pins[]= {
-    {
-        L"Input",                                                  // String pin name
-        FALSE,                                                     // Is it rendered
-        FALSE,                                                     // Is it an output
-        FALSE,                                                     // Allowed none
-        FALSE,                                                     // Allowed many
-        &CLSID_NULL,                                               // Connects to filter
-        L"Output",                                                 // Connects to pin
-        sizeof(inputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),   // Number of types
-        inputMediaTypes                                            // The pin details
-    },
-    {
-        L"Output",                                                 // String pin name
-        FALSE,                                                     // Is it rendered
-        TRUE,                                                      // Is it an output
-        FALSE,                                                     // Allowed none
-        FALSE,                                                     // Allowed many
-        &CLSID_NULL,                                               // Connects to filter
-        L"Input",                                                  // Connects to pin
-        sizeof(outputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),  // Number of types
-        outputMediaTypes                                           // The pin details
-    },
-    {
-        L"In Text",                                                  // String pin name
-        FALSE,                                                       // Is it rendered
-        FALSE,                                                       // Is it an output
-        FALSE,                                                       // Allowed none
-        FALSE,                                                       // Allowed many
-        &CLSID_NULL,                                                 // Connects to filter
-        NULL,                                                        // Connects to pin
-        sizeof(inputTextMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE), // Number of types
-        inputTextMediaTypes                                          // The pin details
-    }
-};
-
-
-AMOVIESETUP_PIN TffdshowDecVideoDXVA::pins[]= {
+AMOVIESETUP_PIN TffdshowDecVideoSubtitles::pins[] = {
     {
         L"Input",                                                  // String pin name
         FALSE,                                                     // Is it rendered
@@ -592,8 +555,45 @@ AMOVIESETUP_PIN TffdshowDecVideoDXVA::pins[]= {
 };
 
 
+AMOVIESETUP_PIN TffdshowDecVideoDXVA::pins[] = {
+    {
+        L"Input",                                                  // String pin name
+        FALSE,                                                     // Is it rendered
+        FALSE,                                                     // Is it an output
+        FALSE,                                                     // Allowed none
+        FALSE,                                                     // Allowed many
+        &CLSID_NULL,                                               // Connects to filter
+        L"Output",                                                 // Connects to pin
+        sizeof(inputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),   // Number of types
+        inputMediaTypes                                            // The pin details
+    },
+    {
+        L"Output",                                                 // String pin name
+        FALSE,                                                     // Is it rendered
+        TRUE,                                                      // Is it an output
+        FALSE,                                                     // Allowed none
+        FALSE,                                                     // Allowed many
+        &CLSID_NULL,                                               // Connects to filter
+        L"Input",                                                  // Connects to pin
+        sizeof(outputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),  // Number of types
+        outputMediaTypes                                           // The pin details
+    },
+    {
+        L"In Text",                                                  // String pin name
+        FALSE,                                                       // Is it rendered
+        FALSE,                                                       // Is it an output
+        FALSE,                                                       // Allowed none
+        FALSE,                                                       // Allowed many
+        &CLSID_NULL,                                                 // Connects to filter
+        NULL,                                                        // Connects to pin
+        sizeof(inputTextMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE), // Number of types
+        inputTextMediaTypes                                          // The pin details
+    }
+};
 
-const AMOVIESETUP_PIN TffdshowDecAudio::pins[]= {
+
+
+const AMOVIESETUP_PIN TffdshowDecAudio::pins[] = {
     {
         L"Output",                                                 // String pin name
         FALSE,                                                     // Is it rendered
@@ -618,7 +618,7 @@ const AMOVIESETUP_PIN TffdshowDecAudio::pins[]= {
     }
 };
 
-const AMOVIESETUP_PIN TffdshowDecAudioRaw::pins[]= {
+const AMOVIESETUP_PIN TffdshowDecAudioRaw::pins[] = {
     {
         L"Output",                                                 // String pin name
         FALSE,                                                     // Is it rendered
@@ -643,7 +643,7 @@ const AMOVIESETUP_PIN TffdshowDecAudioRaw::pins[]= {
     }
 };
 
-const AMOVIESETUP_PIN TffdshowEnc::pins[]= {
+const AMOVIESETUP_PIN TffdshowEnc::pins[] = {
     {
         L"Input",           // String pin name
         FALSE,              // Is it rendered
@@ -668,61 +668,61 @@ const AMOVIESETUP_PIN TffdshowEnc::pins[]= {
     }
 };
 
-const DWORD TffdshowDecVideo::defaultMerit=0xff800001; // a hack to be always the first
-const AMOVIESETUP_FILTER TffdshowDecVideo::filter= {
+const DWORD TffdshowDecVideo::defaultMerit = 0xff800001; // a hack to be always the first
+const AMOVIESETUP_FILTER TffdshowDecVideo::filter = {
     &CLSID_FFDSHOW,                       // Filter CLSID
     FFDSHOW_NAME_L,                       // Filter name
     defaultMerit,
-    sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
+    sizeof(pins) / sizeof(AMOVIESETUP_PIN), // Number of pins
     pins                                  // Pin details
 };
 
-const DWORD TffdshowDecVideoRaw::defaultMerit=MERIT_DO_NOT_USE;
-const AMOVIESETUP_FILTER TffdshowDecVideoRaw::filter= {
+const DWORD TffdshowDecVideoRaw::defaultMerit = MERIT_DO_NOT_USE;
+const AMOVIESETUP_FILTER TffdshowDecVideoRaw::filter = {
     &CLSID_FFDSHOWRAW,                    // Filter CLSID
     FFDSHOWRAW_NAME_L,                    // Filter name
     defaultMerit,
-    sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
+    sizeof(pins) / sizeof(AMOVIESETUP_PIN), // Number of pins
     pins                                  // Pin details
 };
 
-const DWORD TffdshowDecVideoSubtitles::defaultMerit=MERIT_DO_NOT_USE;
-const AMOVIESETUP_FILTER TffdshowDecVideoSubtitles::filter= {
+const DWORD TffdshowDecVideoSubtitles::defaultMerit = MERIT_DO_NOT_USE;
+const AMOVIESETUP_FILTER TffdshowDecVideoSubtitles::filter = {
     &CLSID_FFDSHOWSUBTITLES,              // Filter CLSID
     FFDSHOWSUBTITLES_NAME_L,              // Filter name
     defaultMerit,
-    sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
+    sizeof(pins) / sizeof(AMOVIESETUP_PIN), // Number of pins
     pins                                  // Pin details
 };
 
-const DWORD TffdshowDecVideoDXVA::defaultMerit=0xff800002; // Always be upper FFDShowDecoder merit in case DXVA decoding is enabled
-const AMOVIESETUP_FILTER TffdshowDecVideoDXVA::filter= {
+const DWORD TffdshowDecVideoDXVA::defaultMerit = 0xff800002; // Always be upper FFDShowDecoder merit in case DXVA decoding is enabled
+const AMOVIESETUP_FILTER TffdshowDecVideoDXVA::filter = {
     &CLSID_FFDSHOWDXVA,                    // Filter CLSID
     FFDSHOWDXVA_NAME_L,                    // Filter name
     defaultMerit,
-    sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
+    sizeof(pins) / sizeof(AMOVIESETUP_PIN), // Number of pins
     pins                                  // Pin details
 };
 
-const DWORD TffdshowDecAudio::defaultMerit=0xff800001; // a hack to be always the first
-const AMOVIESETUP_FILTER TffdshowDecAudio::filter= {
+const DWORD TffdshowDecAudio::defaultMerit = 0xff800001; // a hack to be always the first
+const AMOVIESETUP_FILTER TffdshowDecAudio::filter = {
     &CLSID_FFDSHOWAUDIO,                  // Filter CLSID
     FFDSHOWAUDIO_NAME_L,                  // Filter name
     defaultMerit,
-    sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
+    sizeof(pins) / sizeof(AMOVIESETUP_PIN), // Number of pins
     pins                                  // Pin details
 };
 
-const DWORD TffdshowDecAudioRaw::defaultMerit=MERIT_DO_NOT_USE;
-const AMOVIESETUP_FILTER TffdshowDecAudioRaw::filter= {
+const DWORD TffdshowDecAudioRaw::defaultMerit = MERIT_DO_NOT_USE;
+const AMOVIESETUP_FILTER TffdshowDecAudioRaw::filter = {
     &CLSID_FFDSHOWAUDIORAW,               // Filter CLSID
     FFDSHOWAUDIORAW_NAME_L,               // Filter name
     defaultMerit,
-    sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
+    sizeof(pins) / sizeof(AMOVIESETUP_PIN), // Number of pins
     pins                                  // Pin details
 };
 
-const DWORD TffdshowEnc::defaultMerit=MERIT_SW_COMPRESSOR;
+const DWORD TffdshowEnc::defaultMerit = MERIT_SW_COMPRESSOR;
 
 // List of class IDs and creator functions for the class factory. This
 // provides the link between the OLE entry point in the DLL and an object
@@ -879,19 +879,19 @@ CFactoryTemplate g_Templates[] = {
     },
 };
 
-int g_cTemplates=sizeof(g_Templates)/sizeof(CFactoryTemplate);
+int g_cTemplates = sizeof(g_Templates) / sizeof(CFactoryTemplate);
 
 static void remove00000000(void)
 {
-    HKEY hKey=NULL;
-    RegOpenKeyEx(HKEY_CLASSES_ROOT,_l("\\CLSID\\{00000000-0000-0000-0000-000000000000}\\InprocServer32"),0,KEY_READ,&hKey);
+    HKEY hKey = NULL;
+    RegOpenKeyEx(HKEY_CLASSES_ROOT, _l("\\CLSID\\{00000000-0000-0000-0000-000000000000}\\InprocServer32"), 0, KEY_READ, &hKey);
     if (hKey) {
         char_t dll[MAX_PATH];
-        DWORD size=MAX_PATH;
-        LONG res=RegQueryValueEx(hKey,_l(""),0,0,(unsigned char*)dll,&size);
+        DWORD size = MAX_PATH;
+        LONG res = RegQueryValueEx(hKey, _l(""), 0, 0, (unsigned char*)dll, &size);
         RegCloseKey(hKey);
-        if (res==ERROR_SUCCESS && stristr(dll,_l("ffdshow.ax"))) {
-            SHDeleteKey(HKEY_CLASSES_ROOT,_l("\\CLSID\\{00000000-0000-0000-0000-000000000000}"));
+        if (res == ERROR_SUCCESS && stristr(dll, _l("ffdshow.ax"))) {
+            SHDeleteKey(HKEY_CLASSES_ROOT, _l("\\CLSID\\{00000000-0000-0000-0000-000000000000}"));
         }
     }
 }
@@ -899,34 +899,34 @@ static void remove00000000(void)
 STDAPI DllRegisterServer()
 {
     remove00000000();
-    DWORD merit_ffdshowDecVideo=TffdshowDecVideo::defaultMerit;
-    getFilterMerit(CLSID_FFDSHOW,&merit_ffdshowDecVideo);
-    DWORD merit_ffdshowDecAudio=TffdshowDecAudio::defaultMerit;
-    getFilterMerit(CLSID_FFDSHOWAUDIO,&merit_ffdshowDecAudio);
-    HRESULT hr=AMovieDllRegisterServer2(TRUE);
+    DWORD merit_ffdshowDecVideo = TffdshowDecVideo::defaultMerit;
+    getFilterMerit(CLSID_FFDSHOW, &merit_ffdshowDecVideo);
+    DWORD merit_ffdshowDecAudio = TffdshowDecAudio::defaultMerit;
+    getFilterMerit(CLSID_FFDSHOWAUDIO, &merit_ffdshowDecAudio);
+    HRESULT hr = AMovieDllRegisterServer2(TRUE);
     if (FAILED(hr)) {
         return hr;
     }
 
-    setFilterMerit(CLSID_FFDSHOW,merit_ffdshowDecVideo);
-    setFilterMerit(CLSID_FFDSHOWAUDIO,merit_ffdshowDecAudio);
+    setFilterMerit(CLSID_FFDSHOW, merit_ffdshowDecVideo);
+    setFilterMerit(CLSID_FFDSHOWAUDIO, merit_ffdshowDecAudio);
 
     //encoder
-    IFilterMapper2 *pFM2=NULL;
-    if (SUCCEEDED(CoCreateInstance(CLSID_FilterMapper2,NULL,CLSCTX_INPROC_SERVER,IID_IFilterMapper2,(void **)&pFM2))) {
+    IFilterMapper2 *pFM2 = NULL;
+    if (SUCCEEDED(CoCreateInstance(CLSID_FilterMapper2, NULL, CLSCTX_INPROC_SERVER, IID_IFilterMapper2, (void **)&pFM2))) {
         REGFILTER2 rf2FilterReg;
-        rf2FilterReg.dwVersion=1;
-        rf2FilterReg.dwMerit=TffdshowEnc::defaultMerit;
-        rf2FilterReg.cPins=2;
-        rf2FilterReg.rgPins=TffdshowEnc::pins;
+        rf2FilterReg.dwVersion = 1;
+        rf2FilterReg.dwMerit = TffdshowEnc::defaultMerit;
+        rf2FilterReg.cPins = 2;
+        rf2FilterReg.rgPins = TffdshowEnc::pins;
 
-        hr=pFM2->RegisterFilter(CLSID_FFDSHOWENC,
-                                FFDSHOWENC_DESC_L,
-                                NULL,
-                                &CLSID_VideoCompressorCategory,
-                                FFDSHOWENC_DESC_L,
-                                &rf2FilterReg
-                               );
+        hr = pFM2->RegisterFilter(CLSID_FFDSHOWENC,
+                                  FFDSHOWENC_DESC_L,
+                                  NULL,
+                                  &CLSID_VideoCompressorCategory,
+                                  FFDSHOWENC_DESC_L,
+                                  &rf2FilterReg
+                                 );
         pFM2->Release();
     }
     return hr;
@@ -934,16 +934,16 @@ STDAPI DllRegisterServer()
 
 STDAPI DllUnregisterServer()
 {
-    HRESULT hr=AMovieDllRegisterServer2(FALSE);
+    HRESULT hr = AMovieDllRegisterServer2(FALSE);
     if (FAILED(hr)) {
         return hr;
     }
-    IFilterMapper2 *pFM2=NULL;
-    hr=CoCreateInstance(CLSID_FilterMapper2,NULL,CLSCTX_INPROC_SERVER,IID_IFilterMapper2,(void **)&pFM2);
+    IFilterMapper2 *pFM2 = NULL;
+    hr = CoCreateInstance(CLSID_FilterMapper2, NULL, CLSCTX_INPROC_SERVER, IID_IFilterMapper2, (void **)&pFM2);
     if (FAILED(hr)) {
         return hr;
     }
-    hr=pFM2->UnregisterFilter(&CLSID_VideoCompressorCategory,FFDSHOWENC_DESC_L,CLSID_FFDSHOWENC);
+    hr = pFM2->UnregisterFilter(&CLSID_VideoCompressorCategory, FFDSHOWENC_DESC_L, CLSID_FFDSHOWENC);
     pFM2->Release();
     return hr;
 }

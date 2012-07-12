@@ -25,16 +25,16 @@
 #include "TffPict.h"
 #include "IffdshowBase.h"
 
-T3x3blurSWS::T3x3blurSWS(IffdshowBase *deci,unsigned int Idx,unsigned int Idy):dx(Idx),dy(Idy)
+T3x3blurSWS::T3x3blurSWS(IffdshowBase *deci, unsigned int Idx, unsigned int Idy): dx(Idx), dy(Idy)
 {
     deci->getLibavcodec(&libavcodec);
     SwsFilter swsf;
-    swsf.lumV=swsf.lumH=libavcodec->sws_getConstVec(1/3.0,3);
-    swsf.chrH=swsf.chrV=NULL;
+    swsf.lumV = swsf.lumH = libavcodec->sws_getConstVec(1 / 3.0, 3);
+    swsf.chrH = swsf.chrV = NULL;
     int sws_flags = 0;
     SwsParams params;
-    Tlibavcodec::swsInitParams(&params,0,sws_flags);
-    swsc=libavcodec->sws_getCachedContext(NULL,dx,dy,PIX_FMT_GRAY8,dx,dy,PIX_FMT_GRAY8,sws_flags,&swsf,NULL,NULL,&params);
+    Tlibavcodec::swsInitParams(&params, 0, sws_flags);
+    swsc = libavcodec->sws_getCachedContext(NULL, dx, dy, PIX_FMT_GRAY8, dx, dy, PIX_FMT_GRAY8, sws_flags, &swsf, NULL, NULL, &params);
     libavcodec->sws_freeVec(swsf.lumH);
 }
 T3x3blurSWS::~T3x3blurSWS()
@@ -44,11 +44,11 @@ T3x3blurSWS::~T3x3blurSWS()
     }
     libavcodec->Release();
 }
-void T3x3blurSWS::process(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride)
+void T3x3blurSWS::process(const unsigned char *src, stride_t srcStride, unsigned char *dst, stride_t dstStride)
 {
     if (swsc) {
-        libavcodec->sws_scale(swsc,&src,&srcStride,0,dy,&dst,&dstStride);
+        libavcodec->sws_scale(swsc, &src, &srcStride, 0, dy, &dst, &dstStride);
     } else {
-        TffPict::copy(dst,dstStride,src,srcStride,dx,dy);
+        TffPict::copy(dst, dstStride, src, srcStride, dx, dy);
     }
 }

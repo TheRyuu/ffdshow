@@ -3,7 +3,7 @@
 
 #include "TconfPageEnc.h"
 
-class TonePassPage :public TconfPageEnc
+class TonePassPage : public TconfPageEnc
 {
 private:
     void stats2dlg(void);

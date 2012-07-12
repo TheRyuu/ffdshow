@@ -22,19 +22,19 @@
 #include "TdeinterlaceSettings.h"
 #include "TimgFilters.h"
 
-TimgFilterDGbob::TimgFilterDGbob(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+TimgFilterDGbob::TimgFilterDGbob(IffdshowBase *Ideci, Tfilters *Iparent): TimgFilter(Ideci, Iparent)
 {
-    n=0;
-    for (int i=0; i<countof(picts0); i++) {
-        picts0[i]=new TtempPict;
+    n = 0;
+    for (int i = 0; i < countof(picts0); i++) {
+        picts0[i] = new TtempPict;
     }
-    picts=picts0+2;
+    picts = picts0 + 2;
     do_deinterlace = 0;
 }
 TimgFilterDGbob::~TimgFilterDGbob()
 {
     done();
-    for (int i=0; i<countof(picts0); i++) {
+    for (int i = 0; i < countof(picts0); i++) {
         delete picts0[i];
     }
 }
@@ -44,88 +44,88 @@ void TimgFilterDGbob::onSizeChange(void)
 }
 void TimgFilterDGbob::done(void)
 {
-    for (int i=0; i<countof(picts0); i++) {
+    for (int i = 0; i < countof(picts0); i++) {
         picts0[i]->done();
     }
-    n=0;
+    n = 0;
     do_deinterlace = 0;
 }
-HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it, TffPict &pict0, const TfilterSettingsVideo *cfg0)
 {
     HRESULT hr = S_FALSE;
-    const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
+    const TdeinterlaceSettings *cfg = (const TdeinterlaceSettings*)cfg0;
     if (((pict0.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict0.film) && !cfg->deinterlaceAlways) {
         done();
-        return parent->processSample(++it,pict0);
+        return parent->processSample(++it, pict0);
     }
-    init(pict0,cfg->full,0);
+    init(pict0, cfg->full, 0);
     const unsigned char *src_[4];
-    bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2|FF_CSP_RGB32,pict0,cfg->full,src_);
+    bool cspChanged = getCur(FF_CSP_420P | FF_CSP_YUY2 | FF_CSP_RGB32, pict0, cfg->full, src_);
     if (cspChanged) {
         done();
     }
 
-    int order=pict0.fieldtype&FIELD_TYPE::INT_BFF?1:0,fcnt=cfg->dgbobMode==0?1:2;
-    REFERENCE_TIME rtStart=pict0.rtStart,rtDuration=(pict0.rtStop-pict0.rtStart)/fcnt;
+    int order = pict0.fieldtype & FIELD_TYPE::INT_BFF ? 1 : 0, fcnt = cfg->dgbobMode == 0 ? 1 : 2;
+    REFERENCE_TIME rtStart = pict0.rtStart, rtDuration = (pict0.rtStop - pict0.rtStart) / fcnt;
     if (!do_deinterlace) {
-        picts[SRC]->p.copyFrom(pict0,picts[SRC]->buf);
-        picts[NXT]->p.copyFrom(pict0,picts[NXT]->buf);
+        picts[SRC]->p.copyFrom(pict0, picts[SRC]->buf);
+        picts[NXT]->p.copyFrom(pict0, picts[NXT]->buf);
         do_deinterlace = 1;
     }
-    for (int f=0; f<fcnt; f++,order=1-order) {
-        TffPict pict=pict0;
-        picts[NXTNXT]->p.copyFrom(pict,picts[NXTNXT]->buf);
+    for (int f = 0; f < fcnt; f++, order = 1 - order) {
+        TffPict pict = pict0;
+        picts[NXTNXT]->p.copyFrom(pict, picts[NXTNXT]->buf);
         unsigned char *dst[4];
-        cspChanged|=getNext(csp1,pict,cfg->full,dst);
+        cspChanged |= getNext(csp1, pict, cfg->full, dst);
         if (picts[SRC]->buf.size()) {
-            int n=this->n-2;
-            int frame=n;
-            TffPict *src   =&picts[0]->p;
-            TffPict *prv   =&picts[n > 0 ? - 1 : 0]->p;
-            TffPict *prvprv=&picts[n > 1 ? - 2 : 0]->p;
-            TffPict *nxt   =&picts[+1]->p;
-            TffPict *nxtnxt=&picts[+2]->p;
-            int D=n==0?0:cfg->dgbobThreshold;
-            for (unsigned int z=0; z<pict.cspInfo.numPlanes; z++) {
-                const unsigned char *srcp_saved,*srcp;
-                srcp_saved=srcp=src->data[z];
-                unsigned char *dstp_saved,*dstp;
-                dstp_saved=dstp=dst[z];
-                int w=dx2[z]*pict.cspInfo.Bpp;
-                int h=dy2[z];
-                static const int AP=30;
-                static const int T=6;
+            int n = this->n - 2;
+            int frame = n;
+            TffPict *src   = &picts[0]->p;
+            TffPict *prv   = &picts[n > 0 ? - 1 : 0]->p;
+            TffPict *prvprv = &picts[n > 1 ? - 2 : 0]->p;
+            TffPict *nxt   = &picts[+1]->p;
+            TffPict *nxtnxt = &picts[+2]->p;
+            int D = n == 0 ? 0 : cfg->dgbobThreshold;
+            for (unsigned int z = 0; z < pict.cspInfo.numPlanes; z++) {
+                const unsigned char *srcp_saved, *srcp;
+                srcp_saved = srcp = src->data[z];
+                unsigned char *dstp_saved, *dstp;
+                dstp_saved = dstp = dst[z];
+                int w = dx2[z] * pict.cspInfo.Bpp;
+                int h = dy2[z];
+                static const int AP = 30;
+                static const int T = 6;
                 if ((cfg->dgbobMode > 0) && (frame & 1)) {
                     // Process odd-numbered frames.
                     // Copy field from current frame.
                     srcp = srcp_saved + order * src->stride[z];
                     dstp = dstp_saved + order * stride2[z];
-                    for (int y=0; y<h; y+=2) {
+                    for (int y = 0; y < h; y += 2) {
                         memcpy(dstp, srcp, w);
-                        srcp += 2*src->stride[z];
-                        dstp += 2*stride2[z];
+                        srcp += 2 * src->stride[z];
+                        dstp += 2 * stride2[z];
                     }
                     // Copy through the line that will be missed below.
-                    memcpy(dstp_saved + (1-order)*(h-1)*stride2[z], srcp_saved + (1-order)*(h-1)*src->stride[z], w);
+                    memcpy(dstp_saved + (1 - order) * (h - 1)*stride2[z], srcp_saved + (1 - order) * (h - 1)*src->stride[z], w);
                     // For the other field choose adaptively between using the previous field or the interpolant from the current field.
-                    const unsigned char *prvp = prv->data[z] + prv->stride[z] + order*prv->stride[z];
+                    const unsigned char *prvp = prv->data[z] + prv->stride[z] + order * prv->stride[z];
                     const unsigned char *prvpp = prvp - prv->stride[z];
                     const unsigned char *prvpn = prvp + prv->stride[z];
-                    const unsigned char *prvprvp = prvprv->data[z] + prvprv->stride[z] + order*prvprv->stride[z];
+                    const unsigned char *prvprvp = prvprv->data[z] + prvprv->stride[z] + order * prvprv->stride[z];
                     const unsigned char *prvprvpp = prvprvp - prvprv->stride[z];
                     const unsigned char *prvprvpn = prvprvp + prvprv->stride[z];
-                    const unsigned char *nxtp = nxt->data[z] + nxt->stride[z] + order*nxt->stride[z];
+                    const unsigned char *nxtp = nxt->data[z] + nxt->stride[z] + order * nxt->stride[z];
                     const unsigned char *nxtpp = nxtp - nxt->stride[z];
                     const unsigned char *nxtpn = nxtp + nxt->stride[z];
-                    const unsigned char *nxtnxtp = nxtnxt->data[z] + nxtnxt->stride[z] + order*nxtnxt->stride[z];
+                    const unsigned char *nxtnxtp = nxtnxt->data[z] + nxtnxt->stride[z] + order * nxtnxt->stride[z];
                     const unsigned char *nxtnxtpp = nxtnxtp - nxtnxt->stride[z];
                     const unsigned char *nxtnxtpn = nxtnxtp + nxtnxt->stride[z];
-                    const unsigned char *srcp =  srcp_saved + src->stride[z] + order*src->stride[z];
+                    const unsigned char *srcp =  srcp_saved + src->stride[z] + order * src->stride[z];
                     const unsigned char *srcpp = srcp - src->stride[z];
                     const unsigned char *srcpn = srcp + src->stride[z];
-                    unsigned char *dstp =  dstp_saved + stride2[z] + order*stride2[z];
-                    for (int y=0; y<h-2; y+=2) {
-                        for (int x=0; x<w; x++) {
+                    unsigned char *dstp =  dstp_saved + stride2[z] + order * stride2[z];
+                    for (int y = 0; y < h - 2; y += 2) {
+                        for (int x = 0; x < w; x++) {
                             if (abs(srcp[x] - nxtp[x]) < D
                                     //&& abs(srcp[x] - nxtnxtp[x]) < D
                                     //&& abs(prvp[x] - nxtp[x]) < D
@@ -175,51 +175,51 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
                                 }
                             }
                         }
-                        prvp     += 2*prv->stride[z];
-                        prvpp    += 2*prv->stride[z];
-                        prvpn    += 2*prv->stride[z];
-                        prvprvpp += 2*prvprv->stride[z];
-                        prvprvpn += 2*prvprv->stride[z];
-                        nxtp     += 2*nxt->stride[z];
-                        nxtpp    += 2*nxt->stride[z];
-                        nxtpn    += 2*nxt->stride[z];
-                        nxtnxtpp += 2*nxtnxt->stride[z];
-                        nxtnxtpn += 2*nxtnxt->stride[z];
-                        srcp     += 2*src->stride[z];
-                        srcpp    += 2*src->stride[z];
-                        srcpn    += 2*src->stride[z];
-                        dstp     += 2*stride2[z];
+                        prvp     += 2 * prv->stride[z];
+                        prvpp    += 2 * prv->stride[z];
+                        prvpn    += 2 * prv->stride[z];
+                        prvprvpp += 2 * prvprv->stride[z];
+                        prvprvpn += 2 * prvprv->stride[z];
+                        nxtp     += 2 * nxt->stride[z];
+                        nxtpp    += 2 * nxt->stride[z];
+                        nxtpn    += 2 * nxt->stride[z];
+                        nxtnxtpp += 2 * nxtnxt->stride[z];
+                        nxtnxtpn += 2 * nxtnxt->stride[z];
+                        srcp     += 2 * src->stride[z];
+                        srcpp    += 2 * src->stride[z];
+                        srcpn    += 2 * src->stride[z];
+                        dstp     += 2 * stride2[z];
                     }
                 } else {
                     // Process even-numbered frames.
                     // Copy field from current frame.
-                    srcp = srcp_saved + (1-order) * src->stride[z];
-                    dstp = dstp_saved + (1-order) * stride2[z];
-                    for (int y = 0; y < h; y+=2) {
+                    srcp = srcp_saved + (1 - order) * src->stride[z];
+                    dstp = dstp_saved + (1 - order) * stride2[z];
+                    for (int y = 0; y < h; y += 2) {
                         memcpy(dstp, srcp, w);
-                        srcp += 2*src->stride[z];
-                        dstp += 2*stride2[z];
+                        srcp += 2 * src->stride[z];
+                        dstp += 2 * stride2[z];
                     }
                     // Copy through the line that will be missed below.
-                    memcpy(dstp_saved + order*(h-1)*stride2[z], srcp_saved + order*(h-1)*src->stride[z], w);
+                    memcpy(dstp_saved + order * (h - 1)*stride2[z], srcp_saved + order * (h - 1)*src->stride[z], w);
                     // For the other field choose adaptively between using the previous field or the interpolant from the current field.
-                    const unsigned char *prvp = prv->data[z] + prv->stride[z] + (1-order)*prv->stride[z];
+                    const unsigned char *prvp = prv->data[z] + prv->stride[z] + (1 - order) * prv->stride[z];
                     const unsigned char *prvpp = prvp - prv->stride[z];
                     const unsigned char *prvpn = prvp + prv->stride[z];
-                    const unsigned char *prvprvp = prvprv->data[z] + prvprv->stride[z] + (1-order)*prvprv->stride[z];
+                    const unsigned char *prvprvp = prvprv->data[z] + prvprv->stride[z] + (1 - order) * prvprv->stride[z];
                     const unsigned char *prvprvpp = prvprvp - prvprv->stride[z];
                     const unsigned char *prvprvpn = prvprvp + prvprv->stride[z];
-                    const unsigned char *nxtp = nxt->data[z] + nxt->stride[z] + (1-order)*nxt->stride[z];
+                    const unsigned char *nxtp = nxt->data[z] + nxt->stride[z] + (1 - order) * nxt->stride[z];
                     const unsigned char *nxtpp = nxtp - nxt->stride[z];
                     const unsigned char *nxtpn = nxtp + nxt->stride[z];
-                    const unsigned char *nxtnxtp = nxtnxt->data[z] + nxtnxt->stride[z] + (1-order)*nxtnxt->stride[z];
+                    const unsigned char *nxtnxtp = nxtnxt->data[z] + nxtnxt->stride[z] + (1 - order) * nxtnxt->stride[z];
                     const unsigned char *nxtnxtpp = nxtnxtp - nxtnxt->stride[z];
                     const unsigned char *nxtnxtpn = nxtnxtp + nxtnxt->stride[z];
-                    const unsigned char *srcp =  srcp_saved + src->stride[z] + (1-order)*src->stride[z];
+                    const unsigned char *srcp =  srcp_saved + src->stride[z] + (1 - order) * src->stride[z];
                     const unsigned char *srcpp = srcp - src->stride[z];
                     const unsigned char *srcpn = srcp + src->stride[z];
-                    unsigned char *dstp =  dstp_saved + stride2[z] + (1-order)*stride2[z];
-                    for (int y = 0; y < h - 2; y+=2) {
+                    unsigned char *dstp =  dstp_saved + stride2[z] + (1 - order) * stride2[z];
+                    for (int y = 0; y < h - 2; y += 2) {
                         for (int x = 0; x < w; x++) {
                             if (abs(srcp[x] - prvp[x]) < D
                                     //&& abs(srcp[x] - prvprvp[x]) < D
@@ -270,39 +270,39 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
                                 }
                             }
                         }
-                        prvp     += 2*prv->stride[z];
-                        prvpp    += 2*prv->stride[z];
-                        prvpn    += 2*prv->stride[z];
-                        prvprvpp += 2*prvprv->stride[z];
-                        prvprvpn += 2*prvprv->stride[z];
-                        nxtp     += 2*nxt->stride[z];
-                        nxtpp    += 2*nxt->stride[z];
-                        nxtpn    += 2*nxt->stride[z];
-                        nxtnxtpp += 2*nxtnxt->stride[z];
-                        nxtnxtpn += 2*nxtnxt->stride[z];
-                        srcp     += 2*src->stride[z];
-                        srcpp    += 2*src->stride[z];
-                        srcpn    += 2*src->stride[z];
-                        dstp     += 2*stride2[z];
+                        prvp     += 2 * prv->stride[z];
+                        prvpp    += 2 * prv->stride[z];
+                        prvpn    += 2 * prv->stride[z];
+                        prvprvpp += 2 * prvprv->stride[z];
+                        prvprvpn += 2 * prvprv->stride[z];
+                        nxtp     += 2 * nxt->stride[z];
+                        nxtpp    += 2 * nxt->stride[z];
+                        nxtpn    += 2 * nxt->stride[z];
+                        nxtnxtpp += 2 * nxtnxt->stride[z];
+                        nxtnxtpn += 2 * nxtnxt->stride[z];
+                        srcp     += 2 * src->stride[z];
+                        srcpp    += 2 * src->stride[z];
+                        srcpn    += 2 * src->stride[z];
+                        dstp     += 2 * stride2[z];
                     }
                 }
             }
-            picts[SRC]->p.copyFrom(pict,picts[SRC]->buf);
+            picts[SRC]->p.copyFrom(pict, picts[SRC]->buf);
         } else {
             pict.clear(true);
         }
-        TtempPict *pp=picts0[0];
-        memmove(picts0,picts0+1,4*sizeof(picts0[0]));
-        picts0[4]=pp;
-        pict.rtStart=rtStart;
-        pict.rtStop=pict.rtStart+rtDuration;
-        rtStart+=rtDuration;
+        TtempPict *pp = picts0[0];
+        memmove(picts0, picts0 + 1, 4 * sizeof(picts0[0]));
+        picts0[4] = pp;
+        pict.rtStart = rtStart;
+        pict.rtStop = pict.rtStart + rtDuration;
+        rtStart += rtDuration;
         if (f == 0 && fcnt == 2) { //first frame to be delivered
-            parent->processAndDeliverSample(++it,pict); // we have to deliver the additional frame that has been created (pict0 will be taken care of by the caller method)
+            parent->processAndDeliverSample(++it, pict); // we have to deliver the additional frame that has been created (pict0 will be taken care of by the caller method)
             it--;
         } else { //last frame to be delivered
             pict0 = pict;
-            hr=parent->processSample(++it,pict0);
+            hr = parent->processSample(++it, pict0);
         }
         if (FAILED(hr)) {
             return hr;

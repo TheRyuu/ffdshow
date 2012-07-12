@@ -6,7 +6,7 @@
 #include "TaudioParser.h"
 #include "TrealAudioInfo.h"
 
-class TaudioCodecLibavcodec :public TaudioCodec
+class TaudioCodecLibavcodec : public TaudioCodec
 {
 private:
     Tlibavcodec *ffmpeg;
@@ -18,7 +18,7 @@ private:
     TrealAudioInfo m_realAudioInfo;
 protected:
     virtual bool init(const CMediaType &mt);
-    virtual void getInputDescr1(char_t *buf,size_t buflen) const;
+    virtual void getInputDescr1(char_t *buf, size_t buflen) const;
 public:
     AVCodecContext *avctx;
     TaudioCodecLibavcodec(IffdshowBase *deci, IdecAudioSink *Isink);

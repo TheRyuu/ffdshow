@@ -9,8 +9,8 @@
 #include "TsubtitlePGSParser.h"
 
 
-struct TsubtitlePGS :public TsubtitleDVD {
-    TsubtitlePGS(IffdshowBase *Ideci,REFERENCE_TIME Istart, REFERENCE_TIME Istop, TcompositionObject *pCompositionObject,
+struct TsubtitlePGS : public TsubtitleDVD {
+    TsubtitlePGS(IffdshowBase *Ideci, REFERENCE_TIME Istart, REFERENCE_TIME Istop, TcompositionObject *pCompositionObject,
                  TwindowDefinition *IpWindow, TsubtitleDVDparent *Iparent);
     virtual ~TsubtitlePGS();
     virtual void print(

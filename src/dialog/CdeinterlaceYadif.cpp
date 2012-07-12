@@ -28,15 +28,15 @@ TdeinterlacePanel* TdeinterlacePageYadif::create(Twindow *parent)
     return new TdeinterlacePageYadif(parent);
 }
 
-TdeinterlacePageYadif::TdeinterlacePageYadif(Twindow *parent):TdeinterlacePanel(IDD_DEINTERLACE_YADIF,parent)
+TdeinterlacePageYadif::TdeinterlacePageYadif(Twindow *parent): TdeinterlacePanel(IDD_DEINTERLACE_YADIF, parent)
 {
-    static const TbindCombobox<TdeinterlacePageYadif> cbx[]= {
+    static const TbindCombobox<TdeinterlacePageYadif> cbx[] = {
         IDC_CBX_YADIF_PARITY, IDFF_yadifFieldOrder, BINDCBX_DATA, &TdeinterlacePageYadif::cfg2dlg,
         0
     };
     bindComboboxes(cbx);
 
-    createDialog(dialogId,parent->m_hwnd);
+    createDialog(dialogId, parent->m_hwnd);
 }
 TdeinterlacePageYadif::~TdeinterlacePageYadif()
 {
@@ -47,22 +47,22 @@ void TdeinterlacePageYadif::init(void)
 {
     translate();
 
-    int sel=cbxGetCurSel(IDC_CBX_YADIF_PARITY);
+    int sel = cbxGetCurSel(IDC_CBX_YADIF_PARITY);
     cbxClear(IDC_CBX_YADIF_PARITY);
     for (int i = 0 ; TdeinterlaceSettings::yadifParitySEs[i].name ; i++)
         cbxAdd(IDC_CBX_YADIF_PARITY,
                _(IDC_CBX_YADIF_PARITY,
                  TdeinterlaceSettings::yadifParitySEs[i].name),
                TdeinterlaceSettings::yadifParitySEs[i].id);
-    cbxSetCurSel(IDC_CBX_YADIF_PARITY,sel);
+    cbxSetCurSel(IDC_CBX_YADIF_PARITY, sel);
 }
 
 void TdeinterlacePageYadif::cfg2dlg(void)
 {
     setCheck(IDC_CHB_YADIF_SKIP_CHECK, !!(cfgGet(IDFF_yadifMode) & 2));
     setCheck(IDC_CHB_YADIF_DOUBLE_FRAMERATE, cfgGet(IDFF_yadifMode) & 1);
-    int se=cfgGet(IDFF_yadifFieldOrder);
-    cbxSetDataCurSel(IDC_CBX_YADIF_PARITY,se);
+    int se = cfgGet(IDFF_yadifFieldOrder);
+    cbxSetDataCurSel(IDC_CBX_YADIF_PARITY, se);
 }
 
 void TdeinterlacePageYadif::dlg2cfg(void)
@@ -88,5 +88,5 @@ INT_PTR TdeinterlacePageYadif::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             }
             break;
     }
-    return TdeinterlacePanel::msgProc(uMsg,wParam,lParam);
+    return TdeinterlacePanel::msgProc(uMsg, wParam, lParam);
 }

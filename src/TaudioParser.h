@@ -8,14 +8,14 @@
 #include "ffcodecs.h"
 
 enum StreamFormat {
-    UNDEFINED=0,
-    REGULAR_AC3=1,
-    EAC3=2,
-    MLP=3,
-    TRUEHD=4,
-    AC3_TRUEHD=5,
-    DTS=6,
-    DTS_HD=7
+    UNDEFINED = 0,
+    REGULAR_AC3 = 1,
+    EAC3 = 2,
+    MLP = 3,
+    TRUEHD = 4,
+    AC3_TRUEHD = 5,
+    DTS = 6,
+    DTS_HD = 7
 };
 
 /**
@@ -107,8 +107,8 @@ public:
     uint32_t space_size;
 
     TframeData(uint32_t Iframe_size) {
-        frame_size=Iframe_size;
-        space_size=0;
+        frame_size = Iframe_size;
+        space_size = 0;
     }
 };
 
@@ -127,17 +127,17 @@ public:
     int nbFormatChanges;
     int alternateSampleFormat;
     void reset() {
-        wFormatTag=0;
-        sample_rate=0;
-        bit_rate=0;
-        sample_format=0;
-        sample_blocks=0;
-        lastFrameTime=0;
-        isFirst=true;
-        nbFormatChanges=0;
+        wFormatTag = 0;
+        sample_rate = 0;
+        bit_rate = 0;
+        sample_format = 0;
+        sample_blocks = 0;
+        lastFrameTime = 0;
+        isFirst = true;
+        nbFormatChanges = 0;
         frames.clear();
-        alternateSampleFormat=-1;
-        channels=0;
+        alternateSampleFormat = -1;
+        channels = 0;
     }
     TaudioParserData() {
         reset();
@@ -152,11 +152,11 @@ private:
     int includeBytes;
     bool hasMLPFrames;
     bool useAC3CoreOnly;
-    bool useAC3Passthrough,usableAC3Passthrough;
-    bool useDTSPassthrough,usableDTSPassthrough;
-    bool useTrueHDPassthrough,usableTrueHDPassthrough;
-    bool useDTSHDPassthrough,usableDTSHDPassthrough;
-    bool useEAC3Passthrough,usableEAC3Passthrough;
+    bool useAC3Passthrough, usableAC3Passthrough;
+    bool useDTSPassthrough, usableDTSPassthrough;
+    bool useTrueHDPassthrough, usableTrueHDPassthrough;
+    bool useDTSHDPassthrough, usableDTSHDPassthrough;
+    bool useEAC3Passthrough, usableEAC3Passthrough;
     bool firstFrame;
     StreamFormat streamformat;
     TglobalSettingsDecAudio *globalSettings;
@@ -174,7 +174,7 @@ protected:
     uint32_t frame_size;
     bool searchSync;
 public:
-    TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink);
+    TaudioParser(IffdshowBase *Ideci, IdecAudioSink *Isink);
     virtual ~TaudioParser();
     virtual CodecID parseStream(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
     virtual CodecID getCodecIdFromStream(void);
@@ -183,8 +183,8 @@ public:
     virtual bool checkOutputFormat(CodecID codecId);
     virtual TaudioParserData getParserData(void);
     void SearchSync() {
-        searchSync=true;
-        audioParserData.isFirst=true;
+        searchSync = true;
+        audioParserData.isFirst = true;
     }
 };
 

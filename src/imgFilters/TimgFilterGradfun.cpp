@@ -22,7 +22,7 @@
 #include "IffdshowBase.h"
 
 //=================================== TimgFilterGradfun ===================================
-TimgFilterGradfun::TimgFilterGradfun(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+TimgFilterGradfun::TimgFilterGradfun(IffdshowBase *Ideci, Tfilters *Iparent): TimgFilter(Ideci, Iparent)
 {
     deci->getLibavcodec(&ffmpeg);
     dllok = ffmpeg->ok;
@@ -36,8 +36,9 @@ TimgFilterGradfun::TimgFilterGradfun(IffdshowBase *Ideci,Tfilters *Iparent):Timg
 TimgFilterGradfun::~TimgFilterGradfun()
 {
     done();
-    if (ffmpeg)
+    if (ffmpeg) {
         ffmpeg->Release();
+    }
 }
 void TimgFilterGradfun::done(void)
 {
@@ -65,18 +66,20 @@ GradFunContext* TimgFilterGradfun::configure(float threshold, int radius, TffPic
     char gradfun_args[20];
     _snprintf(gradfun_args, 20, "%.2f:%d", threshold, radius);
     GradFunContext *gradFunContext = (GradFunContext*)ffmpeg->av_mallocz(sizeof(GradFunContext));
-    if (gradFunContext == NULL)
+    if (gradFunContext == NULL) {
         return NULL;
+    }
     ffmpeg->gradfunInit(gradFunContext, gradfun_args, NULL);
     gradFunContext->chroma_w = pict.rectFull.dx >> pict.cspInfo.shiftX[1];
     gradFunContext->chroma_h = pict.rectFull.dy >> pict.cspInfo.shiftY[1];
-    gradFunContext->chroma_r = ((((gradFunContext->radius >> pict.cspInfo.shiftX[1]) + (gradFunContext->radius >> pict.cspInfo.shiftY[1])) / 2 ) + 1) & ~1;
-    if (gradFunContext->chroma_r < 4)
+    gradFunContext->chroma_r = ((((gradFunContext->radius >> pict.cspInfo.shiftX[1]) + (gradFunContext->radius >> pict.cspInfo.shiftY[1])) / 2) + 1) & ~1;
+    if (gradFunContext->chroma_r < 4) {
         gradFunContext->chroma_r = 4;
-    else if (gradFunContext->chroma_r > 32)
+    } else if (gradFunContext->chroma_r > 32) {
         gradFunContext->chroma_r = 32;
+    }
     gradFunContext->buf = (uint16_t*)ffmpeg->av_mallocz((ffalign(pict.rectFull.dx, 16) * (gradFunContext->radius + 1) / 2 + 32) * sizeof(uint16_t));
-    if (gradFunContext->buf == NULL){
+    if (gradFunContext->buf == NULL) {
         ffmpeg->av_free(gradFunContext);
         gradFunContext = NULL;
         return NULL;
@@ -96,24 +99,27 @@ void TimgFilterGradfun::filter(GradFunContext *gradFunContext, uint8_t *src[4], 
             r = gradFunContext->chroma_r;
         }
 
-        if (((w) > (h) ? (h) : (w)) > 2 * r)
+        if (((w) > (h) ? (h) : (w)) > 2 * r) {
             ffmpeg->gradfunFilter(gradFunContext, pict.data[p], src[p], w, h, (int)pict.stride[p], (int)pict.stride[p], r);
+        }
     }
 }
-HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0)
 {
-    if (!dllok)
-        return parent->processSample(++it,pict);
+    if (!dllok) {
+        return parent->processSample(++it, pict);
+    }
 
-    const TgradFunSettings *cfg=(const TgradFunSettings*)cfg0;
-    init(pict,1,0);
+    const TgradFunSettings *cfg = (const TgradFunSettings*)cfg0;
+    init(pict, 1, 0);
 
     uint8_t *src[4];
     bool cspChange = getCurNext(FF_CSPS_MASK_YUV_PLANAR, pict, 1, COPYMODE_FULL, src);
-    
+
     // mod2 only
-    if((pict.rectFull.dx % 2) != 0 || (pict.rectFull.dy % 2) != 0 || ((pict.rectFull.dx >> pict.cspInfo.shiftX[1]) % 2 != 0) || ((pict.rectFull.dy >> pict.cspInfo.shiftY[1]) % 2 != 0))
-        return parent->processSample(++it,pict);
+    if ((pict.rectFull.dx % 2) != 0 || (pict.rectFull.dy % 2) != 0 || ((pict.rectFull.dx >> pict.cspInfo.shiftX[1]) % 2 != 0) || ((pict.rectFull.dy >> pict.cspInfo.shiftY[1]) % 2 != 0)) {
+        return parent->processSample(++it, pict);
+    }
 
     if (cspChange || oldThreshold != cfg->threshold || oldRadius != cfg->radius || oldWidth != pict.rectFull.dx || oldHeight != pict.rectFull.dy) {
         oldThreshold = cfg->threshold;
@@ -125,16 +131,17 @@ HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const
 
     if (reconfigure) {
         done();
-        gradFunContext = configure((float)oldThreshold/100, oldRadius, pict);
+        gradFunContext = configure((float)oldThreshold / 100, oldRadius, pict);
         if (gradFunContext == NULL) {
             reconfigure = 0;
-            return parent->processSample(++it,pict);
+            return parent->processSample(++it, pict);
         }
         reconfigure = 0;
     }
 
-    if (gradFunContext != NULL)
+    if (gradFunContext != NULL) {
         filter(gradFunContext, src, pict);
+    }
 
-    return parent->processSample(++it,pict);
+    return parent->processSample(++it, pict);
 }

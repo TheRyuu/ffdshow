@@ -6,13 +6,13 @@
 class Tdll;
 struct Tff_wmv9codecInfo;
 struct Iff_wmv9;
-class TvideoCodecWmv9 :public TvideoCodecDec
+class TvideoCodecWmv9 : public TvideoCodecDec
 {
 private:
     void create(void);
     Tdll *dll;
 public:
-    TvideoCodecWmv9(IffdshowBase *Ideci,IdecVideoSink *IsinkD);
+    TvideoCodecWmv9(IffdshowBase *Ideci, IdecVideoSink *IsinkD);
     virtual ~TvideoCodecWmv9();
     static const char_t *dllname;
 private:
@@ -25,7 +25,7 @@ private:
     int codecIndex;
     mutable char_t codecName[100];
 protected:
-    virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
+    virtual bool beginDecompress(TffPictBase &pict, FOURCC infcc, const CMediaType &mt, int sourceFlags);
 public:
     virtual int getType(void) const {
         return IDFF_MOVIE_WMV9;
@@ -35,10 +35,10 @@ public:
     virtual bool supExtradata(void) {
         return true;
     }
-    virtual bool getExtradata(const void* *ptr,size_t *len);
+    virtual bool getExtradata(const void* *ptr, size_t *len);
 
-    virtual bool testMediaType(FOURCC fcc,const CMediaType &mt);
-    virtual HRESULT decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn);
+    virtual bool testMediaType(FOURCC fcc, const CMediaType &mt);
+    virtual HRESULT decompress(const unsigned char *src, size_t srcLen, IMediaSample *pIn);
 };
 
 #endif

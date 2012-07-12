@@ -6,7 +6,7 @@ private:
     int mode;
     int *pwidths;
     ffstring str;
-    int splitdxMax,splitdxMin;
+    int splitdxMax, splitdxMin;
     std::deque<int> rightOfTheLines;
     int smart(void);
     int smartReverse(void);

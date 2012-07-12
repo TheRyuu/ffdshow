@@ -4,13 +4,13 @@
 #include "TconfPageDec.h"
 #include "IffdshowDecVideo.h"
 
-class TconfPageDecVideo :public TconfPageDec
+class TconfPageDecVideo : public TconfPageDec
 {
 protected:
     comptrQ<IffdshowDecVideo> deciV;
 public:
-    TconfPageDecVideo(TffdshowPageDec *Iparent,const TfilterIDFF *idff=NULL,int IfilterPageId=0):TconfPageDec(Iparent,idff,IfilterPageId) {
-        deciV=deci;
+    TconfPageDecVideo(TffdshowPageDec *Iparent, const TfilterIDFF *idff = NULL, int IfilterPageId = 0): TconfPageDec(Iparent, idff, IfilterPageId) {
+        deciV = deci;
     }
 };
 

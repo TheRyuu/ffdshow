@@ -34,17 +34,17 @@ void TcspOptionsPage::init(void)
     addHint(IDC_CBX_RGB_INTERLACE_METHOD, _l("This setting also applies to YV12 <-> YUY2 conversion."));
     addHint(IDC_RBT_YCbCr_input_levels_auto, L"Use information from the stream if available. Otherwise same as standard.");
     addHint(IDC_RBT_YCbCr_input_levels_16_to_235, L"Nearly all videos use this.");
-    addHint(IDC_RBT_YCbCr_input_levels_0_to_255,_l("JPEG, MJPEG and Fraps sources usually use this"));
+    addHint(IDC_RBT_YCbCr_input_levels_0_to_255, _l("JPEG, MJPEG and Fraps sources usually use this"));
     addHint(IDC_RBT_CSP_OUTPUT_LEVELS_TV, _l("Most TV and Projectors use this.\nConsult the manual of your device."));
 }
 
 void TcspOptionsPage::cfg2dlg(void)
 {
-    int iturbt=cfgGet(IDFF_cspOptionsIturBt);
+    int iturbt = cfgGet(IDFF_cspOptionsIturBt);
     setCheck(IDC_RBT_BT601,  iturbt == TrgbPrimaries::ITUR_BT601);
     setCheck(IDC_RBT_BT709,  iturbt == TrgbPrimaries::ITUR_BT709);
-    setCheck(IDC_RBT_BT_AUTO,iturbt == TrgbPrimaries::ITUR_BT_AUTO);
-    int mode=cfgGet(IDFF_cspOptionsInputLevelsMode);
+    setCheck(IDC_RBT_BT_AUTO, iturbt == TrgbPrimaries::ITUR_BT_AUTO);
+    int mode = cfgGet(IDFF_cspOptionsInputLevelsMode);
     setCheck(IDC_RBT_YCbCr_input_levels_auto,         mode == TrgbPrimaries::AutoYCbCr);
     setCheck(IDC_RBT_YCbCr_input_levels_16_to_235,    mode == TrgbPrimaries::RecYCbCr);
     setCheck(IDC_RBT_YCbCr_input_levels_0_to_255,     mode == TrgbPrimaries::PcYCbCr);
@@ -64,8 +64,8 @@ void TcspOptionsPage::cfg2dlg(void)
     int fixedChromaCutoff = ToutputVideoSettings::get_cspOptionsChromaCutoffStatic(blackCutoff, whiteCutoff, chromaCutoff);
     ffstring str(tr->translate(m_hwnd, dialogId, IDC_RBT_CUSTOM_YUV, NULL));
     strncpyf(customRange, countof(customRange), _l(" (Y: %d-%d, CbCr: %d-%d)"), blackCutoff, whiteCutoff, fixedChromaCutoff, 256 - fixedChromaCutoff);
-    str+=customRange;
-    setText(IDC_RBT_CUSTOM_YUV,str.c_str());
+    str += customRange;
+    setText(IDC_RBT_CUSTOM_YUV, str.c_str());
 
     static const int customs[] = {IDC_TBR_RGBCONV_BLACK,  IDC_TXT_RGBCONV_BLACK,
                                   IDC_TBR_RGBCONV_WHITE,  IDC_TXT_RGBCONV_WHITE,
@@ -74,24 +74,24 @@ void TcspOptionsPage::cfg2dlg(void)
                                  };
     enable(mode == TrgbPrimaries::CutomYCbCr, customs);
 
-    cbxSetCurSel(IDC_CBX_RGB_INTERLACE_METHOD,cfgGet(IDFF_cspOptionsRgbInterlaceMode));
+    cbxSetCurSel(IDC_CBX_RGB_INTERLACE_METHOD, cfgGet(IDFF_cspOptionsRgbInterlaceMode));
     int highQualityRGB = cfgGet(IDFF_highQualityRGB);
-    setCheck(IDC_CHB_HIGH_QUALITY_RGB,highQualityRGB);
-    setCheck(IDC_CHB_RGB_DITHER,cfgGet(IDFF_RGB_dithering));
+    setCheck(IDC_CHB_HIGH_QUALITY_RGB, highQualityRGB);
+    setCheck(IDC_CHB_RGB_DITHER, cfgGet(IDFF_RGB_dithering));
     enable(highQualityRGB && (Tconfig::cpu_flags & FF_CPU_SSE2), IDC_CHB_RGB_DITHER);
 }
 
-void TcspOptionsPage::getTip(char_t *tipS,size_t len)
+void TcspOptionsPage::getTip(char_t *tipS, size_t len)
 {
-    const char_t *tip=_(-IDD_CSP_OPTIONS,_l("YCbCr <-> RGB conversion options"));
-    ff_strncpy(tipS,tip,len);
+    const char_t *tip = _(-IDD_CSP_OPTIONS, _l("YCbCr <-> RGB conversion options"));
+    ff_strncpy(tipS, tip, len);
 }
 
 void TcspOptionsPage::translate(void)
 {
     TconfPageDecVideo::translate();
 
-    cbxTranslate(IDC_CBX_RGB_INTERLACE_METHOD,ToutputVideoSettings::rgbInterlaceMethods);
+    cbxTranslate(IDC_CBX_RGB_INTERLACE_METHOD, ToutputVideoSettings::rgbInterlaceMethods);
 }
 
 bool TcspOptionsPage::reset(bool testonly)
@@ -110,13 +110,13 @@ bool TcspOptionsPage::reset(bool testonly)
     return true;
 }
 
-TcspOptionsPage::TcspOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
+TcspOptionsPage::TcspOptionsPage(TffdshowPageDec *Iparent): TconfPageDecVideo(Iparent)
 {
-    dialogId=IDD_CSP_OPTIONS;
-    helpURL=_l("http://ffdshow-tryout.sourceforge.net/wiki/video:rgb_conversion");
-    inPreset=1;
-    idffOrder=maxOrder+4;
-    static const TbindRadiobutton<TcspOptionsPage> rbt[]= {
+    dialogId = IDD_CSP_OPTIONS;
+    helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/video:rgb_conversion");
+    inPreset = 1;
+    idffOrder = maxOrder + 4;
+    static const TbindRadiobutton<TcspOptionsPage> rbt[] = {
         IDC_RBT_BT_AUTO,                      IDFF_cspOptionsIturBt,          TrgbPrimaries::ITUR_BT_AUTO, &TcspOptionsPage::cfg2dlg,
         IDC_RBT_BT601,                        IDFF_cspOptionsIturBt,          TrgbPrimaries::ITUR_BT601,   &TcspOptionsPage::cfg2dlg,
         IDC_RBT_BT709,                        IDFF_cspOptionsIturBt,          TrgbPrimaries::ITUR_BT709,   &TcspOptionsPage::cfg2dlg,
@@ -124,26 +124,26 @@ TcspOptionsPage::TcspOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Ipa
         IDC_RBT_YCbCr_input_levels_16_to_235, IDFF_cspOptionsInputLevelsMode, TrgbPrimaries::RecYCbCr,     &TcspOptionsPage::cfg2dlg,
         IDC_RBT_YCbCr_input_levels_0_to_255,  IDFF_cspOptionsInputLevelsMode, TrgbPrimaries::PcYCbCr,      &TcspOptionsPage::cfg2dlg,
         IDC_RBT_CUSTOM_YUV,                   IDFF_cspOptionsInputLevelsMode, TrgbPrimaries::CutomYCbCr,   &TcspOptionsPage::cfg2dlg,
-        IDC_RBT_CSP_OUTPUT_LEVELS_PC,         IDFF_cspOptionsOutputLevelsMode,TrgbPrimaries::PcRGB,        &TcspOptionsPage::cfg2dlg,
-        IDC_RBT_CSP_OUTPUT_LEVELS_TV,         IDFF_cspOptionsOutputLevelsMode,TrgbPrimaries::TvRGB,        &TcspOptionsPage::cfg2dlg,
-        0,0,0,NULL
+        IDC_RBT_CSP_OUTPUT_LEVELS_PC,         IDFF_cspOptionsOutputLevelsMode, TrgbPrimaries::PcRGB,        &TcspOptionsPage::cfg2dlg,
+        IDC_RBT_CSP_OUTPUT_LEVELS_TV,         IDFF_cspOptionsOutputLevelsMode, TrgbPrimaries::TvRGB,        &TcspOptionsPage::cfg2dlg,
+        0, 0, 0, NULL
     };
     bindRadioButtons(rbt);
-    static const TbindTrackbar<TcspOptionsPage> htbr[]= {
+    static const TbindTrackbar<TcspOptionsPage> htbr[] = {
         IDC_TBR_RGBCONV_BLACK,  IDFF_cspOptionsBlackCutoff,  &TcspOptionsPage::cfg2dlg,
         IDC_TBR_RGBCONV_WHITE,  IDFF_cspOptionsWhiteCutoff,  &TcspOptionsPage::cfg2dlg,
         IDC_TBR_RGBCONV_CHROMA, IDFF_cspOptionsChromaCutoff, &TcspOptionsPage::cfg2dlg,
-        0,0,NULL
+        0, 0, NULL
     };
     bindHtracks(htbr);
-    static const TbindCheckbox<TcspOptionsPage> chb[]= {
-        IDC_CHB_HIGH_QUALITY_RGB,IDFF_highQualityRGB,&TcspOptionsPage::cfg2dlg,
-        IDC_CHB_RGB_DITHER,IDFF_RGB_dithering,NULL,
-        0,NULL,NULL
+    static const TbindCheckbox<TcspOptionsPage> chb[] = {
+        IDC_CHB_HIGH_QUALITY_RGB, IDFF_highQualityRGB, &TcspOptionsPage::cfg2dlg,
+        IDC_CHB_RGB_DITHER, IDFF_RGB_dithering, NULL,
+        0, NULL, NULL
     };
     bindCheckboxes(chb);
-    static const TbindCombobox<TcspOptionsPage> cbx[]= {
-        IDC_CBX_RGB_INTERLACE_METHOD,IDFF_cspOptionsRgbInterlaceMode,BINDCBX_SEL,NULL,
+    static const TbindCombobox<TcspOptionsPage> cbx[] = {
+        IDC_CBX_RGB_INTERLACE_METHOD, IDFF_cspOptionsRgbInterlaceMode, BINDCBX_SEL, NULL,
         0
     };
     bindComboboxes(cbx);

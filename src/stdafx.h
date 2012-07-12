@@ -7,11 +7,11 @@
 #define _WIN32_DCOM
 
 #ifndef __GNUC__
- #define __attribute__(x)
+#define __attribute__(x)
 #endif
 
 #ifdef __GNUC__
- #define __forceinline __attribute__((__always_inline__)) inline
+#define __forceinline __attribute__((__always_inline__)) inline
 #endif
 
 #define always_inline __forceinline
@@ -42,15 +42,15 @@
 #include <wchar.h>
 // STL
 #include "PODtypes.h"
- #include <vector>
- #include <algorithm>
- #include <map>
- #include <list>
- #include <hash_map>
- #include <utility>
- #include <limits>
- #include <deque>
- #include <array>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <list>
+#include <hash_map>
+#include <utility>
+#include <limits>
+#include <deque>
+#include <array>
 #include "tuple.h"
 // baseclasses
 #include <streams.h>
@@ -91,8 +91,8 @@
 #include "ffdebug.h"
 
 #if defined(UNICODE) && defined(__GNUC__)
- #undef TEXT
- #define TEXT(q) L##q
+#undef TEXT
+#define TEXT(q) L##q
 #endif
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "TconfPageDecVideo.h"
 
-class TqueuePage :public TconfPageDecVideo
+class TqueuePage : public TconfPageDecVideo
 {
 private:
     bool islavc;
@@ -12,15 +12,15 @@ private:
         int idc_chb;
     };
     static const Tworkaround workarounds[];
-    void delay2dlg(void),interlaced2dlg(void);
+    void delay2dlg(void), interlaced2dlg(void);
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
     TqueuePage(TffdshowPageDec *Iparent);
     virtual void init(void);
     virtual void cfg2dlg(void);
-    virtual void getTip(char_t *tipS,size_t len);
-    virtual bool reset(bool testonly=false);
+    virtual void getTip(char_t *tipS, size_t len);
+    virtual bool reset(bool testonly = false);
     virtual void translate(void);
 };
 

@@ -38,8 +38,8 @@ public:
             return;
         }
         mprops.toLOGFONT(lf);
-        HFONT font=fontManager->getFont(lf);
-        old=SelectObject(hdc, font);
+        HFONT font = fontManager->getFont(lf);
+        old = SelectObject(hdc, font);
     }
 
     ~TtoGdiFont() {
@@ -50,7 +50,7 @@ public:
 
     double getHeight() {
         TEXTMETRIC tm;
-        GetTextMetrics(hdc,&tm);
+        GetTextMetrics(hdc, &tm);
         return (double)(tm.tmAscent + tm.tmDescent) / gdi_font_scale;
     }
 };

@@ -51,27 +51,27 @@ const unsigned int mp3header::samplerate_table[3] = {
 };
 unsigned int mp3header::findNearestFreq(unsigned int f)
 {
-    unsigned int mindiff=_UI32_MAX,dstf=0;
-    for (int i=0; i<countof(samplerate_table); i++)
-        for (int d=0; d<=2; d++) {
-            unsigned int diff=ff_abs(int(samplerate_table[i]>>d)-int(f));
-            if (diff<mindiff) {
-                mindiff=diff;
-                dstf=samplerate_table[i]>>d;
-                if (mindiff==0) {
+    unsigned int mindiff = _UI32_MAX, dstf = 0;
+    for (int i = 0; i < countof(samplerate_table); i++)
+        for (int d = 0; d <= 2; d++) {
+            unsigned int diff = ff_abs(int(samplerate_table[i] >> d) - int(f));
+            if (diff < mindiff) {
+                mindiff = diff;
+                dstf = samplerate_table[i] >> d;
+                if (mindiff == 0) {
                     goto end;
                 }
             }
         }
 end:
-    return dstf?dstf:f;
+    return dstf ? dstf : f;
 }
 
-mp3header::mp3header(const unsigned char *buf,unsigned int buflen)
+mp3header::mp3header(const unsigned char *buf, unsigned int buflen)
 {
-    ok=false;
+    ok = false;
     GetBitContext stream;
-    init_get_bits(&stream,buf,buflen*8);
+    init_get_bits(&stream, buf, buflen * 8);
 
     unsigned int index;
 
@@ -186,19 +186,19 @@ mp3header::mp3header(const unsigned char *buf,unsigned int buflen)
         crc_target = (unsigned short) get_bits(&stream, 16);
     }
 
-    ok=true;
+    ok = true;
     return;
 }
 
 unsigned int mp3header::calc_frame_len(void)
 {
     int pad_slot = (flags & MAD_FLAG_PADDING) ? 1 : 0;
-    int N=0;
+    int N = 0;
     if (layer == MAD_LAYER_I) {
         N = ((12 * bitrate / samplerate) + pad_slot) * 4;
     } else {
-        unsigned int slots_per_frame= (layer == MAD_LAYER_III &&
-                                       (flags & MAD_FLAG_LSF_EXT)) ? 72 : 144;
+        unsigned int slots_per_frame = (layer == MAD_LAYER_III &&
+                                        (flags & MAD_FLAG_LSF_EXT)) ? 72 : 144;
 
         N = (slots_per_frame * bitrate / samplerate) + pad_slot;
     }

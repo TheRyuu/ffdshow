@@ -68,7 +68,7 @@ public:
 
     mad_timer_t duration;          /* audio playing time of frame */
 
-    mp3header(const unsigned char *buf,unsigned int buflen);
+    mp3header(const unsigned char *buf, unsigned int buflen);
     bool ok;
     unsigned int calc_frame_len(void);
 };

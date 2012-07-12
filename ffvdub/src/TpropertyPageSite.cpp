@@ -20,53 +20,52 @@
 #include "TpropertyPageSite.h"
 #include "Tffvdub.h"
 
-CUnknown* WINAPI TpropertyPageSite::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
+CUnknown* WINAPI TpropertyPageSite::CreateInstance(LPUNKNOWN punk, HRESULT *phr)
 {
- TpropertyPageSite *pNewObject=new TpropertyPageSite(punk,phr);
- if (pNewObject==NULL) *phr=E_OUTOFMEMORY;
- return pNewObject;
+    TpropertyPageSite *pNewObject = new TpropertyPageSite(punk, phr);
+    if (pNewObject == NULL) { *phr = E_OUTOFMEMORY; }
+    return pNewObject;
 }
-STDMETHODIMP TpropertyPageSite::NonDelegatingQueryInterface(REFIID riid,void **ppv)
+STDMETHODIMP TpropertyPageSite::NonDelegatingQueryInterface(REFIID riid, void **ppv)
 {
- CheckPointer(ppv, E_POINTER);
- if (riid==IID_IPropertyPageSite) return GetInterface((TpropertyPageSite*)this,ppv);
- else return CUnknown::NonDelegatingQueryInterface(riid,ppv);
+    CheckPointer(ppv, E_POINTER);
+    if (riid == IID_IPropertyPageSite) { return GetInterface((TpropertyPageSite*)this, ppv); }
+    else { return CUnknown::NonDelegatingQueryInterface(riid, ppv); }
 }
-HRESULT STDMETHODCALLTYPE TpropertyPageSite::OnStatusChange( /* [in] */ DWORD dwFlags)
+HRESULT STDMETHODCALLTYPE TpropertyPageSite::OnStatusChange(/* [in] */ DWORD dwFlags)
 {
- ffvdub->outchanged=false;
- ffvdub->param(fa);
- if (ffvdub->outchanged)
-  {
-   fa->ifp->UndoSystem(0);
-   fa->ifp->RedoSystem(0);
-  }
- else
-  fa->ifp->RedoFrame(0);
- return S_OK;
+    ffvdub->outchanged = false;
+    ffvdub->param(fa);
+    if (ffvdub->outchanged) {
+        fa->ifp->UndoSystem(0);
+        fa->ifp->RedoSystem(0);
+    } else {
+        fa->ifp->RedoFrame(0);
+    }
+    return S_OK;
 }
-HRESULT STDMETHODCALLTYPE TpropertyPageSite::GetLocaleID( /* [out] */ LCID *pLocaleID)
+HRESULT STDMETHODCALLTYPE TpropertyPageSite::GetLocaleID(/* [out] */ LCID *pLocaleID)
 {
- return S_OK;
+    return S_OK;
 }
-HRESULT STDMETHODCALLTYPE TpropertyPageSite::GetPageContainer( /* [out] */ IUnknown **ppUnk)
+HRESULT STDMETHODCALLTYPE TpropertyPageSite::GetPageContainer(/* [out] */ IUnknown **ppUnk)
 {
- return S_OK;
+    return S_OK;
 }
-HRESULT STDMETHODCALLTYPE TpropertyPageSite::TranslateAccelerator( /* [in] */ MSG *pMsg)
+HRESULT STDMETHODCALLTYPE TpropertyPageSite::TranslateAccelerator(/* [in] */ MSG *pMsg)
 {
- return S_OK;
+    return S_OK;
 }
 
-TpropertyPageSite::TpropertyPageSite(LPUNKNOWN punk,HRESULT *phr):CUnknown(NAME("TpropertyPageSite"),punk)
+TpropertyPageSite::TpropertyPageSite(LPUNKNOWN punk, HRESULT *phr): CUnknown(NAME("TpropertyPageSite"), punk)
 {
- fa=NULL;
+    fa = NULL;
 }
 TpropertyPageSite::~TpropertyPageSite()
 {
 }
 void TpropertyPageSite::setFilterActivation(FilterActivation *Ifa)
 {
- fa=Ifa;
- ffvdub=(Tffvdub*)fa->filter_data;
+    fa = Ifa;
+    ffvdub = (Tffvdub*)fa->filter_data;
 }

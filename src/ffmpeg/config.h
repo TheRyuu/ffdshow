@@ -141,7 +141,7 @@
   #define HAVE_ATTRIBUTE_MAY_ALIAS 1
   #define HAVE_CBRTF 1
   #define HAVE_ISINF 1
-	#define HAVE_ISNAN 1
+  #define HAVE_ISNAN 1
   #define HAVE_LLRINT 1
   #define HAVE_LLRINTF 1
   #define HAVE_LRINT 1

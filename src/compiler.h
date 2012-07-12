@@ -2,8 +2,8 @@
 #define _COMPILER_H_
 
 #ifndef STRINGIFY
- #define STRINGIFY(s) TOSTRING(s)
- #define TOSTRING(s) #s
+  #define STRINGIFY(s) TOSTRING(s)
+  #define TOSTRING(s)  #s
 #endif
 
 #if defined(__INTEL_COMPILER)
@@ -22,20 +22,20 @@
   #elif _MSC_VER==1500
     #define COMPILER "MSVC 2008"
   #else
-#define COMPILER "unknown and not supported"
+    #define COMPILER "unknown and not supported"
   #endif
 #elif defined(__GNUC__)
   #ifdef __SSE__
     #define COMPILER_SSE " SSE"
-    #ifdef __SSE2__
-      #define COMPILER_SSE2 ", SSE2"
+      #ifdef __SSE2__
+        #define COMPILER_SSE2 ", SSE2"
+      #else
+        #define COMPILER_SSE2 ""
+      #endif
     #else
+      #define COMPILER_SSE ""
       #define COMPILER_SSE2 ""
     #endif
-  #else
-    #define COMPILER_SSE ""
-    #define COMPILER_SSE2 ""
-  #endif
   #define COMPILER "MinGW GCC "STRINGIFY(__GNUC__)"."STRINGIFY(__GNUC_MINOR__)"."STRINGIFY(__GNUC_PATCHLEVEL__) COMPILER_SSE COMPILER_SSE2
 #else
   #define COMPILER "unknown and not supported"
@@ -48,9 +48,9 @@
 #endif
 
 #ifdef UNICODE
- #define UNICODE_BUILD "unicode"
+  #define UNICODE_BUILD "unicode"
 #else
- #define UNICODE_BUILD "ansi"
+  #define UNICODE_BUILD "ansi"
 #endif
 
 #ifdef DEBUG

@@ -22,28 +22,28 @@
 
 void TfilterIDFFs::copy(const TfilterIDFFs *orig)
 {
-    const_iterator src=orig->begin();
-    iterator dst=begin();
-    for (; dst != end() && src != orig->end() ; src++,dst++) {
+    const_iterator src = orig->begin();
+    iterator dst = begin();
+    for (; dst != end() && src != orig->end() ; src++, dst++) {
         if (src->cfg->deepcopy) {
             dst->cfg->copy(src->cfg);
         } else {
-            *dst->cfg=*src->cfg;
+            *dst->cfg = *src->cfg;
         }
     }
 }
 
-void TfilterSettings::idffOnChange(const TfilterIDFF &idffs,Tfilters *filters,bool temporary) const
+void TfilterSettings::idffOnChange(const TfilterIDFF &idffs, Tfilters *filters, bool temporary) const
 {
     if (!temporary) {
         if (idffs.is) {
-            setOnChange(idffs.is,filters,&Tfilters::onQueueChange);
+            setOnChange(idffs.is, filters, &Tfilters::onQueueChange);
         }
         if (idffs.show) {
-            setOnChange(idffs.show,filters,&Tfilters::onQueueChange);
+            setOnChange(idffs.show, filters, &Tfilters::onQueueChange);
         }
         if (idffs.order) {
-            setOnChange(idffs.order,filters,&Tfilters::onQueueChange);
+            setOnChange(idffs.order, filters, &Tfilters::onQueueChange);
         }
     }
 }
@@ -54,7 +54,7 @@ bool TfilterSettings::hasReset(unsigned int pageId)
 }
 bool TfilterSettings::reset(unsigned int pageId)
 {
-    if (const int *idResets=getResets(pageId)) {
+    if (const int *idResets = getResets(pageId)) {
         resetValues(idResets);
         return true;
     } else {

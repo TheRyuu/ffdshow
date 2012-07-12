@@ -56,39 +56,39 @@
 #include "ffmpeg/libavcodec/avcodec.h"
 
 //========================= TvideoAutoPresetProps =========================
-const char_t TvideoAutoPresetProps::aspectSAR=_l('S'),TvideoAutoPresetProps::aspectDAR=_l('D');
+const char_t TvideoAutoPresetProps::aspectSAR = _l('S'), TvideoAutoPresetProps::aspectDAR = _l('D');
 
 TvideoAutoPresetProps::TvideoAutoPresetProps(IffdshowBase *Ideci):
     TautoPresetProps(Ideci),
     wasResolution(false),
     deciV(Ideci),
-    SAR(-1),DAR(-1),
+    SAR(-1), DAR(-1),
     fps(0)
 {
-    fourcc[0]='\0';
+    fourcc[0] = '\0';
 }
-void TvideoAutoPresetProps::getSourceResolution(unsigned int *dxPtr,unsigned int *dyPtr)
+void TvideoAutoPresetProps::getSourceResolution(unsigned int *dxPtr, unsigned int *dyPtr)
 {
     if (!wasResolution) {
-        wasResolution=true;
-        deciV->getAVIdimensions(&dx,&dy);
+        wasResolution = true;
+        deciV->getAVIdimensions(&dx, &dy);
     }
-    *dxPtr=dx;
-    *dyPtr=dy;
+    *dxPtr = dx;
+    *dyPtr = dy;
 }
 const char_t* TvideoAutoPresetProps::getFOURCC(void)
 {
-    if (fourcc[0]=='\0') {
-        FOURCC fcc=deciV->getMovieFOURCC();
+    if (fourcc[0] == '\0') {
+        FOURCC fcc = deciV->getMovieFOURCC();
 #ifdef UNICODE
         char fourcc0[5];
-        memcpy(fourcc0,&fcc,4);
-        fourcc0[4]='\0';
-        MultiByteToWideChar(CP_ACP,0,fourcc0,4,fourcc,4);
+        memcpy(fourcc0, &fcc, 4);
+        fourcc0[4] = '\0';
+        MultiByteToWideChar(CP_ACP, 0, fourcc0, 4, fourcc, 4);
 #else
-        memcpy(fourcc,&fcc,4);
+        memcpy(fourcc, &fcc, 4);
 #endif
-        fourcc[4]='\0';
+        fourcc[4] = '\0';
     }
     return fourcc;
 }
@@ -98,7 +98,7 @@ const char_t* TvideoAutoPresetProps::getFOURCC(void)
 const char_t* TvideoAutoPresetProps::getPreviousFOURCC(void)
 {
     TinputPin *pTinputPin;
-    FOURCC fcc=0;
+    FOURCC fcc = 0;
     if (deciD != NULL && (pTinputPin = deciD->getInputPin()) != NULL) {
         IPin *pPin = NULL;
         HRESULT hr = pTinputPin->ConnectedTo(&pPin);
@@ -127,26 +127,26 @@ const char_t* TvideoAutoPresetProps::getPreviousFOURCC(void)
                 if (pinDirection == PINDIR_INPUT) {
                     AM_MEDIA_TYPE mt;
                     filterPin->ConnectionMediaType(&mt);
-                    if (mt.formattype==FORMAT_VideoInfo) {
-                        VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
-                        fcc=vih->bmiHeader.biCompression;
-                    } else if (mt.formattype==FORMAT_VideoInfo2) {
-                        VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
-                        fcc=vih2->bmiHeader.biCompression;
-                    } else if (mt.formattype==FORMAT_MPEGVideo) {
-                        fcc=FOURCC_MPG1;
+                    if (mt.formattype == FORMAT_VideoInfo) {
+                        VIDEOINFOHEADER *vih = (VIDEOINFOHEADER*)mt.pbFormat;
+                        fcc = vih->bmiHeader.biCompression;
+                    } else if (mt.formattype == FORMAT_VideoInfo2) {
+                        VIDEOINFOHEADER2 *vih2 = (VIDEOINFOHEADER2*)mt.pbFormat;
+                        fcc = vih2->bmiHeader.biCompression;
+                    } else if (mt.formattype == FORMAT_MPEGVideo) {
+                        fcc = FOURCC_MPG1;
                         //fcc=mpeg1info->hdr.bmiHeader.biCompression;
-                    } else if (mt.formattype==FORMAT_MPEG2Video) {
-                        MPEG2VIDEOINFO *mpeg2info=(MPEG2VIDEOINFO*)mt.pbFormat;
-                        if (mpeg2info->hdr.bmiHeader.biCompression==0) {
-                            fcc=FOURCC_MPG2;
+                    } else if (mt.formattype == FORMAT_MPEG2Video) {
+                        MPEG2VIDEOINFO *mpeg2info = (MPEG2VIDEOINFO*)mt.pbFormat;
+                        if (mpeg2info->hdr.bmiHeader.biCompression == 0) {
+                            fcc = FOURCC_MPG2;
                         } else {
-                            fcc=FCCupper(mpeg2info->hdr.bmiHeader.biCompression);
+                            fcc = FCCupper(mpeg2info->hdr.bmiHeader.biCompression);
                         }
-                    } else if (mt.formattype==FORMAT_TheoraIll) {
-                        fcc=FOURCC_THEO;
-                    } else if (mt.formattype==FORMAT_RLTheora) {
-                        fcc=FOURCC_THEO;
+                    } else if (mt.formattype == FORMAT_TheoraIll) {
+                        fcc = FOURCC_THEO;
+                    } else if (mt.formattype == FORMAT_RLTheora) {
+                        fcc = FOURCC_THEO;
                     }
                     filterPin->Release();
                     break;
@@ -158,24 +158,24 @@ const char_t* TvideoAutoPresetProps::getPreviousFOURCC(void)
         }
         pPin->Release();
     }
-    if (fcc==0) {
+    if (fcc == 0) {
         return _l("");
     }
 #ifdef UNICODE
     char fourcc0[5];
-    memcpy(fourcc0,&fcc,4);
-    fourcc0[4]='\0';
-    MultiByteToWideChar(CP_ACP,0,fourcc0,4,previousfourcc,4);
+    memcpy(fourcc0, &fcc, 4);
+    fourcc0[4] = '\0';
+    MultiByteToWideChar(CP_ACP, 0, fourcc0, 4, previousfourcc, 4);
 #else
-    memcpy(previousfourcc,&fcc,4);
+    memcpy(previousfourcc, &fcc, 4);
 #endif
-    previousfourcc[4]='\0';
+    previousfourcc[4] = '\0';
     return previousfourcc;
 }
 
-const char_t* TvideoAutoPresetProps::getFOURCCitem(IffdshowDec *deciD,unsigned int index)
+const char_t* TvideoAutoPresetProps::getFOURCCitem(IffdshowDec *deciD, unsigned int index)
 {
-    const char_t **list=deciD->getSupportedFOURCCs();;
+    const char_t **list = deciD->getSupportedFOURCCs();;
     while (index-- && *(list++)) {
         ;
     }
@@ -184,131 +184,131 @@ const char_t* TvideoAutoPresetProps::getFOURCCitem(IffdshowDec *deciD,unsigned i
 
 const char_t* TvideoAutoPresetProps::getSAR(void)
 {
-    if (SAR==-1) {
-        unsigned int a1,a2;
-        if (deciV->getInputSAR(&a1,&a2)==S_OK) {
-            SAR=double(a1)/a2;
+    if (SAR == -1) {
+        unsigned int a1, a2;
+        if (deciV->getInputSAR(&a1, &a2) == S_OK) {
+            SAR = double(a1) / a2;
         }
     }
     return &aspectSAR;
 }
 const char_t* TvideoAutoPresetProps::getDAR(void)
 {
-    if (DAR==-1) {
-        unsigned int a1,a2;
-        if (deciV->getInputDAR(&a1,&a2)==S_OK) {
-            DAR=double(a1)/a2;
+    if (DAR == -1) {
+        unsigned int a1, a2;
+        if (deciV->getInputDAR(&a1, &a2) == S_OK) {
+            DAR = double(a1) / a2;
         }
     }
     return &aspectDAR;
 }
-bool TvideoAutoPresetProps::aspectMatch(const char_t *expr,const char_t *aspectStr)
+bool TvideoAutoPresetProps::aspectMatch(const char_t *expr, const char_t *aspectStr)
 {
-    const double &aspect=aspectStr==&aspectSAR?SAR:DAR;
-    Teval::Tvariable vars[]= {{_l("aspect"),&aspect},NULL};
+    const double &aspect = aspectStr == &aspectSAR ? SAR : DAR;
+    Teval::Tvariable vars[] = {{_l("aspect"), &aspect}, NULL};
     const char_t *err;
-    double res=Teval(expr,vars)(&err);
+    double res = Teval(expr, vars)(&err);
     return !err && !!res;
 }
 
 const char_t* TvideoAutoPresetProps::getFps(void)
 {
-    if (fps==0) {
+    if (fps == 0) {
         unsigned int fps1000;
-        if (deciV->getAVIfps(&fps1000)==S_OK) {
-            fps=fps1000/1000.0;
+        if (deciV->getAVIfps(&fps1000) == S_OK) {
+            fps = fps1000 / 1000.0;
         }
     }
     return _l("fps");
 }
-bool TvideoAutoPresetProps::fpsMatch(const char_t *expr,const char_t *)
+bool TvideoAutoPresetProps::fpsMatch(const char_t *expr, const char_t *)
 {
-    Teval::Tvariable vars[]= {{_l("fps"),&fps},NULL};
+    Teval::Tvariable vars[] = {{_l("fps"), &fps}, NULL};
     const char_t *err;
-    double res=Teval(expr,vars)(&err);
+    double res = Teval(expr, vars)(&err);
     return !err && !!res;
 }
 
 //============================== TpresetVideo =============================
 TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, int filtermode):
-    Tpreset(Ireg_child,IpresetName,-1,filtermode)
+    Tpreset(Ireg_child, IpresetName, -1, filtermode)
 {
-    static const TintOptionT<TpresetVideo> iopts[]= {
-        IDFF_presetAutoloadSize    ,&TpresetVideo::autoloadSize     ,0,0,_l(""),0,
-        _l("autoloadSize"),0,
-        IDFF_presetAutoloadSizeXmin,&TpresetVideo::autoloadSizeXmin ,16,16384,_l(""),0,
-        _l("autoloadSizeXmin"),16,
-        IDFF_presetAutoloadSizeXmax,&TpresetVideo::autoloadSizeXmax ,16,16384,_l(""),0,
-        _l("autoloadSizeXmax"),2048,
-        IDFF_presetAutoloadSizeCond,&TpresetVideo::autoloadSizeCond ,0,1,_l(""),0,
-        _l("autoloadSizeCond"),1,
-        IDFF_presetAutoloadSizeYmin,&TpresetVideo::autoloadSizeYmin ,16,16384,_l(""),0,
-        _l("autoloadSizeYmin"),16,
-        IDFF_presetAutoloadSizeYmax,&TpresetVideo::autoloadSizeYmax ,16,16384,_l(""),0,
-        _l("autoloadSizeYmax"),2048,
+    static const TintOptionT<TpresetVideo> iopts[] = {
+        IDFF_presetAutoloadSize    , &TpresetVideo::autoloadSize     , 0, 0, _l(""), 0,
+        _l("autoloadSize"), 0,
+        IDFF_presetAutoloadSizeXmin, &TpresetVideo::autoloadSizeXmin , 16, 16384, _l(""), 0,
+        _l("autoloadSizeXmin"), 16,
+        IDFF_presetAutoloadSizeXmax, &TpresetVideo::autoloadSizeXmax , 16, 16384, _l(""), 0,
+        _l("autoloadSizeXmax"), 2048,
+        IDFF_presetAutoloadSizeCond, &TpresetVideo::autoloadSizeCond , 0, 1, _l(""), 0,
+        _l("autoloadSizeCond"), 1,
+        IDFF_presetAutoloadSizeYmin, &TpresetVideo::autoloadSizeYmin , 16, 16384, _l(""), 0,
+        _l("autoloadSizeYmin"), 16,
+        IDFF_presetAutoloadSizeYmax, &TpresetVideo::autoloadSizeYmax , 16, 16384, _l(""), 0,
+        _l("autoloadSizeYmax"), 2048,
 
-        IDFF_idct               ,&TpresetVideo::idct               ,0,6,_l(""),1,
-        _l("idct"),0,
-        IDFF_softTelecine       ,&TpresetVideo::softTelecine       ,0,0,_l(""),1,
-        _l("softTelecine"),1,
-        IDFF_videoDelay         ,&TpresetVideo::videoDelay         ,1,1,_l(""),1,
-        _l("videoDelay"),0,
-        IDFF_isVideoDelayEnd    ,&TpresetVideo::isVideoDelayEnd    ,0,0,_l(""),1,
-        _l("isVideoDelayEnd"),0,
-        IDFF_videoDelayEnd      ,&TpresetVideo::videoDelayEnd      ,1,1,_l(""),1,
-        _l("videoDelayEnd"),0,
-        IDFF_workaroundBugs     ,&TpresetVideo::workaroundBugs     ,1,1,_l(""),1,
-        _l("workaroundBugs2"),FF_BUG_AUTODETECT,
-        IDFF_numLAVCdecThreads ,&TpresetVideo::lavcDecThreads      ,1,8,_l(""),1,
-        _l("threadsnum"),TintOption::DEF_DYN,
-        IDFF_multiThreadDec     ,&TpresetVideo::multiThread        ,0,0,_l(""),1,
-        _l("multiThread"),0,
-        IDFF_dontQueueInWMP     ,&TpresetVideo::dontQueueInWMP     ,0,0,_l(""),1,
-        _l("dontQueueInWMP"),1,
-        IDFF_useQueueOnlyIn     ,&TpresetVideo::useQueueOnlyIn     ,0,0,_l(""),1,
-        _l("useQueueOnlyIn"),1,
-        IDFF_queueCount         ,&TpresetVideo::queueCount         ,1,200,_l(""),1,
-        _l("queueCount"),10,
-        IDFF_queueVMR9YV12      ,&TpresetVideo::queueVMR9YV12      ,0,0,_l(""),1,
-        _l("queueVMR9YV12"),0,
+        IDFF_idct               , &TpresetVideo::idct               , 0, 6, _l(""), 1,
+        _l("idct"), 0,
+        IDFF_softTelecine       , &TpresetVideo::softTelecine       , 0, 0, _l(""), 1,
+        _l("softTelecine"), 1,
+        IDFF_videoDelay         , &TpresetVideo::videoDelay         , 1, 1, _l(""), 1,
+        _l("videoDelay"), 0,
+        IDFF_isVideoDelayEnd    , &TpresetVideo::isVideoDelayEnd    , 0, 0, _l(""), 1,
+        _l("isVideoDelayEnd"), 0,
+        IDFF_videoDelayEnd      , &TpresetVideo::videoDelayEnd      , 1, 1, _l(""), 1,
+        _l("videoDelayEnd"), 0,
+        IDFF_workaroundBugs     , &TpresetVideo::workaroundBugs     , 1, 1, _l(""), 1,
+        _l("workaroundBugs2"), FF_BUG_AUTODETECT,
+        IDFF_numLAVCdecThreads , &TpresetVideo::lavcDecThreads      , 1, 8, _l(""), 1,
+        _l("threadsnum"), TintOption::DEF_DYN,
+        IDFF_multiThreadDec     , &TpresetVideo::multiThread        , 0, 0, _l(""), 1,
+        _l("multiThread"), 0,
+        IDFF_dontQueueInWMP     , &TpresetVideo::dontQueueInWMP     , 0, 0, _l(""), 1,
+        _l("dontQueueInWMP"), 1,
+        IDFF_useQueueOnlyIn     , &TpresetVideo::useQueueOnlyIn     , 0, 0, _l(""), 1,
+        _l("useQueueOnlyIn"), 1,
+        IDFF_queueCount         , &TpresetVideo::queueCount         , 1, 200, _l(""), 1,
+        _l("queueCount"), 10,
+        IDFF_queueVMR9YV12      , &TpresetVideo::queueVMR9YV12      , 0, 0, _l(""), 1,
+        _l("queueVMR9YV12"), 0,
 
-        IDFF_dropOnDelay        ,&TpresetVideo::dropOnDelay        ,0,0,_l(""),1,
-        _l("dropOnDelay"),1,
-        IDFF_dropOnDelayTime    ,&TpresetVideo::dropDelayTime      ,0,20000,_l(""),1,
-        _l("dropDelayTime"),1500,
-        IDFF_h264skipOnDelay    ,&TpresetVideo::h264skipOnDelay    ,0,0,_l(""),1,
-        _l("h264skipOnDelay"),1,
-        IDFF_h264skipOnDelayTime,&TpresetVideo::h264skipDelayTime  ,0,20000,_l(""),1,
-        _l("h264skipDelayTime"),350,
-        IDFF_dec_DXVA_H264      ,&TpresetVideo::dec_dxva_h264      ,0,0,_l(""),1,
-        _l("dec_DXVA_H264"),0,
-        IDFF_dec_DXVA_VC1       ,&TpresetVideo::dec_dxva_vc1       ,0,0,_l(""),1,
-        _l("dec_DXVA_VC1"),0,
-        IDFF_dec_DXVA_CompatibilityMode,&TpresetVideo::dec_dxva_compatibilityMode,0,255,_l(""),0,
-        _l("dec_dxva_compatibilityMode"),1,
-        IDFF_dec_DXVA_PostProcessingMode,&TpresetVideo::dec_dxva_postProcessingMode,0,255,_l(""),0,
-        _l("dec_dxva_postProcessingMode"),0,
+        IDFF_dropOnDelay        , &TpresetVideo::dropOnDelay        , 0, 0, _l(""), 1,
+        _l("dropOnDelay"), 1,
+        IDFF_dropOnDelayTime    , &TpresetVideo::dropDelayTime      , 0, 20000, _l(""), 1,
+        _l("dropDelayTime"), 1500,
+        IDFF_h264skipOnDelay    , &TpresetVideo::h264skipOnDelay    , 0, 0, _l(""), 1,
+        _l("h264skipOnDelay"), 1,
+        IDFF_h264skipOnDelayTime, &TpresetVideo::h264skipDelayTime  , 0, 20000, _l(""), 1,
+        _l("h264skipDelayTime"), 350,
+        IDFF_dec_DXVA_H264      , &TpresetVideo::dec_dxva_h264      , 0, 0, _l(""), 1,
+        _l("dec_DXVA_H264"), 0,
+        IDFF_dec_DXVA_VC1       , &TpresetVideo::dec_dxva_vc1       , 0, 0, _l(""), 1,
+        _l("dec_DXVA_VC1"), 0,
+        IDFF_dec_DXVA_CompatibilityMode, &TpresetVideo::dec_dxva_compatibilityMode, 0, 255, _l(""), 0,
+        _l("dec_dxva_compatibilityMode"), 1,
+        IDFF_dec_DXVA_PostProcessingMode, &TpresetVideo::dec_dxva_postProcessingMode, 0, 255, _l(""), 0,
+        _l("dec_dxva_postProcessingMode"), 0,
 
-        IDFF_isDyInterlaced     ,&TpresetVideo::isDyInterlaced     ,0,0,_l(""),0,
-        _l("isDyInterlaced"),0,
-        IDFF_dyInterlaced       ,&TpresetVideo::dyInterlaced       ,0,4096,_l(""),0,
-        _l("dyInterlaced"),288,
+        IDFF_isDyInterlaced     , &TpresetVideo::isDyInterlaced     , 0, 0, _l(""), 0,
+        _l("isDyInterlaced"), 0,
+        IDFF_dyInterlaced       , &TpresetVideo::dyInterlaced       , 0, 4096, _l(""), 0,
+        _l("dyInterlaced"), 288,
 
-        IDFF_bordersBrightness  ,&TpresetVideo::bordersBrightness  ,0,255,_l(""),1,
-        _l("bordersBrightness"),0,
+        IDFF_bordersBrightness  , &TpresetVideo::bordersBrightness  , 0, 255, _l(""), 1,
+        _l("bordersBrightness"), 0,
 
         // Intel QuickSync Decoder options
-        IDFF_QS_ENABLE_TS_CORR      ,&TpresetVideo::qs_enable_ts_corr     , 0,  1, _l(""), 1, _l("qsEnableTimeStampCorrection"), 1,
-        IDFF_QS_ENABLE_MT           ,&TpresetVideo::qs_enable_mt          , 0,  1, _l(""), 1, _l("qsEnableMT")                 , 1,
-        IDFF_QS_FIELD_ORDER         ,&TpresetVideo::qs_field_order        , 0,  2, _l(""), 1, _l("qsFieldOrder")               , 0,
-        IDFF_QS_ENABLE_SW_EMULATION ,&TpresetVideo::qs_enable_sw_emulation, 0,  1, _l(""), 1, _l("qsEnableSwEmulation")        , 0,
-        IDFF_QS_FORCE_FIELD_ORDER   ,&TpresetVideo::qs_force_field_order  , 0,  1, _l(""), 1, _l("qsForceFieldOrder")          , 0,
-        IDFF_QS_ENABLE_DVD_DECODE   ,&TpresetVideo::qs_enable_dvd_decode  , 0,  1, _l(""), 1, _l("qsEnableDvdDecode")          , 0,
-        IDFF_QS_ENABLE_DI           ,&TpresetVideo::qs_enable_di          , 0,  1, _l(""), 1, _l("qsEnableDeinterlacing")      , 0,
-        IDFF_QS_FORCE_DI            ,&TpresetVideo::qs_force_di           , 0,  1, _l(""), 1, _l("qsForceDeinterlacing")       , 0,
-        IDFF_QS_ENABLE_FULL_RATE    ,&TpresetVideo::qs_enable_full_rate   , 0,  1, _l(""), 1, _l("qsEnableFullRateDI")         , 1,
-        IDFF_QS_DETAIL              ,&TpresetVideo::qs_detail             , 0, 64, _l(""), 1, _l("qsDetailStrength")           , 0,
-        IDFF_QS_DENOISE             ,&TpresetVideo::qs_denoise            , 0, 64, _l(""), 1, _l("qsDenoiseStrength")          , 0,
+        IDFF_QS_ENABLE_TS_CORR      , &TpresetVideo::qs_enable_ts_corr     , 0,  1, _l(""), 1, _l("qsEnableTimeStampCorrection"), 1,
+        IDFF_QS_ENABLE_MT           , &TpresetVideo::qs_enable_mt          , 0,  1, _l(""), 1, _l("qsEnableMT")                 , 1,
+        IDFF_QS_FIELD_ORDER         , &TpresetVideo::qs_field_order        , 0,  2, _l(""), 1, _l("qsFieldOrder")               , 0,
+        IDFF_QS_ENABLE_SW_EMULATION , &TpresetVideo::qs_enable_sw_emulation, 0,  1, _l(""), 1, _l("qsEnableSwEmulation")        , 0,
+        IDFF_QS_FORCE_FIELD_ORDER   , &TpresetVideo::qs_force_field_order  , 0,  1, _l(""), 1, _l("qsForceFieldOrder")          , 0,
+        IDFF_QS_ENABLE_DVD_DECODE   , &TpresetVideo::qs_enable_dvd_decode  , 0,  1, _l(""), 1, _l("qsEnableDvdDecode")          , 0,
+        IDFF_QS_ENABLE_DI           , &TpresetVideo::qs_enable_di          , 0,  1, _l(""), 1, _l("qsEnableDeinterlacing")      , 0,
+        IDFF_QS_FORCE_DI            , &TpresetVideo::qs_force_di           , 0,  1, _l(""), 1, _l("qsForceDeinterlacing")       , 0,
+        IDFF_QS_ENABLE_FULL_RATE    , &TpresetVideo::qs_enable_full_rate   , 0,  1, _l(""), 1, _l("qsEnableFullRateDI")         , 1,
+        IDFF_QS_DETAIL              , &TpresetVideo::qs_detail             , 0, 64, _l(""), 1, _l("qsDetailStrength")           , 0,
+        IDFF_QS_DENOISE             , &TpresetVideo::qs_denoise            , 0, 64, _l(""), 1, _l("qsDenoiseStrength")          , 0,
         0
     };
     // Be careful : any  setting added above must also be added into the following method :
@@ -316,122 +316,122 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
     // otherwise it won't be initialized correctly
     addOptions(iopts);
 
-    static const TstrOption sopts[]= {
-        IDFF_useQueueOnlyInList  ,(TstrVal)&TpresetVideo::useQueueOnlyInList ,128,0,_l(""),0,
-        _l("useQueueOnlyInList"),_l("mpc-hc.exe;mplayerc.exe;mpc-hc64.exe;mplayerc64.exe;"),
+    static const TstrOption sopts[] = {
+        IDFF_useQueueOnlyInList  , (TstrVal)&TpresetVideo::useQueueOnlyInList , 128, 0, _l(""), 0,
+        _l("useQueueOnlyInList"), _l("mpc-hc.exe;mplayerc.exe;mpc-hc64.exe;mplayerc64.exe;"),
         0
     };
     addOptions(sopts);
 
     static const TcreateParamList1 listIDCT(Tlibavcodec::idctNames);
-    setParamList(IDFF_idct,&listIDCT);
+    setParamList(IDFF_idct, &listIDCT);
     static const TcreateParamList1 listErrorConcealment(Tlibavcodec::errorConcealments);
     static const TcreateParamList1 listErrorRecognition(Tlibavcodec::errorRecognitions);
 
-    static const char_t *aspectHelp=_l("Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example \"16/9<aspect AND aspect<2.35\" or \"aspect=1\".");
-    static const char_t *fpsHelp=_l("Enter logical expression with 'fps' variable and comparison and arithmetic operators,\nfor example \"fps>30\".");
-    static const TautoPresetItemDef autoPresetItems[]= {
+    static const char_t *aspectHelp = _l("Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example \"16/9<aspect AND aspect<2.35\" or \"aspect=1\".");
+    static const char_t *fpsHelp = _l("Enter logical expression with 'fps' variable and comparison and arithmetic operators,\nfor example \"fps>30\".");
+    static const TautoPresetItemDef autoPresetItems[] = {
         {
-            _l("on FOURCC match"),NULL,
-            _l("autoloadFOURCC"),0,
-            _l("autoloadFOURCCs"),_l(""),
+            _l("on FOURCC match"), NULL,
+            _l("autoloadFOURCC"), 0,
+            _l("autoloadFOURCCs"), _l(""),
             &TautoPresetProps::stricoll,
             (TautoPresetItemDef::TgetValFc)&TvideoAutoPresetProps::getFOURCC,
             &TvideoAutoPresetProps::getFOURCCitem,
         },
         {
-            _l("on FOURCC from previous filter match"),_l("Useful when FFDShow is in raw mode, the compressed format (if any) is given by the previous filter in the chain."),
-            _l("autoloadPreviousFOURCC"),0,
-            _l("autoloadPreviousFOURCCs"),_l(""),
+            _l("on FOURCC from previous filter match"), _l("Useful when FFDShow is in raw mode, the compressed format (if any) is given by the previous filter in the chain."),
+            _l("autoloadPreviousFOURCC"), 0,
+            _l("autoloadPreviousFOURCCs"), _l(""),
             &TautoPresetProps::stricoll,
             (TautoPresetItemDef::TgetValFc)&TvideoAutoPresetProps::getPreviousFOURCC,
             &TvideoAutoPresetProps::getFOURCCitem,
         },
         {
-            _l("on pixel aspect ratio match"),NULL,
-            _l("autoloadSAR"),0,
-            _l("autoloadSARs"),_l(""),
+            _l("on pixel aspect ratio match"), NULL,
+            _l("autoloadSAR"), 0,
+            _l("autoloadSARs"), _l(""),
             (TautoPresetItemDef::TcompareFc)&TvideoAutoPresetProps::aspectMatch,
             (TautoPresetItemDef::TgetValFc)&TvideoAutoPresetProps::getSAR,
-            NULL,aspectHelp
+            NULL, aspectHelp
         },
         {
-            _l("on picture aspect ratio match"),NULL,
-            _l("autoloadDAR"),0,
-            _l("autoloadDARs"),_l(""),
+            _l("on picture aspect ratio match"), NULL,
+            _l("autoloadDAR"), 0,
+            _l("autoloadDARs"), _l(""),
             (TautoPresetItemDef::TcompareFc)&TvideoAutoPresetProps::aspectMatch,
             (TautoPresetItemDef::TgetValFc)&TvideoAutoPresetProps::getDAR,
-            NULL,aspectHelp
+            NULL, aspectHelp
         },
         {
-            _l("on frame rate match"),NULL,
-            _l("autoloadFrameRate"),0,
-            _l("autoloadFrameRatess"),_l(""),
+            _l("on frame rate match"), NULL,
+            _l("autoloadFrameRate"), 0,
+            _l("autoloadFrameRatess"), _l(""),
             (TautoPresetItemDef::TcompareFc)&TvideoAutoPresetProps::fpsMatch,
             (TautoPresetItemDef::TgetValFc)&TvideoAutoPresetProps::getFps,
-            NULL,fpsHelp
+            NULL, fpsHelp
         },
         0
     };
     addAutoPresetItems(autoPresetItems);
 
     if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES) && !(filtermode & IDFF_FILTERMODE_VIDEODXVA)) {
-        new TcropSettings(options,filters);
-        deinterlace=new TdeinterlaceSettings(options,filters);
-        new TlogoawaySettings(options,filters);
-        postproc=new TpostprocSettings(options,filters);
-        new TpictPropSettings(options,filters);
-        new TgradFunSettings(options,filters);
-        levels=new TlevelsSettings(options,filters);
-        new ToffsetSettings(options,filters);
-        new TblurSettings(options,filters);
-        new TsharpenSettings(options,filters);
-        new TwarpsharpSettings(options,filters);
-        new TDScalerFilterSettings(options,filters);
-        new TnoiseSettings(options,filters);
-        resize=new TresizeAspectSettings(options,filters);
-        new TperspectiveSettings(options,filters);
-        new TavisynthSettings(options,filters);
-        vis=new TvisSettings(options,filters);
-        new TdctSettings(options,filters);
-        new TbitmapSettings(options,filters);
-        subtitles=new TsubtitlesSettings(options,filters,filtermode);
-        grab=new TgrabSettings(options,filters);
-        new TOSDsettingsVideo(options,filters);
-        output=new ToutputVideoSettings(options,filters);
+        new TcropSettings(options, filters);
+        deinterlace = new TdeinterlaceSettings(options, filters);
+        new TlogoawaySettings(options, filters);
+        postproc = new TpostprocSettings(options, filters);
+        new TpictPropSettings(options, filters);
+        new TgradFunSettings(options, filters);
+        levels = new TlevelsSettings(options, filters);
+        new ToffsetSettings(options, filters);
+        new TblurSettings(options, filters);
+        new TsharpenSettings(options, filters);
+        new TwarpsharpSettings(options, filters);
+        new TDScalerFilterSettings(options, filters);
+        new TnoiseSettings(options, filters);
+        resize = new TresizeAspectSettings(options, filters);
+        new TperspectiveSettings(options, filters);
+        new TavisynthSettings(options, filters);
+        vis = new TvisSettings(options, filters);
+        new TdctSettings(options, filters);
+        new TbitmapSettings(options, filters);
+        subtitles = new TsubtitlesSettings(options, filters, filtermode);
+        grab = new TgrabSettings(options, filters);
+        new TOSDsettingsVideo(options, filters);
+        output = new ToutputVideoSettings(options, filters);
     } else if (!(filtermode & IDFF_FILTERMODE_VIDEODXVA)) {
-        postproc=NULL;
-        levels=NULL;
-        resize=NULL;
-        vis=NULL;
-        grab=NULL;
-        deinterlace=new TdeinterlaceSettings(options,filters);
-        subtitles=new TsubtitlesSettings(options,filters,filtermode);
-        output=new ToutputVideoSettings(options,filters);
+        postproc = NULL;
+        levels = NULL;
+        resize = NULL;
+        vis = NULL;
+        grab = NULL;
+        deinterlace = new TdeinterlaceSettings(options, filters);
+        subtitles = new TsubtitlesSettings(options, filters, filtermode);
+        output = new ToutputVideoSettings(options, filters);
     } else {
-        postproc=NULL;
-        levels=NULL;
-        resize=NULL;
-        vis=NULL;
-        grab=NULL;
-        subtitles=new TsubtitlesSettings(options,filters,filtermode);
-        new TOSDsettingsVideo(options,filters);
-        output=new ToutputVideoSettings(options,filters);
+        postproc = NULL;
+        levels = NULL;
+        resize = NULL;
+        vis = NULL;
+        grab = NULL;
+        subtitles = new TsubtitlesSettings(options, filters, filtermode);
+        new TOSDsettingsVideo(options, filters);
+        output = new ToutputVideoSettings(options, filters);
     }
 }
 
 void TpresetVideo::reg_op(TregOp &t)
 {
-    t._REG_OP_N(0,_l("needOutcspsFix"),needOutcspsFix,1);
-    t._REG_OP_N(0,_l("needGlobalFix"),needGlobalFix,1);
+    t._REG_OP_N(0, _l("needOutcspsFix"), needOutcspsFix, 1);
+    t._REG_OP_N(0, _l("needGlobalFix"), needGlobalFix, 1);
     Tpreset::reg_op(t);
 }
 
 int TpresetVideo::getDefault(int id)
 {
-    if (id==IDFF_multiThreadDec) {
-        return Tconfig::getCPUcount()>1?1:0;
-    } else if (id==IDFF_numLAVCdecThreads) {
+    if (id == IDFF_multiThreadDec) {
+        return Tconfig::getCPUcount() > 1 ? 1 : 0;
+    } else if (id == IDFF_numLAVCdecThreads) {
         int cpucount = Tconfig::getCPUcount();
         return cpucount > 8 ? 8 : cpucount;
     } else {
@@ -445,88 +445,88 @@ void TpresetVideo::loadReg(void)
     Tpreset::loadReg();
     //if (idct==6) idct=0;
     if (needOutcspsFix && output != NULL) {
-        needOutcspsFix=0;
+        needOutcspsFix = 0;
         char_t rkey[MAX_PATH];
         tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
-        TregOpRegRead t(HKEY_LOCAL_MACHINE,rkey);
+        TregOpRegRead t(HKEY_LOCAL_MACHINE, rkey);
         output->reg_op_outcsps(t);
     }
     if (needGlobalFix) {
-        needGlobalFix=0;
+        needGlobalFix = 0;
         char_t rkey[MAX_PATH];
         tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
-        TregOpRegRead t(HKEY_CURRENT_USER,rkey);
-        if (vis!=NULL) {
+        TregOpRegRead t(HKEY_CURRENT_USER, rkey);
+        if (vis != NULL) {
             vis->reg_op2(t);
         }
-        if (grab!=NULL) {
+        if (grab != NULL) {
             grab->reg_op2(t);
         }
     }
 }
 
-bool TpresetVideo::autoloadSizeMatch(int AVIdx,int AVIdy) const
+bool TpresetVideo::autoloadSizeMatch(int AVIdx, int AVIdy) const
 {
-    bool Xok=(autoloadSizeXmin<=AVIdx && AVIdx<=autoloadSizeXmax);
-    bool Yok=(autoloadSizeYmin<=AVIdy && AVIdy<=autoloadSizeYmax);
-    return (autoloadSizeCond==0)?(Xok && Yok):(Xok || Yok);
+    bool Xok = (autoloadSizeXmin <= AVIdx && AVIdx <= autoloadSizeXmax);
+    bool Yok = (autoloadSizeYmin <= AVIdy && AVIdy <= autoloadSizeYmax);
+    return (autoloadSizeCond == 0) ? (Xok && Yok) : (Xok || Yok);
 }
 
 Tpreset& TpresetVideo::operator =(const Tpreset &src0)
 {
-    if(this!=&src0) {
+    if (this != &src0) {
         try {
             const TpresetVideo &src = dynamic_cast<const TpresetVideo &>(src0);
             Tpreset::operator =(src0);
-            needOutcspsFix=src.needOutcspsFix;
-            needGlobalFix=src.needGlobalFix;
+            needOutcspsFix = src.needOutcspsFix;
+            needGlobalFix = src.needGlobalFix;
 
-            autoloadSize=src.autoloadSize;
-            autoloadSizeXmin=src.autoloadSizeXmin;
-            autoloadSizeXmax=src.autoloadSizeXmax;
-            autoloadSizeCond=src.autoloadSizeCond;
-            autoloadSizeYmin=src.autoloadSizeYmin;
-            autoloadSizeYmax=src.autoloadSizeYmax;
+            autoloadSize = src.autoloadSize;
+            autoloadSizeXmin = src.autoloadSizeXmin;
+            autoloadSizeXmax = src.autoloadSizeXmax;
+            autoloadSizeCond = src.autoloadSizeCond;
+            autoloadSizeYmin = src.autoloadSizeYmin;
+            autoloadSizeYmax = src.autoloadSizeYmax;
 
-            videoDelay=src.videoDelay;
-            isVideoDelayEnd=src.isVideoDelayEnd;
-            videoDelayEnd=src.videoDelayEnd;
-            idct=src.idct;
-            softTelecine=src.softTelecine;
-            workaroundBugs=src.workaroundBugs;
-            lavcDecThreads=src.lavcDecThreads;
-            grayscale=src.grayscale;
-            multiThread=src.multiThread;
-            dontQueueInWMP=src.dontQueueInWMP;
-            useQueueOnlyIn=src.useQueueOnlyIn;
-            queueCount=src.queueCount;
-            queueVMR9YV12=src.queueVMR9YV12;
-            dropOnDelay=src.dropOnDelay;
-            dropDelayTime=src.dropDelayTime;
-            h264skipOnDelay=src.h264skipOnDelay;
-            h264skipDelayTime=src.h264skipDelayTime;
-            dec_dxva_h264=src.dec_dxva_h264;
-            dec_dxva_vc1=src.dec_dxva_vc1;
-            dec_dxva_compatibilityMode=src.dec_dxva_compatibilityMode;
-            dec_dxva_postProcessingMode=src.dec_dxva_postProcessingMode;
-            bordersBrightness=src.bordersBrightness;
+            videoDelay = src.videoDelay;
+            isVideoDelayEnd = src.isVideoDelayEnd;
+            videoDelayEnd = src.videoDelayEnd;
+            idct = src.idct;
+            softTelecine = src.softTelecine;
+            workaroundBugs = src.workaroundBugs;
+            lavcDecThreads = src.lavcDecThreads;
+            grayscale = src.grayscale;
+            multiThread = src.multiThread;
+            dontQueueInWMP = src.dontQueueInWMP;
+            useQueueOnlyIn = src.useQueueOnlyIn;
+            queueCount = src.queueCount;
+            queueVMR9YV12 = src.queueVMR9YV12;
+            dropOnDelay = src.dropOnDelay;
+            dropDelayTime = src.dropDelayTime;
+            h264skipOnDelay = src.h264skipOnDelay;
+            h264skipDelayTime = src.h264skipDelayTime;
+            dec_dxva_h264 = src.dec_dxva_h264;
+            dec_dxva_vc1 = src.dec_dxva_vc1;
+            dec_dxva_compatibilityMode = src.dec_dxva_compatibilityMode;
+            dec_dxva_postProcessingMode = src.dec_dxva_postProcessingMode;
+            bordersBrightness = src.bordersBrightness;
             ff_strncpy(useQueueOnlyInList, src.useQueueOnlyInList, countof(useQueueOnlyInList));
 
-            isDyInterlaced=src.isDyInterlaced;
-            dyInterlaced=src.dyInterlaced;
+            isDyInterlaced = src.isDyInterlaced;
+            dyInterlaced = src.dyInterlaced;
 
             // QuickSync params:
-            qs_enable_ts_corr     =src.qs_enable_ts_corr;
-            qs_enable_mt          =src.qs_enable_mt;
-            qs_field_order        =src.qs_field_order;
-            qs_enable_sw_emulation=src.qs_enable_sw_emulation;
-            qs_force_field_order  =src.qs_force_field_order;
-            qs_enable_dvd_decode  =src.qs_enable_dvd_decode;
-            qs_enable_di          =src.qs_enable_di;          
-            qs_force_di           =src.qs_force_di;           
-            qs_enable_full_rate   =src.qs_enable_full_rate;   
-            qs_detail             =src.qs_detail;             
-            qs_denoise            =src.qs_denoise;
+            qs_enable_ts_corr     = src.qs_enable_ts_corr;
+            qs_enable_mt          = src.qs_enable_mt;
+            qs_field_order        = src.qs_field_order;
+            qs_enable_sw_emulation = src.qs_enable_sw_emulation;
+            qs_force_field_order  = src.qs_force_field_order;
+            qs_enable_dvd_decode  = src.qs_enable_dvd_decode;
+            qs_enable_di          = src.qs_enable_di;
+            qs_force_di           = src.qs_force_di;
+            qs_enable_full_rate   = src.qs_enable_full_rate;
+            qs_detail             = src.qs_detail;
+            qs_denoise            = src.qs_denoise;
         } catch (const std::bad_cast&) {
             DPRINTF(_l("In TpresetVideo::operator =, dynamic_cast failed. This must be a bug."));
             ASSERT(0);
@@ -537,9 +537,9 @@ Tpreset& TpresetVideo::operator =(const Tpreset &src0)
 }
 
 //=========================== TpresetVideoPlayer ==========================
-TpresetVideoPlayer::TpresetVideoPlayer(const char_t *Ireg_child, const char_t *IpresetName, int filtermode):TpresetVideo(Ireg_child, IpresetName, filtermode)
+TpresetVideoPlayer::TpresetVideoPlayer(const char_t *Ireg_child, const char_t *IpresetName, int filtermode): TpresetVideo(Ireg_child, IpresetName, filtermode)
 {
     if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES) && !(filtermode & IDFF_FILTERMODE_VIDEODXVA)) {
-        new ThwOverlaySettings(options,filters);
+        new ThwOverlaySettings(options, filters);
     }
 }

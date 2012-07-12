@@ -3,18 +3,18 @@
 
 #include "TconfPageDecVideo.h"
 
-class TsubtitlesPage :public TconfPageDecVideo
+class TsubtitlesPage : public TconfPageDecVideo
 {
 private:
     bool autosubfirsttime;
     strings autosubfiles;
-    void sub2dlg(void),auto2dlg(void);
+    void sub2dlg(void), auto2dlg(void);
     void loadSubtitles(void);
-    void onLoadfile(void),onSearchdir(void);
+    void onLoadfile(void), onSearchdir(void);
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
-    TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TsubtitlesPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void init(void);
     virtual void cfg2dlg(void);
     virtual void applySettings(void);

@@ -60,7 +60,7 @@ dwReserved1
 Reserved.
 */
 
-const int ThwOverlayControlOverlay::caps[]= {
+const int ThwOverlayControlOverlay::caps[] = {
     0,
     DDCOLOR_BRIGHTNESS,
     DDCOLOR_CONTRAST,
@@ -69,7 +69,7 @@ const int ThwOverlayControlOverlay::caps[]= {
     DDCOLOR_SHARPNESS,
     DDCOLOR_GAMMA
 };
-LONG DDCOLORCONTROL::* ThwOverlayControlOverlay::ddcccaps[]= {
+LONG DDCOLORCONTROL::* ThwOverlayControlOverlay::ddcccaps[] = {
     NULL,
     &DDCOLORCONTROL::lBrightness,
     &DDCOLORCONTROL::lContrast,
@@ -83,23 +83,23 @@ ThwOverlayControlOverlay::ThwOverlayControlOverlay(IMixerPinConfig2 *IoverlayCon
     ThwOverlayControlBase(NAME("ThwOverlayControlOverlay")),
     overlayControl(IoverlayControl)
 {
-    memset(&ddcc,0,sizeof(ddcc));
-    ddcc.dwSize=sizeof(ddcc);
-    ddcc.dwFlags=0xff;
-    if (!overlayControl || overlayControl->GetOverlaySurfaceColorControls(&ddcc)!=S_OK) {
-        ddcc.dwFlags=0;
+    memset(&ddcc, 0, sizeof(ddcc));
+    ddcc.dwSize = sizeof(ddcc);
+    ddcc.dwFlags = 0xff;
+    if (!overlayControl || overlayControl->GetOverlaySurfaceColorControls(&ddcc) != S_OK) {
+        ddcc.dwFlags = 0;
     }
 }
 
 STDMETHODIMP_(bool) ThwOverlayControlOverlay::supported(int cap)
 {
-    if (isIn(cap,1,6)) {
-        return !!(ddcc.dwFlags&caps[cap]);
+    if (isIn(cap, 1, 6)) {
+        return !!(ddcc.dwFlags & caps[cap]);
     } else {
         return false;
     }
 }
-STDMETHODIMP ThwOverlayControlOverlay::get(int cap,int *val)
+STDMETHODIMP ThwOverlayControlOverlay::get(int cap, int *val)
 {
     if (!overlayControl) {
         return E_UNEXPECTED;
@@ -107,32 +107,32 @@ STDMETHODIMP ThwOverlayControlOverlay::get(int cap,int *val)
     if (!val) {
         return E_POINTER;
     }
-    if (!isIn(cap,1,6)) {
+    if (!isIn(cap, 1, 6)) {
         return E_INVALIDARG;
     }
     DDCOLORCONTROL ddcc;
-    memset(&ddcc,0,sizeof(ddcc));
-    ddcc.dwSize=sizeof(ddcc);
-    ddcc.dwFlags=caps[cap];
-    if (overlayControl->GetOverlaySurfaceColorControls(&ddcc)!=S_OK) {
+    memset(&ddcc, 0, sizeof(ddcc));
+    ddcc.dwSize = sizeof(ddcc);
+    ddcc.dwFlags = caps[cap];
+    if (overlayControl->GetOverlaySurfaceColorControls(&ddcc) != S_OK) {
         return E_FAIL;
     }
-    *val=ddcc.*(ddcccaps[cap]);
+    *val = ddcc.*(ddcccaps[cap]);
     return S_OK;
 }
-STDMETHODIMP ThwOverlayControlOverlay::set(int cap,int val)
+STDMETHODIMP ThwOverlayControlOverlay::set(int cap, int val)
 {
     if (!overlayControl) {
         return E_UNEXPECTED;
     }
-    if (!isIn(cap,1,6)) {
+    if (!isIn(cap, 1, 6)) {
         return E_INVALIDARG;
     }
     DDCOLORCONTROL ddcc;
-    memset(&ddcc,0,sizeof(ddcc));
-    ddcc.dwSize=sizeof(ddcc);
-    ddcc.dwFlags=caps[cap];
-    ddcc.*(ddcccaps[cap])=val;
+    memset(&ddcc, 0, sizeof(ddcc));
+    ddcc.dwSize = sizeof(ddcc);
+    ddcc.dwFlags = caps[cap];
+    ddcc.*(ddcccaps[cap]) = val;
     return overlayControl->SetOverlaySurfaceColorControls(&ddcc);
 }
 STDMETHODIMP ThwOverlayControlOverlay::reset(void)

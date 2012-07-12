@@ -10,10 +10,10 @@
 #define size_of_rgb32 4
 
 enum {
-    ALIGN_FFDSHOW=0,
-    ALIGN_LEFT=1,
-    ALIGN_CENTER=2,
-    ALIGN_RIGHT=3
+    ALIGN_FFDSHOW = 0,
+    ALIGN_LEFT = 1,
+    ALIGN_CENTER = 2,
+    ALIGN_RIGHT = 3
 };
 
 class TrenderedSubtitleLine;
@@ -26,11 +26,11 @@ struct TrotateParam {
 };
 
 struct TprintPrefs {
-    TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings);
+    TprintPrefs(IffdshowBase *Ideci, const TfontSettings *IfontSettings);
 
     TprintPrefs() {
-        memset(this,0,sizeof(*this));
-        memset(&fontSettings,0,sizeof(fontSettings));
+        memset(this, 0, sizeof(*this));
+        memset(&fontSettings, 0, sizeof(fontSettings));
     }
 
     bool operator != (const TprintPrefs &rt) const;
@@ -40,15 +40,15 @@ struct TprintPrefs {
         memcpy(this, &rt, sizeof(*this));
     }
 
-    unsigned int dx,dy,clipdy;
+    unsigned int dx, dy, clipdy;
     bool isOSD;
-    int xpos,ypos;
+    int xpos, ypos;
     int align;
     int linespacing;
-    unsigned int sizeDx,sizeDy;
+    unsigned int sizeDx, sizeDy;
     int stereoScopicParallax;
     bool vobchangeposition;
-    int subimgscale,vobaamode,vobaagauss;
+    int subimgscale, vobaamode, vobaagauss;
     bool OSDitemSplit;
     int textMarginLR;
     int tabsize;
@@ -70,11 +70,11 @@ struct TprintPrefs {
     // decoded resolution or 384,288 depending on the settings of
     // "Use movie demensions instead of ASS script information".
     // Note that this works for SRT too.
-    unsigned int xinput,yinput;
+    unsigned int xinput, yinput;
 
     TfontSettings fontSettings;
     YUVcolorA yuvcolor;  // body
-    YUVcolorA outlineYUV,shadowYUV;
+    YUVcolorA outlineYUV, shadowYUV;
 
     // members that are not compared by operator == and !=
     REFERENCE_TIME rtStart;
@@ -95,7 +95,7 @@ public:
      *  just clear pointers, do not delete objects.
      */
     void reset() {
-        erase(begin(),end());
+        erase(begin(), end());
     }
 
     /**
@@ -123,9 +123,9 @@ private:
     {
     public:
         int alignment;
-        double marginTop,marginBottom;
-        double marginL,marginR;
-        int isMove,isScroll;
+        double marginTop, marginBottom;
+        double marginL, marginR;
+        int isMove, isScroll;
         CPoint pos;
         int layer;
         bool hasPrintedRect;
@@ -140,10 +140,10 @@ private:
 
     class ParagraphValue
     {
-        double maxr,maxl;
+        double maxr, maxl;
     public:
-        double width,height,y;
-        double xmin,xmax,y0,xoffset,yoffset;
+        double width, height, y;
+        double xmin, xmax, y0, xoffset, yoffset;
         CRectDouble overhang;
         bool firstuse;
         CRectDouble myrect;
@@ -166,7 +166,7 @@ private:
     class TlayerSort
     {
     public:
-        bool operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const;
+        bool operator()(TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const;
     };
 
     void handleCollision(TrenderedSubtitleLine *line, int x, ParagraphValue &pval, unsigned int prefsdy, int alignment);
@@ -181,22 +181,22 @@ public:
         own(Iown),
         dxChar(0),
         dyChar(0) {
-        for (int i=0; i<3; i++) {
-            bmp[i]=NULL;
-            msk[i]=NULL;
-            outline[i]=NULL;
-            shadow[i]=NULL;
-            dx[i]=0;
-            dy[i]=0;
+        for (int i = 0; i < 3; i++) {
+            bmp[i] = NULL;
+            msk[i] = NULL;
+            outline[i] = NULL;
+            shadow[i] = NULL;
+            dx[i] = 0;
+            dy[i] = 0;
         }
     }
     virtual ~TrenderedSubtitleWordBase();
-    unsigned int dx[3],dy[3];
-    double dxChar,dyChar;
-    unsigned char *bmp[3],*msk[3];
+    unsigned int dx[3], dy[3];
+    double dxChar, dyChar;
+    unsigned char *bmp[3], *msk[3];
     stride_t bmpmskstride[3];
-    unsigned char *outline[3],*shadow[3];
-    virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const =0;
+    unsigned char *outline[3], *shadow[3];
+    virtual void print(int startx, int starty, unsigned int dx[3], int dy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *bmp[3], const unsigned char *msk[3], REFERENCE_TIME rtStart = REFTIME_INVALID) const = 0;
     uint64_t csp;
     virtual double get_ascent() const {
         return dy[0];
@@ -226,32 +226,28 @@ public:
     TrenderedSubtitleLine():
         firstrun(true),
         hasPrintedRect(false),
-        hasParagraphRect(false)
-    {
+        hasParagraphRect(false) {
         mprops.reset();
     }
     TrenderedSubtitleLine(const TSubtitleProps &p, const TprintPrefs &prefs):
         firstrun(true),
         hasPrintedRect(false),
         hasParagraphRect(false),
-        mprops(p,prefs)
-    {
+        mprops(p, prefs) {
     }
 
     TrenderedSubtitleLine(const TSubtitleProps &p, const TprintPrefs &prefs, double IemptyHeight):
         firstrun(true),
         hasPrintedRect(false),
         hasParagraphRect(false),
-        mprops(p,prefs),
-        emptyHeight(IemptyHeight)
-    {
+        mprops(p, prefs),
+        emptyHeight(IemptyHeight) {
     }
 
     TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):
         firstrun(true),
         hasPrintedRect(false),
-        hasParagraphRect(false)
-    {
+        hasParagraphRect(false) {
         push_back(w);
         mprops.reset();
     }
@@ -305,7 +301,7 @@ private:
     TrenderedSubtitleLines lines;
     unsigned int height;
     uint64_t oldCsp;
-    void prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange);
+    void prepareC(TsubtitleText *sub, const TprintPrefs &prefs, bool forceChange);
 public:
     friend struct TsubtitleText;
     //TfontSettings *fontSettings;

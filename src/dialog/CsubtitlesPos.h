@@ -3,7 +3,7 @@
 
 #include "TconfPageDecVideo.h"
 
-class TsubtitlesPosPage :public TconfPageDecVideo
+class TsubtitlesPosPage : public TconfPageDecVideo
 {
 private:
     void expand2dlg(void);
@@ -12,7 +12,7 @@ private:
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
-    TsubtitlesPosPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TsubtitlesPosPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void init(void);
     virtual void cfg2dlg(void);
     virtual void translate(void);

@@ -20,10 +20,10 @@
 #include "TaudioFilterFreeverb.h"
 #include "freeverb/revmodel.h"
 
-TaudioFilterFreeverb::TaudioFilterFreeverb(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
+TaudioFilterFreeverb::TaudioFilterFreeverb(IffdshowBase *Ideci, Tfilters *Iparent): TaudioFilter(Ideci, Iparent)
 {
-    rev=NULL;
-    old.damp=INT_MAX;
+    rev = NULL;
+    old.damp = INT_MAX;
 }
 
 TaudioFilterFreeverb::~TaudioFilterFreeverb()
@@ -33,43 +33,43 @@ TaudioFilterFreeverb::~TaudioFilterFreeverb()
     }
 }
 
-bool TaudioFilterFreeverb::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
+bool TaudioFilterFreeverb::is(const TsampleFormat &fmt, const TfilterSettingsAudio *cfg)
 {
-    return  super::is(fmt,cfg) && fmt.nchannels==2;
+    return  super::is(fmt, cfg) && fmt.nchannels == 2;
 }
 
-HRESULT TaudioFilterFreeverb::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
+HRESULT TaudioFilterFreeverb::process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples0, size_t numsamples, const TfilterSettingsAudio *cfg0)
 {
-    const TfreeverbSettings *cfg=(const TfreeverbSettings*)cfg0;
+    const TfreeverbSettings *cfg = (const TfreeverbSettings*)cfg0;
 
     if (!rev || !cfg->equal(old)) {
-        old=*cfg;
+        old = *cfg;
         bool wasfirst;
         if (!rev) {
-            rev=new revmodel;
-            wasfirst=true;
+            rev = new revmodel;
+            wasfirst = true;
         } else {
-            wasfirst=false;
+            wasfirst = false;
         }
 
-        rev->setwet(cfg->wet/1000.0f);
-        rev->setroomsize(cfg->roomsize/1000.0f);
-        rev->setdry(cfg->dry/1000.0f);
-        rev->setdamp(cfg->damp/1000.0f);
-        rev->setwidth(cfg->width/1000.0f);
-        rev->setmode(cfg->mode/1000.0f);
+        rev->setwet(cfg->wet / 1000.0f);
+        rev->setroomsize(cfg->roomsize / 1000.0f);
+        rev->setdry(cfg->dry / 1000.0f);
+        rev->setdamp(cfg->damp / 1000.0f);
+        rev->setwidth(cfg->width / 1000.0f);
+        rev->setmode(cfg->mode / 1000.0f);
 
         if (wasfirst) {
             rev->mute();
         }
     }
 
-    if (is(fmt,cfg)) {
-        float *samples=(float*)(samples0=init(cfg,fmt,samples0,numsamples));
-        rev->processreplace(samples,samples+1,(int)numsamples,2);
+    if (is(fmt, cfg)) {
+        float *samples = (float*)(samples0 = init(cfg, fmt, samples0, numsamples));
+        rev->processreplace(samples, samples + 1, (int)numsamples, 2);
     }
 
-    return parent->deliverSamples(++it,fmt,samples0,numsamples);
+    return parent->deliverSamples(++it, fmt, samples0, numsamples);
 }
 
 void TaudioFilterFreeverb::onSeek(void)

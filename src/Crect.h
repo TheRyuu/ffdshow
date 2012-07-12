@@ -2,26 +2,26 @@
 #define _CRECT_H_
 
 template <class number_t, class POINT>
-struct CPointT :POINT {
+struct CPointT : POINT {
     CPointT() {
-        x=0;
-        y=0;
+        x = 0;
+        y = 0;
     }
-    CPointT(number_t Ix,number_t Iy) {
-        x=Ix;
-        y=Iy;
+    CPointT(number_t Ix, number_t Iy) {
+        x = Ix;
+        y = Iy;
     }
     inline void operator-=(const CPointT &pt) {
-        x-=pt.x;
-        y-=pt.y;
+        x -= pt.x;
+        y -= pt.y;
     }
 
-    inline void scale(number_t xnum,number_t xden,number_t ynum,number_t yden) {
-        if (xden==0 || yden==0) {
+    inline void scale(number_t xnum, number_t xden, number_t ynum, number_t yden) {
+        if (xden == 0 || yden == 0) {
             return;
         }
-        x=xnum*x/xden;
-        y=ynum*y/yden;
+        x = xnum * x / xden;
+        y = ynum * y / yden;
     }
 
     bool operator != (const CPointT &rt) const {
@@ -70,78 +70,78 @@ struct CPointT :POINT {
 };
 
 template <class number_t, class CSize>
-struct CSizeT :CSize {
+struct CSizeT : CSize {
     CSizeT() {}
-    CSizeT(number_t Icx,number_t Icy) {
-        cx=Icx;
-        cy=Icy;
+    CSizeT(number_t Icx, number_t Icy) {
+        cx = Icx;
+        cy = Icy;
     }
     // Operations
     BOOL operator==(CSize size) {
-        return (cx==size.cx && cy==size.cy);
+        return (cx == size.cx && cy == size.cy);
     }
     BOOL operator!=(CSize size) {
-        return (cx!=size.cx || cy!=size.cy);
+        return (cx != size.cx || cy != size.cy);
     }
 };
 
 template <class number_t, class RECT, class CPoint, class CSize>
-struct CRectT :RECT {
+struct CRectT : RECT {
     CRectT() {
-        top=0;
-        left=0;
-        right=0;
-        bottom=0;
+        top = 0;
+        left = 0;
+        right = 0;
+        bottom = 0;
     }
     CRectT(const RECT &r) {
-        top=r.top;
-        left=r.left;
-        bottom=r.bottom;
-        right=r.right;
+        top = r.top;
+        left = r.left;
+        bottom = r.bottom;
+        right = r.right;
     }
-    CRectT(number_t Ileft,number_t Itop,number_t Iright,number_t Ibottom) {
-        left=Ileft;
-        right=Iright;
-        top=Itop;
-        bottom=Ibottom;
+    CRectT(number_t Ileft, number_t Itop, number_t Iright, number_t Ibottom) {
+        left = Ileft;
+        right = Iright;
+        top = Itop;
+        bottom = Ibottom;
     }
-    CRectT(const CPoint &topleft,const CPoint &rightbottom) {
-        left=topleft.x;
-        top=topleft.y;
-        right=rightbottom.x;
-        bottom=rightbottom.y;
+    CRectT(const CPoint &topleft, const CPoint &rightbottom) {
+        left = topleft.x;
+        top = topleft.y;
+        right = rightbottom.x;
+        bottom = rightbottom.y;
     }
-    CRectT(const CPoint &topleft,const CSize &size) {
-        left=topleft.x;
-        top=topleft.y;
-        right=left+size.cx;
-        bottom=top+size.cy;
+    CRectT(const CPoint &topleft, const CSize &size) {
+        left = topleft.x;
+        top = topleft.y;
+        right = left + size.cx;
+        bottom = top + size.cy;
     }
     inline void operator&=(const CRectT &rect2) {
-        RECT rect1=*this;
-        IntersectRect(this,&rect1,&rect2);
+        RECT rect1 = *this;
+        IntersectRect(this, &rect1, &rect2);
     }
 
     inline void operator += (const CPoint &pt) {
-        left+=pt.x;
-        top+=pt.y;
-        right+=pt.x;
-        bottom+=pt.y;
+        left += pt.x;
+        top += pt.y;
+        right += pt.x;
+        bottom += pt.y;
     }
 
     inline void operator -= (const CPoint &pt) {
-        left-=pt.x;
-        top-=pt.y;
-        right-=pt.x;
-        bottom-=pt.y;
+        left -= pt.x;
+        top -= pt.y;
+        right -= pt.x;
+        bottom -= pt.y;
     }
 
     inline CRectT operator + (const CRectT &rt) {
-        return CRectT (left + rt.left, top + rt.top, right + rt.right, bottom + rt.bottom);
+        return CRectT(left + rt.left, top + rt.top, right + rt.right, bottom + rt.bottom);
     }
 
     inline CRectT operator - (const CRectT &rt) {
-        return CRectT (left - rt.left, top - rt.top, right - rt.right, bottom - rt.bottom);
+        return CRectT(left - rt.left, top - rt.top, right - rt.right, bottom - rt.bottom);
     }
     inline bool operator < (const CRectT &rt) const {
         if (top < rt.top) {
@@ -208,28 +208,28 @@ struct CRectT :RECT {
         return !(*this == rt);
     }
     inline number_t Width(void) const {
-        return right-left;
+        return right - left;
     }
     inline number_t Height(void) const {
-        return bottom-top;
+        return bottom - top;
     }
     inline CPoint TopLeft(void) const {
-        return CPoint(left,top);
+        return CPoint(left, top);
     }
     inline CPoint BottomRight(void) const {
-        return CPoint(right,bottom);
+        return CPoint(right, bottom);
     }
     inline CSize Size(void) const {
-        return CSize(Width(),Height());
+        return CSize(Width(), Height());
     }
-    inline void scale(number_t xnum,number_t xden,number_t ynum,number_t yden) {
-        if (xden==0 || yden==0) {
+    inline void scale(number_t xnum, number_t xden, number_t ynum, number_t yden) {
+        if (xden == 0 || yden == 0) {
             return;
         }
-        left=xnum*left/xden;
-        top=ynum*top/yden;
-        right=xnum*right/xden;
-        bottom=ynum*bottom/yden;
+        left = xnum * left / xden;
+        top = ynum * top / yden;
+        right = xnum * right / xden;
+        bottom = ynum * bottom / yden;
     }
     bool checkOverlap(CRectT &rt) const {
         if (top > rt.bottom) {
@@ -249,11 +249,11 @@ struct CRectT :RECT {
 };
 
 struct POINT_DOUBLE {
-    double x,y;
+    double x, y;
 };
 
 struct SIZE_DOUBLE {
-    double cx,cy;
+    double cx, cy;
 };
 
 struct RECT_DOUBLE {

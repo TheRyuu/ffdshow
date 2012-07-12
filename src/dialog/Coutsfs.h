@@ -4,10 +4,10 @@
 #include "TconfPageDecAudio.h"
 #include "ToutputAudioSettings.h"
 
-class ToutsfsPage :public TconfPageDecAudio
+class ToutsfsPage : public TconfPageDecAudio
 {
 private:
-    void ac32dlg(int &outsfs),connect2dlg(void);
+    void ac32dlg(int &outsfs), connect2dlg(void);
     static const int ac3bitrates[];
     int warningShowed;
 protected:
@@ -16,8 +16,8 @@ public:
     static const char_t* bitstream_formats[];
     ToutsfsPage(TffdshowPageDec *Iparent);
     void init(void);
-    virtual void getTip(char_t *tipS,size_t len);
-    virtual bool reset(bool testonly=false);
+    virtual void getTip(char_t *tipS, size_t len);
+    virtual bool reset(bool testonly = false);
     virtual void cfg2dlg(void);
     virtual void translate(void);
     virtual void applySettings(void);

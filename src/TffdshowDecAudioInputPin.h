@@ -6,13 +6,13 @@
 #include "TaudioParser.h"
 
 class TffdshowDecAudio;
-class TffdshowDecAudioInputPin :public TinputPin,public IdecAudioSink, public IPinConnection
+class TffdshowDecAudioInputPin : public TinputPin, public IdecAudioSink, public IPinConnection
 {
 private:
     TffdshowDecAudio *filter;
     bool searchdts;
     CCritSec m_csReceive;
-    TbyteBuffer buf,newSrcBuffer;
+    TbyteBuffer buf, newSrcBuffer;
     int jitter;
     TaudioParser *audioParser;
     CMediaType outmt;
@@ -26,8 +26,8 @@ public:
 
     DECLARE_IUNKNOWN
 
-    REFERENCE_TIME insample_rtStart,insample_rtStop;
-    TffdshowDecAudioInputPin(const char_t* pObjectName, TffdshowDecAudio* pFilter, HRESULT* phr, LPWSTR pName,int Inumber);
+    REFERENCE_TIME insample_rtStart, insample_rtStop;
+    TffdshowDecAudioInputPin(const char_t* pObjectName, TffdshowDecAudio* pFilter, HRESULT* phr, LPWSTR pName, int Inumber);
     virtual ~TffdshowDecAudioInputPin();
     TaudioCodec *audio;
     void block(bool is);
@@ -43,7 +43,7 @@ public:
     STDMETHODIMP EndFlush(void);
     STDMETHODIMP BeginFlush();
     STDMETHODIMP EndOfStream();
-    STDMETHODIMP NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
+    STDMETHODIMP NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
     HRESULT CompleteConnect(IPin* pReceivePin);
 
     HRESULT Active(void);
@@ -59,16 +59,16 @@ public:
     STDMETHODIMP DynamicDisconnect();
 
     // IdecAudioSink
-    STDMETHODIMP deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt);
+    STDMETHODIMP deliverDecodedSample(void *buf, size_t numsamples, const TsampleFormat &fmt);
     STDMETHODIMP flushDecodedSamples(void);
     STDMETHODIMP setCodecId(CodecID codecId);
     STDMETHODIMP getCodecId(CodecID *pCodecId);
     STDMETHODIMP getAudioParser(TaudioParser **ppAudioParser);
-    STDMETHODIMP deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &fmt);
+    STDMETHODIMP deliverProcessedSample(const void *buf, size_t numsamples, const TsampleFormat &fmt);
     STDMETHODIMP_(bool)getsf(TsampleFormat &sf); //true if S/PDIF or bitstream HDMI
 
     HRESULT getMovieSource(const TaudioCodec* *moviePtr);
-    virtual HRESULT getInCodecString(char_t *buf,size_t buflen);
+    virtual HRESULT getInCodecString(char_t *buf, size_t buflen);
     int getInputBitrate(void) const;
     int getJitter(void) const;
 };

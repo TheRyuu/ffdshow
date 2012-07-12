@@ -3,7 +3,7 @@
 
 #include "TconfPageDecVideo.h"
 
-class TDXVAOptionsPage :public TconfPageDecVideo
+class TDXVAOptionsPage : public TconfPageDecVideo
 {
 private:
     bool islavc;

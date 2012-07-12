@@ -23,24 +23,24 @@
 #include "ffImgfmt.h"
 #include "Tconfig.h"
 
-Tswscale::Tswscale(Tlibavcodec *Ilibavcodec):libavcodec(Ilibavcodec)
+Tswscale::Tswscale(Tlibavcodec *Ilibavcodec): libavcodec(Ilibavcodec)
 {
-    swsc=NULL;
+    swsc = NULL;
 }
 Tswscale::~Tswscale()
 {
     done();
 }
-bool Tswscale::init(unsigned int Idx,unsigned int Idy,uint64_t incsp,uint64_t outcsp)
+bool Tswscale::init(unsigned int Idx, unsigned int Idy, uint64_t incsp, uint64_t outcsp)
 {
     done();
-    PixelFormat sw_incsp=csp_ffdshow2lavc(incsp),sw_outcsp=csp_ffdshow2lavc(outcsp);
-    dx=Idx;
-    dy=Idy;
+    PixelFormat sw_incsp = csp_ffdshow2lavc(incsp), sw_outcsp = csp_ffdshow2lavc(outcsp);
+    dx = Idx;
+    dy = Idy;
     sws_flags = SWS_BILINEAR | SWS_FULL_CHR_H_INT | SWS_FULL_CHR_H_INP; //Resize method
     SwsParams params;
-    Tlibavcodec::swsInitParams(&params,SWS_BILINEAR,sws_flags);
-    swsc=libavcodec->sws_getCachedContext(NULL,dx,dy,sw_incsp,dx,dy,sw_outcsp,sws_flags,NULL,NULL,NULL,&params);
+    Tlibavcodec::swsInitParams(&params, SWS_BILINEAR, sws_flags);
+    swsc = libavcodec->sws_getCachedContext(NULL, dx, dy, sw_incsp, dx, dy, sw_outcsp, sws_flags, NULL, NULL, NULL, &params);
     return !!swsc;
 }
 void Tswscale::done(void)
@@ -48,11 +48,11 @@ void Tswscale::done(void)
     if (swsc) {
         libavcodec->sws_freeContext(swsc);
     }
-    swsc=NULL;
+    swsc = NULL;
 }
 bool Tswscale::convert(const uint8_t* src[], const stride_t srcStride[], uint8_t* dst[], stride_t dstStride[], const TrgbPrimaries &rgbPrimaries)
 {
     const int *table = libavcodec->sws_getCoefficients(rgbPrimaries.get_sws_cs());
-    libavcodec->sws_setColorspaceDetails(swsc, table, rgbPrimaries.isYCbCrFullRange(), table, rgbPrimaries.isRGB_FullRange(),  0, 1<<16, 1<<16);
-    return swsc && libavcodec->sws_scale(swsc,src,srcStride,0,dy,dst,dstStride)>0;
+    libavcodec->sws_setColorspaceDetails(swsc, table, rgbPrimaries.isYCbCrFullRange(), table, rgbPrimaries.isRGB_FullRange(),  0, 1 << 16, 1 << 16);
+    return swsc && libavcodec->sws_scale(swsc, src, srcStride, 0, dy, dst, dstStride) > 0;
 }

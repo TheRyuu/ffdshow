@@ -83,19 +83,19 @@ int TcpuUsage::GetCPUUsage(int Index)
     if (_PrevSysTime == _SysTime) {
         return 0;
     } else {
-        return int(100-(100*(_Counters[Index] - _PrevCounters[Index]))/(_SysTime-_PrevSysTime));
+        return int(100 - (100 * (_Counters[Index] - _PrevCounters[Index])) / (_SysTime - _PrevSysTime));
     }
 }
 
 //------------------------------------------------------------------------------
 int TcpuUsage::GetCPUUsageForPP(void)
 {
-    if (_ProcessorsCount>2) {
-        int result=0;
-        for(int i=0; i<_ProcessorsCount-1; i++) {
-            int x=GetCPUUsage(i);
-            if(x>result) {
-                result=x;
+    if (_ProcessorsCount > 2) {
+        int result = 0;
+        for (int i = 0; i < _ProcessorsCount - 1; i++) {
+            int x = GetCPUUsage(i);
+            if (x > result) {
+                result = x;
             }
         }
         return result;
@@ -108,31 +108,31 @@ int TcpuUsage::GetCPUUsageForPP(void)
 void TcpuUsage::CollectCPUData(void)
 {
     DWORD BS;
-    PPERF_COUNTER_BLOCK    _PCB_Instance;
-    PPERF_INSTANCE_DEFINITION    _PID_Instance;
+    PPERF_COUNTER_BLOCK _PCB_Instance;
+    PPERF_INSTANCE_DEFINITION _PID_Instance;
     FILETIME ST;
 
-    BS=_BufferSize;
+    BS = _BufferSize;
     //const
-    static const char_t *Processor_IDX_Str=_l("238");
-    static const int Processor_IDX=238;
-    static const int CPUUsageIDX=6;
+    static const char_t *Processor_IDX_Str = _l("238");
+    static const int Processor_IDX = 238;
+    static const int CPUUsageIDX = 6;
     LONG ret;
-    while ((ret=RegQueryValueEx( HKEY_PERFORMANCE_DATA, Processor_IDX_Str,NULL,NULL,
-                                  (unsigned char*)_PerfData, &BS )) == ERROR_MORE_DATA) {
+    while ((ret = RegQueryValueEx(HKEY_PERFORMANCE_DATA, Processor_IDX_Str, NULL, NULL,
+                                  (unsigned char*)_PerfData, &BS)) == ERROR_MORE_DATA) {
         // Get a buffer that is big enough.
-        _BufferSize+=0x1000;
-        BS=_BufferSize;
-        _PerfData=(PERF_DATA_BLOCK*)realloc( _PerfData, _BufferSize );
+        _BufferSize += 0x1000;
+        BS = _BufferSize;
+        _PerfData = (PERF_DATA_BLOCK*)realloc(_PerfData, _BufferSize);
     }
-    if (ret!=ERROR_SUCCESS) {
-        _ProcessorsCount=0;
+    if (ret != ERROR_SUCCESS) {
+        _ProcessorsCount = 0;
         return;
     }
 
     // Locate the performance object
     _POT = PPERF_OBJECT_TYPE(intptr_t(_PerfData) + _PerfData->HeaderLength);
-    for (DWORD i1=0; i1<_PerfData->NumObjectTypes; i1++) {
+    for (DWORD i1 = 0; i1 < _PerfData->NumObjectTypes; i1++) {
         if (_POT->ObjectNameTitleIndex == Processor_IDX) {
             break;
         }
@@ -145,16 +145,16 @@ void TcpuUsage::CollectCPUData(void)
     }
 
     if (_ProcessorsCount < 0) {
-        _ProcessorsCount=_POT->NumInstances;
-        _Counters=(PAInt64F)calloc(_ProcessorsCount,sizeof(TInt64));
-        _PrevCounters=(PAInt64F)calloc(_ProcessorsCount,sizeof(TInt64));
-        _SysTime=0;
+        _ProcessorsCount = _POT->NumInstances;
+        _Counters = (PAInt64F)calloc(_ProcessorsCount, sizeof(TInt64));
+        _PrevCounters = (PAInt64F)calloc(_ProcessorsCount, sizeof(TInt64));
+        _SysTime = 0;
     }
 
     // Locate the "% CPU usage" counter definition
     _PCD = PPERF_COUNTER_DEFINITION(intptr_t(_POT) + _POT->HeaderLength);
-    for (DWORD i2 = 0; i2< _POT->NumCounters; i2++) {
-        if (_PCD->CounterNameTitleIndex==CPUUsageIDX) {
+    for (DWORD i2 = 0; i2 < _POT->NumCounters; i2++) {
+        if (_PCD->CounterNameTitleIndex == CPUUsageIDX) {
             break;
         }
         _PCD = PPERF_COUNTER_DEFINITION(intptr_t(_PCD) + _PCD->ByteLength);
@@ -167,25 +167,25 @@ void TcpuUsage::CollectCPUData(void)
 
     // Collecting coutners
     _PID_Instance = PPERF_INSTANCE_DEFINITION(intptr_t(_POT) + _POT->DefinitionLength);
-    for (int i=0; i<_ProcessorsCount; i++) {
-        _PCB_Instance = PPERF_COUNTER_BLOCK(intptr_t(_PID_Instance) + _PID_Instance->ByteLength );
+    for (int i = 0; i < _ProcessorsCount; i++) {
+        _PCB_Instance = PPERF_COUNTER_BLOCK(intptr_t(_PID_Instance) + _PID_Instance->ByteLength);
 
-        _PrevCounters[i]=_Counters[i];
-        _Counters[i]=FInt64(*PInt64(intptr_t(_PCB_Instance) + _PCD->CounterOffset));
+        _PrevCounters[i] = _Counters[i];
+        _Counters[i] = FInt64(*PInt64(intptr_t(_PCB_Instance) + _PCD->CounterOffset));
 
         _PID_Instance = PPERF_INSTANCE_DEFINITION(intptr_t(_PCB_Instance) + _PCB_Instance->ByteLength);
     }
 
-    _PrevSysTime=_SysTime;
+    _PrevSysTime = _SysTime;
     SystemTimeToFileTime(&_PerfData->SystemTime, &ST);
-    memcpy(&_SysTime,&ST,sizeof(ST));//_SysTime=FInt64(TInt64(ST));
+    memcpy(&_SysTime, &ST, sizeof(ST)); //_SysTime=FInt64(TInt64(ST));
 }
 
 
 void TcpuUsage::usage_initialization(void)
 {
-    _ProcessorsCount= -1;
-    _BufferSize= 0x2000;
+    _ProcessorsCount = -1;
+    _BufferSize = 0x2000;
     _PerfData = (PERF_DATA_BLOCK*)malloc(_BufferSize);
 }
 void TcpuUsage::usage_finalization(void)

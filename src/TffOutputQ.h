@@ -30,7 +30,7 @@ public:
     // pin guaranteed not to block at this stage
 
     // do something with these media samples
-    virtual HRESULT ReceiveMultiple (
+    virtual HRESULT ReceiveMultiple(
         IMediaSample **pSamples,
         long nSamples,
         long *nSamplesProcessed);

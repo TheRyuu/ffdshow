@@ -26,32 +26,32 @@
 
 #pragma warning(disable:4799)
 
-extern "C" void idct_mmx (short *block);
-extern "C" void idct_xmm (short *block);
-extern "C" void idct_sse2_dmitry (short *block);
-extern "C" void fdct_mmx_skal (short *block);
-extern "C" void fdct_xmm_skal (short *block);
-extern "C" void fdct_sse2_skal (short *block);
-TimgFilterDCT::TimgFilterDCT(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+extern "C" void idct_mmx(short *block);
+extern "C" void idct_xmm(short *block);
+extern "C" void idct_sse2_dmitry(short *block);
+extern "C" void fdct_mmx_skal(short *block);
+extern "C" void fdct_xmm_skal(short *block);
+extern "C" void fdct_sse2_skal(short *block);
+TimgFilterDCT::TimgFilterDCT(IffdshowBase *Ideci, Tfilters *Iparent): TimgFilter(Ideci, Iparent)
 {
-    if (Tconfig::cpu_flags&FF_CPU_SSE2) {
-        fdct=fdct_sse2_skal;
-        idct=idct_sse2_dmitry;
-    } else if (Tconfig::cpu_flags&FF_CPU_MMXEXT) {
-        fdct=fdct_xmm_skal;
-        idct=idct_xmm;
-    } else if (Tconfig::cpu_flags&FF_CPU_MMX) {
-        fdct=fdct_mmx_skal;
-        idct=idct_mmx;
+    if (Tconfig::cpu_flags & FF_CPU_SSE2) {
+        fdct = fdct_sse2_skal;
+        idct = idct_sse2_dmitry;
+    } else if (Tconfig::cpu_flags & FF_CPU_MMXEXT) {
+        fdct = fdct_xmm_skal;
+        idct = idct_xmm;
+    } else if (Tconfig::cpu_flags & FF_CPU_MMX) {
+        fdct = fdct_mmx_skal;
+        idct = idct_mmx;
     } else {
-        fdct=fdct_c;
-        idct=idct_c;
+        fdct = fdct_c;
+        idct = idct_c;
         idct_c_init();
     }
-    oldfac[0]=INT_MAX;
-    oldMode=-1;
-    oldmatrix[0]=0;
-    pWorkArea=(short*)aligned_malloc(64*sizeof(short),16);
+    oldfac[0] = INT_MAX;
+    oldMode = -1;
+    oldmatrix[0] = 0;
+    pWorkArea = (short*)aligned_malloc(64 * sizeof(short), 16);
 }
 TimgFilterDCT::~TimgFilterDCT()
 {
@@ -60,34 +60,34 @@ TimgFilterDCT::~TimgFilterDCT()
 
 void TimgFilterDCT::multiply(void)
 {
-    const char * const factors8=(const char*)&factors[0][0];
+    const char * const factors8 = (const char*)&factors[0][0];
 
-    *(__m64*)(pWorkArea+0*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+0*8+0),*(__m64*)(factors8+0*16  )),3);
-    *(__m64*)(pWorkArea+0*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+0*8+4),*(__m64*)(factors8+0*16+8)),3);
+    *(__m64*)(pWorkArea + 0 * 8 + 0) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 0 * 8 + 0), *(__m64*)(factors8 + 0 * 16)), 3);
+    *(__m64*)(pWorkArea + 0 * 8 + 4) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 0 * 8 + 4), *(__m64*)(factors8 + 0 * 16 + 8)), 3);
 
-    *(__m64*)(pWorkArea+1*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+1*8+0),*(__m64*)(factors8+1*16  )),3);
-    *(__m64*)(pWorkArea+1*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+1*8+4),*(__m64*)(factors8+1*16+8)),3);
+    *(__m64*)(pWorkArea + 1 * 8 + 0) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 1 * 8 + 0), *(__m64*)(factors8 + 1 * 16)), 3);
+    *(__m64*)(pWorkArea + 1 * 8 + 4) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 1 * 8 + 4), *(__m64*)(factors8 + 1 * 16 + 8)), 3);
 
-    *(__m64*)(pWorkArea+2*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+2*8+0),*(__m64*)(factors8+2*16  )),3);
-    *(__m64*)(pWorkArea+2*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+2*8+4),*(__m64*)(factors8+2*16+8)),3);
+    *(__m64*)(pWorkArea + 2 * 8 + 0) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 2 * 8 + 0), *(__m64*)(factors8 + 2 * 16)), 3);
+    *(__m64*)(pWorkArea + 2 * 8 + 4) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 2 * 8 + 4), *(__m64*)(factors8 + 2 * 16 + 8)), 3);
 
-    *(__m64*)(pWorkArea+3*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+3*8+0),*(__m64*)(factors8+3*16  )),3);
-    *(__m64*)(pWorkArea+3*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+3*8+4),*(__m64*)(factors8+3*16+8)),3);
+    *(__m64*)(pWorkArea + 3 * 8 + 0) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 3 * 8 + 0), *(__m64*)(factors8 + 3 * 16)), 3);
+    *(__m64*)(pWorkArea + 3 * 8 + 4) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 3 * 8 + 4), *(__m64*)(factors8 + 3 * 16 + 8)), 3);
 
-    *(__m64*)(pWorkArea+4*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+4*8+0),*(__m64*)(factors8+4*16  )),3);
-    *(__m64*)(pWorkArea+4*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+4*8+4),*(__m64*)(factors8+4*16+8)),3);
+    *(__m64*)(pWorkArea + 4 * 8 + 0) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 4 * 8 + 0), *(__m64*)(factors8 + 4 * 16)), 3);
+    *(__m64*)(pWorkArea + 4 * 8 + 4) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 4 * 8 + 4), *(__m64*)(factors8 + 4 * 16 + 8)), 3);
 
-    *(__m64*)(pWorkArea+5*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+5*8+0),*(__m64*)(factors8+5*16  )),3);
-    *(__m64*)(pWorkArea+5*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+5*8+4),*(__m64*)(factors8+5*16+8)),3);
+    *(__m64*)(pWorkArea + 5 * 8 + 0) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 5 * 8 + 0), *(__m64*)(factors8 + 5 * 16)), 3);
+    *(__m64*)(pWorkArea + 5 * 8 + 4) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 5 * 8 + 4), *(__m64*)(factors8 + 5 * 16 + 8)), 3);
 
-    *(__m64*)(pWorkArea+6*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+6*8+0),*(__m64*)(factors8+6*16  )),3);
-    *(__m64*)(pWorkArea+6*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+6*8+4),*(__m64*)(factors8+6*16+8)),3);
+    *(__m64*)(pWorkArea + 6 * 8 + 0) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 6 * 8 + 0), *(__m64*)(factors8 + 6 * 16)), 3);
+    *(__m64*)(pWorkArea + 6 * 8 + 4) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 6 * 8 + 4), *(__m64*)(factors8 + 6 * 16 + 8)), 3);
 
-    *(__m64*)(pWorkArea+7*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+7*8+0),*(__m64*)(factors8+7*16  )),3);
-    *(__m64*)(pWorkArea+7*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+7*8+4),*(__m64*)(factors8+7*16+8)),3);
+    *(__m64*)(pWorkArea + 7 * 8 + 0) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 7 * 8 + 0), *(__m64*)(factors8 + 7 * 16)), 3);
+    *(__m64*)(pWorkArea + 7 * 8 + 4) = _mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea + 7 * 8 + 4), *(__m64*)(factors8 + 7 * 16 + 8)), 3);
 }
 
-void TimgFilterDCT::quant_h263_inter(int16_t * coeff,const uint32_t quant, const uint16_t *)
+void TimgFilterDCT::quant_h263_inter(int16_t * coeff, const uint32_t quant, const uint16_t *)
 {
 #define SCALEBITS       16
 #define FIX(X)          ((1L << SCALEBITS) / (X) + 1)
@@ -123,7 +123,7 @@ void TimgFilterDCT::quant_h263_inter(int16_t * coeff,const uint32_t quant, const
             sum += acLevel;         /* sum += |acLevel| */
             coeff[i] = -acLevel;
         } else {
-            acLevel = int16_t(acLevel-quant_d_2);
+            acLevel = int16_t(acLevel - quant_d_2);
             if (acLevel < quant_m_2) {
                 coeff[i] = 0;
                 continue;
@@ -136,7 +136,7 @@ void TimgFilterDCT::quant_h263_inter(int16_t * coeff,const uint32_t quant, const
 #undef SCALEBITS
 }
 
-void TimgFilterDCT::dequant_h263_inter(int16_t * data,const uint32_t quant,const uint16_t *)
+void TimgFilterDCT::dequant_h263_inter(int16_t * data, const uint32_t quant, const uint16_t *)
 {
     const uint16_t quant_m_2 = uint16_t(quant << 1);
     const uint16_t quant_add = uint16_t (quant & 1 ? quant : quant - 1);
@@ -159,11 +159,11 @@ void TimgFilterDCT::dequant_h263_inter(int16_t * data,const uint32_t quant,const
 
 void TimgFilterDCT::h263(void)
 {
-    quant_h263_inter(pWorkArea,quant);
-    dequant_h263_inter(pWorkArea,quant);
+    quant_h263_inter(pWorkArea, quant);
+    dequant_h263_inter(pWorkArea, quant);
 }
 
-void TimgFilterDCT::quant_mpeg_inter(int16_t * coeff,const uint32_t quant,const uint16_t * mpeg_quant_matrices)
+void TimgFilterDCT::quant_mpeg_inter(int16_t * coeff, const uint32_t quant, const uint16_t * mpeg_quant_matrices)
 {
 #define SCALEBITS 17
 #define FIX(X)      ((1UL << SCALEBITS) / (X) + 1)
@@ -206,7 +206,7 @@ void TimgFilterDCT::quant_mpeg_inter(int16_t * coeff,const uint32_t quant,const 
     }
 }
 
-void TimgFilterDCT::dequant_mpeg_inter(int16_t * data,const uint32_t quant,const uint16_t * mpeg_quant_matrices)
+void TimgFilterDCT::dequant_mpeg_inter(int16_t * data, const uint32_t quant, const uint16_t * mpeg_quant_matrices)
 {
     uint32_t sum = 0;
     const uint16_t *inter_matrix = (mpeg_quant_matrices);
@@ -238,119 +238,119 @@ void TimgFilterDCT::dequant_mpeg_inter(int16_t * data,const uint32_t quant,const
 
 void TimgFilterDCT::mpeg(void)
 {
-    quant_mpeg_inter(pWorkArea,quant,(const uint16_t*)&factors[0][0]);
-    dequant_mpeg_inter(pWorkArea,quant,(const uint16_t*)&factors[0][0]);
+    quant_mpeg_inter(pWorkArea, quant, (const uint16_t*)&factors[0][0]);
+    dequant_mpeg_inter(pWorkArea, quant, (const uint16_t*)&factors[0][0]);
 }
 
-HRESULT TimgFilterDCT::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterDCT::process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0)
 {
-    const TdctSettings *cfg=(const TdctSettings*)cfg0;
-    init(pict,cfg->full,cfg->half);
-    if (pictRect.dx>=8 && pictRect.dy>=8) {
-        bool modechange=oldMode!=cfg->mode;
+    const TdctSettings *cfg = (const TdctSettings*)cfg0;
+    init(pict, cfg->full, cfg->half);
+    if (pictRect.dx >= 8 && pictRect.dy >= 8) {
+        bool modechange = oldMode != cfg->mode;
         if (modechange)
-            switch (oldMode=cfg->mode) {
+            switch (oldMode = cfg->mode) {
                 case 1:
-                    processDct=&TimgFilterDCT::h263;
+                    processDct = &TimgFilterDCT::h263;
                     break;
                 case 2:
-                    processDct=&TimgFilterDCT::mpeg;
+                    processDct = &TimgFilterDCT::mpeg;
                     break;
                 default:
                 case 0:
-                    processDct=&TimgFilterDCT::multiply;
+                    processDct = &TimgFilterDCT::multiply;
                     break;
             }
-        if (oldMode==0 && (modechange || memcmp(oldfac,&cfg->fac0,sizeof(oldfac))!=0)) {
-            memcpy(oldfac,&cfg->fac0,sizeof(oldfac));
-            for (int i=0; i<=7; i++)
-                for (int j=0; j<=7; j++) {
-                    factors[i][j]=(short)((oldfac[i]/1000.0) * (oldfac[j]/1000.0) * 8);
+        if (oldMode == 0 && (modechange || memcmp(oldfac, &cfg->fac0, sizeof(oldfac)) != 0)) {
+            memcpy(oldfac, &cfg->fac0, sizeof(oldfac));
+            for (int i = 0; i <= 7; i++)
+                for (int j = 0; j <= 7; j++) {
+                    factors[i][j] = (short)((oldfac[i] / 1000.0) * (oldfac[j] / 1000.0) * 8);
                 }
         }
-        if (oldMode==2 && (modechange || memcpy(oldmatrix,&cfg->matrix0,sizeof(oldmatrix))!=0)) {
-            memcpy(oldmatrix,&cfg->matrix0,sizeof(oldmatrix));
-            const unsigned char *m=(const unsigned char*)&cfg->matrix0;
-            for (int i=0; i<8; i++)
-                for (int j=0; j<8; j++) {
-                    factors[i][j]=(short)limit<int>(*m++,1,255);
+        if (oldMode == 2 && (modechange || memcpy(oldmatrix, &cfg->matrix0, sizeof(oldmatrix)) != 0)) {
+            memcpy(oldmatrix, &cfg->matrix0, sizeof(oldmatrix));
+            const unsigned char *m = (const unsigned char*)&cfg->matrix0;
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++) {
+                    factors[i][j] = (short)limit<int>(*m++, 1, 255);
                 }
         }
-        quant=cfg->quant;
+        quant = cfg->quant;
         const unsigned char *srcY;
-        getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,NULL,NULL,NULL);
+        getCur(FF_CSPS_MASK_YUV_PLANAR, pict, cfg->full, &srcY, NULL, NULL, NULL);
         unsigned char *dstY;
-        getNext(csp1,pict,cfg->full,&dstY,NULL,NULL,NULL);
+        getNext(csp1, pict, cfg->full, &dstY, NULL, NULL, NULL);
 
-        unsigned int cycles=dx1[0]&~7;
+        unsigned int cycles = dx1[0]&~7;
 
-        if (dx1[0]&7) {
-            TffPict::copy(dstY+cycles,stride2[0],srcY+cycles,stride1[0],dx1[0]&7,dy1[0]);
+        if (dx1[0] & 7) {
+            TffPict::copy(dstY + cycles, stride2[0], srcY + cycles, stride1[0], dx1[0] & 7, dy1[0]);
         }
 
-        __m64 m0=_mm_setzero_si64();
-        const stride_t stride1_0=stride1[0],stride2_0=stride2[0];
-        for (unsigned int y=0; y<=dy1[0]-7; srcY+=8*stride1_0,dstY+=8*stride2_0,y+=8) {
-            const unsigned char *srcLn=srcY;
-            unsigned char *dstLn=dstY,*dstLnEnd=dstLn+cycles;
-            for (; dstLn<dstLnEnd; srcLn+=8,dstLn+=8) {
-                __m64 mm0=*(__m64*)(srcLn+0*stride1_0);
-                __m64 mm2=*(__m64*)(srcLn+1*stride1_0);
-                *(__m64*)(pWorkArea+ 0)=_mm_unpacklo_pi8(mm0,m0);
-                *(__m64*)(pWorkArea+ 4)=_mm_unpackhi_pi8(mm0,m0);
-                *(__m64*)(pWorkArea+ 8)=_mm_unpacklo_pi8(mm2,m0);
-                *(__m64*)(pWorkArea+12)=_mm_unpackhi_pi8(mm2,m0);
+        __m64 m0 = _mm_setzero_si64();
+        const stride_t stride1_0 = stride1[0], stride2_0 = stride2[0];
+        for (unsigned int y = 0; y <= dy1[0] - 7; srcY += 8 * stride1_0, dstY += 8 * stride2_0, y += 8) {
+            const unsigned char *srcLn = srcY;
+            unsigned char *dstLn = dstY, *dstLnEnd = dstLn + cycles;
+            for (; dstLn < dstLnEnd; srcLn += 8, dstLn += 8) {
+                __m64 mm0 = *(__m64*)(srcLn + 0 * stride1_0);
+                __m64 mm2 = *(__m64*)(srcLn + 1 * stride1_0);
+                *(__m64*)(pWorkArea + 0) = _mm_unpacklo_pi8(mm0, m0);
+                *(__m64*)(pWorkArea + 4) = _mm_unpackhi_pi8(mm0, m0);
+                *(__m64*)(pWorkArea + 8) = _mm_unpacklo_pi8(mm2, m0);
+                *(__m64*)(pWorkArea + 12) = _mm_unpackhi_pi8(mm2, m0);
 
-                mm0=*(__m64*)(srcLn+2*stride1_0);
-                mm2=*(__m64*)(srcLn+3*stride1_0);
-                *(__m64*)(pWorkArea+16)=_mm_unpacklo_pi8(mm0,m0);
-                *(__m64*)(pWorkArea+20)=_mm_unpackhi_pi8(mm0,m0);
-                *(__m64*)(pWorkArea+24)=_mm_unpacklo_pi8(mm2,m0);
-                *(__m64*)(pWorkArea+28)=_mm_unpackhi_pi8(mm2,m0);
+                mm0 = *(__m64*)(srcLn + 2 * stride1_0);
+                mm2 = *(__m64*)(srcLn + 3 * stride1_0);
+                *(__m64*)(pWorkArea + 16) = _mm_unpacklo_pi8(mm0, m0);
+                *(__m64*)(pWorkArea + 20) = _mm_unpackhi_pi8(mm0, m0);
+                *(__m64*)(pWorkArea + 24) = _mm_unpacklo_pi8(mm2, m0);
+                *(__m64*)(pWorkArea + 28) = _mm_unpackhi_pi8(mm2, m0);
 
-                mm0=*(__m64*)(srcLn+4*stride1_0);
-                mm2=*(__m64*)(srcLn+5*stride1_0);
-                *(__m64*)(pWorkArea+32)=_mm_unpacklo_pi8(mm0,m0);
-                *(__m64*)(pWorkArea+36)=_mm_unpackhi_pi8(mm0,m0);
-                *(__m64*)(pWorkArea+40)=_mm_unpacklo_pi8(mm2,m0);
-                *(__m64*)(pWorkArea+44)=_mm_unpackhi_pi8(mm2,m0);
+                mm0 = *(__m64*)(srcLn + 4 * stride1_0);
+                mm2 = *(__m64*)(srcLn + 5 * stride1_0);
+                *(__m64*)(pWorkArea + 32) = _mm_unpacklo_pi8(mm0, m0);
+                *(__m64*)(pWorkArea + 36) = _mm_unpackhi_pi8(mm0, m0);
+                *(__m64*)(pWorkArea + 40) = _mm_unpacklo_pi8(mm2, m0);
+                *(__m64*)(pWorkArea + 44) = _mm_unpackhi_pi8(mm2, m0);
 
-                mm0=*(__m64*)(srcLn+6*stride1_0);
-                mm2=*(__m64*)(srcLn+7*stride1_0);
-                *(__m64*)(pWorkArea+48)=_mm_unpacklo_pi8(mm0,m0);
-                *(__m64*)(pWorkArea+52)=_mm_unpackhi_pi8(mm0,m0);
-                *(__m64*)(pWorkArea+56)=_mm_unpacklo_pi8(mm2,m0);
-                *(__m64*)(pWorkArea+60)=_mm_unpackhi_pi8(mm2,m0);
+                mm0 = *(__m64*)(srcLn + 6 * stride1_0);
+                mm2 = *(__m64*)(srcLn + 7 * stride1_0);
+                *(__m64*)(pWorkArea + 48) = _mm_unpacklo_pi8(mm0, m0);
+                *(__m64*)(pWorkArea + 52) = _mm_unpackhi_pi8(mm0, m0);
+                *(__m64*)(pWorkArea + 56) = _mm_unpacklo_pi8(mm2, m0);
+                *(__m64*)(pWorkArea + 60) = _mm_unpackhi_pi8(mm2, m0);
 
                 fdct(pWorkArea);
                 (this->*processDct)();
                 idct(pWorkArea);
 
-                *(__m64*)(dstLn+0*stride2_0)=_mm_packs_pu16(*(__m64*)(pWorkArea+0*8),*(__m64*)(pWorkArea+0*8+4));
-                *(__m64*)(dstLn+1*stride2_0)=_mm_packs_pu16(*(__m64*)(pWorkArea+1*8),*(__m64*)(pWorkArea+1*8+4));
-                *(__m64*)(dstLn+2*stride2_0)=_mm_packs_pu16(*(__m64*)(pWorkArea+2*8),*(__m64*)(pWorkArea+2*8+4));
-                *(__m64*)(dstLn+3*stride2_0)=_mm_packs_pu16(*(__m64*)(pWorkArea+3*8),*(__m64*)(pWorkArea+3*8+4));
-                *(__m64*)(dstLn+4*stride2_0)=_mm_packs_pu16(*(__m64*)(pWorkArea+4*8),*(__m64*)(pWorkArea+4*8+4));
-                *(__m64*)(dstLn+5*stride2_0)=_mm_packs_pu16(*(__m64*)(pWorkArea+5*8),*(__m64*)(pWorkArea+5*8+4));
-                *(__m64*)(dstLn+6*stride2_0)=_mm_packs_pu16(*(__m64*)(pWorkArea+6*8),*(__m64*)(pWorkArea+6*8+4));
-                *(__m64*)(dstLn+7*stride2_0)=_mm_packs_pu16(*(__m64*)(pWorkArea+7*8),*(__m64*)(pWorkArea+7*8+4));
+                *(__m64*)(dstLn + 0 * stride2_0) = _mm_packs_pu16(*(__m64*)(pWorkArea + 0 * 8), *(__m64*)(pWorkArea + 0 * 8 + 4));
+                *(__m64*)(dstLn + 1 * stride2_0) = _mm_packs_pu16(*(__m64*)(pWorkArea + 1 * 8), *(__m64*)(pWorkArea + 1 * 8 + 4));
+                *(__m64*)(dstLn + 2 * stride2_0) = _mm_packs_pu16(*(__m64*)(pWorkArea + 2 * 8), *(__m64*)(pWorkArea + 2 * 8 + 4));
+                *(__m64*)(dstLn + 3 * stride2_0) = _mm_packs_pu16(*(__m64*)(pWorkArea + 3 * 8), *(__m64*)(pWorkArea + 3 * 8 + 4));
+                *(__m64*)(dstLn + 4 * stride2_0) = _mm_packs_pu16(*(__m64*)(pWorkArea + 4 * 8), *(__m64*)(pWorkArea + 4 * 8 + 4));
+                *(__m64*)(dstLn + 5 * stride2_0) = _mm_packs_pu16(*(__m64*)(pWorkArea + 5 * 8), *(__m64*)(pWorkArea + 5 * 8 + 4));
+                *(__m64*)(dstLn + 6 * stride2_0) = _mm_packs_pu16(*(__m64*)(pWorkArea + 6 * 8), *(__m64*)(pWorkArea + 6 * 8 + 4));
+                *(__m64*)(dstLn + 7 * stride2_0) = _mm_packs_pu16(*(__m64*)(pWorkArea + 7 * 8), *(__m64*)(pWorkArea + 7 * 8 + 4));
             }
         }
         _mm_empty();
-        if (dy1[0]&7) {
-            TffPict::copy(dstY,stride2[0],srcY,stride1[0],dx1[0],dy1[0]&7);
+        if (dy1[0] & 7) {
+            TffPict::copy(dstY, stride2[0], srcY, stride1[0], dx1[0], dy1[0] & 7);
         }
     }
-    return parent->processSample(++it,pict);
+    return parent->processSample(++it, pict);
 }
 
-short TimgFilterDCT::iclip[1024],*TimgFilterDCT::iclp;
+short TimgFilterDCT::iclip[1024], *TimgFilterDCT::iclp;
 
 void TimgFilterDCT::idct_c_init(void)
 {
     iclp = iclip + 512;
     for (int i = -512; i < 512; i++) {
-        iclp[i] = (short)limit(i,-256,255);
+        iclp[i] = (short)limit(i, -256, 255);
     }
 }
 void TimgFilterDCT::idct_c(short *block)
@@ -361,12 +361,12 @@ void TimgFilterDCT::idct_c(short *block)
      * function!
      */
 
-    static const int W1=2841;               /* 2048*sqrt(2)*cos(1*pi/16) */
-    static const int W2=2676;               /* 2048*sqrt(2)*cos(2*pi/16) */
-    static const int W3=2408;               /* 2048*sqrt(2)*cos(3*pi/16) */
-    static const int W5=1609;               /* 2048*sqrt(2)*cos(5*pi/16) */
-    static const int W6=1108;               /* 2048*sqrt(2)*cos(6*pi/16) */
-    static const int W7=565;                /* 2048*sqrt(2)*cos(7*pi/16) */
+    static const int W1 = 2841;             /* 2048*sqrt(2)*cos(1*pi/16) */
+    static const int W2 = 2676;             /* 2048*sqrt(2)*cos(2*pi/16) */
+    static const int W3 = 2408;             /* 2048*sqrt(2)*cos(3*pi/16) */
+    static const int W5 = 1609;             /* 2048*sqrt(2)*cos(5*pi/16) */
+    static const int W6 = 1108;             /* 2048*sqrt(2)*cos(6*pi/16) */
+    static const int W7 = 565;              /* 2048*sqrt(2)*cos(7*pi/16) */
 
     short *blk;
     long i;
@@ -415,14 +415,14 @@ void TimgFilterDCT::idct_c(short *block)
 
         /* fourth stage  */
 
-        blk[0] = (short) ((X7 + X1) >> 8);
-        blk[1] = (short) ((X3 + X2) >> 8);
-        blk[2] = (short) ((X0 + X4) >> 8);
-        blk[3] = (short) ((X8 + X6) >> 8);
-        blk[4] = (short) ((X8 - X6) >> 8);
-        blk[5] = (short) ((X0 - X4) >> 8);
-        blk[6] = (short) ((X3 - X2) >> 8);
-        blk[7] = (short) ((X7 - X1) >> 8);
+        blk[0] = (short)((X7 + X1) >> 8);
+        blk[1] = (short)((X3 + X2) >> 8);
+        blk[2] = (short)((X0 + X4) >> 8);
+        blk[3] = (short)((X8 + X6) >> 8);
+        blk[4] = (short)((X8 - X6) >> 8);
+        blk[5] = (short)((X0 - X4) >> 8);
+        blk[6] = (short)((X3 - X2) >> 8);
+        blk[7] = (short)((X7 - X1) >> 8);
 
     }                            /* end for ( i = 0; i < 8; ++i ) IDCT-rows */
 
@@ -488,21 +488,21 @@ void TimgFilterDCT::idct_c(short *block)
 
 void TimgFilterDCT::fdct_c(short *block)
 {
-    static const int CONST_BITS =13;
-    static const int PASS1_BITS =2;
+    static const int CONST_BITS = 13;
+    static const int PASS1_BITS = 2;
 
-    static const int FIX_0_298631336= 2446;    /* FIX(0.298631336) */
-    static const int FIX_0_390180644= 3196;    /* FIX(0.390180644) */
-    static const int FIX_0_541196100= 4433;    /* FIX(0.541196100) */
-    static const int FIX_0_765366865= 6270;    /* FIX(0.765366865) */
-    static const int FIX_0_899976223= 7373;    /* FIX(0.899976223) */
-    static const int FIX_1_175875602= 9633;    /* FIX(1.175875602) */
-    static const int FIX_1_501321110=12299;    /* FIX(1.501321110) */
-    static const int FIX_1_847759065=15137;    /* FIX(1.847759065) */
-    static const int FIX_1_961570560=16069;    /* FIX(1.961570560) */
-    static const int FIX_2_053119869=16819;    /* FIX(2.053119869) */
-    static const int FIX_2_562915447=20995;    /* FIX(2.562915447) */
-    static const int FIX_3_072711026=25172;    /* FIX(3.072711026) */
+    static const int FIX_0_298631336 = 2446;   /* FIX(0.298631336) */
+    static const int FIX_0_390180644 = 3196;   /* FIX(0.390180644) */
+    static const int FIX_0_541196100 = 4433;   /* FIX(0.541196100) */
+    static const int FIX_0_765366865 = 6270;   /* FIX(0.765366865) */
+    static const int FIX_0_899976223 = 7373;   /* FIX(0.899976223) */
+    static const int FIX_1_175875602 = 9633;   /* FIX(1.175875602) */
+    static const int FIX_1_501321110 = 12299;  /* FIX(1.501321110) */
+    static const int FIX_1_847759065 = 15137;  /* FIX(1.847759065) */
+    static const int FIX_1_961570560 = 16069;  /* FIX(1.961570560) */
+    static const int FIX_2_053119869 = 16819;  /* FIX(2.053119869) */
+    static const int FIX_2_562915447 = 20995;  /* FIX(2.562915447) */
+    static const int FIX_3_072711026 = 25172;  /* FIX(3.072711026) */
 
     int tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
     int tmp10, tmp11, tmp12, tmp13;

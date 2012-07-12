@@ -10,16 +10,16 @@ protected:
     comptr<IffdshowBase> deci;
 public:
     enum {
-        MUXER_FILE=0,
+        MUXER_FILE = 0,
     };
     static const char_t *muxers[];
-    static Tmuxer* getMuxer(int id,IffdshowBase *deci);
+    static Tmuxer* getMuxer(int id, IffdshowBase *deci);
     Tmuxer(IffdshowBase *Ideci);
     virtual ~Tmuxer();
-    virtual size_t writeHeader(const void *data,size_t len,bool flush,const BITMAPINFOHEADER &bihdr) {
+    virtual size_t writeHeader(const void *data, size_t len, bool flush, const BITMAPINFOHEADER &bihdr) {
         return 0;
     }
-    virtual size_t writeFrame(const void *data,size_t len,const TencFrameParams &frameParams)=0;
+    virtual size_t writeFrame(const void *data, size_t len, const TencFrameParams &frameParams) = 0;
 };
 
 #endif

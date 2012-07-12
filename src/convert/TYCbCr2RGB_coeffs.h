@@ -45,11 +45,11 @@ struct TYCbCr2RGB_coeffs {
         chr_range = 128 - cspOptionsChromaCutoff;
 
         double cspOptionsRGBrange = cspOptionsRGB_WhiteLevel - cspOptionsRGB_BlackLevel;
-        y_mul =cspOptionsRGBrange / in_y_range;
-        vr_mul=(cspOptionsRGBrange / chr_range) * (1.0 - Kr);
-        ug_mul=(cspOptionsRGBrange / chr_range) * (1.0 - Kb) * Kb / Kg;
-        vg_mul=(cspOptionsRGBrange / chr_range) * (1.0 - Kr) * Kr / Kg;
-        ub_mul=(cspOptionsRGBrange / chr_range) * (1.0 - Kb);
+        y_mul = cspOptionsRGBrange / in_y_range;
+        vr_mul = (cspOptionsRGBrange / chr_range) * (1.0 - Kr);
+        ug_mul = (cspOptionsRGBrange / chr_range) * (1.0 - Kb) * Kb / Kg;
+        vg_mul = (cspOptionsRGBrange / chr_range) * (1.0 - Kr) * Kr / Kg;
+        ub_mul = (cspOptionsRGBrange / chr_range) * (1.0 - Kb);
         int sub = std::min((int)cspOptionsRGB_BlackLevel, cspOptionsBlackCutoff);
         Ysub = cspOptionsBlackCutoff - sub;
         RGB_add1 = (int)cspOptionsRGB_BlackLevel - sub;

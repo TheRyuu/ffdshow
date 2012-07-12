@@ -18,14 +18,14 @@
 #include <mmreg.h>
 // STL
 #include "../../PODtypes.h"
- #include <algorithm>
- #include <vector>
+#include <algorithm>
+#include <vector>
 // WMV9
 #ifdef __GNUC__
- #define AM_NOVTABLE
+#define AM_NOVTABLE
 #endif
 #ifndef EXTERN_GUID
- #define EXTERN_GUID(g,l1,s1,s2,c1,c2,c3,c4,c5,c6,c7,c8) DEFINE_GUID(g,l1,s1,s2,c1,c2,c3,c4,c5,c6,c7,c8)
+#define EXTERN_GUID(g,l1,s1,s2,c1,c2,c3,c4,c5,c6,c7,c8) DEFINE_GUID(g,l1,s1,s2,c1,c2,c3,c4,c5,c6,c7,c8)
 #endif
 #include <wmsdk.h>
 #include <wmcodecconst.h>

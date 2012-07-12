@@ -22,7 +22,7 @@
 #include "reg.h"
 
 //======================================== Toptions ========================================
-Toptions::Toptions(TintStrColl *Icoll):coll(Icoll)
+Toptions::Toptions(TintStrColl *Icoll): coll(Icoll)
 {
 }
 Toptions::~Toptions()
@@ -34,167 +34,167 @@ Toptions::~Toptions()
 void Toptions::addOptions(const TintOption *iopts)
 {
     if (coll) {
-        coll->addOptions(iopts,this);
+        coll->addOptions(iopts, this);
     }
 }
 void Toptions::addOptions(const TstrOption *sopts)
 {
     if (coll) {
-        coll->addOptions(sopts,this);
+        coll->addOptions(sopts, this);
     }
 }
 void Toptions::reg_op(TregOp &t)
 {
     if (coll) {
-        coll->reg_op(t,this);
+        coll->reg_op(t, this);
     }
 }
 void Toptions::resetValues(const int *ids)
 {
     if (coll) {
-        coll->reset(ids,this);
+        coll->reset(ids, this);
     }
 }
-void Toptions::setParamList(int id,const TcreateParamListBase *createParamList)
+void Toptions::setParamList(int id, const TcreateParamListBase *createParamList)
 {
     if (coll) {
-        coll->setParamList(id,createParamList);
+        coll->setParamList(id, createParamList);
     }
 }
 
-template<class Topt> void Toptions::getInfo(const Topt *self,TffdshowParamInfo *info)
+template<class Topt> void Toptions::getInfo(const Topt *self, TffdshowParamInfo *info)
 {
-    info->valnamePtr=self->regname?self->regname:_l("?");
+    info->valnamePtr = self->regname ? self->regname : _l("?");
     if (info->valname) {
-        text<char>(info->valnamePtr,info->valname);
+        text<char>(info->valnamePtr, info->valname);
     }
-    info->namePtr=self->name;
+    info->namePtr = self->name;
     if (info->name) {
-        text<char>(info->namePtr,info->name);
+        text<char>(info->namePtr, info->name);
     }
-    info->id=self->id;
-    info->inPreset=self->inPreset;
-    info->ptr=(void*)&(this->*(self->val));
+    info->id = self->id;
+    info->inPreset = self->inPreset;
+    info->ptr = (void*) & (this->*(self->val));
 }
-bool Toptions::notifyChange(int id,int val)
+bool Toptions::notifyChange(int id, int val)
 {
-    return coll?coll->notifyParam(id,val):false;
+    return coll ? coll->notifyParam(id, val) : false;
 }
-bool Toptions::notifyChange(int id,const char_t *val)
+bool Toptions::notifyChange(int id, const char_t *val)
 {
-    return coll?coll->notifyParam(id,val):false;
+    return coll ? coll->notifyParam(id, val) : false;
 }
 
 //================================= Toptions::TintOption ===================================
-bool Toptions::TintOption::get(Toptions *self,int *valPtr) const
+bool Toptions::TintOption::get(Toptions *self, int *valPtr) const
 {
-    if (!val || (min==-2 && max==-2)) {
+    if (!val || (min == -2 && max == -2)) {
         return false;
     }
-    *valPtr=self->*val;
+    *valPtr = self->*val;
     return true;
 }
-void Toptions::TintOption::set(Toptions *self,int newVal,const TsendOnChange &sendOnChange,const TonChangeBind &onChangeBind) const
+void Toptions::TintOption::set(Toptions *self, int newVal, const TsendOnChange &sendOnChange, const TonChangeBind &onChangeBind) const
 {
-    int min,max;
-    if (this->min==-3 && this->max==-3) {
-        self->getMinMax(id,min,max);
+    int min, max;
+    if (this->min == -3 && this->max == -3) {
+        self->getMinMax(id, min, max);
     } else {
-        min=this->min;
-        max=this->max;
+        min = this->min;
+        max = this->max;
     }
-    if (min==max && min<0) {
+    if (min == max && min < 0) {
         return;
     }
-    int oldVal=self->*val;
-    if (min!=max) {
-        newVal=limit(newVal,min,max);
+    int oldVal = self->*val;
+    if (min != max) {
+        newVal = limit(newVal, min, max);
     }
-    self->*val=newVal;
-    if (oldVal!=newVal) {
+    self->*val = newVal;
+    if (oldVal != newVal) {
         if (!sendOnChange.empty()) {
-            sendOnChange(id,newVal);
+            sendOnChange(id, newVal);
         }
         if (!onChangeBind.empty()) {
-            onChangeBind(id,newVal);
+            onChangeBind(id, newVal);
         }
     }
 }
-bool Toptions::TintOption::inv(Toptions *self,const TsendOnChange &sendOnChange,const TonChangeBind &onChangeBind) const
+bool Toptions::TintOption::inv(Toptions *self, const TsendOnChange &sendOnChange, const TonChangeBind &onChangeBind) const
 {
-    if (min==0 && max==0) {
+    if (min == 0 && max == 0) {
         int oldval;
-        get(self,&oldval);
-        set(self,1-oldval,sendOnChange,onChangeBind);
+        get(self, &oldval);
+        set(self, 1 - oldval, sendOnChange, onChangeBind);
         return true;
     } else {
         return false;
     }
 }
 
-void Toptions::TintOption::getInfo(Toptions *self,TffdshowParamInfo *info) const
+void Toptions::TintOption::getInfo(Toptions *self, TffdshowParamInfo *info) const
 {
-    self->getInfo(this,info);
-    info->type=FFDSHOW_PARAM_INT;
-    info->min=min;
-    info->max=max;
+    self->getInfo(this, info);
+    info->type = FFDSHOW_PARAM_INT;
+    info->min = min;
+    info->max = max;
 }
-void Toptions::TintOption::reg_op(Toptions *self,TregOp &t) const
+void Toptions::TintOption::reg_op(Toptions *self, TregOp &t) const
 {
     if (regname) {
-        t._REG_OP_N(short(id),regname,self->*val,def==DEF_DYN?self->getDefault(id):def);
+        t._REG_OP_N(short(id), regname, self->*val, def == DEF_DYN ? self->getDefault(id) : def);
     }
 }
 void Toptions::TintOption::reset(Toptions *self) const
 {
-    self->*val=(def==DEF_DYN?self->getDefault(id):def);
+    self->*val = (def == DEF_DYN ? self->getDefault(id) : def);
 }
-void Toptions::TintOption::reset(Toptions *self,const TsendOnChange &sendOnChange,const TonChangeBind &onChangeBind) const
+void Toptions::TintOption::reset(Toptions *self, const TsendOnChange &sendOnChange, const TonChangeBind &onChangeBind) const
 {
-    set(self,def==DEF_DYN?self->getDefault(id):def,sendOnChange,onChangeBind);
+    set(self, def == DEF_DYN ? self->getDefault(id) : def, sendOnChange, onChangeBind);
 }
 
 //================================= Toptions::TstrOption ===================================
-bool Toptions::TstrOption::get(Toptions *self,const char_t* *valPtr) const
+bool Toptions::TstrOption::get(Toptions *self, const char_t* *valPtr) const
 {
-    *valPtr=&(self->*val);
+    *valPtr = &(self->*val);
     return true;
 }
-void Toptions::TstrOption::set(Toptions *self,const char_t *newval,const TsendOnChange &sendOnChange,const TonChangeBind &onChangeBind) const
+void Toptions::TstrOption::set(Toptions *self, const char_t *newval, const TsendOnChange &sendOnChange, const TonChangeBind &onChangeBind) const
 {
-    if (buflen==0) {
+    if (buflen == 0) {
         return;
     }
-    char_t *val=&(self->*(this->val));
-    int dif=strcmp(newval,val);
-    ff_strncpy(val,newval,buflen);
-    val[buflen-1]='\0';
-    if (dif!=0) {
+    char_t *val = &(self->*(this->val));
+    int dif = strcmp(newval, val);
+    ff_strncpy(val, newval, buflen);
+    val[buflen - 1] = '\0';
+    if (dif != 0) {
         if (!sendOnChange.empty()) {
-            sendOnChange(id,0);
+            sendOnChange(id, 0);
         }
         if (!onChangeBind.empty()) {
-            onChangeBind(id,newval);
+            onChangeBind(id, newval);
         }
     }
 }
 
-void Toptions::TstrOption::getInfo(Toptions *self,TffdshowParamInfo *info) const
+void Toptions::TstrOption::getInfo(Toptions *self, TffdshowParamInfo *info) const
 {
-    self->getInfo(this,info);
-    info->type=FFDSHOW_PARAM_STRING;
-    info->maxlen=(int)buflen;
+    self->getInfo(this, info);
+    info->type = FFDSHOW_PARAM_STRING;
+    info->maxlen = (int)buflen;
 }
 
-void Toptions::TstrOption::reg_op(Toptions *self,TregOp &t) const
+void Toptions::TstrOption::reg_op(Toptions *self, TregOp &t) const
 {
     if (regname) {
         if (def) {
             t._REG_OP_S(short(id), regname, &(self->*val), buflen, def, multipleLines);
         } else {
-            char_t *defbuf=(char_t*)_alloca((buflen+1)*sizeof(char_t));
-            defbuf[0]='\0';
-            self->getDefaultStr(id,defbuf,buflen);
+            char_t *defbuf = (char_t*)_alloca((buflen + 1) * sizeof(char_t));
+            defbuf[0] = '\0';
+            self->getDefaultStr(id, defbuf, buflen);
             t._REG_OP_S(short(id), regname, &(self->*val), buflen, defbuf, multipleLines);
         }
     }
@@ -202,65 +202,65 @@ void Toptions::TstrOption::reg_op(Toptions *self,TregOp &t) const
 void Toptions::TstrOption::reset(Toptions *self) const
 {
     if (def) {
-        strcpy(&(self->*val),def);
+        strcpy(&(self->*val), def);
     } else {
-        self->getDefaultStr(id,&(self->*val),buflen);
+        self->getDefaultStr(id, &(self->*val), buflen);
     }
 }
-void Toptions::TstrOption::reset(Toptions *self,const TsendOnChange &sendOnChange,const TonChangeBind &onChangeBind) const
+void Toptions::TstrOption::reset(Toptions *self, const TsendOnChange &sendOnChange, const TonChangeBind &onChangeBind) const
 {
     if (def) {
-        set(self,def,sendOnChange,onChangeBind);
+        set(self, def, sendOnChange, onChangeBind);
     } else {
-        char_t *defbuf=(char_t*)_alloca((buflen+1)*sizeof(char_t));
-        defbuf[0]='\0';
-        self->getDefaultStr(id,defbuf,buflen);
-        set(self,defbuf,sendOnChange,onChangeBind);
+        char_t *defbuf = (char_t*)_alloca((buflen + 1) * sizeof(char_t));
+        defbuf[0] = '\0';
+        self->getDefaultStr(id, defbuf, buflen);
+        set(self, defbuf, sendOnChange, onChangeBind);
     }
 }
 
 //===================================== TcollOptions =======================================
-template<class Toption,class Tbase> bool TcollOptions<Toption,Tbase>::getInfo(int id,TffdshowParamInfo *info)
+template<class Toption, class Tbase> bool TcollOptions<Toption, Tbase>::getInfo(int id, TffdshowParamInfo *info)
 {
-    typename Tbase::const_iterator o=this->find(id);
-    if (o==this->end()) {
+    typename Tbase::const_iterator o = this->find(id);
+    if (o == this->end()) {
         return false;
     } else {
-        o->second.option->getInfo(o->second.coll,info);
-        info->isNotify=!o->second.onChange.empty();
+        o->second.option->getInfo(o->second.coll, info);
+        info->isNotify = !o->second.onChange.empty();
         return true;
     }
 }
-template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::getInfoIDs(ints &infos)
+template<class Toption, class Tbase> void TcollOptions<Toption, Tbase>::getInfoIDs(ints &infos)
 {
-    for (typename Tbase::const_iterator o=this->begin(); o!=this->end(); o++) {
+    for (typename Tbase::const_iterator o = this->begin(); o != this->end(); o++) {
         infos.push_back(o->second.option->id);
     }
 }
-template<class Toption,class Tbase> bool TcollOptions<Toption,Tbase>::notify(int id,Tval val)
+template<class Toption, class Tbase> bool TcollOptions<Toption, Tbase>::notify(int id, Tval val)
 {
-    typename Tbase::const_iterator o=this->find(id);
-    return o!=this->end() && !o->second.onChange.empty()?(o->second.onChange(id,val),true):false;
+    typename Tbase::const_iterator o = this->find(id);
+    return o != this->end() && !o->second.onChange.empty() ? (o->second.onChange(id, val), true) : false;
 }
-template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::addOptions(const Toption *opts,Toptions *coll)
+template<class Toption, class Tbase> void TcollOptions<Toption, Tbase>::addOptions(const Toption *opts, Toptions *coll)
 {
     for (; opts && opts->id; opts++) {
-        typename Tbase::iterator o=find(opts->id);
-        if (o==this->end()) {
-            insert(std::make_pair(opts->id,TcollOption<Toption>(coll,opts)));
+        typename Tbase::iterator o = find(opts->id);
+        if (o == this->end()) {
+            insert(std::make_pair(opts->id, TcollOption<Toption>(coll, opts)));
         } else {
-            o->second=TcollOption<Toption>(coll,opts);
+            o->second = TcollOption<Toption>(coll, opts);
         }
     }
 }
-template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::removeColl(Toptions *coll)
+template<class Toption, class Tbase> void TcollOptions<Toption, Tbase>::removeColl(Toptions *coll)
 {
     ints ii;
-    for (typename Tbase::iterator i=this->begin(); i!=this->end(); i++)
-        if (i->second.coll==coll) {
+    for (typename Tbase::iterator i = this->begin(); i != this->end(); i++)
+        if (i->second.coll == coll) {
             ii.push_back(i->first);
         }
-    for (ints::iterator i=ii.begin(); i!=ii.end(); i++) {
+    for (ints::iterator i = ii.begin(); i != ii.end(); i++) {
         this->erase(*i);
     }
     /*
@@ -269,60 +269,60 @@ template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::removeColl
        i=erase(i);
     */
 }
-template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::setOnChange(int id,const typename Toption::TonChangeBind &bind)
+template<class Toption, class Tbase> void TcollOptions<Toption, Tbase>::setOnChange(int id, const typename Toption::TonChangeBind &bind)
 {
-    typename Tbase::iterator o=this->find(id);
-    if (o!=this->end()) {
-        o->second.onChange=bind;
+    typename Tbase::iterator o = this->find(id);
+    if (o != this->end()) {
+        o->second.onChange = bind;
     }
 }
-template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::notifyParamsChanged(void)
+template<class Toption, class Tbase> void TcollOptions<Toption, Tbase>::notifyParamsChanged(void)
 {
     typedef std::vector<const typename Toption::TonChangeBind*> Tbinds;
     Tbinds binds;
-    for (typename Tbase::iterator o=this->begin(); o!=this->end(); o++)
-        if (!o->second.onChange.empty() && std::find_if(binds.begin(),binds.end(),TonChangeCmp<const typename Toption::TonChangeBind>(o->second.onChange))==binds.end()) {
+    for (typename Tbase::iterator o = this->begin(); o != this->end(); o++)
+        if (!o->second.onChange.empty() && std::find_if(binds.begin(), binds.end(), TonChangeCmp<const typename Toption::TonChangeBind>(o->second.onChange)) == binds.end()) {
             binds.push_back(&o->second.onChange);
         }
-    for (typename Tbinds::iterator b=binds.begin(); b!=binds.end(); b++) {
-        (**b)(0,0);
+    for (typename Tbinds::iterator b = binds.begin(); b != binds.end(); b++) {
+        (**b)(0, 0);
     }
 }
-template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::reg_op(TregOp &t,Toptions *coll)
+template<class Toption, class Tbase> void TcollOptions<Toption, Tbase>::reg_op(TregOp &t, Toptions *coll)
 {
-    for (typename Tbase::iterator o=this->begin(); o!=this->end(); o++)
-        if (o->second.coll==coll) {
-            o->second.option->reg_op(coll,t);
+    for (typename Tbase::iterator o = this->begin(); o != this->end(); o++)
+        if (o->second.coll == coll) {
+            o->second.option->reg_op(coll, t);
         }
 }
-template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::reset(const int *idBegin,const int *idEnd,Toptions *coll)
+template<class Toption, class Tbase> void TcollOptions<Toption, Tbase>::reset(const int *idBegin, const int *idEnd, Toptions *coll)
 {
-    for (typename Tbase::iterator o=this->begin(); o!=this->end(); o++)
-        if (std::find(idBegin,idEnd,o->first)!=idEnd) {
+    for (typename Tbase::iterator o = this->begin(); o != this->end(); o++)
+        if (std::find(idBegin, idEnd, o->first) != idEnd) {
             o->second.option->reset(coll);
         }
 }
-template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::setParamList(int id,const TcreateParamListBase *createParamList)
+template<class Toption, class Tbase> void TcollOptions<Toption, Tbase>::setParamList(int id, const TcreateParamListBase *createParamList)
 {
-    typename Tbase::iterator o=this->find(id);
-    if (o!=this->end()) {
-        o->second.createParamList=createParamList;
+    typename Tbase::iterator o = this->find(id);
+    if (o != this->end()) {
+        o->second.createParamList = createParamList;
     }
 }
-template<class Toption,class Tbase> TparamListItems* TcollOptions<Toption,Tbase>::getParamList(int id)
+template<class Toption, class Tbase> TparamListItems* TcollOptions<Toption, Tbase>::getParamList(int id)
 {
-    typename Tbase::const_iterator o=this->find(id);
-    return o==this->end() || !o->second.createParamList?NULL:o->second.createParamList->create();
+    typename Tbase::const_iterator o = this->find(id);
+    return o == this->end() || !o->second.createParamList ? NULL : o->second.createParamList->create();
 }
 
 //===================================== TintStrColl ========================================
-void TintStrColl::addOptions(const Toptions::TintOption *iopts,Toptions *coll)
+void TintStrColl::addOptions(const Toptions::TintOption *iopts, Toptions *coll)
 {
-    first.addOptions(iopts,coll);
+    first.addOptions(iopts, coll);
 }
-void TintStrColl::addOptions(const Toptions::TstrOption *sopts,Toptions *coll)
+void TintStrColl::addOptions(const Toptions::TstrOption *sopts, Toptions *coll)
 {
-    second.addOptions(sopts,coll);
+    second.addOptions(sopts, coll);
 }
 void TintStrColl::removeColl(Toptions *coll)
 {
@@ -332,69 +332,69 @@ void TintStrColl::removeColl(Toptions *coll)
         delete this;
     }
 }
-void TintStrColl::setOnChange(int id,const Toptions::TintOption::TonChangeBind &bind)
+void TintStrColl::setOnChange(int id, const Toptions::TintOption::TonChangeBind &bind)
 {
-    first.setOnChange(id,bind);
+    first.setOnChange(id, bind);
 }
-void TintStrColl::setOnChange(int id,const Toptions::TstrOption::TonChangeBind &bind)
+void TintStrColl::setOnChange(int id, const Toptions::TstrOption::TonChangeBind &bind)
 {
-    second.setOnChange(id,bind);
+    second.setOnChange(id, bind);
 }
 void TintStrColl::setSendOnChange(const Toptions::TsendOnChange &IsendOnChange)
 {
-    sendOnChange=IsendOnChange;
+    sendOnChange = IsendOnChange;
 }
 void TintStrColl::notifyParamsChanged(void)
 {
     first.notifyParamsChanged();
     second.notifyParamsChanged();
 }
-bool TintStrColl::notifyParam(int id,int val)
+bool TintStrColl::notifyParam(int id, int val)
 {
-    return first.notify(id,val);
+    return first.notify(id, val);
 }
-bool TintStrColl::notifyParam(int id,const char_t *val)
+bool TintStrColl::notifyParam(int id, const char_t *val)
 {
-    return second.notify(id,val);
+    return second.notify(id, val);
 }
-bool TintStrColl::getInfo(int id,TffdshowParamInfo *info)
+bool TintStrColl::getInfo(int id, TffdshowParamInfo *info)
 {
-    return first.getInfo(id,info) || second.getInfo(id,info);
+    return first.getInfo(id, info) || second.getInfo(id, info);
 }
-void TintStrColl::reg_op(TregOp &t,Toptions *coll)
+void TintStrColl::reg_op(TregOp &t, Toptions *coll)
 {
-    first.reg_op(t,coll);
-    second.reg_op(t,coll);
+    first.reg_op(t, coll);
+    second.reg_op(t, coll);
 }
-void TintStrColl::reset(const int *ids,Toptions *coll)
+void TintStrColl::reset(const int *ids, Toptions *coll)
 {
-    const int *end=ids;
+    const int *end = ids;
     while (*end) {
         end++;
     }
-    first.reset(ids,end,coll);
-    second.reset(ids,end,coll);
+    first.reset(ids, end, coll);
+    second.reset(ids, end, coll);
 }
 bool TintStrColl::reset(int id)
 {
-    return first.reset(id,sendOnChange) || second.reset(id,sendOnChange);
+    return first.reset(id, sendOnChange) || second.reset(id, sendOnChange);
 }
 void TintStrColl::getInfoIDs(ints &infos)
 {
     first.getInfoIDs(infos);
     second.getInfoIDs(infos);
 }
-void TintStrColl::setParamList(int id,const TcreateParamListBase *createParamList)
+void TintStrColl::setParamList(int id, const TcreateParamListBase *createParamList)
 {
-    first.setParamList(id,createParamList);
-    second.setParamList(id,createParamList);
+    first.setParamList(id, createParamList);
+    second.setParamList(id, createParamList);
 }
 TparamListItems* TintStrColl::getParamList(int id)
 {
     TparamListItems *list;
-    if ((list=first.getParamList(id))!=NULL) {
+    if ((list = first.getParamList(id)) != NULL) {
         return list;
-    } else if ((list=second.getParamList(id))!=NULL) {
+    } else if ((list = second.getParamList(id)) != NULL) {
         return list;
     } else {
         return NULL;

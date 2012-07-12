@@ -5,7 +5,7 @@
 #include "libmad/mad.h"
 
 class Tdll;
-class TaudioCodecLibMAD :public TaudioCodec
+class TaudioCodecLibMAD : public TaudioCodec
 {
 private:
     Tdll *dll;
@@ -15,7 +15,7 @@ private:
     void (*mad_frame_init)(struct mad_frame *);
     void (*mad_frame_finish)(struct mad_frame *);
     void (*mad_synth_frame)(struct mad_synth *, struct mad_frame const *);
-    int  (*mad_frame_decode)(struct mad_frame *, struct mad_stream *);
+    int (*mad_frame_decode)(struct mad_frame *, struct mad_stream *);
     void (*mad_stream_buffer)(struct mad_stream *, unsigned char const *, unsigned long);
     bool inited;
     MPEG1WAVEFORMAT infmt;
@@ -25,9 +25,9 @@ private:
     static int32_t scale(mad_fixed_t sample);
 protected:
     virtual bool init(const CMediaType &mt);
-    virtual void getInputDescr1(char_t *buf,size_t buflen) const;
+    virtual void getInputDescr1(char_t *buf, size_t buflen) const;
 public:
-    TaudioCodecLibMAD(IffdshowBase *deci,IdecAudioSink *Isink);
+    TaudioCodecLibMAD(IffdshowBase *deci, IdecAudioSink *Isink);
     virtual ~TaudioCodecLibMAD();
     virtual int getType(void) const {
         return IDFF_MOVIE_LIBMAD;

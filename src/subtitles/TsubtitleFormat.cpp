@@ -26,17 +26,17 @@
 #include "ThtmlColors.h"
 
 //============================ TsubtitleFormat =============================
-ffstring TsubtitleFormat::getAttribute(const wchar_t *start,const wchar_t *end,const wchar_t *attrname)
+ffstring TsubtitleFormat::getAttribute(const wchar_t *start, const wchar_t *end, const wchar_t *attrname)
 {
-    if (const wchar_t *attr=strnistr(start,end-start+1,attrname))
-        if (const wchar_t *eq=strnchr(attr,end-attr+1,'=')) {
+    if (const wchar_t *attr = strnistr(start, end - start + 1, attrname))
+        if (const wchar_t *eq = strnchr(attr, end - attr + 1, '=')) {
             eq++;
-            bool in=false;
-            for (int i=0; i<end-eq+1; i++)
-                if (eq[i]=='"') {
-                    in=!in;
-                } else if (!in && (eq[i]==' ' || eq[i]=='>' || eq[i]=='\0')) {
-                    return stringreplace(ffstring(eq,i).Trim(),L"\"",L"",rfReplaceAll);
+            bool in = false;
+            for (int i = 0; i < end - eq + 1; i++)
+                if (eq[i] == '"') {
+                    in = !in;
+                } else if (!in && (eq[i] == ' ' || eq[i] == '>' || eq[i] == '\0')) {
+                    return stringreplace(ffstring(eq, i).Trim(), L"\"", L"", rfReplaceAll);
                 }
         }
     return ffstring();
@@ -44,72 +44,72 @@ ffstring TsubtitleFormat::getAttribute(const wchar_t *start,const wchar_t *end,c
 
 void TsubtitleFormat::processHTMLTags(Twords &words, const wchar_t* &l, const wchar_t* &l1, const wchar_t* &l2)
 {
-    if (_strnicmp(l2,L"<i>",3)==0) {
-        words.add(l,l1,l2,props,3);
-        props.italic=true;
-    } else if (_strnicmp(l2,L"</i>",4)==0) {
-        words.add(l,l1,l2,props,4);
-        props.italic=false;
-    } else if (_strnicmp(l2,L"<u>",3)==0) {
-        words.add(l,l1,l2,props,3);
-        props.underline=true;
-    } else if (_strnicmp(l2,L"</u>",4)==0) {
-        words.add(l,l1,l2,props,4);
-        props.underline=false;
-    } else if (_strnicmp(l2,L"<b>",3)==0) {
-        words.add(l,l1,l2,props,3);
-        props.bold=true;
-    } else if (_strnicmp(l2,L"</b>",4)==0) {
-        words.add(l,l1,l2,props,4);
-        props.bold=false;
-    } else if (_strnicmp(l2,L"<font ",6)==0) {
-        const wchar_t *end=strchr(l2,'>');
+    if (_strnicmp(l2, L"<i>", 3) == 0) {
+        words.add(l, l1, l2, props, 3);
+        props.italic = true;
+    } else if (_strnicmp(l2, L"</i>", 4) == 0) {
+        words.add(l, l1, l2, props, 4);
+        props.italic = false;
+    } else if (_strnicmp(l2, L"<u>", 3) == 0) {
+        words.add(l, l1, l2, props, 3);
+        props.underline = true;
+    } else if (_strnicmp(l2, L"</u>", 4) == 0) {
+        words.add(l, l1, l2, props, 4);
+        props.underline = false;
+    } else if (_strnicmp(l2, L"<b>", 3) == 0) {
+        words.add(l, l1, l2, props, 3);
+        props.bold = true;
+    } else if (_strnicmp(l2, L"</b>", 4) == 0) {
+        words.add(l, l1, l2, props, 4);
+        props.bold = false;
+    } else if (_strnicmp(l2, L"<font ", 6) == 0) {
+        const wchar_t *end = strchr(l2, '>');
         if (end) {
-            const wchar_t *start=l2+6;
-            ffstring face=getAttribute(start,end,L"face");
-            ffstring color=getAttribute(start,end,L"color").ConvertToLowerCase();
-            ffstring size=getAttribute(start,end,L"size");
-            words.add(l,l1,l2,props,end-l2+1);
+            const wchar_t *start = l2 + 6;
+            ffstring face = getAttribute(start, end, L"face");
+            ffstring color = getAttribute(start, end, L"color").ConvertToLowerCase();
+            ffstring size = getAttribute(start, end, L"size");
+            words.add(l, l1, l2, props, end - l2 + 1);
             if (!face.empty()) {
-                ff_strncpy(props.fontname, (const char_t *)text<char_t>(face.c_str()),countof(props.fontname));
+                ff_strncpy(props.fontname, (const char_t *)text<char_t>(face.c_str()), countof(props.fontname));
             }
-            if (!color.empty() && ((color[0]=='#' && swscanf(color.c_str()+1,L"%x",&props.color)) || (htmlcolors->getColor(color,&props.color,0xffffff),true))) {
-                std::swap(((uint8_t*)&props.color)[0],((uint8_t*)&props.color)[2]);
-                props.isColor=true;
+            if (!color.empty() && ((color[0] == '#' && swscanf(color.c_str() + 1, L"%x", &props.color)) || (htmlcolors->getColor(color, &props.color, 0xffffff), true))) {
+                std::swap(((uint8_t*)&props.color)[0], ((uint8_t*)&props.color)[2]);
+                props.isColor = true;
             }
             if (!size.empty()) {
                 wchar_t *ll;
-                int s=strtol(size.c_str(),&ll,10);
-                if (*ll=='\0') {
-                    props.size=s;
+                int s = strtol(size.c_str(), &ll, 10);
+                if (*ll == '\0') {
+                    props.size = s;
                 }
             }
         }
-    } else if (_strnicmp(l2,L"</font>",7)==0) {
-        words.add(l,l1,l2,props,7);
-        props.isColor=false;
-        props.size=0;
-        props.fontname[0]='\0';
+    } else if (_strnicmp(l2, L"</font>", 7) == 0) {
+        words.add(l, l1, l2, props, 7);
+        props.isColor = false;
+        props.size = 0;
+        props.fontname[0] = '\0';
     }
     // Hacks for badly written HTML tags go here. Comment everything to only parse good HTML tags
-    else if (_strnicmp(l2,L"< i>",4)==0) {
-        words.add(l,l1,l2,props,4);
-        props.italic=true;
-    } else if (_strnicmp(l2,L"< /i>",5)==0) {
-        words.add(l,l1,l2,props,5);
-        props.italic=false;
-    } else if (_strnicmp(l2,L"< u>",4)==0) {
-        words.add(l,l1,l2,props,4);
-        props.underline=true;
-    } else if (_strnicmp(l2,L"< /u>",5)==0) {
-        words.add(l,l1,l2,props,5);
-        props.underline=false;
-    } else if (_strnicmp(l2,L"< b>",4)==0) {
-        words.add(l,l1,l2,props,4);
-        props.bold=true;
-    } else if (_strnicmp(l2,L"< /b>",5)==0) {
-        words.add(l,l1,l2,props,5);
-        props.bold=false;
+    else if (_strnicmp(l2, L"< i>", 4) == 0) {
+        words.add(l, l1, l2, props, 4);
+        props.italic = true;
+    } else if (_strnicmp(l2, L"< /i>", 5) == 0) {
+        words.add(l, l1, l2, props, 5);
+        props.italic = false;
+    } else if (_strnicmp(l2, L"< u>", 4) == 0) {
+        words.add(l, l1, l2, props, 4);
+        props.underline = true;
+    } else if (_strnicmp(l2, L"< /u>", 5) == 0) {
+        words.add(l, l1, l2, props, 5);
+        props.underline = false;
+    } else if (_strnicmp(l2, L"< b>", 4) == 0) {
+        words.add(l, l1, l2, props, 4);
+        props.bold = true;
+    } else if (_strnicmp(l2, L"< /b>", 5) == 0) {
+        words.add(l, l1, l2, props, 5);
+        props.bold = false;
     }
     // End of hacks
     else {
@@ -122,13 +122,13 @@ const TSubtitleProps& TsubtitleFormat::processHTML(Twords &words, const Tsubtitl
     if (line.empty()) {
         return lineProps;
     }
-    const wchar_t *l=line[0];
-    const wchar_t *l1=l,*l2=l;
+    const wchar_t *l = line[0];
+    const wchar_t *l1 = l, *l2 = l;
     while (*l2) {
         processHTMLTags(words, l, l1, l2);
     }
 
-    words.add(l,l1,l2,props,0);
+    words.add(l, l1, l2, props, 0);
     return lineProps;
 }
 
@@ -143,11 +143,11 @@ int TsubtitleFormat::Tssa::parse_parentheses(TparenthesesContents &contents, ffs
     if (second_paren == ffstring::npos) {
         return -1;
     }
-    arg.erase(0,first_paren+1);
+    arg.erase(0, first_paren + 1);
     arg.erase(second_paren - first_paren - 1);
     strings input_strings;
-    strtok(arg.c_str(),L",",input_strings);
-    foreach (ffstring &s, input_strings)
+    strtok(arg.c_str(), L",", input_strings);
+    foreach(ffstring & s, input_strings)
     contents.push_back(TparenthesesContent(s));
     return (int)(second_paren + 1);
 }
@@ -157,11 +157,11 @@ int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &
     int count = 0;
     iterator store_i = begin();
     TparenthesesContents::const_iterator contents_i = contents.begin();
-    for ( ; store_i != end() ; store_i++) {
+    for (; store_i != end() ; store_i++) {
         int64_t val;
         double doubleval;
         if (store_i->offset && store_i->isInteger) {
-            if ( contents_i != contents.end()
+            if (contents_i != contents.end()
                     && contents_i->ok) {
                 if (contents_i->doubleval < store_i->min) {
                     val = (int64_t)store_i->min;
@@ -178,7 +178,7 @@ int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &
             memcpy(dst, &val, store_i->size);
         }
         if (store_i->offset && !store_i->isInteger) {
-            if ( contents_i != contents.end()
+            if (contents_i != contents.end()
                     && contents_i->ok) {
                 if (contents_i->doubleval < store_i->min) {
                     doubleval = store_i->min;
@@ -204,80 +204,81 @@ int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &
 void TsubtitleFormat::Tssa::fontName(ffstring &arg)
 {
     if (arg.size()) {
-        memset(props.fontname,0,sizeof(props.fontname));
+        memset(props.fontname, 0, sizeof(props.fontname));
         text<char_t>(arg.c_str(), (int)arg.size(), (char_t*)props.fontname, countof(props.fontname));
     } else {
         ff_strncpy(props.fontname, defprops.fontname, countof(props.fontname));
     }
 }
 
-template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::intProp(ffstring &arg)
+template<int TSubtitleProps::*offset, int min, int max> void TsubtitleFormat::Tssa::intProp(ffstring &arg)
 {
     if (props.transform.isTransform) {
         // Don't do anything until transform is complete
     } else {
         int enc;
-        if (arg2int(arg,min,max,enc)) {
-            props.*offset=enc;
+        if (arg2int(arg, min, max, enc)) {
+            props.*offset = enc;
         } else {
-            props.*offset=defprops.*offset;
+            props.*offset = defprops.*offset;
         }
     }
 }
 
-template<int min,int max> void TsubtitleFormat::Tssa::intPropAn(ffstring &arg)
+template<int min, int max> void TsubtitleFormat::Tssa::intPropAn(ffstring &arg)
 {
     int enc;
-    if (lineProps.isAlignment == false && arg2int(arg,min,max,enc)) {
+    if (lineProps.isAlignment == false && arg2int(arg, min, max, enc)) {
         lineProps.alignment = TSubtitleProps::alignASS2SSA(enc);
         lineProps.isAlignment = true;
     }
 }
 
-template<int min,int max> void TsubtitleFormat::Tssa::intPropA(ffstring &arg)
+template<int min, int max> void TsubtitleFormat::Tssa::intPropA(ffstring &arg)
 {
     int enc;
-    if (lineProps.isAlignment == false && arg2int(arg,min,max,enc)) {
+    if (lineProps.isAlignment == false && arg2int(arg, min, max, enc)) {
         lineProps.alignment = enc;
         lineProps.isAlignment = true;
     }
 }
 
-template<int min,int max> void TsubtitleFormat::Tssa::intPropQ(ffstring &arg)
+template<int min, int max> void TsubtitleFormat::Tssa::intPropQ(ffstring &arg)
 {
     int enc;
-    if (arg2int(arg,min,max,enc))
+    if (arg2int(arg, min, max, enc)) {
         lineProps.wrapStyle = enc;
+    }
 }
 
-template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::doubleProp(ffstring &arg)
+template<double TSubtitleProps::*offset, int min, int max> void TsubtitleFormat::Tssa::doubleProp(ffstring &arg)
 {
     if (props.transform.isTransform) {
         // Don't do anything until transform is complete
     } else {
         const wchar_t* buf = arg.c_str();
         wchar_t *bufend;
-        double enc=strtod(buf,&bufend);
-        if (buf!=bufend && *bufend=='\0' && isIn(enc,(double)min,(double)max)) {
-            props.*offset=enc;
+        double enc = strtod(buf, &bufend);
+        if (buf != bufend && *bufend == '\0' && isIn(enc, (double)min, (double)max)) {
+            props.*offset = enc;
         } else {
-            props.*offset=defprops.*offset;
+            props.*offset = defprops.*offset;
         }
     }
 }
 
-template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::doublePropDiv100(ffstring &arg)
+template<double TSubtitleProps::*offset, int min, int max> void TsubtitleFormat::Tssa::doublePropDiv100(ffstring &arg)
 {
     if (props.transform.isTransform) {
         // Don't do anything until transform is complete
     } else {
         const wchar_t* buf = arg.c_str();
         wchar_t *bufend;
-        double enc=strtod(buf,&bufend);
-        if (buf!=bufend && *bufend=='\0' && isIn(enc,(double)min,(double)max)) {
-            props.*offset=enc/100.0;
+        double enc = strtod(buf, &bufend);
+        if (buf != bufend && *bufend == '\0' && isIn(enc, (double)min, (double)max)) {
+            props.*offset = enc / 100.0;
         } else {
-            props.*offset=defprops.*offset;
+            props.*offset = defprops.*offset;
         }
     }
 }
@@ -292,33 +293,35 @@ void TsubtitleFormat::Tssa::clip(ffstring &arg)
     store.push_back(TstoreParam(offsetof(TSubtitleProps, clip.bottom), 0, INT_MAX,  defprops.clip.bottom, sizeof(lineProps.clip.bottom), true));
 
     TparenthesesContents contents;
-    parse_parentheses(contents,arg);
+    parse_parentheses(contents, arg);
     if (store.writeProps(contents, &lineProps) >= 4) {
-        lineProps.isClip=true;
+        lineProps.isClip = true;
     }
 }
 
 void TsubtitleFormat::Tssa::pos(ffstring &arg)
 {
-    if (lineProps.isMove)
+    if (lineProps.isMove) {
         return;
+    }
     // (x1,y1) is expected.
     TstoreParams store;
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.x), 0,INT_MAX,defprops.pos.x,sizeof(lineProps.pos.x),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.y), 0,INT_MAX,defprops.pos.y,sizeof(lineProps.pos.y),true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.x), 0, INT_MAX, defprops.pos.x, sizeof(lineProps.pos.x), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.y), 0, INT_MAX, defprops.pos.y, sizeof(lineProps.pos.y), true));
 
     TparenthesesContents contents;
-    parse_parentheses(contents,arg);
+    parse_parentheses(contents, arg);
     if (store.writeProps(contents, &lineProps) == 2) {
-		lineProps.pos2 = lineProps.pos;
-        lineProps.isMove=true;
+        lineProps.pos2 = lineProps.pos;
+        lineProps.isMove = true;
     }
 }
 
 void TsubtitleFormat::Tssa::move(ffstring &arg)
 {
-    if (lineProps.isMove)
+    if (lineProps.isMove) {
         return;
+    }
     // (x1,y1,x2,y2,[t1[,t2]]) is expected.
     TstoreParams store;
     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.x),  0, INT_MAX,  defprops.pos.x,  sizeof(lineProps.pos.x),  true));
@@ -329,25 +332,26 @@ void TsubtitleFormat::Tssa::move(ffstring &arg)
     store.push_back(TstoreParam(offsetof(TSubtitleProps, moveT2), 0, UINT_MAX, 0,               sizeof(lineProps.moveT2), true));
 
     TparenthesesContents contents;
-    parse_parentheses(contents,arg);
+    parse_parentheses(contents, arg);
     if (store.writeProps(contents, &lineProps) >= 4) {
-        lineProps.isMove=true;
+        lineProps.isMove = true;
     }
 }
 
 void TsubtitleFormat::Tssa::org(ffstring &arg)
 {
-    if (lineProps.isOrg)
+    if (lineProps.isOrg) {
         return;
+    }
     // (x1,y1) is expected.
     TstoreParams store;
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, org.x), 0,INT_MAX,defprops.org.x,sizeof(lineProps.org.x),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, org.y), 0,INT_MAX,defprops.org.x,sizeof(lineProps.org.y),true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, org.x), 0, INT_MAX, defprops.org.x, sizeof(lineProps.org.x), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, org.y), 0, INT_MAX, defprops.org.x, sizeof(lineProps.org.y), true));
 
     TparenthesesContents contents;
-    parse_parentheses(contents,arg);
+    parse_parentheses(contents, arg);
     if (store.writeProps(contents, &lineProps) == 2) {
-        lineProps.isOrg=true;
+        lineProps.isOrg = true;
     }
 }
 
@@ -355,33 +359,33 @@ void TsubtitleFormat::Tssa::transform(ffstring &arg)
 {
     // ([t1,t2,][accel,]<style modifiers>) is expected.
     TparenthesesContents contents;
-    parse_parentheses(contents,arg);
+    parse_parentheses(contents, arg);
     TstoreParams store;
     if (contents.size() != 2) {
         store.push_back(TstoreParam(offsetof(TSubtitleProps, transformT1),     0, UINT_MAX, 0, sizeof(props.transformT1),     true));
         store.push_back(TstoreParam(offsetof(TSubtitleProps, transformT2),     0, UINT_MAX, 0, sizeof(props.transformT2),     true));
         store.push_back(TstoreParam(offsetof(TSubtitleProps, transform.accel), 0, DBL_MAX,  1, sizeof(props.transform.accel), false));
     } else {
-        props.transformT1=props.transformT2=0;
+        props.transformT1 = props.transformT2 = 0;
         store.push_back(TstoreParam(offsetof(TSubtitleProps, transform.accel), 0, DBL_MAX,  1, sizeof(props.transform.accel), false));
     }
 
     store.writeProps(contents, &props);
     if (contents.size() > 0) {
-        props.transform.isTransform=true;
-        const wchar_t *s=L"{", *e=L"}", *temp=L"";
+        props.transform.isTransform = true;
+        const wchar_t *s = L"{", *e = L"}", *temp = L"";
         wchar_t tokensT[500] = {0};
         unsigned int i;
-        for (i=0; i<contents.size(); i++) {
+        for (i = 0; i < contents.size(); i++) {
             if (!contents[i].ok) {
-                temp=contents[i].str.c_str();
+                temp = contents[i].str.c_str();
                 wcscat(tokensT, s);
                 wcscat(tokensT, (wchar_t *)temp);
                 wcscat(tokensT, e);
             }
         }
-        const wchar_t *tokens=tokensT, *tokens1=tokens, *tokens2=tokens, *end=strchr(tokens+1,'}');
-        Tssa::processTokens(tokens,tokens1,tokens2,end);
+        const wchar_t *tokens = tokensT, *tokens1 = tokens, *tokens2 = tokens, *end = strchr(tokens + 1, '}');
+        Tssa::processTokens(tokens, tokens1, tokens2, end);
     }
 }
 
@@ -390,10 +394,10 @@ void TsubtitleFormat::Tssa::karaoke_fixProperties()
     /* SRT subtitles do not define (most of the time) any secondary color
         So we have to put the secondary color into the primary color and vice versa for the karaoke word
         that will be added later */
-    if ((sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2)
+    if ((sfmt == Tsubreader::SUB_SUBVIEWER || sfmt == Tsubreader::SUB_SUBVIEWER2)
             && props.karaokeMode != TSubtitleProps::KARAOKE_NONE && props.SecondaryColour == 0xffffff) {
         props.SecondaryColour = DEFAULT_SECONDARY_COLOR;
-        props.isColor=true;
+        props.isColor = true;
     }
 }
 
@@ -440,15 +444,16 @@ void TsubtitleFormat::Tssa::karaoke_k(ffstring &arg)
 
 void TsubtitleFormat::Tssa::fad(ffstring &arg)
 {
-    if (lineProps.isFad)
+    if (lineProps.isFad) {
         return;
+    }
 
     TstoreParams store;
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT3), 0,LLONG_MAX/10000,(double)defprops.fadeT3,sizeof(lineProps.fadeT3),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT4), 0,LLONG_MAX/10000,(double)defprops.fadeT4,sizeof(lineProps.fadeT4),true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT3), 0, LLONG_MAX / 10000, (double)defprops.fadeT3, sizeof(lineProps.fadeT3), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT4), 0, LLONG_MAX / 10000, (double)defprops.fadeT4, sizeof(lineProps.fadeT4), true));
 
     TparenthesesContents contents;
-    parse_parentheses(contents,arg);
+    parse_parentheses(contents, arg);
     if (store.writeProps(contents, &lineProps) == 2) {
         lineProps.isFad  = true;
         lineProps.fadeA1 = 0;
@@ -465,11 +470,12 @@ void TsubtitleFormat::Tssa::fade(ffstring &arg)
 {
     // \fade(<a1>, <a2>, <a3>, <t1>, <t2>, <t3>, <t4>)
 
-    if (lineProps.isFad)
+    if (lineProps.isFad) {
         return;
+    }
 
     TparenthesesContents contents;
-    parse_parentheses(contents,arg);
+    parse_parentheses(contents, arg);
 
     if (contents.size() == 2) {
         // Workaround for \fade(<t1>, <t2>), found in some scripts,
@@ -479,13 +485,13 @@ void TsubtitleFormat::Tssa::fade(ffstring &arg)
     }
 
     TstoreParams store;
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA1), 0, 255,             0,    sizeof(lineProps.fadeA1),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA2), 0, 255,             255,  sizeof(lineProps.fadeA2),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA3), 0, 255,             0,    sizeof(lineProps.fadeA3),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT1), 0, LLONG_MAX/10000, 0,    sizeof(lineProps.fadeT1),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT2), 0, LLONG_MAX/10000, 1000, sizeof(lineProps.fadeT2),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT3), 0, INT_MAX, 2000, sizeof(lineProps.fadeT3),true));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT4), 0, INT_MAX, 3000, sizeof(lineProps.fadeT4),true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA1), 0, 255,             0,    sizeof(lineProps.fadeA1), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA2), 0, 255,             255,  sizeof(lineProps.fadeA2), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA3), 0, 255,             0,    sizeof(lineProps.fadeA3), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT1), 0, LLONG_MAX / 10000, 0,    sizeof(lineProps.fadeT1), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT2), 0, LLONG_MAX / 10000, 1000, sizeof(lineProps.fadeT2), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT3), 0, INT_MAX, 2000, sizeof(lineProps.fadeT3), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT4), 0, INT_MAX, 3000, sizeof(lineProps.fadeT4), true));
 
     if (store.writeProps(contents, &lineProps) == 7) {
         lineProps.fadeA1 = 256 - lineProps.fadeA1;
@@ -500,38 +506,41 @@ void TsubtitleFormat::Tssa::fade(ffstring &arg)
     }
 }
 
-template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool TsubtitleFormat::Tssa::intProp2(ffstring &arg)
+template<int TSubtitleProps::*offset1, int TSubtitleProps::*offset2, int min, int max> bool TsubtitleFormat::Tssa::intProp2(ffstring &arg)
 {
     // (x,y) is expected.
     TstoreParams store;
-    store.push_back(TstoreParam((int64_t TSubtitleProps::*)offset1,min,max,defprops.*offset1,sizeof(int),true));
-    store.push_back(TstoreParam((int64_t TSubtitleProps::*)offset2,min,max,defprops.*offset2,sizeof(int),true));
+    store.push_back(TstoreParam((int64_t TSubtitleProps::*)offset1, min, max, defprops.*offset1, sizeof(int), true));
+    store.push_back(TstoreParam((int64_t TSubtitleProps::*)offset2, min, max, defprops.*offset2, sizeof(int), true));
 
     TparenthesesContents contents;
-    parse_parentheses(contents,arg);
-    return store.writeProps(contents,props) == 2;
+    parse_parentheses(contents, arg);
+    return store.writeProps(contents, props) == 2;
 }
 
 bool TsubtitleFormat::Tssa::arg2int(const ffstring &arg, int min, int max, int &enc)
 {
     const wchar_t* buf = arg.c_str();
     wchar_t *bufend;
-    enc=strtol(buf,&bufend,10);
-    return (buf!=bufend && *bufend=='\0' && isIn(enc,min,max));
+    enc = strtol(buf, &bufend, 10);
+    return (buf != bufend && *bufend == '\0' && isIn(enc, min, max));
 }
 
 bool TsubtitleFormat::Tssa::color2int(ffstring arg, int &intval)
 {
     if (!arg.empty()) {
-        if (arg.compare(0,2,ffstring(_l("&H")))==0)
-            arg.erase(0,2);
-        if (arg.compare(0,1,ffstring(_l("H")))==0)  // "H&" fix typo for a certain script. For compatibility with vsfilter.
-            arg.erase(0,1);
-        if (arg.compare(0,1,ffstring(_l("&")))==0)
-            arg.erase(0,1);
+        if (arg.compare(0, 2, ffstring(_l("&H"))) == 0) {
+            arg.erase(0, 2);
+        }
+        if (arg.compare(0, 1, ffstring(_l("H"))) == 0) { // "H&" fix typo for a certain script. For compatibility with vsfilter.
+            arg.erase(0, 1);
+        }
+        if (arg.compare(0, 1, ffstring(_l("&"))) == 0) {
+            arg.erase(0, 1);
+        }
         wchar_t *endbuf;
-        intval=strtol(arg.c_str(),&endbuf,16);
-        return (*endbuf=='&' || *endbuf==NULL);
+        intval = strtol(arg.c_str(), &endbuf, 16);
+        return (*endbuf == '&' || *endbuf == NULL);
     } else {
         return false;
     }
@@ -543,12 +552,12 @@ template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa::color(ffs
         // Don't do anything until transform is complete
     } else {
         int c;
-        if (color2int(arg,c)) {
-            props.*offset=c;
-            props.isColor=true;
+        if (color2int(arg, c)) {
+            props.*offset = c;
+            props.isColor = true;
         } else {
-            props.*offset=defprops.*offset;
-            props.isColor=defprops.isColor;
+            props.*offset = defprops.*offset;
+            props.isColor = defprops.isColor;
         }
     }
 }
@@ -559,13 +568,13 @@ template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa::alpha(ffstring
         // Don't do anything until transform is complete
     } else {
         int a;
-        if (color2int(arg,a)) {
+        if (color2int(arg, a)) {
             a &= 0xff;
-            props.*offset=256-a;
-            props.isColor=true;
+            props.*offset = 256 - a;
+            props.isColor = true;
         } else {
-            props.*offset=defprops.*offset;
-            props.isColor=defprops.isColor;
+            props.*offset = defprops.*offset;
+            props.isColor = defprops.isColor;
         }
     }
 }
@@ -573,39 +582,39 @@ template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa::alpha(ffstring
 void TsubtitleFormat::Tssa::alphaAll(ffstring &arg)
 {
     int a;
-    if (props.transform.isTransform && color2int(arg,a)) {
-        props.transform.isAlpha=true;
-        props.transform.alpha=a;
-        props.transform.alphaT1= props.transformT1 ? props.tStart + (props.transformT1 * 10000) : props.tStart;
-        props.transform.alphaT2= props.transformT2 ? props.tStart + (props.transformT2 * 10000) : props.tStop;
+    if (props.transform.isTransform && color2int(arg, a)) {
+        props.transform.isAlpha = true;
+        props.transform.alpha = a;
+        props.transform.alphaT1 = props.transformT1 ? props.tStart + (props.transformT1 * 10000) : props.tStart;
+        props.transform.alphaT2 = props.transformT2 ? props.tStart + (props.transformT2 * 10000) : props.tStop;
     } else {
-        if (color2int(arg,a)) {
+        if (color2int(arg, a)) {
             a &= 0xff;
-            props.colorA=256-a;
-            props.SecondaryColourA=256-a;
-            props.TertiaryColourA=256-a;
-            props.OutlineColourA=256-a;
-            props.ShadowColourA=256-a;
-            props.isColor=true;
+            props.colorA = 256 - a;
+            props.SecondaryColourA = 256 - a;
+            props.TertiaryColourA = 256 - a;
+            props.OutlineColourA = 256 - a;
+            props.ShadowColourA = 256 - a;
+            props.isColor = true;
         } else {
-            props.colorA=defprops.colorA;
-            props.SecondaryColourA=defprops.SecondaryColourA;
-            props.TertiaryColourA=defprops.TertiaryColourA;
-            props.OutlineColourA=defprops.OutlineColourA;
-            props.ShadowColourA=defprops.ShadowColourA;
-            props.isColor=defprops.isColor;
+            props.colorA = defprops.colorA;
+            props.SecondaryColourA = defprops.SecondaryColourA;
+            props.TertiaryColourA = defprops.TertiaryColourA;
+            props.OutlineColourA = defprops.OutlineColourA;
+            props.ShadowColourA = defprops.ShadowColourA;
+            props.isColor = defprops.isColor;
         }
     }
 }
 
 template<bool TSubtitleProps::*offset> void TsubtitleFormat::Tssa::boolProp(ffstring &arg)
 {
-    if (arg.size() && arg[0]=='1') {
-        props.*offset=true;
-    } else if (arg.size() && arg[0]=='0') {
-        props.*offset=false;
+    if (arg.size() && arg[0] == '1') {
+        props.*offset = true;
+    } else if (arg.size() && arg[0] == '0') {
+        props.*offset = false;
     } else {
-        props.*offset=defprops.*offset;
+        props.*offset = defprops.*offset;
     }
 }
 
@@ -619,24 +628,24 @@ void TsubtitleFormat::Tssa::reset(ffstring &arg)
             props.lineID = lineID;
         }
     } else {
-        props=defprops;
+        props = defprops;
     }
 }
 
-bool TsubtitleFormat::Tssa::processTokenI(const wchar_t* &l2,const wchar_t *tok,TssaAction action,Tstr_cmp_func str_cmp_func)
+bool TsubtitleFormat::Tssa::processTokenI(const wchar_t* &l2, const wchar_t *tok, TssaAction action, Tstr_cmp_func str_cmp_func)
 {
-    size_t toklen=strlen(tok);
-    if (str_cmp_func(l2,tok,toklen)==0) {
-        const wchar_t *end1=((strchr(l2+2,'\\') > strchr(l2+2,'(')) && (strchr(l2+2,'\\') < strchr(l2+2,')'))) ? strchr(l2+2,')')+1 : strchr(l2+2,'\\');
-        const wchar_t *end2=strchr(l2,'}');
-        const wchar_t *end=(end1 && end1<end2)?end1:end2;
+    size_t toklen = strlen(tok);
+    if (str_cmp_func(l2, tok, toklen) == 0) {
+        const wchar_t *end1 = ((strchr(l2 + 2, '\\') > strchr(l2 + 2, '(')) && (strchr(l2 + 2, '\\') < strchr(l2 + 2, ')'))) ? strchr(l2 + 2, ')') + 1 : strchr(l2 + 2, '\\');
+        const wchar_t *end2 = strchr(l2, '}');
+        const wchar_t *end = (end1 && end1 < end2) ? end1 : end2;
         if (end) {
-            const wchar_t *start=l2+toklen;
-            ffstring arg(start,end - start);
+            const wchar_t *start = l2 + toklen;
+            ffstring arg(start, end - start);
             if (action) {
                 (this->*action)(arg);
             }
-            l2=(end1 && end1<end2)?end1:end2+1;
+            l2 = (end1 && end1 < end2) ? end1 : end2 + 1;
         }
         return true;
     } else {
@@ -645,66 +654,66 @@ bool TsubtitleFormat::Tssa::processTokenI(const wchar_t* &l2,const wchar_t *tok,
 }
 
 // case sensitive version
-bool TsubtitleFormat::Tssa::processTokenC(const wchar_t* &l2,const wchar_t *tok,TssaAction action)
+bool TsubtitleFormat::Tssa::processTokenC(const wchar_t* &l2, const wchar_t *tok, TssaAction action)
 {
-    return processTokenI(l2,tok,action,strncmp);
+    return processTokenI(l2, tok, action, strncmp);
 }
 
-bool TsubtitleFormat::Tssa::processToken(const wchar_t* &l2,const wchar_t *tok,TssaAction action)
+bool TsubtitleFormat::Tssa::processToken(const wchar_t* &l2, const wchar_t *tok, TssaAction action)
 {
-    return processTokenI(l2,tok,action,_strnicmp);
+    return processTokenI(l2, tok, action, _strnicmp);
 }
 
-void TsubtitleFormat::Tssa::processTokens(const wchar_t *l,const wchar_t* &l1,const wchar_t* &l2,const wchar_t *end)
+void TsubtitleFormat::Tssa::processTokens(const wchar_t *l, const wchar_t* &l1, const wchar_t* &l2, const wchar_t *end)
 {
-    const wchar_t *l3=l2+1;
-    words.add(l,l1,l2,props,end-l2+1);
-    while (l3<end) {
+    const wchar_t *l3 = l2 + 1;
+    words.add(l, l1, l2, props, end - l2 + 1);
+    while (l3 < end) {
         if (
-            !processToken(l3,L"\\1a",&Tssa::template alpha<&TSubtitleProps::colorA>) &&
-            !processToken(l3,L"\\2a",&Tssa::template alpha<&TSubtitleProps::SecondaryColourA>) &&
-            !processToken(l3,L"\\3a",&Tssa::template alpha<&TSubtitleProps::OutlineColourA>) &&
-            !processToken(l3,L"\\4a",&Tssa::template alpha<&TSubtitleProps::ShadowColourA>) &&
-            !processToken(l3,L"\\1c",&Tssa::template color<&TSubtitleProps::color>) &&
-            !processToken(l3,L"\\2c",&Tssa::template color<&TSubtitleProps::SecondaryColour>) &&
-            !processToken(l3,L"\\3c",&Tssa::template color<&TSubtitleProps::OutlineColour>) &&
-            !processToken(l3,L"\\4c",&Tssa::template color<&TSubtitleProps::ShadowColour>) &&
-            !processToken(l3,L"\\alpha",&Tssa::alphaAll) &&
-            !processToken(l3,L"\\an",&Tssa::template intPropAn<1,9>) &&
-            !processToken(l3,L"\\a",&Tssa::template intPropA<1,11>) &&
-            !processToken(l3,L"\\blur",&Tssa::template doubleProp<&TSubtitleProps::gauss,0,100>) &&
-            !processToken(l3,L"\\bord",&Tssa::template doubleProp<&TSubtitleProps::outlineWidth,0,100>) &&
-            !processToken(l3,L"\\be",&Tssa::template intProp<&TSubtitleProps::blur_be,0,1000>) &&
-            !processToken(l3,L"\\b",&Tssa::template intProp<&TSubtitleProps::bold,0,1>) &&
-            !processToken(l3,L"\\clip",&Tssa::clip) &&
-            !processToken(l3,L"\\c",&Tssa::template color<&TSubtitleProps::color>) &&
-            !processToken(l3,L"\\fn",&Tssa::fontName) &&
-            !processToken(l3,L"\\fscx",&Tssa::template doublePropDiv100<&TSubtitleProps::scaleX,1,1000>) &&
-            !processToken(l3,L"\\fscy",&Tssa::template doublePropDiv100<&TSubtitleProps::scaleY,1,1000>) &&
-            !processToken(l3,L"\\fsp",&Tssa::template doubleProp<&TSubtitleProps::spacing,INT_MIN+1,INT_MAX>) &&
-            !processToken(l3,L"\\fs",&Tssa::template doubleProp<&TSubtitleProps::size,1,1000>) &&
-            !processToken(l3,L"\\frx",&Tssa::template doubleProp<&TSubtitleProps::angleX,0,10000>) &&
-            !processToken(l3,L"\\fry",&Tssa::template doubleProp<&TSubtitleProps::angleY,0,10000>) &&
-            !processToken(l3,L"\\frz",&Tssa::template doubleProp<&TSubtitleProps::angleZ,0,10000>) &&
-            !processToken(l3,L"\\fr",&Tssa::template doubleProp<&TSubtitleProps::angleZ,0,10000>) &&
-            !processToken(l3,L"\\fe",&Tssa::template intProp<&TSubtitleProps::encoding,0,255>) &&
-            !processToken(l3,L"\\fade",&Tssa::fade) &&
-            !processToken(l3,L"\\fad",&Tssa::fad) &&
-            !processToken(l3,L"\\i",&Tssa::template boolProp<&TSubtitleProps::italic>) &&
-            !processToken(l3,L"\\kf",&Tssa::karaoke_kf) &&
-            !processToken(l3,L"\\ko",&Tssa::karaoke_ko) &&
-            !processTokenC(l3,L"\\K",&Tssa::karaoke_kf) &&
-            !processTokenC(l3,L"\\k",&Tssa::karaoke_k) &&
-            !processToken(l3,L"\\move",&Tssa::move) &&
-            !processToken(l3,L"\\org",&Tssa::org) &&
-            !processToken(l3,L"\\pos",&Tssa::pos) &&
-            !processToken(l3,L"\\p",&Tssa::template intProp<&TSubtitleProps::polygon,0,255>) &&
-            !processToken(l3,L"\\q",&Tssa::template intPropQ<0,3>) &&
-            !processToken(l3,L"\\r",&Tssa::reset) &&
-            !processToken(l3,L"\\shad",&Tssa::template doubleProp<&TSubtitleProps::shadowDepth,0,30>) &&
-            !processToken(l3,L"\\s",&Tssa::template boolProp<&TSubtitleProps::strikeout>) &&
-            !processToken(l3,L"\\t",&Tssa::transform) &&
-            !processToken(l3,L"\\u",&Tssa::template boolProp<&TSubtitleProps::underline>)
+            !processToken(l3, L"\\1a", &Tssa::template alpha<&TSubtitleProps::colorA>) &&
+            !processToken(l3, L"\\2a", &Tssa::template alpha<&TSubtitleProps::SecondaryColourA>) &&
+            !processToken(l3, L"\\3a", &Tssa::template alpha<&TSubtitleProps::OutlineColourA>) &&
+            !processToken(l3, L"\\4a", &Tssa::template alpha<&TSubtitleProps::ShadowColourA>) &&
+            !processToken(l3, L"\\1c", &Tssa::template color<&TSubtitleProps::color>) &&
+            !processToken(l3, L"\\2c", &Tssa::template color<&TSubtitleProps::SecondaryColour>) &&
+            !processToken(l3, L"\\3c", &Tssa::template color<&TSubtitleProps::OutlineColour>) &&
+            !processToken(l3, L"\\4c", &Tssa::template color<&TSubtitleProps::ShadowColour>) &&
+            !processToken(l3, L"\\alpha", &Tssa::alphaAll) &&
+            !processToken(l3, L"\\an", &Tssa::template intPropAn<1, 9>) &&
+            !processToken(l3, L"\\a", &Tssa::template intPropA<1, 11>) &&
+            !processToken(l3, L"\\blur", &Tssa::template doubleProp<&TSubtitleProps::gauss, 0, 100>) &&
+            !processToken(l3, L"\\bord", &Tssa::template doubleProp<&TSubtitleProps::outlineWidth, 0, 100>) &&
+            !processToken(l3, L"\\be", &Tssa::template intProp<&TSubtitleProps::blur_be, 0, 1000>) &&
+            !processToken(l3, L"\\b", &Tssa::template intProp<&TSubtitleProps::bold, 0, 1>) &&
+            !processToken(l3, L"\\clip", &Tssa::clip) &&
+            !processToken(l3, L"\\c", &Tssa::template color<&TSubtitleProps::color>) &&
+            !processToken(l3, L"\\fn", &Tssa::fontName) &&
+            !processToken(l3, L"\\fscx", &Tssa::template doublePropDiv100<&TSubtitleProps::scaleX, 1, 1000>) &&
+            !processToken(l3, L"\\fscy", &Tssa::template doublePropDiv100<&TSubtitleProps::scaleY, 1, 1000>) &&
+            !processToken(l3, L"\\fsp", &Tssa::template doubleProp < &TSubtitleProps::spacing, INT_MIN + 1, INT_MAX >) &&
+            !processToken(l3, L"\\fs", &Tssa::template doubleProp<&TSubtitleProps::size, 1, 1000>) &&
+            !processToken(l3, L"\\frx", &Tssa::template doubleProp<&TSubtitleProps::angleX, 0, 10000>) &&
+            !processToken(l3, L"\\fry", &Tssa::template doubleProp<&TSubtitleProps::angleY, 0, 10000>) &&
+            !processToken(l3, L"\\frz", &Tssa::template doubleProp<&TSubtitleProps::angleZ, 0, 10000>) &&
+            !processToken(l3, L"\\fr", &Tssa::template doubleProp<&TSubtitleProps::angleZ, 0, 10000>) &&
+            !processToken(l3, L"\\fe", &Tssa::template intProp<&TSubtitleProps::encoding, 0, 255>) &&
+            !processToken(l3, L"\\fade", &Tssa::fade) &&
+            !processToken(l3, L"\\fad", &Tssa::fad) &&
+            !processToken(l3, L"\\i", &Tssa::template boolProp<&TSubtitleProps::italic>) &&
+            !processToken(l3, L"\\kf", &Tssa::karaoke_kf) &&
+            !processToken(l3, L"\\ko", &Tssa::karaoke_ko) &&
+            !processTokenC(l3, L"\\K", &Tssa::karaoke_kf) &&
+            !processTokenC(l3, L"\\k", &Tssa::karaoke_k) &&
+            !processToken(l3, L"\\move", &Tssa::move) &&
+            !processToken(l3, L"\\org", &Tssa::org) &&
+            !processToken(l3, L"\\pos", &Tssa::pos) &&
+            !processToken(l3, L"\\p", &Tssa::template intProp<&TSubtitleProps::polygon, 0, 255>) &&
+            !processToken(l3, L"\\q", &Tssa::template intPropQ<0, 3>) &&
+            !processToken(l3, L"\\r", &Tssa::reset) &&
+            !processToken(l3, L"\\shad", &Tssa::template doubleProp<&TSubtitleProps::shadowDepth, 0, 30>) &&
+            !processToken(l3, L"\\s", &Tssa::template boolProp<&TSubtitleProps::strikeout>) &&
+            !processToken(l3, L"\\t", &Tssa::transform) &&
+            !processToken(l3, L"\\u", &Tssa::template boolProp<&TSubtitleProps::underline>)
         ) {
             l3++;
         }
@@ -716,27 +725,27 @@ const TSubtitleProps& TsubtitleFormat::processSSA(Twords &words, const Tsubtitle
     if (line.empty()) {
         return lineProps;
     }
-    const wchar_t *l=line[0];
-    const wchar_t *l1=l,*l2=l;
+    const wchar_t *l = line[0];
+    const wchar_t *l1 = l, *l2 = l;
     Tssa ssa(props, lineProps, parent.defProps, parent.getStyles(), words, sfmt);
     while (*l2) {
-        if (l2[0]=='{') {
-            if (const wchar_t *end=strchr(l2+1,'}')) {
-                ssa.processTokens(l,l1 ,l2,end);
-                l2=end+1;
+        if (l2[0] == '{') {
+            if (const wchar_t *end = strchr(l2 + 1, '}')) {
+                ssa.processTokens(l, l1 , l2, end);
+                l2 = end + 1;
                 continue;
             }
             l2++;
         }
         // Process HTML tags in SSA subs when extended tags option is checked
         else if (parent.defProps.extendedTags) { // Add HTML support within SSA
-            processHTMLTags(words,l,l1,l2);
+            processHTMLTags(words, l, l1, l2);
         } else {
             l2++;
         }
     }
 
-    words.add(l,l1,l2,props,0);
+    words.add(l, l1, l2, props, 0);
     return lineProps;
 }
 
@@ -745,52 +754,52 @@ void TsubtitleFormat::processMicroDVD(TsubtitleText &parent, std::vector< Tsubti
     if (it->empty()) {
         return;
     }
-    const wchar_t *line0=(*it)[0],*line=line0;
+    const wchar_t *line0 = (*it)[0], *line = line0;
     while (*line)
-        if (line[0]=='}' || line[0]==' ') {
+        if (line[0] == '}' || line[0] == ' ') {
             line++;
-        } else if (_strnicmp(line,L"{y:",3)==0) {
-            const wchar_t *end=strchr(line+3,'}');
-            if (end==NULL) {
+        } else if (_strnicmp(line, L"{y:", 3) == 0) {
+            const wchar_t *end = strchr(line + 3, '}');
+            if (end == NULL) {
                 break;
             }
-            bool all=!!iswupper(line[1]);
-            if (std::find_if(line+3,end,Tncasecmp<'i'>())!=end) {
-                parent.propagateProps(all?parent.begin():it,&TSubtitleProps::italic   ,true,all?parent.end():it+1);
+            bool all = !!iswupper(line[1]);
+            if (std::find_if(line + 3, end, Tncasecmp < 'i' > ()) != end) {
+                parent.propagateProps(all ? parent.begin() : it, &TSubtitleProps::italic   , true, all ? parent.end() : it + 1);
             }
-            if (std::find_if(line+3,end,Tncasecmp<'b'>())!=end) {
-                parent.propagateProps(all?parent.begin():it,&TSubtitleProps::bold     ,1,all?parent.end():it+1);
+            if (std::find_if(line + 3, end, Tncasecmp < 'b' > ()) != end) {
+                parent.propagateProps(all ? parent.begin() : it, &TSubtitleProps::bold     , 1, all ? parent.end() : it + 1);
             }
-            if (std::find_if(line+3,end,Tncasecmp<'u'>())!=end) {
-                parent.propagateProps(all?parent.begin():it,&TSubtitleProps::underline,true,all?parent.end():it+1);
+            if (std::find_if(line + 3, end, Tncasecmp < 'u' > ()) != end) {
+                parent.propagateProps(all ? parent.begin() : it, &TSubtitleProps::underline, true, all ? parent.end() : it + 1);
             }
-            if (std::find_if(line+3,end,Tncasecmp<'s'>())!=end) {
-                parent.propagateProps(all?parent.begin():it,&TSubtitleProps::strikeout,true,all?parent.end():it+1);
+            if (std::find_if(line + 3, end, Tncasecmp < 's' > ()) != end) {
+                parent.propagateProps(all ? parent.begin() : it, &TSubtitleProps::strikeout, true, all ? parent.end() : it + 1);
             }
-            line=end+1;
-        } else if (_strnicmp(line,L"{s:",3)==0) {
+            line = end + 1;
+        } else if (_strnicmp(line, L"{s:", 3) == 0) {
             int size;
-            if (swscanf(line,L"{s:%i}",&size) || swscanf(line,L"{S:%i}",&size)) {
-                parent.propagateProps(iswupper(line[1])?parent.begin():it, &TSubtitleProps::size, double(size), iswupper(line[1])?parent.end():it+1);
-                const wchar_t *r=strchr(line,'}');
+            if (swscanf(line, L"{s:%i}", &size) || swscanf(line, L"{S:%i}", &size)) {
+                parent.propagateProps(iswupper(line[1]) ? parent.begin() : it, &TSubtitleProps::size, double(size), iswupper(line[1]) ? parent.end() : it + 1);
+                const wchar_t *r = strchr(line, '}');
                 if (r) {
-                    line=r+1;
+                    line = r + 1;
                 }
             }
-        } else if (_strnicmp(line,L"{c:$",4)==0) {
+        } else if (_strnicmp(line, L"{c:$", 4) == 0) {
             COLORREF color;
-            if (swscanf(line,L"{c:$%x}",&color) || swscanf(line,L"{C:$%x}",&color)) {
-                parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::color,color,iswupper(line[1])?parent.end():it+1);
-                const wchar_t *r=strchr(line,'}');
+            if (swscanf(line, L"{c:$%x}", &color) || swscanf(line, L"{C:$%x}", &color)) {
+                parent.propagateProps(iswupper(line[1]) ? parent.begin() : it, &TSubtitleProps::color, color, iswupper(line[1]) ? parent.end() : it + 1);
+                const wchar_t *r = strchr(line, '}');
                 if (r) {
-                    parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::isColor,true,iswupper(line[1])?parent.end():it+1);
-                    line=r+1;
+                    parent.propagateProps(iswupper(line[1]) ? parent.begin() : it, &TSubtitleProps::isColor, true, iswupper(line[1]) ? parent.end() : it + 1);
+                    line = r + 1;
                 }
             }
         } else {
             break;
         }
-    (*it)[0].eraseLeft(line-line0);
+    (*it)[0].eraseLeft(line - line0);
 }
 
 void TsubtitleFormat::processMPL2(TsubtitleLine &line)
@@ -798,9 +807,9 @@ void TsubtitleFormat::processMPL2(TsubtitleLine &line)
     if (line.empty() || !line[0]) {
         return;
     }
-    if (line[0][0]=='/') {
-        foreach (TsubtitleWord &word,line)
-        word.props.italic=true;
+    if (line[0][0] == '/') {
+        foreach(TsubtitleWord & word, line)
+        word.props.italic = true;
         line[0].eraseLeft(1);
     }
 }

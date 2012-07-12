@@ -19,24 +19,24 @@
 #include "stdafx.h"
 #include "mixer.h"
 
-const double TmixerMatrix::LEVEL_PLUS6DB=2.0;
-const double TmixerMatrix::LEVEL_PLUS3DB=1.4142135623730951;
-const double TmixerMatrix::LEVEL_3DB    =0.7071067811865476;
-const double TmixerMatrix::LEVEL_45DB   =0.5946035575013605;
-const double TmixerMatrix::LEVEL_6DB    =0.5;
+const double TmixerMatrix::LEVEL_PLUS6DB = 2.0;
+const double TmixerMatrix::LEVEL_PLUS3DB = 1.4142135623730951;
+const double TmixerMatrix::LEVEL_3DB     = 0.7071067811865476;
+const double TmixerMatrix::LEVEL_45DB    = 0.5946035575013605;
+const double TmixerMatrix::LEVEL_6DB     = 0.5;
 
 TmixerMatrix::TmixerMatrix(void)
 {
-    for (int i=0; i<NCHANNELS; i++)
-        for (int j=0; j<NCHANNELS; j++) {
-            matrix[i][j]=0;
+    for (int i = 0; i < NCHANNELS; i++)
+        for (int j = 0; j < NCHANNELS; j++) {
+            matrix[i][j] = 0;
         }
 }
 
-TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerSettings *cfg)
+TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt, const TmixerSettings *cfg)
 {
-    TsampleFormat outfmt=infmt;
-    cfg->setFormatOut(outfmt,infmt);
+    TsampleFormat outfmt = infmt;
+    cfg->setFormatOut(outfmt, infmt);
 
     DWORD in_ch      = infmt.makeChannelMask();
     DWORD out_ch     = outfmt.makeChannelMask();
@@ -46,14 +46,14 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
     int out_nfront = outfmt.nfront();
     int out_nrear  = outfmt.nrear();
     int out_nside  = outfmt.nside();
-    double clev=cfg->clev/100.0;             // central mix level
-    double slev=cfg->slev/100.0;             // surround mix level
-    double lfelev=cfg->lfelev/100.0;         // lfe mix level
+    double clev = cfg->clev / 100.0;         // central mix level
+    double slev = cfg->slev / 100.0;         // surround mix level
+    double lfelev = cfg->lfelev / 100.0;     // lfe mix level
 
     if (cfg->customMatrix)
-        for (int i=0; i<9; i++)
-            for (int j=0; j<9; j++) {
-                matrix[i][j]=((int (*)[9])&cfg->matrix00)[i][j]/100000.0;
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++) {
+                matrix[i][j] = ((int (*)[9])&cfg->matrix00)[i][j] / 100000.0;
             }
     else {
         memset(&matrix, 0, sizeof(mixer_matrix_t));
@@ -75,10 +75,10 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
             } else if (in_nrear == 2) {
                 switch (outfmt.dolby) {
                     case TsampleFormat::DOLBY_PROLOGICII:
-                        matrix[CH_BL][CH_L] = -0.8660*slev;
-                        matrix[CH_BR][CH_L] = -0.5000*slev;
-                        matrix[CH_BL][CH_R] = +0.5000*slev;
-                        matrix[CH_BR][CH_R] = +0.8660*slev;
+                        matrix[CH_BL][CH_L] = -0.8660 * slev;
+                        matrix[CH_BR][CH_L] = -0.5000 * slev;
+                        matrix[CH_BL][CH_R] = +0.5000 * slev;
+                        matrix[CH_BR][CH_R] = +0.8660 * slev;
                         break;
                     case TsampleFormat::DOLBY_SURROUND:
                     case TsampleFormat::DOLBY_PROLOGIC:
@@ -93,35 +93,35 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
         } else { // A/52 standart mixes
             // direct route equal channels
             if (in_ch & out_ch & SPEAKER_FRONT_LEFT) {
-                matrix[CH_L ][CH_L ]=1.0;
+                matrix[CH_L ][CH_L ] = 1.0;
             }
             if (in_ch & out_ch & SPEAKER_FRONT_RIGHT) {
-                matrix[CH_R ][CH_R ]=1.0;
+                matrix[CH_R ][CH_R ] = 1.0;
             }
             if (in_ch & out_ch & SPEAKER_FRONT_CENTER) {
-                matrix[CH_C ][CH_C ]=clev;
+                matrix[CH_C ][CH_C ] = clev;
             }
             if (in_ch & out_ch & SPEAKER_BACK_LEFT) {
-                matrix[CH_BL][CH_BL]=slev;
+                matrix[CH_BL][CH_BL] = slev;
             }
             if (in_ch & out_ch & SPEAKER_BACK_RIGHT) {
-                matrix[CH_BR][CH_BR]=slev;
+                matrix[CH_BR][CH_BR] = slev;
             }
             if (in_ch & out_ch & SPEAKER_SIDE_LEFT) {
-                matrix[CH_AL][CH_AL]=slev;
+                matrix[CH_AL][CH_AL] = slev;
             }
             if (in_ch & out_ch & SPEAKER_SIDE_RIGHT) {
-                matrix[CH_AR][CH_AR]=slev;
+                matrix[CH_AR][CH_AR] = slev;
             }
             if (in_ch & out_ch & SPEAKER_BACK_CENTER) {
-                matrix[CH_BC][CH_BC]=slev;
+                matrix[CH_BC][CH_BC] = slev;
             }
 
             // calc matrix for fbw channels
             if (out_nfront == 1) {
                 if (in_nfront != 1) {
-                    matrix[CH_L][CH_M]=LEVEL_3DB;
-                    matrix[CH_R][CH_M]=LEVEL_3DB;
+                    matrix[CH_L][CH_M] = LEVEL_3DB;
+                    matrix[CH_R][CH_M] = LEVEL_3DB;
                 }
                 if (in_nfront == 3) {
                     matrix[CH_C][CH_M] = clev * LEVEL_PLUS3DB;
@@ -178,7 +178,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
                             matrix[CH_AR][CH_R] = slev;
                         }
                     } else if (out_nside == 0 && in_nrear == 0) {
-                        if (out_nrear ==2) {
+                        if (out_nrear == 2) {
                             matrix[CH_AL][CH_BL] = slev;
                             matrix[CH_AR][CH_BR] = slev;
                         } else if (out_nrear == 1) {
@@ -277,7 +277,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
             }
 
         if (max_level > 0) {
-            norm = 1.0/max_level;
+            norm = 1.0 / max_level;
         } else {
             norm = 1.0;
         }
@@ -290,7 +290,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
 
     for (int i = 0; i < NCHANNELS; i++)
         for (int j = 0; j < NCHANNELS; j++) {
-            matrix[j][i] = limit(matrix[j][i],-4.0,4.0);
+            matrix[j][i] = limit(matrix[j][i], -4.0, 4.0);
         }
     return outfmt;
 }

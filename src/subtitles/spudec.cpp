@@ -41,7 +41,7 @@ Tspudec::Tspudec(IffdshowBase *Ideci):deci(Ideci)
 
 }
 */
-void Tspudec::spudec_queue_packet( packet_t *packet)
+void Tspudec::spudec_queue_packet(packet_t *packet)
 {
     if (queue_head == NULL) {
         queue_head = packet;
@@ -94,7 +94,7 @@ unsigned char Tspudec::get_nibble(packet_t *packet)
     unsigned char nib;
     unsigned int *nibblep = packet->current_nibble + packet->deinterlace_oddness;
     if (*nibblep / 2 >= packet->control_start) {
-        DPRINTF( _l("SPUdec: ERROR: get_nibble past end of packet"));
+        DPRINTF(_l("SPUdec: ERROR: get_nibble past end of packet"));
         return 0;
     }
     nib = packet->packet[*nibblep / 2];
@@ -122,7 +122,7 @@ void Tspudec::spudec_cut_image(void)
     for (fy = 0; fy < this->image_size && !this->aimage[fy]; fy++) {
         ;
     }
-    for (ly = this->stride * this->height-1; ly && !this->aimage[ly]; ly--) {
+    for (ly = this->stride * this->height - 1; ly && !this->aimage[ly]; ly--) {
         ;
     }
     first_y = fy / this->stride;
@@ -131,8 +131,8 @@ void Tspudec::spudec_cut_image(void)
     this->start_row += first_y;
 
     // Some subtitles trigger this condition
-    if (last_y + 1 > first_y ) {
-        this->height = last_y - first_y +1;
+    if (last_y + 1 > first_y) {
+        this->height = last_y - first_y + 1;
     } else {
         this->height = 0;
         this->image_size = 0;
@@ -142,7 +142,7 @@ void Tspudec::spudec_cut_image(void)
     //  printf("new h %d new start %d (sz %d st %d)---\n", this->height, this->start_row, this->image_size, this->stride);
 
     image = (unsigned char*)malloc(2 * this->stride * this->height);
-    if(image) {
+    if (image) {
         this->image_size = this->stride * this->height;
         aimage = image + this->image_size;
         memcpy(image, this->image + this->stride * first_y, this->image_size);
@@ -169,7 +169,7 @@ int Tspudec::mkalpha(int i)
     }
 }
 
-void Tspudec::spudec_process_data( packet_t *packet)
+void Tspudec::spudec_process_data(packet_t *packet)
 {
     unsigned int cmap[4], alpha[4];
     unsigned int i, x, y;
@@ -272,14 +272,14 @@ times I got black characters with white around and half the reverse.
 */
 void Tspudec::compute_palette(packet_t *packet)
 {
-    int used[16],i,cused,start,step,color;
+    int used[16], i, cused, start, step, color;
 
     memset(used, 0, sizeof(used));
-    for (i=0; i<4; i++)
+    for (i = 0; i < 4; i++)
         if (packet->alpha[i]) { /* !Transparent? */
             used[packet->palette[i]] = 1;
         }
-    for (cused=0, i=0; i<16; i++)
+    for (cused = 0, i = 0; i < 16; i++)
         if (used[i]) {
             cused++;
         }
@@ -291,10 +291,10 @@ void Tspudec::compute_palette(packet_t *packet)
         step = 0;
     } else {
         start = font_start_level;
-        step = (0xF0-font_start_level)/(cused-1);
+        step = (0xF0 - font_start_level) / (cused - 1);
     }
     memset(used, 0, sizeof(used));
-    for (i=0; i<4; i++) {
+    for (i = 0; i < 4; i++) {
         color = packet->palette[i];
         if (packet->alpha[i] && !used[color]) { /* not assigned? */
             used[color] = 1;
@@ -304,15 +304,15 @@ void Tspudec::compute_palette(packet_t *packet)
     }
 }
 
-void Tspudec::spudec_process_control( unsigned int pts100)
+void Tspudec::spudec_process_control(unsigned int pts100)
 {
-    int a,b; /* Temporary vars */
+    int a, b; /* Temporary vars */
     unsigned int date, type;
     unsigned int off;
     unsigned int start_off = 0;
     unsigned int next_off;
-    unsigned int start_pts=0;
-    unsigned int end_pts=0;
+    unsigned int start_pts = 0;
+    unsigned int end_pts = 0;
     unsigned int current_nibble[2];
     unsigned int control_start;
     unsigned int display = 0;
@@ -330,11 +330,11 @@ void Tspudec::spudec_process_control( unsigned int pts100)
         start_off = next_off;
         date = get_be16(this->packet + start_off) * 1024;
         next_off = get_be16(this->packet + start_off + 2);
-        DPRINTF( _l("date=%d"), date);
+        DPRINTF(_l("date=%d"), date);
         off = start_off + 4;
         for (type = this->packet[off++]; type != 0xff; type = this->packet[off++]) {
-            DPRINTF( _l("cmd=%d  "),type);
-            switch(type) {
+            DPRINTF(_l("cmd=%d  "), type);
+            switch (type) {
                 case 0x00:
                     /* Menu ID, 1 byte */
                     DPRINTF(_l("Menu ID"));
@@ -342,20 +342,20 @@ void Tspudec::spudec_process_control( unsigned int pts100)
                     start_pts = pts100 + date;
                     end_pts = UINT_MAX;
                     display = 1;
-                    this->is_forced_sub=(unsigned int)~0; // current subtitle is forced
+                    this->is_forced_sub = (unsigned int)~0; // current subtitle is forced
                     break;
                 case 0x01:
                     /* Start display */
                     start_pts = pts100 + date;
                     end_pts = UINT_MAX;
                     display = 1;
-                    DPRINTF(_l("Start display! %i"),start_pts);
-                    this->is_forced_sub=0;
+                    DPRINTF(_l("Start display! %i"), start_pts);
+                    this->is_forced_sub = 0;
                     break;
                 case 0x02:
                     /* Stop display */
                     end_pts = pts100 + date;
-                    DPRINTF(_l("Stop display! %i"),end_pts);
+                    DPRINTF(_l("Stop display! %i"), end_pts);
                     break;
                 case 0x03:
                     /* Palette */
@@ -364,7 +364,7 @@ void Tspudec::spudec_process_control( unsigned int pts100)
                     this->palette[2] = this->packet[off + 1] >> 4;
                     this->palette[3] = this->packet[off + 1] & 0xf;
                     DPRINTF(_l("Palette %d, %d, %d, %d"), this->palette[0], this->palette[1], this->palette[2], this->palette[3]);
-                    off+=2;
+                    off += 2;
                     break;
                 case 0x04:
                     /* Alpha */
@@ -373,7 +373,7 @@ void Tspudec::spudec_process_control( unsigned int pts100)
                     this->alpha[2] = this->packet[off + 1] >> 4;
                     this->alpha[3] = this->packet[off + 1] & 0xf;
                     DPRINTF(_l("Alpha %d, %d, %d, %d"),  this->alpha[0], this->alpha[1], this->alpha[2], this->alpha[3]);
-                    off+=2;
+                    off += 2;
                     break;
                 case 0x05:
                     /* Co-ords */
@@ -387,14 +387,14 @@ void Tspudec::spudec_process_control( unsigned int pts100)
                     end_row = b & 0xfff;
                     height = (end_row < start_row) ? 0 : end_row - start_row /* + 1 */;
                     DPRINTF(_l("Coords  col: %d - %d  row: %d - %d  (%dx%d)"), start_col, end_col, start_row, end_row, width, height);
-                    off+=6;
+                    off += 6;
                     break;
                 case 0x06:
                     /* Graphic lines */
                     current_nibble[0] = 2 * get_be16(this->packet + off);
                     current_nibble[1] = 2 * get_be16(this->packet + off + 2);
                     DPRINTF(_l("Graphic offset 1: %d  offset 2: %d"), current_nibble[0] / 2, current_nibble[1] / 2);
-                    off+=4;
+                    off += 4;
                     break;
                 case 0xff:
                     /* All done, bye-bye */
@@ -427,7 +427,7 @@ next_control:
             packet->height = height;
             packet->stride = stride;
             packet->control_start = control_start;
-            for (i=0; i<4; i++) {
+            for (i = 0; i < 4; i++) {
                 packet->alpha[i] = this->alpha[i];
                 packet->palette[i] = this->palette[i];
             }
@@ -440,7 +440,7 @@ next_control:
 
 void Tspudec::spudec_decode(unsigned int pts100)
 {
-    spudec_process_control( pts100);
+    spudec_process_control(pts100);
 }
 
 int Tspudec::spudec_changed(void)
@@ -496,23 +496,23 @@ void Tspudec::spudec_assemble(const unsigned char *packet, unsigned int len, uns
     // [cb] packet_size is padded to be even -> may be one byte too long
     if ((this->packet_offset == this->packet_size) ||
             ((this->packet_offset + 1) == this->packet_size)) {
-        unsigned int x=0,y;
-        while(x+4<=this->packet_offset) {
-            y=get_be16(this->packet+x+2); // next control pointer
-            DPRINTF(_l("SPUtest: x=%d y=%d off=%d size=%d"),x,y,this->packet_offset,this->packet_size);
-            if(x>=4 && x==y) {        // if it points to self - we're done!
+        unsigned int x = 0, y;
+        while (x + 4 <= this->packet_offset) {
+            y = get_be16(this->packet + x + 2); // next control pointer
+            DPRINTF(_l("SPUtest: x=%d y=%d off=%d size=%d"), x, y, this->packet_offset, this->packet_size);
+            if (x >= 4 && x == y) {   // if it points to self - we're done!
                 // we got it!
-                DPRINTF(_l("SPUgot: off=%d  size=%d "),this->packet_offset,this->packet_size);
+                DPRINTF(_l("SPUgot: off=%d  size=%d "), this->packet_offset, this->packet_size);
                 spudec_decode(pts100);
                 this->packet_offset = 0;
                 break;
             }
-            if(y<=x || y>=this->packet_size) { // invalid?
-                DPRINTF(_l("SPUtest: broken packet!!!!! y=%d < x=%d"),y,x);
+            if (y <= x || y >= this->packet_size) { // invalid?
+                DPRINTF(_l("SPUtest: broken packet!!!!! y=%d < x=%d"), y, x);
                 this->packet_size = this->packet_offset = 0;
                 break;
             }
-            x=y;
+            x = y;
         }
         // [cb] packet is done; start new packet
         this->packet_offset = 0;
@@ -551,9 +551,9 @@ void Tspudec::spudec_heartbeat(unsigned int pts100)
         start_pts = packet->start_pts;
         end_pts = packet->end_pts;
         if (auto_palette) {
-            compute_palette( packet);
+            compute_palette(packet);
         }
-        spudec_process_data( packet);
+        spudec_process_data(packet);
         spudec_free_packet(packet);
         spu_changed = 1;
     }
@@ -561,17 +561,17 @@ void Tspudec::spudec_heartbeat(unsigned int pts100)
 
 int Tspudec::spudec_visible(void)
 {
-    int ret=(start_pts <= now_pts &&
-             now_pts < end_pts &&
-             height > 0);
+    int ret = (start_pts <= now_pts &&
+               now_pts < end_pts &&
+               height > 0);
     //    printf("spu visible: %d  ",ret);
     return ret;
 }
 
-void Tspudec::spudec_set_forced_subs_only( const unsigned int flag)
+void Tspudec::spudec_set_forced_subs_only(const unsigned int flag)
 {
-    forced_subs_only=flag;
-    DPRINTF(_l("SPU: Display only forced subs now %s"), flag ? _l("enabled"): _l("disabled"));
+    forced_subs_only = flag;
+    DPRINTF(_l("SPU: Display only forced subs now %s"), flag ? _l("enabled") : _l("disabled"));
 }
 /*
 void Tspudec::spudec_draw( void (*draw_alpha)(int x0,int y0, int w,int h, unsigned char* src, unsigned char *srca, int stride,const void *self),const void *self)
@@ -585,7 +585,7 @@ void Tspudec::spudec_draw( void (*draw_alpha)(int x0,int y0, int w,int h, unsign
 }
 */
 /* calc the bbox for spudec subs */
-void Tspudec::spudec_calc_bbox( unsigned int dxs, unsigned int dys, unsigned int* bbox)
+void Tspudec::spudec_calc_bbox(unsigned int dxs, unsigned int dys, unsigned int* bbox)
 {
     int y1;
     if (orig_frame_width == 0 || orig_frame_height == 0
@@ -601,7 +601,7 @@ void Tspudec::spudec_calc_bbox( unsigned int dxs, unsigned int dys, unsigned int
         bbox[1] = start_col * scalex / 0x100 + width * scalex / 0x100;
         switch (spu_alignment) {
             case 0:
-                bbox[3] = dys*sub_pos/100 + height * scaley / 0x100;
+                bbox[3] = dys * sub_pos / 100 + height * scaley / 0x100;
                 if (bbox[3] > dys) {
                     bbox[3] = dys;
                 }
@@ -609,7 +609,7 @@ void Tspudec::spudec_calc_bbox( unsigned int dxs, unsigned int dys, unsigned int
                 break;
             case 1:
                 if (sub_pos < 50) {
-                    y1 = dys*sub_pos/100 - height * scaley / 0x200;
+                    y1 = dys * sub_pos / 100 - height * scaley / 0x200;
                     if (y1 < 0) {
                         bbox[2] = 0;
                     } else {
@@ -617,7 +617,7 @@ void Tspudec::spudec_calc_bbox( unsigned int dxs, unsigned int dys, unsigned int
                     }
                     bbox[3] = bbox[2] + height;
                 } else {
-                    bbox[3] = dys*sub_pos/100 + height * scaley / 0x200;
+                    bbox[3] = dys * sub_pos / 100 + height * scaley / 0x200;
                     if (bbox[3] > dys) {
                         bbox[3] = dys;
                     }
@@ -625,7 +625,7 @@ void Tspudec::spudec_calc_bbox( unsigned int dxs, unsigned int dys, unsigned int
                 }
                 break;
             case 2:
-                y1 = dys*sub_pos/100 - height * scaley / 0x100;
+                y1 = dys * sub_pos / 100 - height * scaley / 0x100;
                 if (y1 < 0) {
                     bbox[2] = 0;
                 } else {
@@ -656,9 +656,9 @@ void Tspudec::scale_table(unsigned int start_src, unsigned int start_tar, unsign
     if (delta_src == 0 || delta_tar == 0) {
         return;
     }
-    src_step = (delta_src << 16) / delta_tar >>1;
-    for (t = 0; t<=delta_tar; src += (src_step << 1), t++) {
-        table[t].position= std::min((unsigned int)(src >> 16), end_src - 1);
+    src_step = (delta_src << 16) / delta_tar >> 1;
+    for (t = 0; t <= delta_tar; src += (src_step << 1), t++) {
+        table[t].position = std::min((unsigned int)(src >> 16), end_src - 1);
         table[t].right_down = src & 0xffff;
         table[t].left_up = 0x10000 - table[t].right_down;
     }
@@ -681,10 +681,10 @@ void Tspudec::scale_image(int x, int y, scale_pixel* table_x, scale_pixel* table
     color[2] = image[base + stride];
     color[3] = image[base + stride + 1];
     scale[0] = (table_x[x].left_up * table_y[y].left_up >> 16) * alpha[0];
-    scale[1] = (table_x[x].right_down * table_y[y].left_up >>16) * alpha[1];
+    scale[1] = (table_x[x].right_down * table_y[y].left_up >> 16) * alpha[1];
     scale[2] = (table_x[x].left_up * table_y[y].right_down >> 16) * alpha[2];
     scale[3] = (table_x[x].right_down * table_y[y].right_down >> 16) * alpha[3];
-    scaled_imageY[scaled] = (unsigned char)((color[0] * scale[0] + color[1] * scale[1] + color[2] * scale[2] + color[3] * scale[3])>>24);
+    scaled_imageY[scaled] = (unsigned char)((color[0] * scale[0] + color[1] * scale[1] + color[2] * scale[2] + color[3] * scale[3]) >> 24);
     scaled_aimageY[scaled] = (unsigned char)((scale[0] + scale[1] + scale[2] + scale[3]) >> 16);
     /*
       if (scaled_aimage[scaled]){
@@ -695,25 +695,25 @@ void Tspudec::scale_image(int x, int y, scale_pixel* table_x, scale_pixel* table
 }
 
 void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds,
-                            unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TprintPrefs &prefs)
+                            unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss, const TprintPrefs &prefs)
 {
     if (!filter.lumH || oldgauss != prefs.vobaagauss) {
         if (filter.lumH) {
             libavcodec->sws_freeVec(filter.lumH);
         }
-        filter.lumH = filter.lumV = filter.chrH = filter.chrV = libavcodec->sws_getGaussianVec(prefs.vobaagauss/1000.0, 3.0);
+        filter.lumH = filter.lumV = filter.chrH = filter.chrV = libavcodec->sws_getGaussianVec(prefs.vobaagauss / 1000.0, 3.0);
         libavcodec->sws_normalizeVec(filter.lumH, 1.0);
         oldgauss = prefs.vobaagauss;
     }
     int swsflags = SWS_GAUSS;
     SwsParams params;
-    Tlibavcodec::swsInitParams(&params,SWS_GAUSS,swsflags);
-    SwsContext *ctx=libavcodec->sws_getCachedContext(NULL,sw, sh, PIX_FMT_GRAY8, dw, dh, PIX_FMT_GRAY8, swsflags, &filter, NULL,NULL, &params);
-    libavcodec->sws_scale(ctx,(const uint8_t**)&s1,&ss,0,sh,&d1,&ds);
-    for (stride_t i=ss*sh-1; i>=0; i--) {
-        s2[i]=(unsigned char)canon_alpha(s2[i]);
+    Tlibavcodec::swsInitParams(&params, SWS_GAUSS, swsflags);
+    SwsContext *ctx = libavcodec->sws_getCachedContext(NULL, sw, sh, PIX_FMT_GRAY8, dw, dh, PIX_FMT_GRAY8, swsflags, &filter, NULL, NULL, &params);
+    libavcodec->sws_scale(ctx, (const uint8_t**)&s1, &ss, 0, sh, &d1, &ds);
+    for (stride_t i = ss * sh - 1; i >= 0; i--) {
+        s2[i] = (unsigned char)canon_alpha(s2[i]);
     }
-    libavcodec->sws_scale(ctx,(const uint8_t**)&s2,&ss,0,sh,&d2,&ds);
+    libavcodec->sws_scale(ctx, (const uint8_t**)&s2, &ss, 0, sh, &d2, &ds);
     libavcodec->sws_freeContext(ctx);
 }
 
@@ -732,7 +732,7 @@ void Tspudec::spudec_draw_scaled(
     if (start_pts <= now_pts && now_pts < end_pts) {
 
         // check if only forced subtitles are requested
-        if( (forced_subs_only) && !(is_forced_sub) ) {
+        if ((forced_subs_only) && !(is_forced_sub)) {
             return;
         }
         /*
@@ -746,9 +746,9 @@ void Tspudec::spudec_draw_scaled(
               }
             }
             else*/ {
-            if (/*oldscale!=prefs.subimgscale || */scaled_frame_width != dxs || scaled_frame_height != dys || spu_aamode!=prefs.vobaamode) {  /* Resizing is needed */
-                spu_aamode=prefs.vobaamode;
-                oldscale=prefs.subimgscale;
+            if (/*oldscale!=prefs.subimgscale || */scaled_frame_width != dxs || scaled_frame_height != dys || spu_aamode != prefs.vobaamode) { /* Resizing is needed */
+                spu_aamode = prefs.vobaamode;
+                oldscale = prefs.subimgscale;
                 /* scaled_x = scalex * x / 0x100
                    scaled_y = scaley * y / 0x100
                    order of operations is important because of rounding. */
@@ -760,7 +760,7 @@ void Tspudec::spudec_draw_scaled(
                 scaled_height = height * scaley / 0x100;
                 /* Kludge: draw_alpha needs width multiple of 8 */
                 scaled_strideY = ffalign(scaled_width, 8);
-                scaled_strideUV = ffalign(scaled_width/2, 8);
+                scaled_strideUV = ffalign(scaled_width / 2, 8);
                 if (scaled_image_size < scaled_strideY * scaled_height) {
                     if (scaled_imageY) {
                         free(scaled_imageY);
@@ -770,11 +770,11 @@ void Tspudec::spudec_draw_scaled(
                         free(scaled_imageUV);
                     }
                     scaled_imageY = (unsigned char*) malloc(2 * scaled_strideY * scaled_height);
-                    scaled_imageUV= (unsigned char*) malloc(2 * scaled_strideUV* ((scaled_height+1)/2));
+                    scaled_imageUV = (unsigned char*) malloc(2 * scaled_strideUV * ((scaled_height + 1) / 2));
                     if (scaled_imageY) {
                         scaled_image_size = scaled_strideY * scaled_height;
                         scaled_aimageY = scaled_imageY + scaled_image_size;
-                        scaled_aimageUV= scaled_imageUV+ scaled_strideUV * ((scaled_height+1)/2);
+                        scaled_aimageUV = scaled_imageUV + scaled_strideUV * ((scaled_height + 1) / 2);
                     }
                 }
                 if (scaled_imageY) {
@@ -793,16 +793,16 @@ void Tspudec::spudec_draw_scaled(
                        memset(scaled_aimageUV + y * scaled_strideUV + scaled_width/2, 128, scaled_strideUV - scaled_width/2);
                        memset(scaled_imageUV + y * scaled_strideUV + scaled_width/2, 128, scaled_strideUV - scaled_width/2);
                       }*/
-                    memset(scaled_imageUV ,0,scaled_strideUV*(scaled_height/2));
-                    memset(scaled_aimageUV,128,scaled_strideUV*((scaled_height+1)/2));
+                    memset(scaled_imageUV , 0, scaled_strideUV * (scaled_height / 2));
+                    memset(scaled_aimageUV, 128, scaled_strideUV * ((scaled_height + 1) / 2));
                     if (scaled_width <= 1 || scaled_height <= 1) {
                         goto nothing_to_do;
                     }
-                    switch(spu_aamode&15) {
+                    switch (spu_aamode & 15) {
                         case 4:
                             sws_spu_image(scaled_imageY, scaled_aimageY,
                                           scaled_width, scaled_height, scaled_strideY,
-                                          image, aimage, width, height, stride,prefs);
+                                          image, aimage, width, height, stride, prefs);
                             break;
                         case 3:
                             table_x = (scale_pixel*)calloc(scaled_width, sizeof(scale_pixel));
@@ -1035,23 +1035,23 @@ void Tspudec::spudec_draw_scaled(
 nothing_to_do:
                     scaled_frame_width = dxs;
                     scaled_frame_height = dys;
-                    for (unsigned int y=0; y<scaled_height/2; y++)
-                        for (unsigned int x=0; x<scaled_width/2; x++) {
-                            scaled_imageUV[x+scaled_strideUV*y]=0;
-                            scaled_aimageUV[x+scaled_strideUV*y]=scaled_aimageY[x*2+scaled_strideY*(y*2)];
+                    for (unsigned int y = 0; y < scaled_height / 2; y++)
+                        for (unsigned int x = 0; x < scaled_width / 2; x++) {
+                            scaled_imageUV[x + scaled_strideUV * y] = 0;
+                            scaled_aimageUV[x + scaled_strideUV * y] = scaled_aimageY[x * 2 + scaled_strideY * (y * 2)];
                         }
                 }
             }
             if (scaled_imageY) {
                 switch (spu_alignment) {
                     case 0:
-                        scaled_start_row = dys*sub_pos/100;
+                        scaled_start_row = dys * sub_pos / 100;
                         if (scaled_start_row + scaled_height > dys) {
                             scaled_start_row = dys - scaled_height;
                         }
                         break;
                     case 1:
-                        y1 = dys*sub_pos/100 - scaled_height/2;
+                        y1 = dys * sub_pos / 100 - scaled_height / 2;
                         if (sub_pos < 50) {
                             if (y1 < 0) {
                                 scaled_start_row = 0;
@@ -1067,7 +1067,7 @@ nothing_to_do:
                         }
                         break;
                     case 2:
-                        y1 = dys*sub_pos/100 - scaled_height;
+                        y1 = dys * sub_pos / 100 - scaled_height;
                         if (y1 < 0) {
                             scaled_start_row = 0;
                         } else {
@@ -1076,19 +1076,19 @@ nothing_to_do:
                         break;
                 }
                 draw_alpha(scaled_start_col, scaled_start_row, scaled_width, scaled_height,
-                           scaled_imageY, scaled_aimageY, scaled_strideY,scaled_imageUV, scaled_aimageUV, scaled_strideUV,prefs,
-                           Idst,Istride);
+                           scaled_imageY, scaled_aimageY, scaled_strideY, scaled_imageUV, scaled_aimageUV, scaled_strideUV, prefs,
+                           Idst, Istride);
                 spu_changed = 0;
             }
         }
     } else {
-        DPRINTF(_l("SPU not displayed: start_pts=%d  end_pts=%d  now_pts=%d"),start_pts, end_pts, now_pts);
+        DPRINTF(_l("SPU not displayed: start_pts=%d  end_pts=%d  now_pts=%d"), start_pts, end_pts, now_pts);
     }
 }
 
-void Tspudec::spudec_set_font_factor( double factor)
+void Tspudec::spudec_set_font_factor(double factor)
 {
-    font_start_level = (int)(0xF0-(0xE0*factor));
+    font_start_level = (int)(0xF0 - (0xE0 * factor));
 }
 /*
 Tspudec::Tspudec(unsigned int *palette, unsigned int frame_width, unsigned int frame_height)
@@ -1097,18 +1097,18 @@ Tspudec::Tspudec(unsigned int *palette, unsigned int frame_width, unsigned int f
 }
 */
 /* get palette custom color, width, height from .idx file */
-Tspudec::Tspudec(IffdshowBase *Ideci,const YUVcolorA *palette, const YUVcolorA *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height)
+Tspudec::Tspudec(IffdshowBase *Ideci, const YUVcolorA *palette, const YUVcolorA *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height)
 {
-    memset(this,0,sizeof(*this));
-    deci=Ideci;
+    memset(this, 0, sizeof(*this));
+    deci = Ideci;
     spu_aamode = 4;
     spu_alignment = -1;
-    sub_pos=0;
-    oldgauss=-1;
+    sub_pos = 0;
+    oldgauss = -1;
     deci->getLibavcodec(&libavcodec);
     this->packet = NULL;
     this->image = NULL;
-    this->scaled_imageY=this->scaled_imageUV = NULL;
+    this->scaled_imageY = this->scaled_imageUV = NULL;
     /* XXX Although the video frame is some size, the SPU frame is
        always maximum size i.e. 720 wide and 576 or 480 high */
     this->orig_frame_width = 720;
@@ -1130,9 +1130,9 @@ Tspudec::Tspudec(IffdshowBase *Ideci,const YUVcolorA *palette, const YUVcolorA *
         this->auto_palette = 0;
     }
     // forced subtitles default: show all subtitles
-    this->forced_subs_only=0;
-    this->is_forced_sub=0;
-    packet_pts=0;
+    this->forced_subs_only = 0;
+    this->is_forced_sub = 0;
+    packet_pts = 0;
 }
 /*
 Tspudec::Tspudec(unsigned int *palette)

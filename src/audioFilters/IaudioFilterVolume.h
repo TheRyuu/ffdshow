@@ -6,8 +6,8 @@ static const GUID IID_IaudioFilterVolume = { 0xe23237f7, 0xe9e1, 0x40d1, { 0xa0,
 
 DECLARE_INTERFACE(IaudioFilterVolume)
 {
-    STDMETHOD (getVolumeData)(unsigned int *nchannels,int channels[],int volumes[]) PURE;
-    STDMETHOD_(int,getCurrentNormalization)(void) PURE; //*100
+    STDMETHOD(getVolumeData)(unsigned int * nchannels, int channels[], int volumes[]) PURE;
+    STDMETHOD_(int, getCurrentNormalization)(void) PURE; //*100
 };
 
 #endif

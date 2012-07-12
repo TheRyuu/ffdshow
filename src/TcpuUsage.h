@@ -4,7 +4,7 @@
 class TcpuUsage
 {
 public:
-    TcpuUsage(void):_W9xCpuKey(NULL),_Counters(NULL),_PrevCounters(NULL),_PerfData(NULL) {
+    TcpuUsage(void): _W9xCpuKey(NULL), _Counters(NULL), _PrevCounters(NULL), _PerfData(NULL) {
         usage_initialization();
     }
     ~TcpuUsage() {
@@ -15,7 +15,7 @@ public:
     int GetCPUUsage(int Index); // Call it to obtain the % of usage for given CPU
     int GetCPUUsageForPP(void);
 private:
-    void usage_initialization(void),usage_finalization(void);
+    void usage_initialization(void), usage_finalization(void);
     typedef int64_t TInt64;
     typedef TInt64 *PInt64;
 
@@ -29,7 +29,7 @@ private:
     typedef TInt64F FInt64;
     typedef TInt64 Int64D;
     //type
-    typedef TInt64F AInt64F[0xffff+1];//    AInt64F = array[0..$FFFF] of TInt64F;
+    typedef TInt64F AInt64F[0xffff + 1]; //    AInt64F = array[0..$FFFF] of TInt64F;
     typedef TInt64F *PAInt64F;//PAInt64F = ^AInt64F;
     //var
     PPERF_DATA_BLOCK    _PerfData;

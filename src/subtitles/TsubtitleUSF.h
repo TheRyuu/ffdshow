@@ -7,9 +7,9 @@ struct TsubtitleUSF2 : public Tsubtitle {
 private:
     TsubreaderUSF2 *subs;
     int idx;
-    mutable bool ok,first;
+    mutable bool ok, first;
 public:
-    TsubtitleUSF2(TsubreaderUSF2 *Isubs,int Iidx,REFERENCE_TIME start,REFERENCE_TIME stop);
+    TsubtitleUSF2(TsubreaderUSF2 *Isubs, int Iidx, REFERENCE_TIME start, REFERENCE_TIME stop);
     virtual void print(
         REFERENCE_TIME time,
         bool wasseek,
@@ -19,9 +19,9 @@ public:
         unsigned char **dst,
         const stride_t *stride);
     virtual Tsubtitle* create(void) {
-        return new TsubtitleUSF2(subs,idx,start,stop);
+        return new TsubtitleUSF2(subs, idx, start, stop);
     }
     virtual Tsubtitle* copy(void) {
-        return new TsubtitleUSF2(subs,idx,start,stop);
+        return new TsubtitleUSF2(subs, idx, start, stop);
     }
 };

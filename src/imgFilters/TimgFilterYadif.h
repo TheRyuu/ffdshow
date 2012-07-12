@@ -5,7 +5,7 @@
 #include "TdeinterlaceSettings.h"
 #include "Tlibavcodec.h"
 
-DECLARE_FILTER(TimgFilterYadif,public,TimgFilter)
+DECLARE_FILTER(TimgFilterYadif, public, TimgFilter)
 private:
 Tlibavcodec *libavcodec;
 TdeinterlaceSettings oldcfg;
@@ -16,7 +16,7 @@ bool hasImageInBuffer;
 REFERENCE_TIME last_rtStop;
 bool dllok;
 
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSP_420P | FF_CSP_422P;
@@ -32,10 +32,10 @@ int config(TffPict &pict);
 TffPict oldpict;
 
 public:
-TimgFilterYadif(IffdshowBase *Ideci,Tfilters *Iparent,bool Ibob=false);
+TimgFilterYadif(IffdshowBase *Ideci, Tfilters *Iparent, bool Ibob = false);
 ~TimgFilterYadif();
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 virtual void onSeek(void);
 virtual HRESULT onEndOfStream(void);
 virtual bool onPullImageFromSubtitlesFilter(void);

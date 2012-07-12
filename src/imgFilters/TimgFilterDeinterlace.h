@@ -5,19 +5,19 @@
 #include "libpostproc/postprocess_internal.h"
 #include "simd.h"
 
-DECLARE_FILTER(TimgFilterDeinterlace,public,TimgFilter)
+DECLARE_FILTER(TimgFilterDeinterlace, public, TimgFilter)
 protected:
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK;
 }
 public:
-TimgFilterDeinterlace(IffdshowBase *Ideci,Tfilters *Iparent);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+TimgFilterDeinterlace(IffdshowBase *Ideci, Tfilters *Iparent);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 struct Tlibavcodec;
-DECLARE_FILTER(TimgFilterAvcodecDeinterlace,public,TimgFilter)
+DECLARE_FILTER(TimgFilterAvcodecDeinterlace, public, TimgFilter)
 private:
 Tlibavcodec *libavcodec;
 void *pp_ctx;
@@ -32,23 +32,23 @@ virtual void onSizeChange(void)
     done();
 }
 public:
-TimgFilterAvcodecDeinterlace(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterAvcodecDeinterlace(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual ~TimgFilterAvcodecDeinterlace();
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
-DECLARE_FILTER(TimgFilterFramerateDoubler,public,TimgFilter)
+DECLARE_FILTER(TimgFilterFramerateDoubler, public, TimgFilter)
 private:
 TffPict *old;
 Tbuffer oldbuf;
 template<class Tsimd> struct Tinterpolate {
-    static void pictInterpolate(unsigned char *dst,stride_t dstStride,const unsigned char *src1,stride_t src1stride,const unsigned char *src2,stride_t src2stride,unsigned int dx,unsigned int dy);
-    static inline void bestInterp(__m64 &mm5,__m64 &mm6,const __m64 *paddr1,const __m64 *paddr2);
-    static void interpolateMotion(stride_t src_pit, stride_t dst_pit, stride_t prev_pit, unsigned int rowsize, const BYTE* srcp, BYTE* dstp, const BYTE* _pPrev, int FldHeight,int Search_Effort,int thresh);
+    static void pictInterpolate(unsigned char *dst, stride_t dstStride, const unsigned char *src1, stride_t src1stride, const unsigned char *src2, stride_t src2stride, unsigned int dx, unsigned int dy);
+    static inline void bestInterp(__m64 &mm5, __m64 &mm6, const __m64 *paddr1, const __m64 *paddr2);
+    static void interpolateMotion(stride_t src_pit, stride_t dst_pit, stride_t prev_pit, unsigned int rowsize, const BYTE* srcp, BYTE* dstp, const BYTE* _pPrev, int FldHeight, int Search_Effort, int thresh);
 };
-void (*interpolateMotion)(stride_t src_pit, stride_t dst_pit, stride_t prev_pit, unsigned int rowsize, const BYTE* srcp, BYTE* dstp, const BYTE* _pPrev, int FldHeight,int Search_Effort,int thresh);
-void (*pictInterpolate)(unsigned char *dst,stride_t dstStride,const unsigned char *src1,stride_t src1stride,const unsigned char *src2,stride_t src2stride,unsigned int dx,unsigned int dy);
+void (*interpolateMotion)(stride_t src_pit, stride_t dst_pit, stride_t prev_pit, unsigned int rowsize, const BYTE* srcp, BYTE* dstp, const BYTE* _pPrev, int FldHeight, int Search_Effort, int thresh);
+void (*pictInterpolate)(unsigned char *dst, stride_t dstStride, const unsigned char *src1, stride_t src1stride, const unsigned char *src2, stride_t src2stride, unsigned int dx, unsigned int dy);
 protected:
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
@@ -59,10 +59,10 @@ virtual void onSizeChange(void)
     done();
 }
 public:
-TimgFilterFramerateDoubler(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterFramerateDoubler(IffdshowBase *Ideci, Tfilters *Iparent);
 virtual void done(void);
 virtual void onSeek(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 };
 
 #endif

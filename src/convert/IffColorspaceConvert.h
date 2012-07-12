@@ -8,12 +8,12 @@ DEFINE_GUID(IID_IffColorspaceConvert , 0x59e1bfb0, 0x8ea8, 0x4e0e, 0x8c, 0x22, 0
 // {87271B4E-1726-4ced-AF0D-BE675621FD29}
 DEFINE_GUID(CLSID_FFCOLORSPACECONVERT, 0x87271b4e, 0x1726, 0x4ced, 0xaf, 0xd, 0xbe, 0x67, 0x56, 0x21, 0xfd, 0x29);
 
-DECLARE_INTERFACE_(IffColorspaceConvert,IUnknown)
+DECLARE_INTERFACE_(IffColorspaceConvert, IUnknown)
 {
-    STDMETHOD (allocPicture)(uint64_t csp,unsigned int dx,unsigned int dy,uint8_t *data[],stride_t stride[]) PURE;
-    STDMETHOD (freePicture)(uint8_t *data[]) PURE;
-    STDMETHOD (convert)(unsigned int dx,unsigned int dy,uint64_t incsp,uint8_t *src[],const stride_t srcStride[],uint64_t outcsp,uint8_t *dst[],stride_t dstStride[]) PURE;
-    STDMETHOD (convertPalette)(unsigned int dx,unsigned int dy,uint64_t incsp,uint8_t *src[],const stride_t srcStride[],uint64_t outcsp,uint8_t *dst[],stride_t dstStride[],const unsigned char *pal,unsigned int numcolors) PURE;
+    STDMETHOD(allocPicture)(uint64_t csp, unsigned int dx, unsigned int dy, uint8_t * data[], stride_t stride[]) PURE;
+    STDMETHOD(freePicture)(uint8_t * data[]) PURE;
+    STDMETHOD(convert)(unsigned int dx, unsigned int dy, uint64_t incsp, uint8_t * src[], const stride_t srcStride[], uint64_t outcsp, uint8_t * dst[], stride_t dstStride[]) PURE;
+    STDMETHOD(convertPalette)(unsigned int dx, unsigned int dy, uint64_t incsp, uint8_t * src[], const stride_t srcStride[], uint64_t outcsp, uint8_t * dst[], stride_t dstStride[], const unsigned char * pal, unsigned int numcolors) PURE;
 };
 
 #endif

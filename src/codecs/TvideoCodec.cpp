@@ -33,23 +33,23 @@
 #include "ffmpeg/libavcodec/avcodec.h"
 
 //======================================= TvideoCodec =======================================
-TvideoCodec::TvideoCodec(IffdshowBase *Ideci):Tcodec(Ideci)
+TvideoCodec::TvideoCodec(IffdshowBase *Ideci): Tcodec(Ideci)
 {
-    ok=false;
+    ok = false;
 }
 TvideoCodec::~TvideoCodec()
 {
 }
 
 //===================================== TvideoCodecDec ======================================
-TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,CodecID codecId,FOURCC fcc,const CMediaType &mt)
+TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci, IdecVideoSink *sink, CodecID codecId, FOURCC fcc, const CMediaType &mt)
 {
     // DXVA mode is a preset setting
     switch (codecId) {
         case CODEC_ID_H264:
             if (deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA) {
                 if (deci->getParam2(IDFF_dec_DXVA_H264)) {
-                    codecId=CODEC_ID_H264_DXVA;
+                    codecId = CODEC_ID_H264_DXVA;
                 } else {
                     return NULL;
                 }
@@ -59,7 +59,7 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
         case CODEC_ID_WMV9_LIB:
             if (deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA) {
                 if (deci->getParam2(IDFF_dec_DXVA_VC1)) {
-                    codecId=CODEC_ID_VC1_DXVA;
+                    codecId = CODEC_ID_VC1_DXVA;
                 } else {
                     return NULL;
                 }
@@ -69,55 +69,61 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
             break;
     }
 
-    TvideoCodecDec *movie=NULL;
+    TvideoCodecDec *movie = NULL;
 
     if (is_quicksync_codec(codecId)) {
-        movie=new TvideoCodecQuickSync(deci, sink, codecId);
+        movie = new TvideoCodecQuickSync(deci, sink, codecId);
     } else if (lavc_codec(codecId)) {
-        movie=new TvideoCodecLibavcodec(deci,sink);
+        movie = new TvideoCodecLibavcodec(deci, sink);
     } else if (raw_codec(codecId)) {
-        movie=new TvideoCodecUncompressed(deci,sink);
+        movie = new TvideoCodecUncompressed(deci, sink);
     } else if (wmv9_codec(codecId)) {
-        movie=new TvideoCodecWmv9(deci,sink);
-    } else if (codecId==CODEC_ID_XVID4) {
-        movie=new TvideoCodecXviD4(deci,sink);
-    } else if (codecId==CODEC_ID_LIBMPEG2) {
-        movie=new TvideoCodecLibmpeg2(deci,sink);
-    } else if (codecId==CODEC_ID_AVISYNTH) {
-        movie=new TvideoCodecAvisynth(deci,sink);
-    } else if (codecId==CODEC_ID_H264_DXVA || codecId==CODEC_ID_VC1_DXVA) {
-        movie=new TvideoCodecLibavcodecDxva(deci,sink, codecId);
+        movie = new TvideoCodecWmv9(deci, sink);
+    } else if (codecId == CODEC_ID_XVID4) {
+        movie = new TvideoCodecXviD4(deci, sink);
+    } else if (codecId == CODEC_ID_LIBMPEG2) {
+        movie = new TvideoCodecLibmpeg2(deci, sink);
+    } else if (codecId == CODEC_ID_AVISYNTH) {
+        movie = new TvideoCodecAvisynth(deci, sink);
+    } else if (codecId == CODEC_ID_H264_DXVA || codecId == CODEC_ID_VC1_DXVA) {
+        movie = new TvideoCodecLibavcodecDxva(deci, sink, codecId);
     } else {
         return NULL;
     }
     if (!movie) {
         return NULL;
     }
-    if (movie->ok && movie->testMediaType(fcc,mt)) {
-        movie->codecId=codecId;
+    if (movie->ok && movie->testMediaType(fcc, mt)) {
+        movie->codecId = codecId;
         return movie;
     } else if (is_quicksync_codec(codecId)) {
         // QuickSync decoder init failed, revert to internal decoder.
         switch (codecId) {
-        case CODEC_ID_H264_QUICK_SYNC:  codecId = CODEC_ID_H264;     break;
-        case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_LIBMPEG2; break;
-        case CODEC_ID_VC1_QUICK_SYNC:   codecId = CODEC_ID_WMV9_LIB; break;
-        default:
-            ASSERT(FALSE); // this shouldn't happen!
+            case CODEC_ID_H264_QUICK_SYNC:
+                codecId = CODEC_ID_H264;
+                break;
+            case CODEC_ID_MPEG2_QUICK_SYNC:
+                codecId = CODEC_ID_LIBMPEG2;
+                break;
+            case CODEC_ID_VC1_QUICK_SYNC:
+                codecId = CODEC_ID_WMV9_LIB;
+                break;
+            default:
+                ASSERT(FALSE); // this shouldn't happen!
         }
 
         delete movie;
 
         // Call this function again with the new codecId.
-        return initDec(deci,sink,codecId,fcc,mt);
-    } else {        
+        return initDec(deci, sink, codecId, fcc, mt);
+    } else {
         delete movie;
         return NULL;
     }
 }
 
-TvideoCodecDec::TvideoCodecDec(IffdshowBase *Ideci,IdecVideoSink *Isink):
-    Tcodec(Ideci),TcodecDec(Ideci,Isink),TvideoCodec(Ideci),
+TvideoCodecDec::TvideoCodecDec(IffdshowBase *Ideci, IdecVideoSink *Isink):
+    Tcodec(Ideci), TcodecDec(Ideci, Isink), TvideoCodec(Ideci),
     sinkD(Isink),
     deciV(Ideci),
     quantsDx(0),
@@ -128,7 +134,7 @@ TvideoCodecDec::TvideoCodecDec(IffdshowBase *Ideci,IdecVideoSink *Isink):
     intra_matrix(NULL),
     telecineManager(this)
 {
-    isdvdproc=!!deci->getParam2(IDFF_dvdproc);
+    isdvdproc = !!deci->getParam2(IDFF_dvdproc);
 }
 
 TvideoCodecDec::~TvideoCodecDec()
@@ -140,13 +146,13 @@ float TvideoCodecDec::calcMeanQuant(void)
     if (!quants || !quantsDx || !quantsDy) {
         return 0;
     }
-    unsigned int sum=0,num=quantsDx*quantsDy;
-    unsigned char *quants1=(unsigned char*)quants;
-    for (unsigned int y=0; y<quantsDy; y++)
-        for (unsigned int x=0; x<quantsDx; x++) {
-            sum+=quants1[(y*quantsStride+x)*quantBytes];
+    unsigned int sum = 0, num = quantsDx * quantsDy;
+    unsigned char *quants1 = (unsigned char*)quants;
+    for (unsigned int y = 0; y < quantsDy; y++)
+        for (unsigned int x = 0; x < quantsDx; x++) {
+            sum += quants1[(y * quantsStride + x) * quantBytes];
         }
-    return float(sum)/num;
+    return float(sum) / num;
 }
 
 Rational TvideoCodecDec::guessMPEG2sar(const Trect &r, const Rational &sar2, const Rational &containerSar)
@@ -251,9 +257,9 @@ void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat
         group_rtStart = rtStart;
     }
     cfg_softTelecine = parent->deci->getParam2(IDFF_softTelecine);
-    if (   parent->deci->getParam2(IDFF_isAvisynth)
-        && parent->deci->getParam2(IDFF_showAvisynth)
-        && parent->deci->getParam2(IDFF_avisynthApplyPulldown) == 1) {
+    if (parent->deci->getParam2(IDFF_isAvisynth)
+            && parent->deci->getParam2(IDFF_showAvisynth)
+            && parent->deci->getParam2(IDFF_avisynthApplyPulldown) == 1) {
         cfg_softTelecine = false;
     }
 }
@@ -270,7 +276,7 @@ void TvideoCodecDec::TtelecineManager::get_fieldtype(TffPict &pict)
     } else {
         pict.repeat_first_field = group[segment_count & 1].repeat_pict != 0;
         if (pict.repeat_first_field) {
-            pict.fieldtype = group[(segment_count-1) & 1].fieldtype;
+            pict.fieldtype = group[(segment_count - 1) & 1].fieldtype;
         } else {
             pict.fieldtype = group[segment_count & 1].fieldtype;
         }
@@ -290,8 +296,8 @@ void TvideoCodecDec::TtelecineManager::get_timestamps(TffPict &pict)
 }
 
 //===================================== TvideoCodecEnc ======================================
-TvideoCodecEnc::TvideoCodecEnc(IffdshowBase *Ideci,IencVideoSink *Isink):
-    Tcodec(Ideci),TvideoCodec(deci),
+TvideoCodecEnc::TvideoCodecEnc(IffdshowBase *Ideci, IencVideoSink *Isink):
+    Tcodec(Ideci), TvideoCodec(deci),
     deciE(Ideci),
     sinkE(Isink)
 {
@@ -303,15 +309,15 @@ TvideoCodecEnc::~TvideoCodecEnc()
 {
 }
 
-bool TvideoCodecEnc::getExtradata(const void* *ptr,size_t *len)
+bool TvideoCodecEnc::getExtradata(const void* *ptr, size_t *len)
 {
     if (len) {
-        *len=0;
+        *len = 0;
     } else {
         return false;
     }
     if (ptr) {
-        *ptr=NULL;
+        *ptr = NULL;
     } else {
         return false;
     }
@@ -319,29 +325,29 @@ bool TvideoCodecEnc::getExtradata(const void* *ptr,size_t *len)
 }
 
 //======================================== TencLibs =========================================
-void TvideoCodecs::init(IffdshowBase *deci,IencVideoSink *sink)
+void TvideoCodecs::init(IffdshowBase *deci, IencVideoSink *sink)
 {
-    push_back(new TvideoCodecLibavcodec(deci,sink));
+    push_back(new TvideoCodecLibavcodec(deci, sink));
     //push_back(new TvideoCodecXviD4(deci,sink));
     //push_back(new TvideoCodecWmv9(deci,sink));
-    push_back(new TvideoCodecUncompressed(deci,sink));
+    push_back(new TvideoCodecUncompressed(deci, sink));
 }
 TvideoCodecEnc* TvideoCodecs::getEncLib(int codecId)
 {
-    for (const_iterator l=begin(); l!=end(); l++)
+    for (const_iterator l = begin(); l != end(); l++)
         if (*l)
-            for (Tencoders::const_iterator e=(*l)->encoders.begin(); e!=(*l)->encoders.end(); e++)
-                if ((*e)->id==codecId) {
+            for (Tencoders::const_iterator e = (*l)->encoders.begin(); e != (*l)->encoders.end(); e++)
+                if ((*e)->id == codecId) {
                     return *l;
                 }
     return NULL;
 }
 const Tencoder* TvideoCodecs::getEncoder(int codecId) const
 {
-    for (const_iterator l=begin(); l!=end(); l++)
+    for (const_iterator l = begin(); l != end(); l++)
         if (*l)
-            for (Tencoders::const_iterator e=(*l)->encoders.begin(); e!=(*l)->encoders.end(); e++)
-                if ((*e)->id==codecId) {
+            for (Tencoders::const_iterator e = (*l)->encoders.begin(); e != (*l)->encoders.end(); e++)
+                if ((*e)->id == codecId) {
                     return *e;
                 }
     return NULL;

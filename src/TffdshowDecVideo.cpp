@@ -60,22 +60,22 @@
 #include "IDSMPropertyBag.h"
 
 
-void TffdshowDecVideo::getMinMax(int id,int &min,int &max)
+void TffdshowDecVideo::getMinMax(int id, int &min, int &max)
 {
-    if (id==IDFF_subCurLang) {
-        min=0;
-        max=getSubtitleLanguagesCount2()-1;
+    if (id == IDFF_subCurLang) {
+        min = 0;
+        max = getSubtitleLanguagesCount2() - 1;
     }
 }
 
 // constructor
-TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CLSID &Iproppageid,int IcfgDlgCaptionId,int IiconId,LPUNKNOWN punk,HRESULT *phr,int Imode,int IdefaultMerit,TintStrColl *Ioptions):
-    TffdshowVideo(this,m_pOutput,this,this),
+TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid, const char_t *className, const CLSID &Iproppageid, int IcfgDlgCaptionId, int IiconId, LPUNKNOWN punk, HRESULT *phr, int Imode, int IdefaultMerit, TintStrColl *Ioptions):
+    TffdshowVideo(this, m_pOutput, this, this),
     TffdshowDec(Ioptions,
-                className,punk,Iclsid,
-                globalSettings=new TglobalSettingsDecVideo(&config,Imode,Ioptions),
-                dialogSettings=new TdialogSettingsDecVideo(Imode,Ioptions),
-                presets=
+                className, punk, Iclsid,
+                globalSettings = new TglobalSettingsDecVideo(&config, Imode, Ioptions),
+                dialogSettings = new TdialogSettingsDecVideo(Imode, Ioptions),
+                presets =
                     (Imode&IDFF_FILTERMODE_VIDEODXVA) ? (TpresetsVideo*)new TpresetsVideoDXVA(Imode) :
                     ((Imode&IDFF_FILTERMODE_VIDEORAW) ? (TpresetsVideo*)new TpresetsVideoRaw(Imode) :
                      ((Imode&IDFF_FILTERMODE_VFW) ? (TpresetsVideo*)new TpresetsVideoVFW(Imode) :
@@ -86,9 +86,9 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
                 m_pOutput,
                 m_pGraph,
                 (Tfilters*&)imgFilters,
-                Iproppageid,IcfgDlgCaptionId,IiconId,
+                Iproppageid, IcfgDlgCaptionId, IiconId,
                 defaultMerit),
-    decVideo_char(punk,this),
+    decVideo_char(punk, this),
     outOldRenderer(false),
     m_IsOldVideoRenderer(false),
     m_IsOldVMR9RenderlessAndRGB(false),
@@ -123,81 +123,81 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
 {
     DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
-    OSDtimeMax= 0;
+    OSDtimeMax = 0;
 #endif
     ASSERT(phr);
 
-    setThreadName(DWORD(-1),"decVideo");
+    setThreadName(DWORD(-1), "decVideo");
 
-    static const TintOptionT<TffdshowDecVideo> iopts[]= {
-        IDFF_currentFrame       ,&TffdshowDecVideo::currentFrame      , 1, 1,_l("Current frame"),0,NULL,0,
-        IDFF_decodingFps        ,&TffdshowDecVideo::decodingFps       ,-1,-1,_l("Decoding Fps"),0,NULL,0,
+    static const TintOptionT<TffdshowDecVideo> iopts[] = {
+        IDFF_currentFrame       , &TffdshowDecVideo::currentFrame      , 1, 1, _l("Current frame"), 0, NULL, 0,
+        IDFF_decodingFps        , &TffdshowDecVideo::decodingFps       , -1, -1, _l("Decoding Fps"), 0, NULL, 0,
         //IDFF_AVIcolorspace      ,&TffdshowDecVideo::decodingCsp       ,-1,-1,_l("Input colorspace"),0,NULL,0,
-        IDFF_dvdproc            ,&TffdshowDecVideo::dvdproc           ,-1,-1,_l(""),0,NULL,0,
+        IDFF_dvdproc            , &TffdshowDecVideo::dvdproc           , -1, -1, _l(""), 0, NULL, 0,
 
-        IDFF_currentq           ,&TffdshowDecVideo::currentq          ,0,6,_l(""),0,NULL,0,
+        IDFF_currentq           , &TffdshowDecVideo::currentq          , 0, 6, _l(""), 0, NULL, 0,
 
-        IDFF_subShowEmbedded    ,&TffdshowDecVideo::subShowEmbedded   ,0,40,_l(""),0,NULL,0,
-        IDFF_subForceEmbedded   ,&TffdshowDecVideo::subForceEmbedded   ,0,0,_l(""),0,NULL,0, // IAMStreamSelect
+        IDFF_subShowEmbedded    , &TffdshowDecVideo::subShowEmbedded   , 0, 40, _l(""), 0, NULL, 0,
+        IDFF_subForceEmbedded   , &TffdshowDecVideo::subForceEmbedded   , 0, 0, _l(""), 0, NULL, 0, // IAMStreamSelect
         //IDFF_subFoundEmbedded   ,&TffdshowDecVideo::foundEmbedded     ,0,0,_l(""),0,NULL,0,
-        IDFF_subCurLang         ,&TffdshowDecVideo::subCurLang        ,-3,-3,_l(""),0,NULL,0,
+        IDFF_subCurLang         , &TffdshowDecVideo::subCurLang        , -3, -3, _l(""), 0, NULL, 0,
         0
     };
     addOptions(iopts);
 
-    trayIconStart=&TtrayIconBase::start<TtrayIconDecVideo>;
+    trayIconStart = &TtrayIconBase::start<TtrayIconDecVideo>;
 
-    inpin=new TffdshowVideoInputPin(NAME("TffdshowVideoInputPin"),this,phr);
+    inpin = new TffdshowVideoInputPin(NAME("TffdshowVideoInputPin"), this, phr);
     if (!inpin) {
-        *phr=E_OUTOFMEMORY;
+        *phr = E_OUTOFMEMORY;
     }
-    m_pInput=inpin;
+    m_pInput = inpin;
     if (FAILED(*phr)) {
         return;
     }
     //textpin=new TtextInputPin(this,phr);
-    m_pOutputDecVideo= NULL;
-    m_pOutputDecVideo=new TffdshowDecVideoOutputPin(NAME("TffdshowDecVideoOutputPin"),this,phr,L"Out");
-    if(!m_pOutputDecVideo) {
-        *phr=E_OUTOFMEMORY;
+    m_pOutputDecVideo = NULL;
+    m_pOutputDecVideo = new TffdshowDecVideoOutputPin(NAME("TffdshowDecVideoOutputPin"), this, phr, L"Out");
+    if (!m_pOutputDecVideo) {
+        *phr = E_OUTOFMEMORY;
     }
     if (FAILED(*phr)) {
         delete m_pInput;
-        m_pInput=NULL;
+        m_pInput = NULL;
         return;
     }
-    m_pOutput= m_pOutputDecVideo;
+    m_pOutput = m_pOutputDecVideo;
 
-    subShowEmbedded=0;
-    subForceEmbedded=0;
-    imgFilters=NULL;
-    wasSubtitleResetTime=false;
-    fontManager=NULL;
-    m_frame.dstColorspace=0;
-    currentFrame=-1;
-    decodingFps=0;
-    decodingCsp=FF_CSP_NULL;
-    segmentStart=-1;
-    segmentFrameCnt=0;
+    subShowEmbedded = 0;
+    subForceEmbedded = 0;
+    imgFilters = NULL;
+    wasSubtitleResetTime = false;
+    fontManager = NULL;
+    m_frame.dstColorspace = 0;
+    currentFrame = -1;
+    decodingFps = 0;
+    decodingCsp = FF_CSP_NULL;
+    segmentStart = -1;
+    segmentFrameCnt = 0;
     vc1frameCnt = 0;
-    vc1rtStart=0;
-    videoWindow=NULL;
-    wasVideoWindow=false;
-    basicVideo=NULL;
-    wasBasicVideo=false;
-    currentq=0;
-    subCurLang=0;
-    dvdproc=0;
-    hwDeinterlace=false;
-    waitForKeyframe=0;
-    ppropActual.cBuffers=1;
+    vc1rtStart = 0;
+    videoWindow = NULL;
+    wasVideoWindow = false;
+    basicVideo = NULL;
+    wasBasicVideo = false;
+    currentq = 0;
+    subCurLang = 0;
+    dvdproc = 0;
+    hwDeinterlace = false;
+    waitForKeyframe = 0;
+    ppropActual.cBuffers = 1;
 }
 
-TffdshowDecVideoRaw::TffdshowDecVideoRaw(LPUNKNOWN punk,HRESULT *phr):TffdshowDecVideo(CLSID_FFDSHOWRAW,NAME("TffdshowDecVideoRaw"),CLSID_TFFDSHOWPAGERAW,IDS_FFDSHOWDECVIDEORAW,IDI_FFDSHOW,punk,phr,IDFF_FILTERMODE_PLAYER|IDFF_FILTERMODE_VIDEORAW,defaultMerit,new TintStrColl)
+TffdshowDecVideoRaw::TffdshowDecVideoRaw(LPUNKNOWN punk, HRESULT *phr): TffdshowDecVideo(CLSID_FFDSHOWRAW, NAME("TffdshowDecVideoRaw"), CLSID_TFFDSHOWPAGERAW, IDS_FFDSHOWDECVIDEORAW, IDI_FFDSHOW, punk, phr, IDFF_FILTERMODE_PLAYER | IDFF_FILTERMODE_VIDEORAW, defaultMerit, new TintStrColl)
 {
 }
 
-TffdshowDecVideoSubtitles::TffdshowDecVideoSubtitles(LPUNKNOWN punk,HRESULT *phr):TffdshowDecVideo(CLSID_FFDSHOWSUBTITLES,NAME("TffdshowDecVideoSubtitles"), CLSID_TFFDSHOWPAGESUBTITLES, IDS_FFDSHOWDECVIDEOSUBTITLES, IDI_FFDSHOW,punk,phr, IDFF_FILTERMODE_PLAYER | IDFF_FILTERMODE_VIDEOSUBTITLES | IDFF_FILTERMODE_VIDEORAW, defaultMerit, new TintStrColl)
+TffdshowDecVideoSubtitles::TffdshowDecVideoSubtitles(LPUNKNOWN punk, HRESULT *phr): TffdshowDecVideo(CLSID_FFDSHOWSUBTITLES, NAME("TffdshowDecVideoSubtitles"), CLSID_TFFDSHOWPAGESUBTITLES, IDS_FFDSHOWDECVIDEOSUBTITLES, IDI_FFDSHOW, punk, phr, IDFF_FILTERMODE_PLAYER | IDFF_FILTERMODE_VIDEOSUBTITLES | IDFF_FILTERMODE_VIDEORAW, defaultMerit, new TintStrColl)
 {
 }
 
@@ -208,7 +208,7 @@ TffdshowDecVideo::~TffdshowDecVideo()
     if (searchInterfaceInGraph) {
         delete searchInterfaceInGraph;
     }
-    for (size_t i=0; i<textpins.size(); i++) {
+    for (size_t i = 0; i < textpins.size(); i++) {
         delete textpins[i];
     }
     if (fontManager) {
@@ -220,12 +220,12 @@ TffdshowDecVideo::~TffdshowDecVideo()
     }
 }
 
-HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
+HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir, IPin *pPin)
 {
     HRESULT res;
     switch (dir) {
         case PINDIR_INPUT:
-            dvdproc=searchPrevNextFilter(PINDIR_INPUT,pPin,CLSID_DVDNavigator);
+            dvdproc = searchPrevNextFilter(PINDIR_INPUT, pPin, CLSID_DVDNavigator);
             return S_OK;
         case PINDIR_OUTPUT: {
             if (!presetSettings) {
@@ -237,28 +237,28 @@ HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
         default:
             return E_UNEXPECTED;
     }
-    return res==S_OK?CTransformFilter::CheckConnect(dir,pPin):res;
+    return res == S_OK ? CTransformFilter::CheckConnect(dir, pPin) : res;
 }
 
 HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
 {
-    CLSID clsid=GetCLSID(pPin);
+    CLSID clsid = GetCLSID(pPin);
     outOldRenderer = !!(clsid == CLSID_VideoRenderer);
-    
+
     /* next filter in graph must support changes */
-    bool compatibleFilter=clsid==CLSID_OverlayMixer ||	 
-            clsid==CLSID_VideoMixingRenderer ||	 
-            clsid==CLSID_VideoMixingRenderer9 ||	 
-            clsid==CLSID_EnhancedVideoRenderer ||	 
-            clsid==CLSID_DirectVobSubFilter ||	 
-            clsid==CLSID_DirectVobSubFilter2 ||	 
-            clsid==CLSID_HaaliVideoRenderer ||	 
-            clsid==CLSID_MADVideoRenderer ||	 
-            clsid==CLSID_JREncoderFilter ||
-            clsid==CLSID_FFDSHOW ||	 
-            clsid==CLSID_FFDSHOWRAW ||	 
-            clsid==CLSID_FFDSHOWSUBTITLES;	 
-   
+    bool compatibleFilter = clsid == CLSID_OverlayMixer ||
+                            clsid == CLSID_VideoMixingRenderer ||
+                            clsid == CLSID_VideoMixingRenderer9 ||
+                            clsid == CLSID_EnhancedVideoRenderer ||
+                            clsid == CLSID_DirectVobSubFilter ||
+                            clsid == CLSID_DirectVobSubFilter2 ||
+                            clsid == CLSID_HaaliVideoRenderer ||
+                            clsid == CLSID_MADVideoRenderer ||
+                            clsid == CLSID_JREncoderFilter ||
+                            clsid == CLSID_FFDSHOW ||
+                            clsid == CLSID_FFDSHOWRAW ||
+                            clsid == CLSID_FFDSHOWSUBTITLES;
+
     if (outOldRenderer || clsid == CLSID_DecklinkVideoRenderFilter || clsid == CLSID_InfTee || clsid == CLSID_SmartT || clsid == CLSID_WMP_VIDEODSP_DMO) {
         allowOutChange = false;
     } else {
@@ -278,7 +278,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
     DPRINTF(_l("TffdshowDecVideo::GetMediaType"));
     CAutoLock lock(&inpin->m_csCodecs_and_imgFilters);
 
-    if (m_pInput->IsConnected()==FALSE) {
+    if (m_pInput->IsConnected() == FALSE) {
         return E_UNEXPECTED;
     }
 
@@ -286,23 +286,23 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
         initPreset();
     }
 
-    bool use_workaround = (_strnicmp(_l("powerpnt.exe"),getExeflnm(),13)==0);
+    bool use_workaround = (_strnicmp(_l("powerpnt.exe"), getExeflnm(), 13) == 0);
     int hwOverlay = use_workaround ? 0 : 2;
-    
-    if (hwOverlay==2 && m_pOutput->IsConnected()) {
-        const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
-        if (ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9) {
+
+    if (hwOverlay == 2 && m_pOutput->IsConnected()) {
+        const CLSID &ref = GetCLSID(m_pOutput->GetConnected());
+        if (ref == CLSID_VideoMixingRenderer || ref == CLSID_VideoMixingRenderer9) {
             hwOverlay = 1;
         }
     }
 
-    bool isVIH2 = (hwOverlay==1 || (hwOverlay==2 && (iPosition&1)==0));
+    bool isVIH2 = (hwOverlay == 1 || (hwOverlay == 2 && (iPosition & 1) == 0));
 
-    if(hwOverlay==2) {
-        iPosition/=2;
+    if (hwOverlay == 2) {
+        iPosition /= 2;
     }
 
-    if (iPosition<0) {
+    if (iPosition < 0) {
         return E_INVALIDARG;
     }
 
@@ -310,22 +310,23 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
     size_t osize;
 
     presetSettings->output->getOutputColorspaces(ocsps);
-    osize=ocsps.size();
+    osize = ocsps.size();
 
-    if ((size_t)iPosition>=osize) {
+    if ((size_t)iPosition >= osize) {
         return VFW_S_NO_MORE_ITEMS;
     }
 
     TffPictBase pictOut;
     if (inReconnect) {
-        pictOut=reconnectRect;
+        pictOut = reconnectRect;
     } else {
-        pictOut=inpin->pictIn;
+        pictOut = inpin->pictIn;
     }
 
     calcNewSize(pictOut);
-    if (!pictOut.csp)
+    if (!pictOut.csp) {
         return VFW_S_NO_MORE_ITEMS;
+    }
 
     // Support mediatype with unknown dimension. This is necessary to support MEDIASUBTYPE_H264.
     // http://msdn.microsoft.com/en-us/library/dd757808(VS.85).aspx
@@ -339,11 +340,11 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
 
     ocsps.sort(pictOut.csp, csp_reg2ffdshow(presetSettings->output->outPrimaryCsp));
 
-    oldRect=pictOut.rectFull;
+    oldRect = pictOut.rectFull;
 
     const TcspInfo *c = ocsps[iPosition];
-    if(c->id == FF_CSP_420P) {  // YV12 and odd number lines.
-        pictOut.rectFull.dy=odd2even(pictOut.rectFull.dy);
+    if (c->id == FF_CSP_420P) { // YV12 and odd number lines.
+        pictOut.rectFull.dy = odd2even(pictOut.rectFull.dy);
     }
     return pict2mediaType(isVIH2, mtOut, pictOut, c, use_workaround);
 }
@@ -351,61 +352,61 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
 HRESULT TffdshowDecVideo::pict2mediaType(bool isVIH2, CMediaType *mtOut, TffPictBase &pictOut, const TcspInfo *cspInfo, bool use_workaround)
 {
     BITMAPINFOHEADER bih;
-    memset(&bih,0,sizeof(bih));
-    bih.biSize  =sizeof(BITMAPINFOHEADER);
-    bih.biWidth =pictOut.rectFull.dx;
-    bih.biHeight=pictOut.rectFull.dy;
-    bih.biPlanes=WORD(cspInfo->numPlanes);
-    bih.biCompression=cspInfo->fcc;
-    bih.biBitCount=WORD(cspInfo->bpp);
-    bih.biSizeImage=DIBSIZE(bih);// bih.biWidth*bih.biHeight*bih.biBitCount>>3;
+    memset(&bih, 0, sizeof(bih));
+    bih.biSize  = sizeof(BITMAPINFOHEADER);
+    bih.biWidth = pictOut.rectFull.dx;
+    bih.biHeight = pictOut.rectFull.dy;
+    bih.biPlanes = WORD(cspInfo->numPlanes);
+    bih.biCompression = cspInfo->fcc;
+    bih.biBitCount = WORD(cspInfo->bpp);
+    bih.biSizeImage = DIBSIZE(bih); // bih.biWidth*bih.biHeight*bih.biBitCount>>3;
 
-    mtOut->majortype=MEDIATYPE_Video;
-    mtOut->subtype=*cspInfo->subtype;
-    mtOut->formattype=isVIH2?FORMAT_VideoInfo2:FORMAT_VideoInfo;
+    mtOut->majortype = MEDIATYPE_Video;
+    mtOut->subtype = *cspInfo->subtype;
+    mtOut->formattype = isVIH2 ? FORMAT_VideoInfo2 : FORMAT_VideoInfo;
     mtOut->SetTemporalCompression(FALSE);
     mtOut->SetSampleSize(bih.biSizeImage);
 
     if (!isVIH2) {
-        VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mtOut->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER));
+        VIDEOINFOHEADER *vih = (VIDEOINFOHEADER*)mtOut->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER));
         if (!vih) {
             return E_OUTOFMEMORY;
         }
-        ZeroMemory(vih,sizeof(VIDEOINFOHEADER));
+        ZeroMemory(vih, sizeof(VIDEOINFOHEADER));
 
-        vih->rcSource.left=0;
-        vih->rcSource.right=bih.biWidth;
-        vih->rcSource.top=0;
-        vih->rcSource.bottom=bih.biHeight;
-        vih->rcTarget=vih->rcSource;
-        vih->AvgTimePerFrame=inpin->avgTimePerFrame;
-        vih->bmiHeader=bih;
+        vih->rcSource.left = 0;
+        vih->rcSource.right = bih.biWidth;
+        vih->rcSource.top = 0;
+        vih->rcSource.bottom = bih.biHeight;
+        vih->rcTarget = vih->rcSource;
+        vih->AvgTimePerFrame = inpin->avgTimePerFrame;
+        vih->bmiHeader = bih;
     } else {
-        VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mtOut->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER2));
+        VIDEOINFOHEADER2 *vih2 = (VIDEOINFOHEADER2*)mtOut->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER2));
         if (!vih2) {
             return E_OUTOFMEMORY;
         }
-        ZeroMemory(vih2,sizeof(VIDEOINFOHEADER2));
-        if((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) || use_workaround) {
-            pictOut.rectFull.sar.num= 1;//pictOut.rectFull.dx; // VMR9 behaves better when this is set to 1(SAR). But in reconnectOutput, it is different(DAR) in my system.
-            pictOut.rectFull.sar.den= 1;//pictOut.rectFull.dy;
+        ZeroMemory(vih2, sizeof(VIDEOINFOHEADER2));
+        if ((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode == 0) || use_workaround) {
+            pictOut.rectFull.sar.num = 1; //pictOut.rectFull.dx; // VMR9 behaves better when this is set to 1(SAR). But in reconnectOutput, it is different(DAR) in my system.
+            pictOut.rectFull.sar.den = 1; //pictOut.rectFull.dy;
         }
-        setVIH2aspect(vih2,pictOut.rectFull,presetSettings->output->hwOverlayAspect);
+        setVIH2aspect(vih2, pictOut.rectFull, presetSettings->output->hwOverlayAspect);
 
         //DPRINTF(_l("AR getMediaType: %i:%i"),vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY);
 
-        vih2->rcSource.left=0;
-        vih2->rcSource.right=bih.biWidth;
-        vih2->rcSource.top=0;
-        vih2->rcSource.bottom=bih.biHeight;
-        vih2->rcTarget=vih2->rcSource;
-        vih2->AvgTimePerFrame=inpin->avgTimePerFrame;
-        vih2->bmiHeader=bih;
+        vih2->rcSource.left = 0;
+        vih2->rcSource.right = bih.biWidth;
+        vih2->rcSource.top = 0;
+        vih2->rcSource.bottom = bih.biHeight;
+        vih2->rcTarget = vih2->rcSource;
+        vih2->AvgTimePerFrame = inpin->avgTimePerFrame;
+        vih2->bmiHeader = bih;
         vih2->dwControlFlags = 0;//get_dwControlFlags();
-        hwDeinterlace=presetSettings->output->hwDeinterlace;
+        hwDeinterlace = presetSettings->output->hwDeinterlace;
 
         if (hwDeinterlace) {
-            vih2->dwInterlaceFlags=AMINTERLACE_IsInterlaced|AMINTERLACE_DisplayModeBobOrWeave;
+            vih2->dwInterlaceFlags = AMINTERLACE_IsInterlaced | AMINTERLACE_DisplayModeBobOrWeave;
         }
     }
     return S_OK;
@@ -416,89 +417,93 @@ DWORD TffdshowDecVideo::get_dwControlFlags(const TffPict &pict)
     DWORD dwControlFlags = AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT;
     DXVA_ExtendedFormat& flags = (DXVA_ExtendedFormat&)dwControlFlags;
     switch (pict.YCbCr_RGB_matrix_coefficients) {
-    case AVCOL_SPC_BT709:
-        flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_BT709;
-        break;
-    case AVCOL_SPC_BT470BG:
-    case AVCOL_SPC_SMPTE170M:
-        flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_BT601;
-        break;
-    case AVCOL_SPC_SMPTE240M:
-        flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_SMPTE240M;
-        break;
-    default:
-        flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_Unknown;
+        case AVCOL_SPC_BT709:
+            flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_BT709;
+            break;
+        case AVCOL_SPC_BT470BG:
+        case AVCOL_SPC_SMPTE170M:
+            flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_BT601;
+            break;
+        case AVCOL_SPC_SMPTE240M:
+            flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_SMPTE240M;
+            break;
+        default:
+            flags.VideoTransferMatrix = DXVA_VideoTransferMatrix_Unknown;
     };
 
-    if (pict.video_full_range_flag == AVCOL_RANGE_JPEG)
+    if (pict.video_full_range_flag == AVCOL_RANGE_JPEG) {
         flags.NominalRange = DXVA_NominalRange_0_255;
-    else if (pict.video_full_range_flag == AVCOL_RANGE_MPEG)
+    } else if (pict.video_full_range_flag == AVCOL_RANGE_MPEG) {
         flags.NominalRange = DXVA_NominalRange_16_235;
-    else
+    } else {
         flags.NominalRange = DXVA_NominalRange_Unknown;
+    }
 
-    if ((pict.csp & (FF_CSPS_MASK_420_YUV|FF_CSPS_MASK_422_YUV)) && pict.chroma_sample_location != AVCHROMA_LOC_UNSPECIFIED) {
-        if (pict.film || (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME))
+    if ((pict.csp & (FF_CSPS_MASK_420_YUV | FF_CSPS_MASK_422_YUV)) && pict.chroma_sample_location != AVCHROMA_LOC_UNSPECIFIED) {
+        if (pict.film || (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME)) {
             flags.VideoChromaSubsampling = DXVA_VideoChromaSubsampling_ProgressiveChroma;
+        }
 
-        if (pict.chroma_sample_location == AVCHROMA_LOC_LEFT)
+        if (pict.chroma_sample_location == AVCHROMA_LOC_LEFT) {
             flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_MPEG2;
-        else if (pict.chroma_sample_location == AVCHROMA_LOC_CENTER)
+        } else if (pict.chroma_sample_location == AVCHROMA_LOC_CENTER) {
             flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_MPEG1;
-        else if (pict.chroma_sample_location == AVCHROMA_LOC_TOPLEFT)
+        } else if (pict.chroma_sample_location == AVCHROMA_LOC_TOPLEFT) {
             flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_Horizontally_Cosited | DXVA_VideoChromaSubsampling_Vertically_Cosited;
-        else if (pict.chroma_sample_location == AVCHROMA_LOC_TOP)
+        } else if (pict.chroma_sample_location == AVCHROMA_LOC_TOP) {
             flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_Vertically_AlignedChromaPlanes | DXVA_VideoChromaSubsampling_Vertically_Cosited;
-        else if (pict.chroma_sample_location == AVCHROMA_LOC_BOTTOMLEFT)
+        } else if (pict.chroma_sample_location == AVCHROMA_LOC_BOTTOMLEFT) {
             flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_Horizontally_Cosited;
+        }
 
-        if (pict.csp & FF_CSPS_MASK_422_YUV)
+        if (pict.csp & FF_CSPS_MASK_422_YUV) {
             flags.VideoChromaSubsampling |= DXVA_VideoChromaSubsampling_Vertically_Cosited | DXVA_VideoChromaSubsampling_Vertically_AlignedChromaPlanes;
+        }
     }
 
     switch (pict.color_primaries) {
-    case AVCOL_PRI_BT709:
-        flags.VideoPrimaries = DXVA_VideoPrimaries_BT709;
-        break;
-    case AVCOL_PRI_BT470M:
-        flags.VideoPrimaries = DXVA_VideoPrimaries_BT470_2_SysM;
-        break;
-    case AVCOL_PRI_BT470BG:
-        flags.VideoPrimaries = DXVA_VideoPrimaries_BT470_2_SysBG;
-        break;
-    case AVCOL_PRI_SMPTE170M:
-        flags.VideoPrimaries = DXVA_VideoPrimaries_SMPTE170M;
-        break;
-    case AVCOL_PRI_SMPTE240M:
-        flags.VideoPrimaries = DXVA_VideoPrimaries_SMPTE240M;
-        break;
-    case AVCOL_PRI_UNSPECIFIED:
-    case AVCOL_PRI_FILM:
-    case AVCOL_PRI_NB:
-    default:
-        flags.VideoPrimaries = DXVA_VideoPrimaries_Unknown;
-        break;
+        case AVCOL_PRI_BT709:
+            flags.VideoPrimaries = DXVA_VideoPrimaries_BT709;
+            break;
+        case AVCOL_PRI_BT470M:
+            flags.VideoPrimaries = DXVA_VideoPrimaries_BT470_2_SysM;
+            break;
+        case AVCOL_PRI_BT470BG:
+            flags.VideoPrimaries = DXVA_VideoPrimaries_BT470_2_SysBG;
+            break;
+        case AVCOL_PRI_SMPTE170M:
+            flags.VideoPrimaries = DXVA_VideoPrimaries_SMPTE170M;
+            break;
+        case AVCOL_PRI_SMPTE240M:
+            flags.VideoPrimaries = DXVA_VideoPrimaries_SMPTE240M;
+            break;
+        case AVCOL_PRI_UNSPECIFIED:
+        case AVCOL_PRI_FILM:
+        case AVCOL_PRI_NB:
+        default:
+            flags.VideoPrimaries = DXVA_VideoPrimaries_Unknown;
+            break;
     };
 
     switch (pict.color_trc) {
-    case AVCOL_TRC_BT709:
-    case 6: // H.264 ITU-R Rec. BT.601-6 525 or 625 or ITU-R Rec. BT.1358 525 or 625 or ITU-R Rec. BT.1700 NTSC or Society of Motion Picture and Television or Engineers 170M (2004)
-        flags.VideoTransferFunction = DXVA_VideoTransFunc_22_709;
-        break;
-    case AVCOL_TRC_GAMMA22:
-        flags.VideoTransferFunction = DXVA_VideoTransFunc_22;
-        break;
-    case AVCOL_TRC_GAMMA28:
-        flags.VideoTransferFunction = DXVA_VideoTransFunc_28;
-        break;
-    case AVCOL_TRC_SMPTE240M:
-        flags.VideoTransferFunction = DXVA_VideoTransFunc_22_240M;
-        break;
-    case AVCOL_TRC_UNSPECIFIED:
-    case AVCOL_TRC_NB:
-    default:
-        flags.VideoTransferFunction = DXVA_VideoTransFunc_Unknown;
-        break;
+        case AVCOL_TRC_BT709:
+        case 6: // H.264 ITU-R Rec. BT.601-6 525 or 625 or ITU-R Rec. BT.1358 525 or 625 or ITU-R Rec. BT.1700 NTSC or Society of Motion Picture and Television or Engineers 170M (2004)
+            flags.VideoTransferFunction = DXVA_VideoTransFunc_22_709;
+            break;
+        case AVCOL_TRC_GAMMA22:
+            flags.VideoTransferFunction = DXVA_VideoTransFunc_22;
+            break;
+        case AVCOL_TRC_GAMMA28:
+            flags.VideoTransferFunction = DXVA_VideoTransFunc_28;
+            break;
+        case AVCOL_TRC_SMPTE240M:
+            flags.VideoTransferFunction = DXVA_VideoTransFunc_22_240M;
+            break;
+        case AVCOL_TRC_UNSPECIFIED:
+        case AVCOL_TRC_NB:
+        default:
+            flags.VideoTransferFunction = DXVA_VideoTransFunc_Unknown;
+            break;
     };
 
     return dwControlFlags;
@@ -519,42 +524,42 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
      if (!ok) return S_FALSE;
     */
     TcspInfos ocsps;
-    for (int i=0; cspFccs[i].name; i++) {
+    for (int i = 0; cspFccs[i].name; i++) {
         const TcspInfo *cspInfo;
-        cspInfo=csp_getInfo(cspFccs[i].csp);
-        if (*cspInfo->subtype!=mt.subtype) {
+        cspInfo = csp_getInfo(cspFccs[i].csp);
+        if (*cspInfo->subtype != mt.subtype) {
             continue;
         }
-        m_frame.dstColorspace=cspFccs[i].csp;
+        m_frame.dstColorspace = cspFccs[i].csp;
 
-        int biWidth,outDy;
+        int biWidth, outDy;
         BITMAPINFOHEADER *bih;
-        if (mt.formattype==FORMAT_VideoInfo && mt.pbFormat) { // && mt.pbFormat = work around other filter's bug.
-            VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
-            m_frame.dstStride=calcBIstride(biWidth=vih->bmiHeader.biWidth,cspInfo->Bpp*8);
-            outDy=vih->bmiHeader.biHeight;
-            bih=&vih->bmiHeader;
-        } else if (mt.formattype==FORMAT_VideoInfo2 && mt.pbFormat) {
-            VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
-            biWidth=vih2->bmiHeader.biWidth;
-            m_frame.dstStride=calcBIstride(biWidth, cspInfo->Bpp*8);
-            outDy=vih2->bmiHeader.biHeight;
-            bih=&vih2->bmiHeader;
+        if (mt.formattype == FORMAT_VideoInfo && mt.pbFormat) { // && mt.pbFormat = work around other filter's bug.
+            VIDEOINFOHEADER *vih = (VIDEOINFOHEADER*)mt.pbFormat;
+            m_frame.dstStride = calcBIstride(biWidth = vih->bmiHeader.biWidth, cspInfo->Bpp * 8);
+            outDy = vih->bmiHeader.biHeight;
+            bih = &vih->bmiHeader;
+        } else if (mt.formattype == FORMAT_VideoInfo2 && mt.pbFormat) {
+            VIDEOINFOHEADER2 *vih2 = (VIDEOINFOHEADER2*)mt.pbFormat;
+            biWidth = vih2->bmiHeader.biWidth;
+            m_frame.dstStride = calcBIstride(biWidth, cspInfo->Bpp * 8);
+            outDy = vih2->bmiHeader.biHeight;
+            bih = &vih2->bmiHeader;
         } else {
             return VFW_E_TYPE_NOT_ACCEPTED;    //S_FALSE;
         }
-        m_frame.dstSize=DIBSIZE(*bih);
+        m_frame.dstSize = DIBSIZE(*bih);
 
         char_t s[256];
-        DPRINTF(_l("TffdshowDecVideo::setOutputMediaType: colorspace:%s, biWidth:%i, dstStride:%i, Bpp:%i, dstSize:%i"),csp_getName(m_frame.dstColorspace,s,256),biWidth,m_frame.dstStride,cspInfo->Bpp,m_frame.dstSize);
-        if (csp_isRGB(m_frame.dstColorspace) && outDy>0) {
-            m_frame.dstColorspace|=FF_CSP_FLAGS_VFLIP;
+        DPRINTF(_l("TffdshowDecVideo::setOutputMediaType: colorspace:%s, biWidth:%i, dstStride:%i, Bpp:%i, dstSize:%i"), csp_getName(m_frame.dstColorspace, s, 256), biWidth, m_frame.dstStride, cspInfo->Bpp, m_frame.dstSize);
+        if (csp_isRGB(m_frame.dstColorspace) && outDy > 0) {
+            m_frame.dstColorspace |= FF_CSP_FLAGS_VFLIP;
         }
         //else if (biheight<0)
         // m_frame.colorspace|=FF_CSP_FLAGS_VFLIP;
         return S_OK;
     }
-    m_frame.dstColorspace=FF_CSP_NULL;
+    m_frame.dstColorspace = FF_CSP_NULL;
     return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;
 }
 
@@ -578,28 +583,28 @@ HRESULT TffdshowDecVideo::CheckTransform(const CMediaType *mtIn, const CMediaTyp
 {
     DPRINTF(_l("TffdshowDecVideo::CheckTransform"));
 #if 0
-    BITMAPINFOHEADER *bmi=NULL;
-    if (mtOut && mtOut->formattype==FORMAT_VideoInfo2
+    BITMAPINFOHEADER *bmi = NULL;
+    if (mtOut && mtOut->formattype == FORMAT_VideoInfo2
             && mtOut->pbFormat
-            && mtOut->cbFormat>=sizeof(VIDEOINFOHEADER2)) {
+            && mtOut->cbFormat >= sizeof(VIDEOINFOHEADER2)) {
         VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)mtOut->pbFormat;
-        bmi=&vih->bmiHeader;
+        bmi = &vih->bmiHeader;
     }
-    if (mtOut && mtOut->formattype==FORMAT_VideoInfo
+    if (mtOut && mtOut->formattype == FORMAT_VideoInfo
             && mtOut->pbFormat
-            && mtOut->cbFormat>=sizeof(VIDEOINFOHEADER)) {
+            && mtOut->cbFormat >= sizeof(VIDEOINFOHEADER)) {
         VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)mtOut->pbFormat;
-        bmi=&vih->bmiHeader;
+        bmi = &vih->bmiHeader;
     }
     if (bmi && bmi->biCompression) {
         TcspInfos ocsps;
         size_t osize;
         presetSettings->output->getOutputColorspaces(ocsps);
-        osize=ocsps.size();
-        bool outOk=false;
-        for (size_t i=0; i<osize; i++) {
-            if (ocsps[i]->fcc==bmi->biCompression) {
-                outOk=true;
+        osize = ocsps.size();
+        bool outOk = false;
+        for (size_t i = 0; i < osize; i++) {
+            if (ocsps[i]->fcc == bmi->biCompression) {
+                outOk = true;
                 break;
             }
         }
@@ -612,8 +617,8 @@ HRESULT TffdshowDecVideo::CheckTransform(const CMediaType *mtIn, const CMediaTyp
         return S_OK;
     } else {
         BITMAPINFOHEADER biOut;
-        ExtractBIH(*mtOut,&biOut);
-        if (ff_abs(biOut.biWidth)>=oldRect.dx && ff_abs(biOut.biHeight)==oldRect.dy) {
+        ExtractBIH(*mtOut, &biOut);
+        if (ff_abs(biOut.biWidth) >= oldRect.dx && ff_abs(biOut.biHeight) == oldRect.dy) {
             return S_OK;
         } else {
             return VFW_E_TYPE_NOT_ACCEPTED;
@@ -621,24 +626,24 @@ HRESULT TffdshowDecVideo::CheckTransform(const CMediaType *mtIn, const CMediaTyp
     }
 }
 
-HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceivePin)
+HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction, IPin *pReceivePin)
 {
-    if (direction==PINDIR_INPUT) {
+    if (direction == PINDIR_INPUT) {
         DPRINTF(_l("TffdshowDecVideo::CompleteConnect input"));
-    } else if (direction==PINDIR_OUTPUT) {
+    } else if (direction == PINDIR_OUTPUT) {
         DPRINTF(_l("TffdshowDecVideo::CompleteConnect output"));
         IPin *pConnectedPin = m_pOutput->GetConnected();
-        const CLSID &out=GetCLSID(pConnectedPin);
-        outOverlayMixer=!!(out==CLSID_OverlayMixer);
+        const CLSID &out = GetCLSID(pConnectedPin);
+        outOverlayMixer = !!(out == CLSID_OverlayMixer);
 
         // egur - hopefully a temporary solution...
         // WMC (and maybe other players) use the SampleGrabber or MediaDet to capture thumbnails.
         // Unfortunately this filter doesn't have the HW device needed for full screen exclusive playback.
         // So fallback to a SW decoder is needed.
-        TvideoCodecDec *pDecoder=NULL;
+        TvideoCodecDec *pDecoder = NULL;
         getMovieSource((const TvideoCodecDec**)&pDecoder);
 
-        if (NULL!=pDecoder) {
+        if (NULL != pDecoder) {
             if (is_quicksync_codec(pDecoder->codecId) && (out == CLSID_SampleGrabber || out == CLSID_MediaDetFilter)) {
                 CMediaType &mt = m_pInput->CurrentMediaType();
                 m_pInput->SetMediaType(&mt);
@@ -647,69 +652,69 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
             }
         }
     }
-    return CTransformFilter::CompleteConnect(direction,pReceivePin);
+    return CTransformFilter::CompleteConnect(direction, pReceivePin);
 }
 
 // alloc output buffer
 HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest)
 {
     DPRINTF(_l("TffdshowDecVideo::DecideBufferSize"));
-    if (m_pInput->IsConnected()==FALSE) {
+    if (m_pInput->IsConnected() == FALSE) {
         return E_UNEXPECTED;
     }
 
     if (!presetSettings) {
         initPreset();
     }
-    if (m_IsQueueListedApp==-1) { // Not initialized
-        m_IsQueueListedApp= IsQueueListedApp(getExeflnm());
+    if (m_IsQueueListedApp == -1) { // Not initialized
+        m_IsQueueListedApp = IsQueueListedApp(getExeflnm());
     }
 
 
-    m_IsOldVideoRenderer= IsOldRenderer();
-    const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
-    if (isQueue==-1) {
-        isQueue=presetSettings->multiThread && m_IsQueueListedApp;
+    m_IsOldVideoRenderer = IsOldRenderer();
+    const CLSID &ref = GetCLSID(m_pOutput->GetConnected());
+    if (isQueue == -1) {
+        isQueue = presetSettings->multiThread && m_IsQueueListedApp;
     }
     // Queue and Overlay Mixer works only in MPC and
     // when Overlay Mixer is not connected to old video renderer(rare, usually RGB out).
     // If queue can't work with Overlay Mixer, IsOldRenderer() returns true.
-    isQueue=isQueue && !m_IsOldVideoRenderer &&
-            (ref==CLSID_OverlayMixer || ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9);
-    m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB();
-    isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB); // inform MPC about queue only when queue is effective.
+    isQueue = isQueue && !m_IsOldVideoRenderer &&
+              (ref == CLSID_OverlayMixer || ref == CLSID_VideoMixingRenderer || ref == CLSID_VideoMixingRenderer9);
+    m_IsOldVMR9RenderlessAndRGB = IsOldVMR9RenderlessAndRGB();
+    isQueue = isQueue && !(m_IsOldVMR9RenderlessAndRGB); // inform MPC about queue only when queue is effective.
     // DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
-    if (ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer) {
-        return DecideBufferSizeOld(pAlloc, ppropInputRequest,ref);
+    if (ref == CLSID_VideoRenderer || ref == CLSID_OverlayMixer) {
+        return DecideBufferSizeOld(pAlloc, ppropInputRequest, ref);
     } else {
-        return DecideBufferSizeVMR(pAlloc, ppropInputRequest,ref);
+        return DecideBufferSizeVMR(pAlloc, ppropInputRequest, ref);
     }
 }
 
 HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest, const CLSID &ref)
 {
     HRESULT result;
-    if (downstreamID==VMR9 && !presetSettings->queueVMR9YV12) {
-        CMediaType &mt=m_pOutput->CurrentMediaType();
-        if (mt.subtype==MEDIASUBTYPE_YV12) {
-            m_IsYV12andVMR9= true; // to let OSD getQueuedCount know the reason.
-            isQueue= false; // queue off internaly.
+    if (downstreamID == VMR9 && !presetSettings->queueVMR9YV12) {
+        CMediaType &mt = m_pOutput->CurrentMediaType();
+        if (mt.subtype == MEDIASUBTYPE_YV12) {
+            m_IsYV12andVMR9 = true; // to let OSD getQueuedCount know the reason.
+            isQueue = false; // queue off internaly.
         }
     }
     int cBuffersMax;
-    if (isQueue==1) {
-        cBuffersMax= presetSettings->queueCount+1;
+    if (isQueue == 1) {
+        cBuffersMax = presetSettings->queueCount + 1;
     } else {
-        cBuffersMax= 1;
+        cBuffersMax = 1;
     }
-    TffPictBase pictOut=inpin->pictIn;
+    TffPictBase pictOut = inpin->pictIn;
     calcNewSize(pictOut);
     const TcspInfo *cspInfo = csp_getInfo(m_frame.dstColorspace);
     ppropInputRequest->cbBuffer = ffalign(pictOut.rectFull.dx, 32) * pictOut.rectFull.dy * cspInfo->bpp >> 3;
     // cbAlign 16 causes problems with the resize filter
     //ppropInputRequest->cbAlign =1;
-    ppropInputRequest->cbPrefix=0;
-    ppropInputRequest->cBuffers=1;
+    ppropInputRequest->cbPrefix = 0;
+    ppropInputRequest->cBuffers = 1;
 
     // first try cBuffers=1, if succeeded try cBuffers=cBuffersMax. Faster than before(older than 20060730).
 
@@ -717,38 +722,38 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
     // is holding and waiting for the presentation time,
     // even when it is asked to Reconnect.
     // if frame rate > 10, and 10 frames are queued in VMR9's internal queue, 1000ms would be enough.
-    int retry=ppropActual.cBuffers*10;
+    int retry = ppropActual.cBuffers * 10;
     bool isretry;
     do {
-        result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
-        isretry=result==VFW_E_BUFFERS_OUTSTANDING && retry-->0 && !firsttransform && downstreamID!=VMR7;
+        result = pAlloc->SetProperties(ppropInputRequest, &ppropActual);
+        isretry = result == VFW_E_BUFFERS_OUTSTANDING && retry-- > 0 && !firsttransform && downstreamID != VMR7;
         if (isretry) {
             Sleep(10);
         }
     } while (isretry);
-    if (result!=S_OK) {
+    if (result != S_OK) {
         return result;
     }
-    if (cBuffersMax>1) {
-        ppropInputRequest->cBuffers= cBuffersMax;
-        while(ppropInputRequest->cBuffers>=1) {
-            result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
-            if (result==S_OK) {
+    if (cBuffersMax > 1) {
+        ppropInputRequest->cBuffers = cBuffersMax;
+        while (ppropInputRequest->cBuffers >= 1) {
+            result = pAlloc->SetProperties(ppropInputRequest, &ppropActual);
+            if (result == S_OK) {
                 break;
             }
             ppropInputRequest->cBuffers--;
-            DPRINTF(_l("cBuffsers= %d failed. About to try cBuffers= %d"), ppropInputRequest->cBuffers+1, ppropInputRequest->cBuffers);
+            DPRINTF(_l("cBuffsers= %d failed. About to try cBuffers= %d"), ppropInputRequest->cBuffers + 1, ppropInputRequest->cBuffers);
         }
-        if (result==S_OK && ppropInputRequest->cBuffers>=3) {
+        if (result == S_OK && ppropInputRequest->cBuffers >= 3) {
             ppropInputRequest->cBuffers--; // avoiding to keep all the memory.
-            result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
+            result = pAlloc->SetProperties(ppropInputRequest, &ppropActual);
         }
     }
-    if (ppropActual.cbBuffer<ppropInputRequest->cbBuffer) {
+    if (ppropActual.cbBuffer < ppropInputRequest->cbBuffer) {
         return E_FAIL;
     }
-    if (downstreamID==VMR9) {
-        isQueue=0;    // Use VMR9's internal queueing.
+    if (downstreamID == VMR9) {
+        isQueue = 0;  // Use VMR9's internal queueing.
     }
     return result;
 }
@@ -760,39 +765,39 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
      * Old renderer doesn't support multithreading, so cBuffers should be 1.
      */
     int cBuffersMax;
-    if (isQueue==1) {
-        cBuffersMax= presetSettings->queueCount;
+    if (isQueue == 1) {
+        cBuffersMax = presetSettings->queueCount;
     } else {
-        cBuffersMax= 1;
+        cBuffersMax = 1;
     }
 
-    if (ref==CLSID_OverlayMixer) {
-        ppropInputRequest->cBuffers= cBuffersMax;
+    if (ref == CLSID_OverlayMixer) {
+        ppropInputRequest->cBuffers = cBuffersMax;
     } else {
-        ppropInputRequest->cBuffers= 1;
+        ppropInputRequest->cBuffers = 1;
     }
 
-    TffPictBase pictOut=inpin->pictIn;
+    TffPictBase pictOut = inpin->pictIn;
     calcNewSize(pictOut);
     const TcspInfo *cspInfo = csp_getInfo(m_frame.dstColorspace);
     ppropInputRequest->cbBuffer = ffalign(pictOut.rectFull.dx, 32) * pictOut.rectFull.dy * cspInfo->bpp >> 3;
     // cbAlign 16 causes problems with the resize filter */
     //ppropInputRequest->cbAlign =1;
-    ppropInputRequest->cbPrefix=0;
+    ppropInputRequest->cbPrefix = 0;
 
-    HRESULT result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
-    if (result!=S_OK) {
-        while(ppropInputRequest->cBuffers>1 && result!=S_OK) {
+    HRESULT result = pAlloc->SetProperties(ppropInputRequest, &ppropActual);
+    if (result != S_OK) {
+        while (ppropInputRequest->cBuffers > 1 && result != S_OK) {
             // retry
             ppropInputRequest->cBuffers--;
-            DPRINTF(_l("cBuffsers= %d failed. About to try cBuffers= %d"), ppropInputRequest->cBuffers+1, ppropInputRequest->cBuffers);
-            result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
+            DPRINTF(_l("cBuffsers= %d failed. About to try cBuffers= %d"), ppropInputRequest->cBuffers + 1, ppropInputRequest->cBuffers);
+            result = pAlloc->SetProperties(ppropInputRequest, &ppropActual);
         }
-        if (result!=S_OK) {
+        if (result != S_OK) {
             return result;
         }
     }
-    if (ppropActual.cbBuffer<ppropInputRequest->cbBuffer) {
+    if (ppropActual.cbBuffer < ppropInputRequest->cbBuffer) {
         return E_FAIL;
     }
     return S_OK;
@@ -806,16 +811,16 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
     }
     HRESULT hr;
     if (inputConnectedPin == NULL) { // Reuse of inputConnectedPin is possible
-        hr=inpin->ConnectedTo(&inputConnectedPin);
-        if(FAILED(hr)) {
+        hr = inpin->ConnectedTo(&inputConnectedPin);
+        if (FAILED(hr)) {
             return;
         }
     }
-    IFilterGraph *pGraph=NULL;
+    IFilterGraph *pGraph = NULL;
     getGraph(&pGraph);
     IGraphBuilder *pGraphBuilder = NULL;
     hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
-    if (hr!=S_OK) {
+    if (hr != S_OK) {
         return;
     }
 
@@ -828,8 +833,8 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
     // Browse pins compatible codec
     IEnumPins *enumPins = NULL;
     inpin->pCompatibleFilter->EnumPins(&enumPins);
-    IPin *outPin=NULL, *filterPin;
-    bool inPinConnected=false, outPinFound=false;
+    IPin *outPin = NULL, *filterPin;
+    bool inPinConnected = false, outPinFound = false;
     unsigned long fetched;
     while (1) {
         enumPins->Next(1, &filterPin, &fetched);
@@ -842,9 +847,9 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
         if (pinDirection == PINDIR_INPUT && !inPinConnected) {
             // Input filter -> FFDShow ==> Input filter -> Compatible filter
             hr = inputConnectedPin->Connect(filterPin, &connectedPinMediaType);
-            inPinConnected=true;
-        } else if (pinDirection == PINDIR_OUTPUT && outPin==NULL) {
-            outPin=filterPin;
+            inPinConnected = true;
+        } else if (pinDirection == PINDIR_OUTPUT && outPin == NULL) {
+            outPin = filterPin;
             continue;
         }
         filterPin->Release();
@@ -852,7 +857,7 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
     enumPins->Release();
 
     // Input filter -> Compatible filter ==> Input filter -> Compatible filter -> FFDShow
-    if (outPin==NULL) { // Oops... problem, should not happen
+    if (outPin == NULL) { // Oops... problem, should not happen
         pGraph->Reconnect(inputConnectedPin);
         return;
     }
@@ -864,16 +869,16 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
     IEnumMediaTypes *ppEnum = NULL;
     outPin->EnumMediaTypes(&ppEnum);
     AM_MEDIA_TYPE *mediaTypes = (AM_MEDIA_TYPE*)alloca(sizeof(AM_MEDIA_TYPE));
-    fetched=0;
+    fetched = 0;
     bool compatibleMediaTypeFound = false;
     while (1) {
-        ppEnum->Next(1,&mediaTypes,&fetched);
+        ppEnum->Next(1, &mediaTypes, &fetched);
         if (!fetched) {
             break;
         }
         CMediaType mt = CMediaType(mediaTypes[0]);
         if (inpin->CheckMediaType(&mt) == S_OK) {
-            compatibleMediaTypeFound=true;
+            compatibleMediaTypeFound = true;
             break;
         }
     }
@@ -885,21 +890,21 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
         return;
     }
 
-    connectedPinMediaTypeOut=mediaTypes[0];
+    connectedPinMediaTypeOut = mediaTypes[0];
 
-    hr = pGraphBuilder->ConnectDirect(outPin, inpin,&connectedPinMediaTypeOut);
+    hr = pGraphBuilder->ConnectDirect(outPin, inpin, &connectedPinMediaTypeOut);
 
     // Update the new MediaType in the decoder and in the input pin
     DPRINTF(_l("TffdshowDecVideo::ConnectCompatibleFilter. Connection done, new media type"));
-    CMediaType *newInputMediaTypep=new CMediaType(connectedPinMediaTypeOut);
+    CMediaType *newInputMediaTypep = new CMediaType(connectedPinMediaTypeOut);
     inpin->SetMediaType(newInputMediaTypep);
 
     outPin->Release();
     pGraphBuilder->Release();
     inputConnectedPin->Release();
-    inputConnectedPin=NULL;
+    inputConnectedPin = NULL;
 
-    compatibleFilterConnected=true;
+    compatibleFilterConnected = true;
 }
 
 void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
@@ -910,16 +915,16 @@ void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
 
     HRESULT hr;
     IPin *connectedPin = NULL;
-    hr=inpin->ConnectedTo(&connectedPin);
-    if(FAILED(hr)) {
+    hr = inpin->ConnectedTo(&connectedPin);
+    if (FAILED(hr)) {
         return;
     }
 
-    IFilterGraph *pGraph=NULL;
+    IFilterGraph *pGraph = NULL;
     getGraph(&pGraph);
     IGraphBuilder *pGraphBuilder = NULL;
     hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
-    if (hr!=S_OK) {
+    if (hr != S_OK) {
         connectedPin->Release();
         return;
     }
@@ -930,8 +935,8 @@ void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
     // Browse pins compatible codec
     IEnumPins *enumPins = NULL;
     inpin->pCompatibleFilter->EnumPins(&enumPins);
-    IPin *outPin=NULL, *filterPin;
-    bool inPinDisConnected=false, outPinFound=false;
+    IPin *outPin = NULL, *filterPin;
+    bool inPinDisConnected = false, outPinFound = false;
     unsigned long fetched;
     while (1) {
         enumPins->Next(1, &filterPin, &fetched);
@@ -942,14 +947,14 @@ void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
         PIN_DIRECTION pinDirection;
         filterPin->QueryDirection(&pinDirection);
         if (pinDirection == PINDIR_INPUT && !inPinDisConnected) {
-            IPin *pPin=NULL;
+            IPin *pPin = NULL;
             filterPin->ConnectedTo(&pPin);
-            if (pPin!=NULL) {
+            if (pPin != NULL) {
                 pPin->Disconnect();
             }
             pPin->Release();
             filterPin->Disconnect();
-            inPinDisConnected=true;
+            inPinDisConnected = true;
         }
         filterPin->Release();
     }
@@ -957,7 +962,7 @@ void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
     connectedPin->Release();
     pGraphBuilder->Release();
 
-    compatibleFilterConnected=false;
+    compatibleFilterConnected = false;
 }
 
 HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
@@ -978,12 +983,12 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
     // This means that any decision to drop the frame must be taken before
     // calling GetDeliveryBuffer.
     ASSERT(pSample);
-    ASSERT(m_pOutput!=NULL);
+    ASSERT(m_pOutput != NULL);
 
     inSampleTypeSpecificFlags = 0;
     AM_SAMPLE2_PROPERTIES inProp2;
-    if (comptrQ<IMediaSample2> pIn2=pSample) {
-        pIn2->GetProperties(sizeof(AM_SAMPLE2_PROPERTIES),(PBYTE)&inProp2);
+    if (comptrQ<IMediaSample2> pIn2 = pSample) {
+        pIn2->GetProperties(sizeof(AM_SAMPLE2_PROPERTIES), (PBYTE)&inProp2);
         inSampleTypeSpecificFlags = inProp2.dwTypeSpecificFlags;
     }
     // If no output pin to deliver to then no point sending us data
@@ -994,11 +999,11 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
     // draw garbage. (typically, this is a palette change in the movie,
     // but could be something more sinister like the compression type changing,
     // or even the video size changing)
-    if(isOSD_time_on_ffdshow && m_pClock) {
+    if (isOSD_time_on_ffdshow && m_pClock) {
         m_pClock->GetTime(&OSD_time_on_ffdshowStart);
     }
     pSample->GetMediaType(&pmt);
-    if (pmt!=NULL && pmt->pbFormat!=NULL) {
+    if (pmt != NULL && pmt->pbFormat != NULL) {
         // spew some debug output
         ASSERT(!IsEqualGUID(pmt->majortype, GUID_NULL));
         // now switch to using the new format.  I am assuming that the
@@ -1008,16 +1013,16 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
         m_pInput->CurrentMediaType() = *pmt;
         DeleteMediaType(pmt);
         // if this fails, playback will stop, so signal an error
-        HRESULT hr=StartStreaming();
+        HRESULT hr = StartStreaming();
         if (FAILED(hr)) {
             return abortPlayback(hr);
         }
     }
     // Now that we have noticed any format changes on the input sample, it's OK to discard it.
-    REFERENCE_TIME rtStart,rtStop;
-    if (pSample->GetTime(&rtStart,&rtStop)==S_OK) { // memo: If VFW_S_NO_STOP_TIME is returned, rtStart is supoosed to be valid.
-        late-=ff_abs(rtStart-lastrtStart);
-        lastrtStart=rtStart;
+    REFERENCE_TIME rtStart, rtStop;
+    if (pSample->GetTime(&rtStart, &rtStop) == S_OK) { // memo: If VFW_S_NO_STOP_TIME is returned, rtStart is supoosed to be valid.
+        late -= ff_abs(rtStart - lastrtStart);
+        lastrtStart = rtStart;
         insample_rtStart = rtStart;
         insample_rtStop = rtStop;
     } else {
@@ -1026,39 +1031,39 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
         insample_rtStop = REFTIME_INVALID;
     }
 
-    if (m_bSampleSkipped && late>0) {
+    if (m_bSampleSkipped && late > 0) {
         return S_OK;
     }
     int codecId = inpin->getInCodecId2();
-    if (presetSettings->dropOnDelay && !mpeg12_codec(codecId) && !vc1_codec(codecId) && !h264_codec(codecId) && late>presetSettings->dropDelayTime*10000) {
+    if (presetSettings->dropOnDelay && !mpeg12_codec(codecId) && !vc1_codec(codecId) && !h264_codec(codecId) && late > presetSettings->dropDelayTime * 10000) {
         //MSR_NOTE(m_idSkip);
         setSampleSkipped(true);
         DPRINTF_SAMPLE_TIME(pSample);
         //late=0;
-        waitForKeyframe=1000;
+        waitForKeyframe = 1000;
         count_decoded_frames_for_framerate_calculation = 0;
         rollingAvg = 0;
         return S_OK;
     }
 
     // After a discontinuity, we need to wait for the next key frame
-    if (pSample->IsDiscontinuity()==S_OK && inpin->waitForKeyframes()) {
+    if (pSample->IsDiscontinuity() == S_OK && inpin->waitForKeyframes()) {
         DPRINTF(_l("Non-key discontinuity - wait for keyframe"));
-        waitForKeyframe=100;
+        waitForKeyframe = 100;
     }
 
     if (firsttransform) {
-        firsttransform=false;
+        firsttransform = false;
         initKeys();
         initMouse();
         initRemote();
-        onTrayIconChange(0,0);
-        options->notifyParam(IDFF_isKeys,0);
-        options->notifyParam(IDFF_isMouse,0);
-        remote->onChange(0,0);
-        lastTime=clock();
-        m_IsOldVideoRenderer= IsOldRenderer();
-        isQueue=isQueue && !m_IsOldVideoRenderer;
+        onTrayIconChange(0, 0);
+        options->notifyParam(IDFF_isKeys, 0);
+        options->notifyParam(IDFF_isMouse, 0);
+        remote->onChange(0, 0);
+        lastTime = clock();
+        m_IsOldVideoRenderer = IsOldRenderer();
+        isQueue = isQueue && !m_IsOldVideoRenderer;
         checkAllowOutChange(m_pOutput->GetConnected());
     }
 
@@ -1069,19 +1074,19 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
     }
 
     long srcLength;
-    HRESULT hr=inpin->decompress(pSample,&srcLength);
-    if (srcLength<0) {
+    HRESULT hr = inpin->decompress(pSample, &srcLength);
+    if (srcLength < 0) {
         return S_FALSE;
     }
-    bytesCnt+=srcLength;
+    bytesCnt += srcLength;
 
     if (waitForKeyframe) {
         waitForKeyframe--;
     }
 
-    if (hr==S_FALSE) {
+    if (hr == S_FALSE) {
         bool useDXVA = false;
-        TvideoCodecDec *pDecoder=NULL;
+        TvideoCodecDec *pDecoder = NULL;
         getMovieSource((const TvideoCodecDec**)&pDecoder);
         if (pDecoder != NULL && pDecoder->useDXVA()) {
             useDXVA = true;
@@ -1091,11 +1096,11 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
             setSampleSkipped(false);
             DPRINTF_SAMPLE_TIME(pSample);
             if (!m_bQualityChanged) {
-                m_bQualityChanged=TRUE;
-                NotifyEvent(EC_QUALITY_CHANGE,0,0);
+                m_bQualityChanged = TRUE;
+                NotifyEvent(EC_QUALITY_CHANGE, 0, 0);
             }
         }
-        hr=S_OK;
+        hr = S_OK;
     }
     return hr;
 }
@@ -1105,13 +1110,13 @@ bool TffdshowDecVideo::IsOldRenderer(void)
     // Check downstream filter
     // Does Video Renderer support multithreading?
 
-    const char_t *fileName= getExeflnm();
+    const char_t *fileName = getExeflnm();
     bool isOld = false;
-    const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
-    if(   _strnicmp(_l("mpc-hc.exe"),fileName,11)!=0
-            ||  _strnicmp(_l("mplayerc.exe"),fileName,13)!=0
-            ||  _strnicmp(_l("mpc-hc64.exe"),fileName,13)!=0
-            ||  _strnicmp(_l("mplayerc64.exe"),fileName,15)!=0) {
+    const CLSID &ref = GetCLSID(m_pOutput->GetConnected());
+    if (_strnicmp(_l("mpc-hc.exe"), fileName, 11) != 0
+            ||  _strnicmp(_l("mplayerc.exe"), fileName, 13) != 0
+            ||  _strnicmp(_l("mpc-hc64.exe"), fileName, 13) != 0
+            ||  _strnicmp(_l("mplayerc64.exe"), fileName, 15) != 0) {
         return (ref == CLSID_VideoRenderer || ref == CLSID_OverlayMixer) ? true : false;
     } else {
         if (ref == CLSID_VideoRenderer) {
@@ -1160,34 +1165,34 @@ bool TffdshowDecVideo::IsOldRenderer(void)
 
 bool TffdshowDecVideo::IsOldVMR9RenderlessAndRGB(void)
 {
-    if(!csp_isRGB(m_frame.dstColorspace)) {
+    if (!csp_isRGB(m_frame.dstColorspace)) {
         return false;
     }
 
-    const char_t *fileName= getExeflnm();
-    if(   _strnicmp(_l("mpc-hc.exe"),fileName,11)!=0
-            ||  _strnicmp(_l("mplayerc.exe"),fileName,13)!=0
-            ||  _strnicmp(_l("mpc-hc64.exe"),fileName,13)!=0
-            ||  _strnicmp(_l("mplayerc64.exe"),fileName,15)!=0) {
+    const char_t *fileName = getExeflnm();
+    if (_strnicmp(_l("mpc-hc.exe"), fileName, 11) != 0
+            ||  _strnicmp(_l("mplayerc.exe"), fileName, 13) != 0
+            ||  _strnicmp(_l("mpc-hc64.exe"), fileName, 13) != 0
+            ||  _strnicmp(_l("mplayerc64.exe"), fileName, 15) != 0) {
         return false;
     }
 
     // Check downstream filter
     IBaseFilter* pBaseFilter;
 
-    bool isVMR9rs= false;
+    bool isVMR9rs = false;
 
-    if(graph) {
-        if(graph->FindFilterByName(L"Video Mixing Render 9 (Renderless)", &pBaseFilter)==S_OK) {
+    if (graph) {
+        if (graph->FindFilterByName(L"Video Mixing Render 9 (Renderless)", &pBaseFilter) == S_OK) {
             IVMRffdshow9* ivmrffdshow9;
-            pBaseFilter->QueryInterface(IID_IVMRffdshow9,(void**)&ivmrffdshow9);
+            pBaseFilter->QueryInterface(IID_IVMRffdshow9, (void**)&ivmrffdshow9);
             pBaseFilter->Release();
-            if(ivmrffdshow9) {
+            if (ivmrffdshow9) {
                 ivmrffdshow9->support_ffdshow();
                 ivmrffdshow9->Release();
-                isVMR9rs= false; // patched VMR9 Renderless
+                isVMR9rs = false; // patched VMR9 Renderless
             } else {
-                isVMR9rs= true;
+                isVMR9rs = true;
             }
         }
     }
@@ -1196,14 +1201,14 @@ bool TffdshowDecVideo::IsOldVMR9RenderlessAndRGB(void)
 
 bool TffdshowDecVideo::IsVMR9Renderless(IPin *downstream_input_pin)
 {
-    bool result=false;
+    bool result = false;
     PIN_INFO pininfo;
     FILTER_INFO filterinfo;
     downstream_input_pin->QueryPinInfo(&pininfo);
     if (pininfo.pFilter) {
         pininfo.pFilter->QueryFilterInfo(&filterinfo);
-        if (wcsncmp(L"Video Mixing Render 9 (Renderless)",filterinfo.achName,34)==0) {
-            result=true;
+        if (wcsncmp(L"Video Mixing Render 9 (Renderless)", filterinfo.achName, 34) == 0) {
+            result = true;
         }
         if (filterinfo.pGraph) {
             filterinfo.pGraph->Release();
@@ -1216,8 +1221,8 @@ bool TffdshowDecVideo::IsVMR9Renderless(IPin *downstream_input_pin)
 STDMETHODIMP TffdshowDecVideo::deliverPreroll(int frametype)
 {
     // Maybe we're waiting for a keyframe still?
-    if (waitForKeyframe && (frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I) {
-        waitForKeyframe=FALSE;
+    if (waitForKeyframe && (frametype & FRAME_TYPE::typemask) == FRAME_TYPE::I) {
+        waitForKeyframe = FALSE;
     }
     // if so, then we don't want to pass this on to the renderer
     //if (waitForKeyframe)
@@ -1233,18 +1238,18 @@ STDMETHODIMP TffdshowDecVideo::flushDecodedSamples(void)
 
 STDMETHODIMP TffdshowDecVideo::setFrameTime(TffPict &pict, bool &frameTimeReconstructed)
 {
-    HRESULT frameTimeOk=S_FALSE;
+    HRESULT frameTimeOk = S_FALSE;
     frameTimeReconstructed = false;
     int codecId = inpin->getInCodecId2();
-    if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG) {
-        frameTimeOk=S_OK;
-    } else if (inpin->sourceFlags&TvideoCodecDec::SOURCE_REORDER && pict.rtStart!=REFTIME_INVALID && pict.rtStop==REFTIME_INVALID) {
-        pict.rtStop=pict.rtStart+inpin->avgTimePerFrame;
-        frameTimeOk=S_OK;
+    if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression != FOURCC_MPEG) {
+        frameTimeOk = S_OK;
+    } else if (inpin->sourceFlags & TvideoCodecDec::SOURCE_REORDER && pict.rtStart != REFTIME_INVALID && pict.rtStop == REFTIME_INVALID) {
+        pict.rtStop = pict.rtStart + inpin->avgTimePerFrame;
+        frameTimeOk = S_OK;
     }
 
     if (frameTimeOk != S_OK) {
-        frameTimeOk=(pict.rtStart!=REFTIME_INVALID) ? S_OK : S_FALSE;
+        frameTimeOk = (pict.rtStart != REFTIME_INVALID) ? S_OK : S_FALSE;
     }
 
     if (presetSettings->softTelecine && vc1_codec(codecId) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666) {
@@ -1255,8 +1260,8 @@ STDMETHODIMP TffdshowDecVideo::setFrameTime(TffPict &pict, bool &frameTimeRecons
             pict.rtStop = pict.rtStart + 417082;
         }
     } else { //not vc-1
-        if (frameTimeOk!=S_OK || pict.rtStop-pict.rtStart==0) {
-            frameTimeOk=S_OK;
+        if (frameTimeOk != S_OK || pict.rtStop - pict.rtStart == 0) {
+            frameTimeOk = S_OK;
             frameTimeReconstructed = true;
             pict.rtStart = m_rtStart;
             if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD) {
@@ -1282,9 +1287,9 @@ void TffdshowDecVideo::advanceTimeToNextFrame(TffPict &pict, bool frameTimeOk, b
             m_rtStart = pict.rtStop + 1;
         }
     } else { //not vc-1
-        if (frameTimeOk && !frameTimeReconstructed && pict.rtStop-pict.rtStart!=0) {
-            if (inpin->avgTimePerFrame==0) {
-                inpin->avgTimePerFrame=pict.rtStop-pict.rtStart;
+        if (frameTimeOk && !frameTimeReconstructed && pict.rtStop - pict.rtStart != 0) {
+            if (inpin->avgTimePerFrame == 0) {
+                inpin->avgTimePerFrame = pict.rtStop - pict.rtStart;
             }
             m_rtStart = pict.rtStart + inpin->avgTimePerFrame;
         } else {
@@ -1302,24 +1307,24 @@ void TffdshowDecVideo::advanceTimeToNextFrame(TffPict &pict, bool frameTimeOk, b
 void TffdshowDecVideo::setFrameVideoDelay(TffPict &pict)
 {
     int videoDelay;
-    if (moviesecs>0 && presetSettings->isVideoDelayEnd && presetSettings->videoDelay!=presetSettings->videoDelayEnd) {
+    if (moviesecs > 0 && presetSettings->isVideoDelayEnd && presetSettings->videoDelay != presetSettings->videoDelayEnd) {
         unsigned int msecs;
         if (SUCCEEDED(getCurrentFrameTimeMS(&msecs))) {
-            videoDelay=msecs*(presetSettings->videoDelayEnd-presetSettings->videoDelay)/(moviesecs*1000)+presetSettings->videoDelay;
+            videoDelay = msecs * (presetSettings->videoDelayEnd - presetSettings->videoDelay) / (moviesecs * 1000) + presetSettings->videoDelay;
         } else {
-            videoDelay=presetSettings->videoDelay;
+            videoDelay = presetSettings->videoDelay;
         }
     } else {
-        videoDelay=presetSettings->videoDelay;
+        videoDelay = presetSettings->videoDelay;
     }
 
     if (videoDelay) {
-        REFERENCE_TIME delay100ns=videoDelay*10000LL;
-        pict.rtStart+=delay100ns;
-        pict.rtStop +=delay100ns;
+        REFERENCE_TIME delay100ns = videoDelay * 10000LL;
+        pict.rtStart += delay100ns;
+        pict.rtStop += delay100ns;
     }
-    pict.rtStart+=segmentStart;
-    pict.rtStop+=segmentStart;
+    pict.rtStart += segmentStart;
+    pict.rtStop += segmentStart;
 }
 
 STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
@@ -1328,7 +1333,7 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
 
     bool frameTimeReconstructed;
     HRESULT frameTimeOk = setFrameTime(pict, frameTimeReconstructed);
-    advanceTimeToNextFrame(pict, frameTimeOk==S_OK, frameTimeReconstructed);
+    advanceTimeToNextFrame(pict, frameTimeOk == S_OK, frameTimeReconstructed);
 
     if ((inSampleEverField1Repeat || inpin->isInterlacedRawVideo) && !(inSampleTypeSpecificFlags & AM_VIDEO_FLAG_WEAVE)) {
         if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_FIELD1FIRST) {
@@ -1340,10 +1345,10 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
 
     //LONGLONG mediaTime1=-1,mediaTime2=-1;
     //HRESULT mediaTimeOk=pIn->GetMediaTime(&mediaTime1,&mediaTime2);
-    if (pict.mediatimeStart!=REFTIME_INVALID) {
-        currentFrame=(unsigned long)pict.mediatimeStart;
-    } else if (frameTimeOk==S_OK && inpin->avgTimePerFrame) {
-        currentFrame=long((pict.rtStart+segmentStart)/(inpin->avgTimePerFrame*1.0)+0.5);
+    if (pict.mediatimeStart != REFTIME_INVALID) {
+        currentFrame = (unsigned long)pict.mediatimeStart;
+    } else if (frameTimeOk == S_OK && inpin->avgTimePerFrame) {
+        currentFrame = long((pict.rtStart + segmentStart) / (inpin->avgTimePerFrame * 1.0) + 0.5);
     } else {
         currentFrame++;
     }
@@ -1352,28 +1357,28 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
 
     setFrameVideoDelay(pict);
 
-    clock_t t=clock();
-    decodingFps=(t!=lastTime)?1000*CLOCKS_PER_SEC/(t-lastTime):0;
-    lastTime=t;
+    clock_t t = clock();
+    decodingFps = (t != lastTime) ? 1000 * CLOCKS_PER_SEC / (t - lastTime) : 0;
+    lastTime = t;
 
-    if (pict.csp!=FF_CSP_NULL) {
-        decodingCsp=pict.csp;
+    if (pict.csp != FF_CSP_NULL) {
+        decodingCsp = pict.csp;
     }
 
-    if (!cpu && cpus==-1) {
-        cpu=new TcpuUsage;
-        cpus=cpu->GetCPUCount();
-        if (cpus==0) {
+    if (!cpu && cpus == -1) {
+        cpu = new TcpuUsage;
+        cpus = cpu->GetCPUCount();
+        if (cpus == 0) {
             delete cpu;
-            cpu=NULL;
+            cpu = NULL;
         };
     }
 
     if (!imgFilters) {
-        imgFilters=createImgFilters();
+        imgFilters = createImgFilters();
     }
     if (wasSubtitleResetTime) {
-        imgFilters->subtitleResetTime=pict.rtStart;
+        imgFilters->subtitleResetTime = pict.rtStart;
     }
     // buffer recent four timestamps for frame rate calculation
     decoded_rtStarts[count_decoded_frames_for_framerate_calculation & 3] = pict.rtStart;
@@ -1384,14 +1389,14 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
     // Store the decoded picture dimensions (used by some imgFilters)
     decodedPict = Trect(pict.rectFull, pict.rectFull.sar);
 
-    return imgFilters->process(pict,presetSettings);
+    return imgFilters->process(pict, presetSettings);
 }
 
 STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
 {
     // Maybe we're waiting for a keyframe still?
-    if (waitForKeyframe && (pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I) {
-        waitForKeyframe=FALSE;
+    if (waitForKeyframe && (pict.frametype & FRAME_TYPE::typemask) == FRAME_TYPE::I) {
+        waitForKeyframe = FALSE;
     }
     // if so, then we don't want to pass this on to the renderer
     if (waitForKeyframe) {
@@ -1416,29 +1421,29 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
     HRESULT hr;
 
     ASSERT(CritCheckIn(&inpin->m_csCodecs_and_imgFilters));
-    if (pict.csp==FF_CSP_NULL) {
+    if (pict.csp == FF_CSP_NULL) {
         return S_OK;
     }
 
-    REFERENCE_TIME rtStart=pict.rtStart-segmentStart;
-    REFERENCE_TIME rtStop=rtStart+1;
+    REFERENCE_TIME rtStart = pict.rtStart - segmentStart;
+    REFERENCE_TIME rtStop = rtStart + 1;
 
     int codecId = inpin->getInCodecId2();
-    if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG && rtStart < 0) {
+    if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression != FOURCC_MPEG && rtStart < 0) {
         return S_OK;    // work around compatibility issue with splitter?
     }
 
     sendOnFrameMsg();
 
-    comptr<IMediaSample> pOut=NULL;
+    comptr<IMediaSample> pOut = NULL;
     {
         CAutoUnlock unlock1(&inpin->m_csCodecs_and_imgFilters);
 
         if (presetSettings->output->hwOverlayAspect) {
-            pict.setDar(Rational(presetSettings->output->hwOverlayAspect>>8,256));
+            pict.setDar(Rational(presetSettings->output->hwOverlayAspect >> 8, 256));
         }
         if (allowOutChange) {
-            hr=reconnectOutput(pict);
+            hr = reconnectOutput(pict);
             if (FAILED(hr)) {
                 return S_FALSE;    //hr;
             }
@@ -1447,37 +1452,37 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
         segmentFrameCnt++;
         frameCnt++;
 
-        hr=initializeOutputSample(&pOut);
+        hr = initializeOutputSample(&pOut);
         if (FAILED(hr)) {
             return hr;
         }
     }
 
     if (hwDeinterlace) {
-        if (comptrQ<IMediaSample2> pOut2=pOut) {
+        if (comptrQ<IMediaSample2> pOut2 = pOut) {
             AM_SAMPLE2_PROPERTIES outProp2;
-            if (SUCCEEDED(pOut2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwSampleFlags),(PBYTE)&outProp2))) {
+            if (SUCCEEDED(pOut2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES, dwSampleFlags), (PBYTE)&outProp2))) {
                 // Set interlace information (every sample)
-                outProp2.dwTypeSpecificFlags=AM_VIDEO_FLAG_INTERLEAVED_FRAME;
+                outProp2.dwTypeSpecificFlags = AM_VIDEO_FLAG_INTERLEAVED_FRAME;
 
                 // Force weave
                 // If ffdshow's internal deinterlacing filter is being used, disable hardware deinterlacing by flagging frames as weave
                 if (presetSettings->output->hwDeintMethod == 1 || presetSettings->deinterlace->is) {
-                    outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+                    outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_WEAVE;
                 }
                 // Force bob
                 else if (presetSettings->output->hwDeintMethod == 2) {
                     // force TFF
                     if (presetSettings->output->hwDeintFieldOrder == 1) {
-                        outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                        outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_FIELD1FIRST;
                     }
                     // auto field order
                     else if (presetSettings->output->hwDeintFieldOrder == 0) {
-                        if (pict.fieldtype&FIELD_TYPE::INT_TFF
+                        if (pict.fieldtype & FIELD_TYPE::INT_TFF
                                 && !(pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME
                                      && !pict.film) // avoid sending rapidly alternating TFF and BFF if telecine is detected.
                            ) {
-                            outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                            outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_FIELD1FIRST;
                         }
                     }
                 }
@@ -1485,31 +1490,31 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
                 else {
                     if (pict.film) {
                         if (presetSettings->softTelecine) {
-                            outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+                            outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_WEAVE;
                         } else {
                             if (pict.repeat_first_field) {
                                 outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_REPEAT_FIELD;
                             }
-                            if (pict.fieldtype&FIELD_TYPE::INT_TFF) {
-                                outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                            if (pict.fieldtype & FIELD_TYPE::INT_TFF) {
+                                outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_FIELD1FIRST;
                             }
                         }
                     } else if (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) {
-                        outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+                        outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_WEAVE;
                     } else {
                         // force TFF
                         if (presetSettings->output->hwDeintFieldOrder == 1) {
-                            outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                            outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_FIELD1FIRST;
                         }
                         // auto field order
                         else if (presetSettings->output->hwDeintFieldOrder == 0) {
-                            if (pict.fieldtype&FIELD_TYPE::INT_TFF) {
-                                outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                            if (pict.fieldtype & FIELD_TYPE::INT_TFF) {
+                                outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_FIELD1FIRST;
                             }
                         }
                     }
                 }
-                pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwSampleFlags),(PBYTE)&outProp2);
+                pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES, dwSampleFlags), (PBYTE)&outProp2);
             }
 #if 0
             AM_SAMPLE2_PROPERTIES outProp3;
@@ -1518,18 +1523,18 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
                 bool top_field_first = !!(outProp3.dwTypeSpecificFlags & AM_VIDEO_FLAG_FIELD1FIRST);
                 bool progressive = !!(outProp3.dwTypeSpecificFlags & AM_VIDEO_FLAG_WEAVE);
                 DPRINTF(L"AM_VIDEO_FLAG_REPEAT_FIELD %d AM_VIDEO_FLAG_FIELD1FIRST %d AM_VIDEO_FLAG_WEAVE %d",
-                    repeat_first_field,top_field_first,progressive);
+                        repeat_first_field, top_field_first, progressive);
             }
 #endif
         }
     }
 
-    m_bSampleSkipped=FALSE;
+    m_bSampleSkipped = FALSE;
     // The renderer may ask us to on-the-fly to start transforming to a
     // different format.  If we don't obey it, we'll draw garbage
     AM_MEDIA_TYPE *pmtOut;
     pOut->GetMediaType(&pmtOut);
-    if (pmtOut!=NULL && pmtOut->pbFormat!=NULL) {
+    if (pmtOut != NULL && pmtOut->pbFormat != NULL) {
         // spew some debug output
         ASSERT(!IsEqualGUID(pmtOut->majortype, GUID_NULL));
         // now switch to using the new format.  I am assuming that the
@@ -1555,12 +1560,12 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
         }
     }
 
-    AM_MEDIA_TYPE *mtOut=NULL;
+    AM_MEDIA_TYPE *mtOut = NULL;
     pOut->GetMediaType(&mtOut);
-    if (mtOut!=NULL) {
-        hr=setOutputMediaType(*mtOut);
+    if (mtOut != NULL) {
+        hr = setOutputMediaType(*mtOut);
         DeleteMediaType(mtOut);
-        if (hr!=S_OK) {
+        if (hr != S_OK) {
             return hr;
         }
     }
@@ -1569,68 +1574,68 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
         // code imported from DScaler. Copyright (c) 2004 John Adcock
         m_NeedToAttachFormat = false;
         AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
-        if (omt.formattype==FORMAT_VideoInfo2) {
+        if (omt.formattype == FORMAT_VideoInfo2) {
             VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
-/* FIXME: only do this for renderers that support it. Working: madVR, Broken: Overlay and Haali
-            vih->dwControlFlags = get_dwControlFlags(pict);
-*/
-            BITMAPINFOHEADER *bmi=&vih->bmiHeader;
+            /* FIXME: only do this for renderers that support it. Working: madVR, Broken: Overlay and Haali
+                        vih->dwControlFlags = get_dwControlFlags(pict);
+            */
+            BITMAPINFOHEADER *bmi = &vih->bmiHeader;
             setVIH2aspect(vih, pict.rectFull, 0);
             SetRect(&vih->rcTarget, 0, 0, 0, 0);
             SetRect(&vih->rcSource, 0, 0, pict.rectFull.dx, pict.rectFull.dy);
             bmi->biXPelsPerMeter = pict.rectFull.dx * vih->dwPictAspectRatioX;
             bmi->biYPelsPerMeter = pict.rectFull.dy * vih->dwPictAspectRatioY;
             pOut->SetMediaType(&omt);
-            comptrQ<IMediaEventSink> pMES=graph;
+            comptrQ<IMediaEventSink> pMES = graph;
             NotifyEvent(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(pict.rectFull.dx, pict.rectFull.dy), 0);
         }
     } else {
-/* FIXME: only do this for renderers that support it. Working: madVR, Broken: Overlay and Haali
-        AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
-        if (omt.formattype==FORMAT_VideoInfo2) {
-            VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
-            DWORD dwControlFlags = get_dwControlFlags(pict);
-            if (vih->dwControlFlags != dwControlFlags) {
-                vih->dwControlFlags = dwControlFlags;
-                pOut->SetMediaType(&omt);
-            }
-        }
-*/
+        /* FIXME: only do this for renderers that support it. Working: madVR, Broken: Overlay and Haali
+                AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
+                if (omt.formattype==FORMAT_VideoInfo2) {
+                    VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
+                    DWORD dwControlFlags = get_dwControlFlags(pict);
+                    if (vih->dwControlFlags != dwControlFlags) {
+                        vih->dwControlFlags = dwControlFlags;
+                        pOut->SetMediaType(&omt);
+                    }
+                }
+        */
     }
 
-    int sync=(pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I?TRUE:FALSE;
+    int sync = (pict.frametype & FRAME_TYPE::typemask) == FRAME_TYPE::I ? TRUE : FALSE;
     pOut->SetSyncPoint(sync);
     if (outOverlayMixer) {
         pOut->SetDiscontinuity(TRUE);
     }
 
-    if (rtStart!=REFTIME_INVALID) {
-        rtStop=pict.rtStop-segmentStart;
+    if (rtStart != REFTIME_INVALID) {
+        rtStop = pict.rtStop - segmentStart;
         //DPRINTF(_l("pOut->SetTime rtStart %s rtStop %s"),Trt2str(rtStart).c_str(),Trt2str(rtStop).c_str());
-        pOut->SetTime(&rtStart,&rtStop);
+        pOut->SetTime(&rtStart, &rtStop);
     }
 
-    if (pict.mediatimeStart!=REFTIME_INVALID) {
-        pOut->SetMediaTime(&pict.mediatimeStart,&pict.mediatimeStop);
+    if (pict.mediatimeStart != REFTIME_INVALID) {
+        pOut->SetMediaTime(&pict.mediatimeStart, &pict.mediatimeStop);
     }
 
     unsigned char *dst;
-    if (pOut->GetPointer(&dst)!=S_OK) {
+    if (pOut->GetPointer(&dst) != S_OK) {
         return S_FALSE;
     }
-    LONG dstSize=pOut->GetSize();
+    LONG dstSize = pOut->GetSize();
 
     HRESULT cr = S_OK;
     if (!(inpin->m_rateAndFlush.m_flushing || inpin->m_rateAndFlush.m_endflush)) {
-        cr=imgFilters->convertOutputSample(pict,m_frame.dstColorspace,&dst,&m_frame.dstStride,dstSize,presetSettings->output);
+        cr = imgFilters->convertOutputSample(pict, m_frame.dstColorspace, &dst, &m_frame.dstStride, dstSize, presetSettings->output);
     }
-    pOut->SetActualDataLength(cr==S_FALSE ? dstSize : m_frame.dstSize);
+    pOut->SetActualDataLength(cr == S_FALSE ? dstSize : m_frame.dstSize);
     update_time_on_ffdshow3(rtStart, rtStop);
 
     {
         CAutoUnlock unlock2(&inpin->m_csCodecs_and_imgFilters);
 
-        hr= m_pOutput->Deliver(pOut);
+        hr = m_pOutput->Deliver(pOut);
 
         update_time_on_ffdshow4();
 
@@ -1657,17 +1662,17 @@ HRESULT TffdshowDecVideo::onGraphRemove(void)
 {
     CAutoLock lock(&inpin->m_csCodecs_and_imgFilters);
     if (videoWindow) {
-        videoWindow=NULL;
-        wasVideoWindow=false;
+        videoWindow = NULL;
+        wasVideoWindow = false;
     }
     if (basicVideo) {
-        basicVideo=NULL;
-        wasBasicVideo=false;
+        basicVideo = NULL;
+        wasBasicVideo = false;
     }
     if (imgFilters) {
         delete imgFilters;
     }
-    imgFilters=NULL;
+    imgFilters = NULL;
     if (inputConnectedPin != NULL) {
         inputConnectedPin->Release();
         inputConnectedPin = NULL;
@@ -1677,16 +1682,16 @@ HRESULT TffdshowDecVideo::onGraphRemove(void)
 
 STDMETHODIMP TffdshowDecVideo::Run(REFERENCE_TIME tStart)
 {
-    DPRINTF(_l("TffdshowDecVideo::Run thread=%d"),GetCurrentThreadId());
+    DPRINTF(_l("TffdshowDecVideo::Run thread=%d"), GetCurrentThreadId());
     if (!wasVideoWindow) {
-        wasVideoWindow=true;
-        if (SUCCEEDED(m_pGraph->QueryInterface(IID_IVideoWindow,(void**)&videoWindow))) {
+        wasVideoWindow = true;
+        if (SUCCEEDED(m_pGraph->QueryInterface(IID_IVideoWindow, (void**)&videoWindow))) {
             videoWindow->Release();
         }
     }
     if (!wasBasicVideo) {
-        wasBasicVideo=true;
-        if (SUCCEEDED(m_pGraph->QueryInterface(IID_IBasicVideo,(void**)&basicVideo))) {
+        wasBasicVideo = true;
+        if (SUCCEEDED(m_pGraph->QueryInterface(IID_IBasicVideo, (void**)&basicVideo))) {
             basicVideo->Release();
         }
     }
@@ -1694,18 +1699,18 @@ STDMETHODIMP TffdshowDecVideo::Run(REFERENCE_TIME tStart)
 }
 STDMETHODIMP TffdshowDecVideo::Stop(void)
 {
-    DPRINTF(_l("TffdshowDecVideo::Stop thread=%d"),GetCurrentThreadId());
+    DPRINTF(_l("TffdshowDecVideo::Stop thread=%d"), GetCurrentThreadId());
     m_dirtyStop = true;
     if (hReconnectEvent) {
         SetEvent(hReconnectEvent);
     }
     if (videoWindow) {
-        videoWindow=NULL;
-        wasVideoWindow=false;
+        videoWindow = NULL;
+        wasVideoWindow = false;
     }
     if (basicVideo) {
-        basicVideo=NULL;
-        wasBasicVideo=false;
+        basicVideo = NULL;
+        wasBasicVideo = false;
     }
     return TffdshowDec::Stop();
 }
@@ -1721,32 +1726,32 @@ void TffdshowDecVideo::unlockReceive(void)
     m_csReceive.Unlock();
 }
 
-HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate)
+HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
-    DPRINTF(_l("TffdshowDecVideo::NewSegment thread=%d"),GetCurrentThreadId());
-    OSD_time_on_ffdshowStart=0;
-    OSD_time_on_ffdshowBeforeGetBuffer=0;
-    OSD_time_on_ffdshowAfterGetBuffer=0;
-    OSD_time_on_ffdshowEnd=0;
-    OSD_time_on_ffdshowResult=0;
-    OSD_time_on_ffdshowOldStart=0;
-    OSD_time_on_ffdshowDuration=0;
-    segmentStart=tStart;
-    segmentFrameCnt=0;
+    DPRINTF(_l("TffdshowDecVideo::NewSegment thread=%d"), GetCurrentThreadId());
+    OSD_time_on_ffdshowStart = 0;
+    OSD_time_on_ffdshowBeforeGetBuffer = 0;
+    OSD_time_on_ffdshowAfterGetBuffer = 0;
+    OSD_time_on_ffdshowEnd = 0;
+    OSD_time_on_ffdshowResult = 0;
+    OSD_time_on_ffdshowOldStart = 0;
+    OSD_time_on_ffdshowDuration = 0;
+    segmentStart = tStart;
+    segmentFrameCnt = 0;
     vc1frameCnt = 0;
-    vc1rtStart=0;
+    vc1rtStart = 0;
     m_rtStart = 0;
     count_decoded_frames_for_framerate_calculation = 0;
     rollingAvg = 0;
 
-    for (size_t i=0; i<textpins.size(); i++)
+    for (size_t i = 0; i < textpins.size(); i++)
         if (textpins[i]->needSegment) {
-            textpins[i]->NewSegment(tStart,tStop,dRate);
+            textpins[i]->NewSegment(tStart, tStop, dRate);
         }
-    late=lastrtStart=0;
-    frameCnt=0;
-    bytesCnt=0;
-    return TffdshowDec::NewSegment(tStart,tStop,dRate);
+    late = lastrtStart = 0;
+    frameCnt = 0;
+    bytesCnt = 0;
+    return TffdshowDec::NewSegment(tStart, tStop, dRate);
 }
 
 HRESULT TffdshowDecVideo::EndOfStream(void)
@@ -1763,11 +1768,11 @@ STDMETHODIMP TffdshowDecVideo::findOverlayControl(IMixerPinConfig2* *overlayPtr)
     if (!overlayPtr) {
         return E_POINTER;
     }
-    *overlayPtr=NULL;
+    *overlayPtr = NULL;
     if (!m_pGraph) {
         return E_UNEXPECTED;
     }
-    return searchPinInterface(m_pGraph,IID_IMixerPinConfig2,(IUnknown**)overlayPtr)?S_OK:S_FALSE;
+    return searchPinInterface(m_pGraph, IID_IMixerPinConfig2, (IUnknown**)overlayPtr) ? S_OK : S_FALSE;
 }
 
 struct TvmrInterfaceCmp {
@@ -1776,19 +1781,19 @@ private:
 public:
     mutable comptr<IVMRMixerControl9> vmr9;
     mutable int id;
-    TvmrInterfaceCmp(const IID &Iiid):iid(Iiid),vmr9(NULL),id(-1) {}
-    bool operator()(IBaseFilter *f,IPin *ipin) const {
-        if (FAILED(f->QueryInterface(iid,(void**)&vmr9)) || vmr9==NULL) {
+    TvmrInterfaceCmp(const IID &Iiid): iid(Iiid), vmr9(NULL), id(-1) {}
+    bool operator()(IBaseFilter *f, IPin *ipin) const {
+        if (FAILED(f->QueryInterface(iid, (void**)&vmr9)) || vmr9 == NULL) {
             return false;
         }
         comptr<IEnumPins> epi;
-        if (f->EnumPins(&epi)==S_OK) {
+        if (f->EnumPins(&epi) == S_OK) {
             epi->Reset();
-            id=0;
-            for (comptr<IPin> bpi; epi->Next(1,&bpi,NULL)==S_OK; bpi=NULL,id++) {
+            id = 0;
+            for (comptr<IPin> bpi; epi->Next(1, &bpi, NULL) == S_OK; bpi = NULL, id++) {
                 comptr<IPin> cpin;
                 bpi->ConnectedTo(&cpin);
-                if (ipin==cpin) {
+                if (ipin == cpin) {
                     return true;
                 }
             }
@@ -1802,19 +1807,19 @@ STDMETHODIMP TffdshowDecVideo::findOverlayControl2(IhwOverlayControl* *overlayPt
     if (!overlayPtr) {
         return E_POINTER;
     }
-    *overlayPtr=NULL;
+    *overlayPtr = NULL;
     if (m_pGraph) {
         comptr<IMixerPinConfig2> overlay;
         if (!searchInterfaceInGraph) {
             searchInterfaceInGraph = new TsearchInterfaceInGraph(m_pGraph, IID_IMixerPinConfig2, searchPinInterface);
         }
         if (searchInterfaceInGraph && searchInterfaceInGraph->getResult((IUnknown**)&overlay) && overlay) {
-            (*overlayPtr=new ThwOverlayControlOverlay(overlay))->AddRef();
+            (*overlayPtr = new ThwOverlayControlOverlay(overlay))->AddRef();
             return S_OK;
         } else {
             TvmrInterfaceCmp vmr9comp(IID_IVMRMixerControl9);
-            if (searchPrevNextFilter(PINDIR_OUTPUT,m_pOutput,m_pOutput,NULL,vmr9comp)) {
-                (*overlayPtr=new ThwOverlayControlVMR9(vmr9comp.vmr9,vmr9comp.id))->AddRef();
+            if (searchPrevNextFilter(PINDIR_OUTPUT, m_pOutput, m_pOutput, NULL, vmr9comp)) {
+                (*overlayPtr = new ThwOverlayControlVMR9(vmr9comp.vmr9, vmr9comp.id))->AddRef();
                 return S_OK;
             }
         }
@@ -1822,33 +1827,33 @@ STDMETHODIMP TffdshowDecVideo::findOverlayControl2(IhwOverlayControl* *overlayPt
             return E_FAIL;
         }
     }
-    (*overlayPtr=new ThwOverlayControlBase)->AddRef();
+    (*overlayPtr = new ThwOverlayControlBase)->AddRef();
     return S_FALSE;
 }
 
 int TffdshowDecVideo::GetPinCount(void)
 {
-    return int(2+textpins.size()+(textpins.size()==textpins.getNumConnectedInpins()?1:0));
+    return int(2 + textpins.size() + (textpins.size() == textpins.getNumConnectedInpins() ? 1 : 0));
 }
 CBasePin* TffdshowDecVideo::GetPin(int n)
 {
-    if (n==0) {
+    if (n == 0) {
         return m_pInput;
-    } else if (n==1) {
+    } else if (n == 1) {
         return m_pOutput;
     } else {
-        n-=2;
-        if (n<(int)textpins.size()) {
+        n -= 2;
+        if (n < (int)textpins.size()) {
             return textpins[n];
         } else {
             wchar_t name[50];
-            if (n==0) {
-                swprintf(name,L"In Text");
+            if (n == 0) {
+                swprintf(name, L"In Text");
             } else {
-                swprintf(name,L"In Text %i",n+1);
+                swprintf(name, L"In Text %i", n + 1);
             }
-            HRESULT phr=0;
-            TtextInputPin *textpin=new TtextInputPin(this,&phr,name,n+1);
+            HRESULT phr = 0;
+            TtextInputPin *textpin = new TtextInputPin(this, &phr, name, n + 1);
             if (FAILED(phr)) {
                 return NULL;
             }
@@ -1857,16 +1862,16 @@ CBasePin* TffdshowDecVideo::GetPin(int n)
         }
     }
 }
-STDMETHODIMP TffdshowDecVideo::FindPin(LPCWSTR Id,IPin **ppPin)
+STDMETHODIMP TffdshowDecVideo::FindPin(LPCWSTR Id, IPin **ppPin)
 {
-    CheckPointer(ppPin,E_POINTER);
+    CheckPointer(ppPin, E_POINTER);
 
-    if (lstrcmpW(Id,m_pInput->Name())==0) {
-        *ppPin=m_pInput;
-    } else if (lstrcmpW(Id,m_pOutput->Name())==0) {
-        *ppPin=m_pOutput;
+    if (lstrcmpW(Id, m_pInput->Name()) == 0) {
+        *ppPin = m_pInput;
+    } else if (lstrcmpW(Id, m_pOutput->Name()) == 0) {
+        *ppPin = m_pOutput;
     } else {
-        *ppPin=textpins.find(Id);
+        *ppPin = textpins.find(Id);
     }
 
     if (*ppPin) {
@@ -1878,80 +1883,80 @@ STDMETHODIMP TffdshowDecVideo::FindPin(LPCWSTR Id,IPin **ppPin)
 }
 HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 {
-    HRESULT hr=S_OK;
-    bool use_workaround = (_strnicmp(_l("powerpnt.exe"),getExeflnm(),13)==0);
-    
-    if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
+    HRESULT hr = S_OK;
+    bool use_workaround = (_strnicmp(_l("powerpnt.exe"), getExeflnm(), 13) == 0);
+
+    if ((newpict.rectFull == oldRect && newpict.rectFull.sar != oldRect.sar)
             && use_workaround) {
         // Do not set PAR in output media type.
-        oldRect=newpict.rectFull;
+        oldRect = newpict.rectFull;
         return S_OK;
     }
-    if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
-            && _strnicmp(_l("wmplayer.exe"),getExeflnm(),13)!=0
-            && (downstreamID == OVERLAY_MIXER || (dvdproc &&  (downstreamID ==  VMR7 || downstreamID == VMR9 || downstreamID == VMR9RENDERLESS_MPC)))) {
+    if ((newpict.rectFull == oldRect && newpict.rectFull.sar != oldRect.sar)
+            && _strnicmp(_l("wmplayer.exe"), getExeflnm(), 13) != 0
+            && (downstreamID == OVERLAY_MIXER || (dvdproc && (downstreamID ==  VMR7 || downstreamID == VMR9 || downstreamID == VMR9RENDERLESS_MPC)))) {
         m_NeedToAttachFormat = true;
-        oldRect=newpict.rectFull;
+        oldRect = newpict.rectFull;
         return S_OK;
     }
 
-    if (newpict.rectFull!=oldRect || newpict.rectFull.sar!=oldRect.sar) {
+    if (newpict.rectFull != oldRect || newpict.rectFull.sar != oldRect.sar) {
         DPRINTF(_l("TffdshowDecVideo::reconnectOutput"));
 
         if (!m_pOutput->IsConnected()) {
             return VFW_E_NOT_CONNECTED;
         }
 
-        inReconnect=true;
-        int newdy=newpict.rectFull.dy;
-        if (newpict.cspInfo.id==FF_CSP_420P) {
-            newdy=odd2even(newdy);
+        inReconnect = true;
+        int newdy = newpict.rectFull.dy;
+        if (newpict.cspInfo.id == FF_CSP_420P) {
+            newdy = odd2even(newdy);
         }
-        reconnectRect=newpict;
-        reconnectRect.rectFull.dy=newdy;
-        CMediaType &mt=m_pOutput->CurrentMediaType();
-        BITMAPINFOHEADER *bmi=NULL;
-        if (mt.formattype==FORMAT_VideoInfo) {
-            VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.Format();
-            SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newdy);
-            SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
-            bmi=&vih->bmiHeader;
+        reconnectRect = newpict;
+        reconnectRect.rectFull.dy = newdy;
+        CMediaType &mt = m_pOutput->CurrentMediaType();
+        BITMAPINFOHEADER *bmi = NULL;
+        if (mt.formattype == FORMAT_VideoInfo) {
+            VIDEOINFOHEADER *vih = (VIDEOINFOHEADER*)mt.Format();
+            SetRect(&vih->rcSource, 0, 0, newpict.rectFull.dx, newdy);
+            SetRect(&vih->rcTarget, 0, 0, newpict.rectFull.dx, newdy);
+            bmi = &vih->bmiHeader;
             //bmi->biXPelsPerMeter = m_win * m_aryin;
             //bmi->biYPelsPerMeter = m_hin * m_arxin;
-        } else if (mt.formattype==FORMAT_VideoInfo2) {
-            VIDEOINFOHEADER2* vih=(VIDEOINFOHEADER2*)mt.Format();
+        } else if (mt.formattype == FORMAT_VideoInfo2) {
+            VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)mt.Format();
             //DPRINTF(_l("AR in: %i:%i"),vih->dwPictAspectRatioX,vih->dwPictAspectRatioY);
 
-            SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newdy);
-            SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
-            bmi=&vih->bmiHeader;
+            SetRect(&vih->rcSource, 0, 0, newpict.rectFull.dx, newdy);
+            SetRect(&vih->rcTarget, 0, 0, newpict.rectFull.dx, newdy);
+            bmi = &vih->bmiHeader;
 
             //DPRINTF(_l("AR pict: %i:%i"),newpict.rectFull.dar().num,newpict.rectFull.dar().den);
 
             //vih->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift);
-            setVIH2aspect(vih,newpict.rectFull,presetSettings->output->hwOverlayAspect);
+            setVIH2aspect(vih, newpict.rectFull, presetSettings->output->hwOverlayAspect);
             if (use_workaround) {
-                vih->dwPictAspectRatioX=newpict.rectFull.dx;
-                vih->dwPictAspectRatioY=newdy;
-                vih->dwControlFlags=0;
+                vih->dwPictAspectRatioX = newpict.rectFull.dx;
+                vih->dwPictAspectRatioY = newdy;
+                vih->dwControlFlags = 0;
             }
-            if(presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) {
-                vih->dwPictAspectRatioX= newpict.rectFull.dx;
-                vih->dwPictAspectRatioY= newpict.rectFull.dy;
+            if (presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode == 0) {
+                vih->dwPictAspectRatioX = newpict.rectFull.dx;
+                vih->dwPictAspectRatioY = newpict.rectFull.dy;
             }
 
             //DPRINTF(_l("AR set: %i:%i"),vih->dwPictAspectRatioX,vih->dwPictAspectRatioY);
         }
 
-        bmi->biWidth=newpict.rectFull.dx;
-        bmi->biHeight=newdy;
-        bmi->biSizeImage=newpict.rectFull.dx*newdy*bmi->biBitCount>>3;
+        bmi->biWidth = newpict.rectFull.dx;
+        bmi->biHeight = newdy;
+        bmi->biSizeImage = newpict.rectFull.dx * newdy * bmi->biBitCount >> 3;
 
         FILTER_INFO filtInfo;
-        IPinConnection* ipinConnection= NULL;  // if this is not supported, dynamic reconnect fails.
-        IGraphConfig* igraphConfig= NULL;      // To reconnect dynamicly. We need to re-negotiate cBuffers.
-        IVMRVideoStreamControl9* iVmrSC9= NULL;
-        BOOL isVMR9Active= true;
+        IPinConnection* ipinConnection = NULL; // if this is not supported, dynamic reconnect fails.
+        IGraphConfig* igraphConfig = NULL;     // To reconnect dynamicly. We need to re-negotiate cBuffers.
+        IVMRVideoStreamControl9* iVmrSC9 = NULL;
+        BOOL isVMR9Active = true;
         m_pOutputDecVideo->DeliverBeginFlush();
         m_pOutputDecVideo->DeliverEndFlush();
         m_pOutputDecVideo->SendAnyway();
@@ -1967,36 +1972,36 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
             iVmrSC9->GetStreamActiveState(&isVMR9Active);
             iVmrSC9->Release();
         }
-        bool overlayYUY2=downstreamID==OVERLAY_MIXER && m_frame.dstColorspace==FF_CSP_YUY2;
+        bool overlayYUY2 = downstreamID == OVERLAY_MIXER && m_frame.dstColorspace == FF_CSP_YUY2;
         if (!overlayYUY2) {
-            hr= m_pOutput->GetConnected()->QueryAccept(&mt);
+            hr = m_pOutput->GetConnected()->QueryAccept(&mt);
             if (SUCCEEDED(hr)) {
-                int retry=ppropActual.cBuffers*10; // Read comments in DecideBufferSizeVMR for the reason to retry.
+                int retry = ppropActual.cBuffers * 10; // Read comments in DecideBufferSizeVMR for the reason to retry.
                 do {
-                    hr= m_pOutput->GetConnected()->ReceiveConnection(m_pOutput, &mt);
+                    hr = m_pOutput->GetConnected()->ReceiveConnection(m_pOutput, &mt);
                     if (FAILED(hr)) {
                         Sleep(10);
                     }
-                } while (FAILED(hr) && retry-->0);
+                } while (FAILED(hr) && retry-- > 0);
             }
         }
 
-        int isDynamicTried=false;
+        int isDynamicTried = false;
         if (overlayYUY2 || (FAILED(hr) && isQueue)) { // try dynamic reconnect to re-negotiate cBuffers.
             DPRINTF(_l("try dynamic reconnect."));
             if (ipinConnection && igraphConfig) {
-                hr= ipinConnection->DynamicQueryAccept(&mt);
+                hr = ipinConnection->DynamicQueryAccept(&mt);
                 if (SUCCEEDED(hr)) {
-                    isDynamicTried=true;
-                    hReconnectEvent= CreateEvent(NULL, false, false, NULL);
-                    hr= igraphConfig->Reconnect((IPin *)m_pOutput, m_pOutput->GetConnected(),&mt,NULL,hReconnectEvent ,AM_GRAPH_CONFIG_RECONNECT_DIRECTCONNECT);
+                    isDynamicTried = true;
+                    hReconnectEvent = CreateEvent(NULL, false, false, NULL);
+                    hr = igraphConfig->Reconnect((IPin *)m_pOutput, m_pOutput->GetConnected(), &mt, NULL, hReconnectEvent , AM_GRAPH_CONFIG_RECONNECT_DIRECTCONNECT);
                     if (SUCCEEDED(hr)) {
                         m_pOutputDecVideo->GetAllocator()->Commit();
                     } else {
                         DPRINTF(_l("Reconnect failed."));
                     }
                     CloseHandle(hReconnectEvent);
-                    hReconnectEvent= NULL;
+                    hReconnectEvent = NULL;
                 }
             }
         }
@@ -2010,18 +2015,18 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
         if (FAILED(hr)) {
             if (reconnectFirstError && isDynamicTried) {
-                MessageBox(NULL,_l("Reconnect failed.\nPlease restart the video application."),_l("ffdshow error"),MB_ICONERROR|MB_OK);
-                reconnectFirstError=false;
+                MessageBox(NULL, _l("Reconnect failed.\nPlease restart the video application."), _l("ffdshow error"), MB_ICONERROR | MB_OK);
+                reconnectFirstError = false;
             }
-            inReconnect=false;
+            inReconnect = false;
             return hr;
         }
 
         comptr<IMediaSample> pOut;
-        if (SUCCEEDED(m_pOutput->GetDeliveryBuffer(&pOut,NULL,NULL,0))) {
+        if (SUCCEEDED(m_pOutput->GetDeliveryBuffer(&pOut, NULL, NULL, 0))) {
             AM_MEDIA_TYPE *opmt;
             if (SUCCEEDED(pOut->GetMediaType(&opmt)) && opmt) {
-                CMediaType omt=*opmt;
+                CMediaType omt = *opmt;
 
                 //VIDEOINFOHEADER2* vih=(VIDEOINFOHEADER2*)omt.Format();
                 //DPRINTF(_l("AR out: %i:%i"),vih->dwPictAspectRatioX,vih->dwPictAspectRatioY);
@@ -2036,17 +2041,17 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
         }
 
 #if 0
-        comptrQ<IMixerPinConfig> imixer=m_pOutput->GetConnected();
+        comptrQ<IMixerPinConfig> imixer = m_pOutput->GetConnected();
         AM_ASPECT_RATIO_MODE arMode;
         if (imixer) {
-            HRESULT hr1=imixer->GetAspectRatioMode(&arMode);
+            HRESULT hr1 = imixer->GetAspectRatioMode(&arMode);
         }
 
-        if (downstreamID==OVERLAY_MIXER) {
-            IBasicVideo2 *ibv=NULL;
+        if (downstreamID == OVERLAY_MIXER) {
+            IBasicVideo2 *ibv = NULL;
             graph->QueryInterface(IID_IBasicVideo2, (void **)(&ibv));
             if (ibv) {
-                HRESULT hr2=ibv->SetSourcePosition(newpict.rectFull.x,newpict.rectFull.y,newpict.rectFull.dx,newdy);
+                HRESULT hr2 = ibv->SetSourcePosition(newpict.rectFull.x, newpict.rectFull.y, newpict.rectFull.dx, newdy);
                 ibv->Release();
             }
         }
@@ -2061,11 +2066,11 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
         }
 
         // some renderers don't send this
-        NotifyEvent(EC_VIDEO_SIZE_CHANGED,MAKELPARAM(newpict.rectFull.dx,newdy),0);
-        oldRect=newpict.rectFull;
-        inReconnect=false;
-        if(_strnicmp(_l("ehshell.exe"),getExeflnm(),12) == 0) {
-            m_NeedToPauseRun=true;
+        NotifyEvent(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(newpict.rectFull.dx, newdy), 0);
+        oldRect = newpict.rectFull;
+        inReconnect = false;
+        if (_strnicmp(_l("ehshell.exe"), getExeflnm(), 12) == 0) {
+            m_NeedToPauseRun = true;
         }
         return S_OK;
     }
@@ -2075,18 +2080,18 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
 HRESULT TffdshowDecVideo::AlterQuality(Quality q)
 {
-    late=q.Late;
+    late = q.Late;
     return S_FALSE;
 }
 
 HRESULT TffdshowDecVideo::initializeOutputSample(IMediaSample **ppOutSample)
 {
-    if(!m_pOutput->IsConnected()) {
+    if (!m_pOutput->IsConnected()) {
         return VFW_E_NOT_CONNECTED;
     }
     // default - times are the same
-    AM_SAMPLE2_PROPERTIES * const pProps=m_pInput->SampleProps();
-    DWORD dwFlags=m_bSampleSkipped?AM_GBF_PREVFRAMESKIPPED:0;
+    AM_SAMPLE2_PROPERTIES * const pProps = m_pInput->SampleProps();
+    DWORD dwFlags = m_bSampleSkipped ? AM_GBF_PREVFRAMESKIPPED : 0;
 
     // This will prevent the image renderer from switching us to DirectDraw
     // when we can't do it without skipping frames because we're not on a
@@ -2101,28 +2106,28 @@ HRESULT TffdshowDecVideo::initializeOutputSample(IMediaSample **ppOutSample)
     HRESULT hr;
     update_time_on_ffdshow1();
 
-    hr=m_pOutputDecVideo->GetDeliveryBuffer(&pOutSample,
-                                            pProps->dwSampleFlags&AM_SAMPLE_TIMEVALID?&pProps->tStart:NULL,
-                                            pProps->dwSampleFlags&AM_SAMPLE_STOPVALID?&pProps->tStop :NULL,
-                                            dwFlags);
+    hr = m_pOutputDecVideo->GetDeliveryBuffer(&pOutSample,
+            pProps->dwSampleFlags & AM_SAMPLE_TIMEVALID ? &pProps->tStart : NULL,
+            pProps->dwSampleFlags & AM_SAMPLE_STOPVALID ? &pProps->tStop : NULL,
+            dwFlags);
 
     update_time_on_ffdshow2();
 
     if (FAILED(hr)) {
-        DPRINTF(_l(" TffdshowDecVideo::initializeOutputSample GetDeliveryBuffer failed %x"),hr);
+        DPRINTF(_l(" TffdshowDecVideo::initializeOutputSample GetDeliveryBuffer failed %x"), hr);
         return hr;
     }
-    *ppOutSample=pOutSample;
+    *ppOutSample = pOutSample;
 
     ASSERT(pOutSample);
-    setPropsTime(pOutSample,pProps->tStart,pProps->tStop,pProps,&m_bSampleSkipped);
+    setPropsTime(pOutSample, pProps->tStart, pProps->tStop, pProps, &m_bSampleSkipped);
     return S_OK;
 }
 
 void TffdshowDecVideo::setSampleSkipped(bool sendSkip)
 {
     //DPRINTF(_l("dropframe"));
-    m_bSampleSkipped=TRUE;
+    m_bSampleSkipped = TRUE;
     if (sendSkip && inpin) {
         inpin->setSampleSkipped();
     }
@@ -2133,16 +2138,16 @@ int TffdshowDecVideo::IsQueueListedApp(const char_t *exe)
     if (!presetSettings) {
         initPreset();
     }
-    if(presetSettings->useQueueOnlyIn) {
+    if (presetSettings->useQueueOnlyIn) {
         strings queuelistList;
-        strtok(presetSettings->useQueueOnlyInList,_l(";"),queuelistList);
-        for (strings::const_iterator b=queuelistList.begin(); b!=queuelistList.end(); b++)
-            if (DwStrcasecmp(*b,exe)==0) {
+        strtok(presetSettings->useQueueOnlyInList, _l(";"), queuelistList);
+        for (strings::const_iterator b = queuelistList.begin(); b != queuelistList.end(); b++)
+            if (DwStrcasecmp(*b, exe) == 0) {
                 return 1;
             }
         return 0;
     } else {
-        if (_strnicmp(_l("wmplayer.exe"),exe,13)==0) {
+        if (_strnicmp(_l("wmplayer.exe"), exe, 13) == 0) {
             return 0;
         }
         return 1;
@@ -2154,33 +2159,33 @@ void TffdshowDecVideo::DPRINTF_SampleTime(IMediaSample* pSample)
     REFERENCE_TIME TimeStart;
     REFERENCE_TIME TimeEnd;
     pSample->GetTime(&TimeStart, &TimeEnd);
-    DPRINTF(_l(" tStart %7.0f, tEnd %7.0f"), TimeStart/10000.0, TimeEnd/10000.0);
+    DPRINTF(_l(" tStart %7.0f, tEnd %7.0f"), TimeStart / 10000.0, TimeEnd / 10000.0);
 }
 
 void TffdshowDecVideo::set_downstreamID(IPin *downstream_input_pin)
 {
-    downstreamID=UNKNOWN;
-    const CLSID &ref=GetCLSID(downstream_input_pin);
-    if (ref==CLSID_VideoRenderer) {
-        downstreamID=OLD_RENDERER;
+    downstreamID = UNKNOWN;
+    const CLSID &ref = GetCLSID(downstream_input_pin);
+    if (ref == CLSID_VideoRenderer) {
+        downstreamID = OLD_RENDERER;
     }
-    if (ref==CLSID_OverlayMixer) {
-        downstreamID=OVERLAY_MIXER;
+    if (ref == CLSID_OverlayMixer) {
+        downstreamID = OVERLAY_MIXER;
     }
-    if (ref==CLSID_VideoMixingRenderer) {
-        downstreamID=VMR7;
+    if (ref == CLSID_VideoMixingRenderer) {
+        downstreamID = VMR7;
     }
-    if (ref==CLSID_HaaliVideoRenderer) {
-        downstreamID=HAALI_RENDERER;
+    if (ref == CLSID_HaaliVideoRenderer) {
+        downstreamID = HAALI_RENDERER;
     }
-    if (ref==CLSID_VideoMixingRenderer9)
+    if (ref == CLSID_VideoMixingRenderer9)
         if (IsVMR9Renderless(downstream_input_pin)) {
-            downstreamID=VMR9RENDERLESS_MPC;
+            downstreamID = VMR9RENDERLESS_MPC;
         } else {
-            downstreamID=VMR9;
+            downstreamID = VMR9;
         }
-    if (ref==CLSID_DirectVobSubFilter || ref==CLSID_DirectVobSubFilter2) {
-        downstreamID=DVOBSUB;
+    if (ref == CLSID_DirectVobSubFilter || ref == CLSID_DirectVobSubFilter2) {
+        downstreamID = DVOBSUB;
     }
 }
 
@@ -2199,11 +2204,11 @@ int TffdshowDecVideo::get_trayIconType(void)
 void TffdshowDecVideo::getChapters(void)
 {
     comptr<IEnumFilters> eff;
-    if (graph->EnumFilters(&eff)==S_OK) {
+    if (graph->EnumFilters(&eff) == S_OK) {
         eff->Reset();
-        for (comptr<IBaseFilter> bff; eff->Next(1,&bff,NULL)==S_OK; bff=NULL) {
-            char_t name[MAX_PATH],filtername[MAX_PATH];
-            getFilterName(bff,name,filtername,countof(filtername));
+        for (comptr<IBaseFilter> bff; eff->Next(1, &bff, NULL) == S_OK; bff = NULL) {
+            char_t name[MAX_PATH], filtername[MAX_PATH];
+            getFilterName(bff, name, filtername, countof(filtername));
             if (!strcmp(FFDSHOW_NAME_L, filtername)
                     || !strcmp(FFDSHOWRAW_NAME_L, filtername)
                     || !strcmp(FFDSHOWVFW_NAME_L, filtername)
@@ -2236,13 +2241,13 @@ void TffdshowDecVideo::getChapters(void)
             chaptersList.clear();
 
             // Retrieve the list of chapters and add them to the chaptersList
-            for (int i=1; i<= markerCount; i++) {
+            for (int i = 1; i <= markerCount; i++) {
                 double markerTime = 0;
                 BSTR markerName = NULL;
                 if (pChapterBag != NULL) {
                     REFERENCE_TIME rtMarker = 0;
-                    pChapterBag->ChapGet(i-1, &rtMarker, &markerName);
-                    markerTime = (double)(rtMarker/100000000);
+                    pChapterBag->ChapGet(i - 1, &rtMarker, &markerName);
+                    markerTime = (double)(rtMarker / 100000000);
                 } else {
                     pAMExtendedSeeking->GetMarkerTime(i, &markerTime);
                     pAMExtendedSeeking->GetMarkerName(i, &markerName);
@@ -2260,10 +2265,10 @@ void TffdshowDecVideo::getChapters(void)
                 } else {
                     int hh, mm, ss;
                     char_t time_str[30];
-                    hh = (int)(markerTime/3600);
-                    mm = (int)((markerTime - hh*3600)/60);
-                    ss = (int)(markerTime - hh*3600 - mm*60);
-                    tsprintf(time_str,_l("%02i:%02i:%02"), hh, mm, ss);
+                    hh = (int)(markerTime / 3600);
+                    mm = (int)((markerTime - hh * 3600) / 60);
+                    ss = (int)(markerTime - hh * 3600 - mm * 60);
+                    tsprintf(time_str, _l("%02i:%02i:%02"), hh, mm, ss);
                     long markerTimeL = (long)markerTime;
                     std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, time_str);
                     chaptersList.push_back(pair);
@@ -2293,7 +2298,7 @@ STDMETHODIMP TffdshowDecVideo::get_CurrentMarker(long * pCurrentMarker)
     }
     DWORD currentTime = GetTickCount();
     unsigned int i = 0;
-    for (i=0; i<chaptersList.size(); i++) {
+    for (i = 0; i < chaptersList.size(); i++) {
         if ((double)currentTime < chaptersList[i].first) {
             break;
         }
@@ -2313,9 +2318,9 @@ STDMETHODIMP TffdshowDecVideo::GetMarkerTime(long MarkerNum, double * pMarkerTim
         return S_FALSE;
     }
 
-    for (long l=0; (unsigned long)l<chaptersList.size(); l++) {
-        if (l+1 == MarkerNum) {
-            *pMarkerTime=(double)chaptersList[l].first;
+    for (long l = 0; (unsigned long)l < chaptersList.size(); l++) {
+        if (l + 1 == MarkerNum) {
+            *pMarkerTime = (double)chaptersList[l].first;
             break;
         }
     }
@@ -2332,14 +2337,14 @@ STDMETHODIMP TffdshowDecVideo::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerN
         return S_FALSE;
     }
 
-    for (unsigned int i = 0; i<chaptersList.size(); i++) {
-        if (i+1 == (unsigned int)MarkerNum) {
+    for (unsigned int i = 0; i < chaptersList.size(); i++) {
+        if (i + 1 == (unsigned int)MarkerNum) {
             const char_t* markerName = chaptersList[i].second.c_str();
             //wcrtomb(
-            size_t wlen = (chaptersList[i].second.size()+1)*sizeof(WCHAR);
-            *pbstrMarkerName=(WCHAR*)CoTaskMemAlloc(wlen);
-            memset(*pbstrMarkerName,0,wlen);
-            nCopyAnsiToWideChar(*pbstrMarkerName,markerName);
+            size_t wlen = (chaptersList[i].second.size() + 1) * sizeof(WCHAR);
+            *pbstrMarkerName = (WCHAR*)CoTaskMemAlloc(wlen);
+            memset(*pbstrMarkerName, 0, wlen);
+            nCopyAnsiToWideChar(*pbstrMarkerName, markerName);
             break;
         }
         i++;
@@ -2358,45 +2363,45 @@ STDMETHODIMP TffdshowDecVideo::getChaptersList(void **ppChaptersList)
 
 void TffdshowDecVideo::update_time_on_ffdshow1(void)
 {
-    if(isOSD_time_on_ffdshow && m_pClock) {
+    if (isOSD_time_on_ffdshow && m_pClock) {
         m_pClock->GetTime(&OSD_time_on_ffdshowBeforeGetBuffer);
     }
 }
 
 void TffdshowDecVideo::update_time_on_ffdshow2(void)
 {
-    if(isOSD_time_on_ffdshow && m_pClock) {
+    if (isOSD_time_on_ffdshow && m_pClock) {
         m_pClock->GetTime(&OSD_time_on_ffdshowAfterGetBuffer);
     }
 }
 
 void TffdshowDecVideo::update_time_on_ffdshow3(REFERENCE_TIME rtStart, REFERENCE_TIME rtStop)
 {
-    if(isOSD_time_on_ffdshow && m_pClock && rtStart!=REFTIME_INVALID) {
+    if (isOSD_time_on_ffdshow && m_pClock && rtStart != REFTIME_INVALID) {
         m_pClock->GetTime(&OSD_time_on_ffdshowEnd);
-        if(OSD_time_on_ffdshowFirstRun) {
-            OSD_time_on_ffdshowFirstRun= false;
-            OSD_time_on_ffdshowOldStart= rtStart;
-            OSD_time_on_ffdshowDuration= 0;
-            OSD_time_on_ffdshowResult=0;
+        if (OSD_time_on_ffdshowFirstRun) {
+            OSD_time_on_ffdshowFirstRun = false;
+            OSD_time_on_ffdshowOldStart = rtStart;
+            OSD_time_on_ffdshowDuration = 0;
+            OSD_time_on_ffdshowResult = 0;
         } else {
-            OSD_time_on_ffdshowResult= OSD_time_on_ffdshowEnd
-                                       -OSD_time_on_ffdshowAfterGetBuffer
-                                       +OSD_time_on_ffdshowBeforeGetBuffer
-                                       -OSD_time_on_ffdshowStart;
-            if(rtStop>rtStart+1) {
-                OSD_time_on_ffdshowDuration= rtStop-rtStart;
+            OSD_time_on_ffdshowResult = OSD_time_on_ffdshowEnd
+                                        - OSD_time_on_ffdshowAfterGetBuffer
+                                        + OSD_time_on_ffdshowBeforeGetBuffer
+                                        - OSD_time_on_ffdshowStart;
+            if (rtStop > rtStart + 1) {
+                OSD_time_on_ffdshowDuration = rtStop - rtStart;
             } else {
-                OSD_time_on_ffdshowDuration= rtStart-OSD_time_on_ffdshowOldStart;
+                OSD_time_on_ffdshowDuration = rtStart - OSD_time_on_ffdshowOldStart;
             }
-            OSD_time_on_ffdshowOldStart= rtStart;
+            OSD_time_on_ffdshowOldStart = rtStart;
         }
     }
 }
 
 void TffdshowDecVideo::update_time_on_ffdshow4(void)
 {
-    if(isOSD_time_on_ffdshow && m_pClock) {
+    if (isOSD_time_on_ffdshow && m_pClock) {
         m_pClock->GetTime(&OSD_time_on_ffdshowStart);
     }
 }
@@ -2412,10 +2417,10 @@ STDMETHODIMP TffdshowDecVideo::getCurrentSubtitlesFile(char_t **ppSubtitleFile)
     if (!ppSubtitleFile) {
         return E_FAIL;
     }
-    char_t *pSubtitleFile = imgFilters?imgFilters->getCurrentSubFlnm():_l("");
-    size_t len=(strlen(pSubtitleFile)+1)*sizeof(char_t);
-    *ppSubtitleFile=(char_t*)CoTaskMemAlloc(len);
-    memset(*ppSubtitleFile,0,len);
+    char_t *pSubtitleFile = imgFilters ? imgFilters->getCurrentSubFlnm() : _l("");
+    size_t len = (strlen(pSubtitleFile) + 1) * sizeof(char_t);
+    *ppSubtitleFile = (char_t*)CoTaskMemAlloc(len);
+    memset(*ppSubtitleFile, 0, len);
     strcpy(*ppSubtitleFile, pSubtitleFile);
     return S_OK;
 }
@@ -2452,22 +2457,22 @@ void TffdshowDecVideo::OSDtimeStartSampling(void)
 void TffdshowDecVideo::OSDtimeEndSampling(void)
 {
     m_pClock->GetTime(&OSDtime2);
-    if(OSDtime2>OSDlastdisplayed+1000000 && OSDtime2!=OSDtime1) {
-        OSDtime3=OSDtime2-OSDtime1;
-        OSDlastdisplayed=OSDtime2;
+    if (OSDtime2 > OSDlastdisplayed + 1000000 && OSDtime2 != OSDtime1) {
+        OSDtime3 = OSDtime2 - OSDtime1;
+        OSDlastdisplayed = OSDtime2;
     }
 }
 
 void TffdshowDecVideo::OSDtimeEndSamplingMax(void)
 {
     m_pClock->GetTime(&OSDtime2);
-    if(OSDtime2-OSDtime1>OSDtimeMax) {
-        OSDtimeMax= OSDtime2-OSDtime1;
+    if (OSDtime2 - OSDtime1 > OSDtimeMax) {
+        OSDtimeMax = OSDtime2 - OSDtime1;
     }
-    if(OSDtime2>OSDlastdisplayed+5000000 && OSDtime2!=OSDtime1) {
-        OSDtime3=OSDtimeMax;
-        OSDtimeMax=0;
-        OSDlastdisplayed=OSDtime2;
+    if (OSDtime2 > OSDlastdisplayed + 5000000 && OSDtime2 != OSDtime1) {
+        OSDtime3 = OSDtimeMax;
+        OSDtimeMax = 0;
+        OSDlastdisplayed = OSDtime2;
     }
 }
 #endif

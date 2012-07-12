@@ -39,51 +39,51 @@
 void TaboutPage::init(void)
 {
     if (!lic) {
-        lic=loadText(IDD_LICENSE);
+        lic = loadText(IDD_LICENSE);
         if (lic) {
-            setDlgItemText(m_hwnd,IDC_ED_LICENSE,lic);
-            SendDlgItemMessage(m_hwnd,IDC_ED_LICENSE,EM_SETSEL,0,-1);
+            setDlgItemText(m_hwnd, IDC_ED_LICENSE, lic);
+            SendDlgItemMessage(m_hwnd, IDC_ED_LICENSE, EM_SETSEL, 0, -1);
         }
     }
 }
 
-void TaboutPage::exportReg(Twindow *w,char_t *regflnm)
+void TaboutPage::exportReg(Twindow *w, char_t *regflnm)
 {
-    DWORD filterIndex=sizeof(char)==sizeof(char_t)?1:2;;
-    if (dlgGetFile(true,w->m_hwnd,w->_(-IDD_ABOUT,_l("Export ffdshow settings")),_l("Win9x/NT4 Registration Files\0*.reg\0Unicode Registration files\0*.reg\0"),_l("reg"),regflnm,_l("."),0,&filterIndex))
-        if (w->deci->exportRegSettings(true,regflnm,filterIndex==2?1:0)==S_OK) {
-            w->msg(w->_(-IDD_ABOUT,_l("Settings have been succefully exported")));
+    DWORD filterIndex = sizeof(char) == sizeof(char_t) ? 1 : 2;;
+    if (dlgGetFile(true, w->m_hwnd, w->_(-IDD_ABOUT, _l("Export ffdshow settings")), _l("Win9x/NT4 Registration Files\0*.reg\0Unicode Registration files\0*.reg\0"), _l("reg"), regflnm, _l("."), 0, &filterIndex))
+        if (w->deci->exportRegSettings(true, regflnm, filterIndex == 2 ? 1 : 0) == S_OK) {
+            w->msg(w->_(-IDD_ABOUT, _l("Settings have been succefully exported")));
         } else {
-            w->err(w->_(-IDD_ABOUT,_l("Settings export has failed")));
+            w->err(w->_(-IDD_ABOUT, _l("Settings export has failed")));
         }
 }
 void TaboutPage::onExport(void)
 {
     parent->OnApplyChanges();
-    exportReg(this,regflnm);
+    exportReg(this, regflnm);
 }
 void TaboutPage::onLicense(void)
 {
-    int is=getCheck(IDC_CHB_LICENSE);
-    show(!is,IDC_ED_HELP);
-    show(is,IDC_ED_LICENSE);
+    int is = getCheck(IDC_CHB_LICENSE);
+    show(!is, IDC_ED_HELP);
+    show(is, IDC_ED_LICENSE);
 }
 
-template<class T> bool TaboutPage::getVersion(const Tconfig *config,ffstring &vers,ffstring &license)
+template<class T> bool TaboutPage::getVersion(const Tconfig *config, ffstring &vers, ffstring &license)
 {
-    Tdll *dl=new Tdll(T::dllname,config);
-    void (__stdcall *getVersion)(char *ver,const char* *license);
-    dl->loadFunction(getVersion,"getVersion");
-    bool res=false;
+    Tdll *dl = new Tdll(T::dllname, config);
+    void (__stdcall * getVersion)(char * ver, const char* *license);
+    dl->loadFunction(getVersion, "getVersion");
+    bool res = false;
     if (getVersion) {
-        res=true;
+        res = true;
         char ver[256];
         const char *lic;
-        getVersion(ver,&lic);
-        vers=ver;
-        license=lic;
+        getVersion(ver, &lic);
+        vers = ver;
+        license = lic;
     } else {
-        vers="not found";
+        vers = "not found";
         license.clear();
     }
     delete dl;
@@ -92,28 +92,28 @@ template<class T> bool TaboutPage::getVersion(const Tconfig *config,ffstring &ve
 
 void TaboutPage::onAbout(void)
 {
-    TversionsDlg verdlg(deci,m_hwnd,fcsVersions());
+    TversionsDlg verdlg(deci, m_hwnd, fcsVersions());
 }
 /*void TaboutPage::onDonate(void)
 {
  ShellExecute(m_hwnd,_l("open"),_l("http://order.kagi.com/?6FAEY"),NULL,_l("."),SW_SHOWNORMAL);
 }*/
 
-TaboutPage::TaboutPage(TffdshowPageBase *Iparent):TconfPageBase(Iparent)
+TaboutPage::TaboutPage(TffdshowPageBase *Iparent): TconfPageBase(Iparent)
 {
-    dialogId=IDD_ABOUT;
-    helpURL=_l("http://ffdshow-tryout.sourceforge.net/wiki/credits");
-    strcpy(regflnm,_l("ffdshow.reg"));
-    static const TbindButton<TaboutPage> bt[]= {
-        IDC_BT_EXPORT,&TaboutPage::onExport,
+    dialogId = IDD_ABOUT;
+    helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/credits");
+    strcpy(regflnm, _l("ffdshow.reg"));
+    static const TbindButton<TaboutPage> bt[] = {
+        IDC_BT_EXPORT, &TaboutPage::onExport,
         //IDC_LBL_FFDSHOWVERSION,&TaboutPage::onAbout,
-        IDC_BT_FFDSHOWVERSION,&TaboutPage::onAbout,
+        IDC_BT_FFDSHOWVERSION, &TaboutPage::onAbout,
         //IDC_BT_DONATE,&TaboutPage::onDonate,
-        IDC_CHB_LICENSE,&TaboutPage::onLicense,
-        0,NULL
+        IDC_CHB_LICENSE, &TaboutPage::onLicense,
+        0, NULL
     };
     bindButtons(bt);
-    lic=NULL;
+    lic = NULL;
 }
 TaboutPage::~TaboutPage()
 {
@@ -124,82 +124,82 @@ TaboutPage::~TaboutPage()
 void TaboutPage::translate(void)
 {
     TconfPageBase::translate();
-    setText(IDC_LBL_FFDSHOW,_(IDC_LBL_FFDSHOW,capt));
-    const char_t *help= tr->translate(aboutStringID);
-    if(help[0]==0) {
+    setText(IDC_LBL_FFDSHOW, _(IDC_LBL_FFDSHOW, capt));
+    const char_t *help = tr->translate(aboutStringID);
+    if (help[0] == 0) {
         loadHelpStr(helpId);
     } else {
-        setDlgItemText(m_hwnd,IDC_ED_HELP,help);
-        SendDlgItemMessage(m_hwnd,IDC_ED_HELP,EM_SETSEL,0,-1);
+        setDlgItemText(m_hwnd, IDC_ED_HELP, help);
+        SendDlgItemMessage(m_hwnd, IDC_ED_HELP, EM_SETSEL, 0, -1);
     }
     int revision;
-    TregOpRegRead tNSI(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
-    tNSI._REG_OP_N(0,_l("revision"),revision,0);
-    if(revision) {
-        setText(IDC_LBL_FFDSHOWVERSION,_l("ffdshow tryouts rev%d %s"),revision,FFDSHOW_VER);
+    TregOpRegRead tNSI(HKEY_LOCAL_MACHINE, FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
+    tNSI._REG_OP_N(0, _l("revision"), revision, 0);
+    if (revision) {
+        setText(IDC_LBL_FFDSHOWVERSION, _l("ffdshow tryouts rev%d %s"), revision, FFDSHOW_VER);
     } else {
-        setText(IDC_LBL_FFDSHOWVERSION,_l("%s %s"),_(IDC_LBL_FFDSHOWVERSION),FFDSHOW_VER);
+        setText(IDC_LBL_FFDSHOWVERSION, _l("%s %s"), _(IDC_LBL_FFDSHOWVERSION), FFDSHOW_VER);
     }
 }
 
-TaboutPageDecVideo::TaboutPageDecVideo(TffdshowPageBase *Iparent):TaboutPage(Iparent)
+TaboutPageDecVideo::TaboutPageDecVideo(TffdshowPageBase *Iparent): TaboutPage(Iparent)
 {
-    capt=_l("ffdshow video decoder");
-    helpId=IDD_ABOUT;
-    aboutStringID=IDD_README_VIDEO;
+    capt = _l("ffdshow video decoder");
+    helpId = IDD_ABOUT;
+    aboutStringID = IDD_README_VIDEO;
 }
 
 const TversionsDlg::TversionInfo* TaboutPageDecVideo::fcsVersions(void)
 {
-    static const TversionsDlg::TversionInfo fcsDecVideo[]= {
-        _l("ffmpeg.dll"),Tlibavcodec::getVersion,
-        TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
-        TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
-        TimgFilterKernelDeint2::dllname,getVersion<TimgFilterKernelDeint2>,
-        TstreamRAR::dllname,getVersion<TstreamRAR>,
-        TvideoCodecLibmpeg2::dllname,getVersion<TvideoCodecLibmpeg2>,
-        TimgFilterTomsMoComp::dllname,getVersion<TimgFilterTomsMoComp>,
-        Tavisynth_c::dllname,Tavisynth_c::getVersion,
-        TvideoCodecQuickSync::dllname,getVersion<TvideoCodecQuickSync>,
+    static const TversionsDlg::TversionInfo fcsDecVideo[] = {
+        _l("ffmpeg.dll"), Tlibavcodec::getVersion,
+        TvideoCodecXviD4::dllname, getVersion<TvideoCodecXviD4>,
+        TvideoCodecWmv9::dllname, getVersion<TvideoCodecWmv9>,
+        TimgFilterKernelDeint2::dllname, getVersion<TimgFilterKernelDeint2>,
+        TstreamRAR::dllname, getVersion<TstreamRAR>,
+        TvideoCodecLibmpeg2::dllname, getVersion<TvideoCodecLibmpeg2>,
+        TimgFilterTomsMoComp::dllname, getVersion<TimgFilterTomsMoComp>,
+        Tavisynth_c::dllname, Tavisynth_c::getVersion,
+        TvideoCodecQuickSync::dllname, getVersion<TvideoCodecQuickSync>,
         NULL
     };
     return fcsDecVideo;
 }
 
-TaboutPageDecAudio::TaboutPageDecAudio(TffdshowPageBase *Iparent):TaboutPage(Iparent)
+TaboutPageDecAudio::TaboutPageDecAudio(TffdshowPageBase *Iparent): TaboutPage(Iparent)
 {
-    capt=_l("ffdshow audio decoder");
-    helpId=IDD_ABOUTAUDIO;
-    aboutStringID=IDD_README_AUDIO;
+    capt = _l("ffdshow audio decoder");
+    helpId = IDD_ABOUTAUDIO;
+    aboutStringID = IDD_README_AUDIO;
 }
 const TversionsDlg::TversionInfo* TaboutPageDecAudio::fcsVersions(void)
 {
-    static const TversionsDlg::TversionInfo fcsDecAudio[]= {
-        _l("ffmpeg.dll"),Tlibavcodec::getVersion,
-        TaudioCodecLiba52::dllname,getVersion<TaudioCodecLiba52>,
-        TaudioCodecLibDTS::dllname,getVersion<TaudioCodecLibDTS>,
-        TaudioCodecLibFAAD::dllname,getVersion<TaudioCodecLibFAAD>,
-        TaudioCodecLibMAD::dllname,getVersion<TaudioCodecLibMAD>,
-        TaudioFilterResampleSRC::dllname,getVersion<TaudioFilterResampleSRC>,
-        Tavisynth_c::dllname,Tavisynth_c::getVersion,
+    static const TversionsDlg::TversionInfo fcsDecAudio[] = {
+        _l("ffmpeg.dll"), Tlibavcodec::getVersion,
+        TaudioCodecLiba52::dllname, getVersion<TaudioCodecLiba52>,
+        TaudioCodecLibDTS::dllname, getVersion<TaudioCodecLibDTS>,
+        TaudioCodecLibFAAD::dllname, getVersion<TaudioCodecLibFAAD>,
+        TaudioCodecLibMAD::dllname, getVersion<TaudioCodecLibMAD>,
+        TaudioFilterResampleSRC::dllname, getVersion<TaudioFilterResampleSRC>,
+        Tavisynth_c::dllname, Tavisynth_c::getVersion,
         NULL
     };
     return fcsDecAudio;
 }
 
-TaboutPageEnc::TaboutPageEnc(TffdshowPageBase *Iparent):TaboutPage(Iparent)
+TaboutPageEnc::TaboutPageEnc(TffdshowPageBase *Iparent): TaboutPage(Iparent)
 {
-    capt=_l("ffdshow video encoder");
-    helpId=IDD_ABOUTENC;
-    aboutStringID=IDD_README_ENC;
+    capt = _l("ffdshow video encoder");
+    helpId = IDD_ABOUTENC;
+    aboutStringID = IDD_README_ENC;
 }
 const TversionsDlg::TversionInfo* TaboutPageEnc::fcsVersions(void)
 {
-    static const TversionsDlg::TversionInfo fcsEnc[]= {
-        _l("ffmpeg.dll"),Tlibavcodec::getVersion,
+    static const TversionsDlg::TversionInfo fcsEnc[] = {
+        _l("ffmpeg.dll"), Tlibavcodec::getVersion,
         //TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
         //TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
-        Tavisynth_c::dllname,Tavisynth_c::getVersion,
+        Tavisynth_c::dllname, Tavisynth_c::getVersion,
         NULL
     };
     return fcsEnc;

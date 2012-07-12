@@ -149,7 +149,7 @@ private:
         stride_t stride_src,
         stride_t stride_dst);
 
-     template <class _mm, int src_aligned, int dst_aligned> static void convert_simd_Y416(
+    template <class _mm, int src_aligned, int dst_aligned> static void convert_simd_Y416(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -159,13 +159,13 @@ private:
         stride_t stride_src,
         stride_t stride_dst);
 
-     template <class _mm, int src_aligned, int dst_aligned> static void convert_simd_GBRPtoRGB(
-         const uint8_t* srcG,
-         const uint8_t* srcB,
-         const uint8_t* srcR,
-         uint8_t* dst,
-         int dx,
-         int dy,
-         stride_t stride_src,
-         stride_t stride_dst);
+    template <class _mm, int src_aligned, int dst_aligned> static void convert_simd_GBRPtoRGB(
+        const uint8_t* srcG,
+        const uint8_t* srcB,
+        const uint8_t* srcR,
+        uint8_t* dst,
+        int dx,
+        int dy,
+        stride_t stride_src,
+        stride_t stride_dst);
 };

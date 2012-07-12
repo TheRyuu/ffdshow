@@ -3,7 +3,7 @@
 
 #include "TconfPageDecVideo.h"
 
-class TdecoderOptionsPage :public TconfPageDecVideo
+class TdecoderOptionsPage : public TconfPageDecVideo
 {
 private:
     bool islavc;
@@ -19,8 +19,8 @@ public:
     TdecoderOptionsPage(TffdshowPageDec *Iparent);
     virtual void init(void);
     virtual void cfg2dlg(void);
-    virtual void getTip(char_t *tipS,size_t len);
-    virtual bool reset(bool testonly=false);
+    virtual void getTip(char_t *tipS, size_t len);
+    virtual bool reset(bool testonly = false);
     virtual void translate(void);
 };
 

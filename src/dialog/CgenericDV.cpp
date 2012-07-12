@@ -26,34 +26,34 @@ void TgenericDVpage::init(void)
 
 bool TgenericDVpage::enabled(void)
 {
-    return codecId==CODEC_ID_DVVIDEO;
+    return codecId == CODEC_ID_DVVIDEO;
 }
 
 void TgenericDVpage::cfg2dlg(void)
 {
-    cbxSetDataCurSel(IDC_CBX_DV_PROFILE,cfgGet(IDFF_enc_dv_profile));
+    cbxSetDataCurSel(IDC_CBX_DV_PROFILE, cfgGet(IDFF_enc_dv_profile));
 }
 
 void TgenericDVpage::translate(void)
 {
     TconfPageEnc::translate();
 
-    int ii=cbxGetCurSel(IDC_CBX_DV_PROFILE);
+    int ii = cbxGetCurSel(IDC_CBX_DV_PROFILE);
     cbxClear(IDC_CBX_DV_PROFILE);
-    cbxAdd(IDC_CBX_DV_PROFILE,_(IDC_CBX_DV_PROFILE,_l("automatic")),DV_PROFILE_AUTO);
-    for (int i=0; i<countof(dv_profiles); i++) {
-        cbxAdd(IDC_CBX_DV_PROFILE,_(IDC_CBX_DV_PROFILE,text<char_t>(dv_profiles[i].name)),i);
+    cbxAdd(IDC_CBX_DV_PROFILE, _(IDC_CBX_DV_PROFILE, _l("automatic")), DV_PROFILE_AUTO);
+    for (int i = 0; i < countof(dv_profiles); i++) {
+        cbxAdd(IDC_CBX_DV_PROFILE, _(IDC_CBX_DV_PROFILE, text<char_t>(dv_profiles[i].name)), i);
     }
-    cbxSetCurSel(IDC_CBX_DV_PROFILE,ii);
+    cbxSetCurSel(IDC_CBX_DV_PROFILE, ii);
 }
 
-TgenericDVpage::TgenericDVpage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
+TgenericDVpage::TgenericDVpage(TffdshowPageEnc *Iparent): TconfPageEnc(Iparent)
 {
-    dialogId=IDD_GENERIC_DV;
-    static const int props[]= {IDFF_enc_dv_profile,0};
-    propsIDs=props;
-    static const TbindCombobox<TgenericDVpage> cbx[]= {
-        IDC_CBX_DV_PROFILE,IDFF_enc_dv_profile,BINDCBX_DATA,NULL,
+    dialogId = IDD_GENERIC_DV;
+    static const int props[] = {IDFF_enc_dv_profile, 0};
+    propsIDs = props;
+    static const TbindCombobox<TgenericDVpage> cbx[] = {
+        IDC_CBX_DV_PROFILE, IDFF_enc_dv_profile, BINDCBX_DATA, NULL,
         0
     };
     bindComboboxes(cbx);

@@ -2,7 +2,8 @@
 
 #define ENABLE_PERFORMANCE_COUNTER 0
 
-class TPerformanceCounter {
+class TPerformanceCounter
+{
 #if ENABLE_PERFORMANCE_COUNTER
     double frequency;
     LONGLONG timer;
@@ -17,7 +18,8 @@ public:
     void stop();
 };
 
-class TautoPerformanceCounter {
+class TautoPerformanceCounter
+{
 #if ENABLE_PERFORMANCE_COUNTER
     TPerformanceCounter *performanceCounter;
 #endif

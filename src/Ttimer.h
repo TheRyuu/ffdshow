@@ -6,7 +6,7 @@ class Ttimer
 {
 private:
     const char_t *name;
-    int64_t t,t1;
+    int64_t t, t1;
     double freq;
 #ifndef __GNUC__
     static int64_t read_counter(void) {
@@ -45,22 +45,22 @@ private:
             ;
         }
         y = read_counter();
-        return (double) (y - x) / 1000.;
+        return (double)(y - x) / 1000.;
     }
     public:
     Ttimer(const char_t *Iname) {
         //freq=get_freq();
-        name=Iname;
-        t=0;
+        name = Iname;
+        t = 0;
     }
     ~Ttimer() {
-        DPRINTF(_l("timer %s: %12I64i"),name,t);
+        DPRINTF(_l("timer %s: %12I64i"), name, t);
     }
     void start(void) {
-        t1=read_counter();
+        t1 = read_counter();
     }
     void stop(void) {
-        t+=read_counter()-t1;
+        t += read_counter() - t1;
     }
 };
 class TtimerAuto
@@ -69,10 +69,10 @@ class TtimerAuto
     Ttimer *t;
     bool own;
     public:
-    TtimerAuto(const char_t *name):t(new Ttimer(name)),own(true) {
+    TtimerAuto(const char_t *name): t(new Ttimer(name)), own(true) {
         t->start();
     }
-    TtimerAuto(Ttimer &It):t(&It),own(false) {
+    TtimerAuto(Ttimer &It): t(&It), own(false) {
         t->start();
     }
     ~TtimerAuto() {

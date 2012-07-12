@@ -23,16 +23,16 @@ public:
 
 class Tdll;
 struct IkernelDeint;
-DECLARE_FILTER(TimgFilterKernelDeint2,public,TimgFilter)
+DECLARE_FILTER(TimgFilterKernelDeint2, public, TimgFilter)
 private:
 bool bob;
 Tdll *dll;
-IkernelDeint* (*createI)(bool IisYV12,unsigned int width,unsigned int height,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int cpuflags);
+IkernelDeint* (*createI)(bool IisYV12, unsigned int width, unsigned int height, unsigned int rowsize, int Iorder, int Ithreshold, bool Isharp, bool Itwoway, bool Ilinked, bool Imap, bool Ibob, int cpuflags);
 IkernelDeint *kernel;
 TdeinterlaceSettings oldcfg;
 int oldOrder;
 protected:
-virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual bool is(const TffPictBase &pict, const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSP_420P/*|FF_CSP_YUY2*/;
@@ -40,16 +40,16 @@ virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) c
 virtual void onSizeChange(void);
 public:
 static const char_t *dllname;
-TimgFilterKernelDeint2(IffdshowBase *Ideci,Tfilters *Iparent,bool Ibob=false);
+TimgFilterKernelDeint2(IffdshowBase *Ideci, Tfilters *Iparent, bool Ibob = false);
 ~TimgFilterKernelDeint2();
 virtual void done(void);
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 virtual void onSeek(void);
 };
 
-DECLARE_FILTER(TimgFilterKernelBob,public,TimgFilterKernelDeint2)
+DECLARE_FILTER(TimgFilterKernelBob, public, TimgFilterKernelDeint2)
 public:
-TimgFilterKernelBob(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilterKernelDeint2(Ideci,Iparent,true) {}
+TimgFilterKernelBob(IffdshowBase *Ideci, Tfilters *Iparent): TimgFilterKernelDeint2(Ideci, Iparent, true) {}
 };
 
 #endif

@@ -62,7 +62,7 @@ int TccDecoder::good_parity(uint16_t data)
 
 TccDecoder::cc_buffer_t* TccDecoder::active_ccbuffer(void)
 {
-    cc_memory_t *mem=*active;
+    cc_memory_t *mem = *active;
     return &mem->channel[mem->channel_no];
 }
 
@@ -114,7 +114,7 @@ int TccDecoder::cc_row_t::ccrow_find_next_attr_change(int pos, int lastpos)
 
 bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
 {
-    bool was=false;
+    bool was = false;
     int pos = ccrow_find_next_text_part(0);
     while (pos < num_chars) {
         int endpos = ccrow_find_end_of_text_part(pos);
@@ -140,7 +140,7 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
             buf[seg_end - seg_begin] = '\0';
 
             const cc_attribute_t *attr = &cells[attr_pos].attributes;
-            wchar_t sub[CC_COLUMNS*2]=L"";
+            wchar_t sub[CC_COLUMNS * 2] = L"";
             if (attr->italic) {
                 strncat_s(sub, countof(sub), L"<i>", _TRUNCATE);
             }
@@ -155,7 +155,7 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
                 strncat_s(sub, countof(sub), L"</u>", _TRUNCATE);
             }
             renderer->deciV->addClosedCaption(sub);
-            was=true;
+            was = true;
             //ccrow_set_attributes(renderer, this, attr_pos);
             //osd_renderer->get_text_size(renderer->cap_display, buf, &seg_w, &seg_h);
 
@@ -208,7 +208,7 @@ void TccDecoder::cc_buffer_t::ccbuf_add_char(wchar_t c)
 #endif
     }
 
-    if (pos > 0 && rowbuf->cells[pos-1].c == 0x27 && c == 0x2019) {
+    if (pos > 0 && rowbuf->cells[pos - 1].c == 0x27 && c == 0x2019) {
         rowbuf->cells[pos].c = c;
         rowbuf->cells[pos].midrow_attr = rowbuf->attr_chg;
     } else {
@@ -282,10 +282,10 @@ int TccDecoder::cc_buffer_t::cc_buf_has_displayable()
 
 void TccDecoder::cc_buffer_t::ccbuf_render(cc_renderer_t *renderer)
 {
-    bool wasrow=false;
+    bool wasrow = false;
     for (int row = 0; row < CC_ROWS; ++row) {
         if (rows[row].num_chars > 0) {
-            wasrow|=rows[row].ccrow_render(renderer, row);
+            wasrow |= rows[row].ccrow_render(renderer, row);
         } else if (wasrow) {
             renderer->deciV->addClosedCaption(L"");
         }
@@ -295,7 +295,7 @@ void TccDecoder::cc_buffer_t::ccbuf_render(cc_renderer_t *renderer)
 
 void TccDecoder::cc_memory_t::ccmem_clear(void)
 {
-    memset(this, 0, sizeof (cc_memory_t));
+    memset(this, 0, sizeof(cc_memory_t));
 }
 
 void TccDecoder::cc_set_channel(int channel)
@@ -550,16 +550,16 @@ void TccDecoder::cc_swap_buffers(void)
     cc_hide_displayed();
 
     // DPRINTFA("cc_decoder: cc_swap_buffers: swapping caption memory\n");
-    std::swap( on_buf, off_buf);
+    std::swap(on_buf, off_buf);
 
     /* show new displayed memory */
     cc_show_displayed();
 }
 
 
-void TccDecoder::cc_decode_misc_control_code(int channel,uint8_t c1, uint8_t c2)
+void TccDecoder::cc_decode_misc_control_code(int channel, uint8_t c1, uint8_t c2)
 {
-    cc_set_channel( channel);
+    cc_set_channel(channel);
 
     switch (c2) {          /* 0x20 <= c2 <= 0x2f */
 
@@ -681,7 +681,7 @@ void TccDecoder::cc_decode_EIA608(uint16_t data)
     lastcode = data;
 }
 
-void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
+void TccDecoder::decode(const uint8_t *buffer, size_t buf_len)
 {
     /* The first number may denote a channel number. I don't have the
      * EIA-708 standard, so it is hard to say.
@@ -789,7 +789,7 @@ void TccDecoder::cc_show_displayed(void)
     if (cc_onscreen_displayable()) {
         //int64_t vpts = cc_renderer_calc_vpts(cc_state->renderer, pts, f_offset);
         //DPRINTFA("cc_decoder: cc_show_displayed: showing caption %u at vpts %u\n", capid, vpts);
-        int64_t vpts=0;
+        int64_t vpts = 0;
         capid++;
         cc_state.renderer->cc_renderer_show_caption(&on_buf->channel[on_buf->channel_no], vpts);
     }
@@ -815,7 +815,7 @@ void TccDecoder::onSeek(void)
 TccDecoder::TccDecoder(IffdshowDecVideo *deciV):
     capid(0),
     lastcode(0),
-    pts(0),f_offset(0),
+    pts(0), f_offset(0),
     cc_renderer(deciV),
     cc_state(&cc_renderer)
 {

@@ -13,7 +13,7 @@ public:
     void analyze(const TxvidStats *stats);
     bool ready;
     double avg;
-    double avgmin,avgmax;
+    double avgmin, avgmax;
     uint64_t Psize;
     unsigned int Pnum;
     unsigned int getFramesCount(unsigned int size);

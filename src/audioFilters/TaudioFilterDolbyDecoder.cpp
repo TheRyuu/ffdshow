@@ -21,11 +21,11 @@
 #include "TaudioFilterDolbyDecoder.h"
 #include "TfirSettings.h"
 
-TaudioFilterDolbyDecoder2::TaudioFilterDolbyDecoder2(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
+TaudioFilterDolbyDecoder2::TaudioFilterDolbyDecoder2(IffdshowBase *Ideci, Tfilters *Iparent): TaudioFilter(Ideci, Iparent)
 {
-    olddelay=-1;
-    oldfreq=0;
-    filter_coefs_lfe=NULL;
+    olddelay = -1;
+    oldfreq = 0;
+    filter_coefs_lfe = NULL;
 }
 
 void TaudioFilterDolbyDecoder2::done(void)
@@ -34,16 +34,16 @@ void TaudioFilterDolbyDecoder2::done(void)
     if (filter_coefs_lfe) {
         aligned_free(filter_coefs_lfe);
     }
-    filter_coefs_lfe=NULL;
+    filter_coefs_lfe = NULL;
 }
 
-bool TaudioFilterDolbyDecoder2::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
+bool TaudioFilterDolbyDecoder2::is(const TsampleFormat &fmt, const TfilterSettingsAudio *cfg)
 {
-    return super::is(fmt,cfg) && fmt.nchannels==2;
+    return super::is(fmt, cfg) && fmt.nchannels == 2;
 }
-bool TaudioFilterDolbyDecoder2::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
+bool TaudioFilterDolbyDecoder2::getOutputFmt(TsampleFormat &fmt, const TfilterSettingsAudio *cfg)
 {
-    if (super::getOutputFmt(fmt,cfg)) {
+    if (super::getOutputFmt(fmt, cfg)) {
         fmt.setChannels(6);
         return true;
     } else {
@@ -53,7 +53,7 @@ bool TaudioFilterDolbyDecoder2::getOutputFmt(TsampleFormat &fmt,const TfilterSet
 
 float TaudioFilterDolbyDecoder2::passive_lock(float x)
 {
-    static const float MATAGCLOCK=0.2f;    /* AGC range (around 1) where the matrix behaves passively */
+    static const float MATAGCLOCK = 0.2f;  /* AGC range (around 1) where the matrix behaves passively */
     const float x1 = x - 1;
     const float ax1s = fabs(x - 1) * (1.0f / MATAGCLOCK);
     return x1 - x1 / (1 + ax1s * ax1s) + 1;
@@ -69,10 +69,10 @@ void TaudioFilterDolbyDecoder2::matrix_decode(const float *in, const int k, cons
         float *lf, float *rf, float *lr,
         float *rr, float *cf)
 {
-    static const float M9_03DB=0.3535533906f;
-    static const float MATAGCTRIG=8.0f;    /* (Fuzzy) AGC trigger */
-    static const float MATAGCDECAY=1.0f;   /* AGC baseline decay rate (1/samp.) */
-    static const float MATCOMPGAIN=0.37f;  /* Cross talk compensation gain,  0.50 - 0.55 is full cancellation. */
+    static const float M9_03DB = 0.3535533906f;
+    static const float MATAGCTRIG = 8.0f;  /* (Fuzzy) AGC trigger */
+    static const float MATAGCDECAY = 1.0f; /* AGC baseline decay rate (1/samp.) */
+    static const float MATCOMPGAIN = 0.37f; /* Cross talk compensation gain,  0.50 - 0.55 is full cancellation. */
 
     const int kr = (k + olddelay) % dlbuflen;
     float l_gain = (l_fwr + r_fwr) / (1 + l_fwr + l_fwr);
@@ -145,29 +145,29 @@ void TaudioFilterDolbyDecoder2::matrix_decode(const float *in, const int k, cons
 
 TfirFilter::_ftype_t* TaudioFilterDolbyDecoder2::calc_coefficients_125Hz_lowpass(int rate)
 {
-    len125=256;
-    TfirFilter::_ftype_t f=125.0f/(rate/2);
-    TfirFilter::_ftype_t *coeffs=TfirFilter::design_fir(&len125,&f,TfirSettings::LOWPASS,TfirSettings::WINDOW_HAMMING,0);
-    static const float M3_01DB=0.7071067812f;
-    for (unsigned int i=0; i<len125; i++) {
-        coeffs[i]*=M3_01DB;
+    len125 = 256;
+    TfirFilter::_ftype_t f = 125.0f / (rate / 2);
+    TfirFilter::_ftype_t *coeffs = TfirFilter::design_fir(&len125, &f, TfirSettings::LOWPASS, TfirSettings::WINDOW_HAMMING, 0);
+    static const float M3_01DB = 0.7071067812f;
+    for (unsigned int i = 0; i < len125; i++) {
+        coeffs[i] *= M3_01DB;
     }
     return coeffs;
 }
 
-HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
+HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it, TsampleFormat &fmt, void *samples, size_t numsamples, const TfilterSettingsAudio *cfg0)
 {
-    static const unsigned int FWRDURATION=240;      /* FWR average duration (samples) */
+    static const unsigned int FWRDURATION = 240;    /* FWR average duration (samples) */
 
-    const TdolbyDecoderSettings *cfg=(const TdolbyDecoderSettings*)cfg0;
+    const TdolbyDecoderSettings *cfg = (const TdolbyDecoderSettings*)cfg0;
 
-    if (is(fmt,cfg)) {
-        if (olddelay!=cfg->delay || oldfreq!=fmt.freq) {
+    if (is(fmt, cfg)) {
+        if (olddelay != cfg->delay || oldfreq != fmt.freq) {
             done();
-            olddelay=cfg->delay;
-            oldfreq=fmt.freq;
-            dlbuflen=std::max(FWRDURATION,(fmt.freq*cfg->delay/1000));//+(len7000-1);
-            cyc_pos=dlbuflen-1;
+            olddelay = cfg->delay;
+            oldfreq = fmt.freq;
+            dlbuflen = std::max(FWRDURATION, (fmt.freq * cfg->delay / 1000)); //+(len7000-1);
+            cyc_pos = dlbuflen - 1;
             fwrbuf_l.resize(dlbuflen);
             fwrbuf_r.resize(dlbuflen);
             lf.resize(dlbuflen);
@@ -176,16 +176,16 @@ HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleForm
             rr.resize(dlbuflen);
             cf.resize(dlbuflen);
             cr.resize(dlbuflen);
-            filter_coefs_lfe=calc_coefficients_125Hz_lowpass(fmt.freq);
-            lfe_pos=0;
-            memset(LFE_buf,0,sizeof(LFE_buf));
+            filter_coefs_lfe = calc_coefficients_125Hz_lowpass(fmt.freq);
+            lfe_pos = 0;
+            memset(LFE_buf, 0, sizeof(LFE_buf));
         }
 
-        float *in=(float*)init(cfg,fmt,samples,numsamples); // Input audio data
-        float *end=in+numsamples*fmt.nchannels; // Loop end
+        float *in = (float*)init(cfg, fmt, samples, numsamples); // Input audio data
+        float *end = in + numsamples * fmt.nchannels; // Loop end
         fmt.setChannels(6);
-        float *out=(float*)(samples=alloc_buffer(fmt,numsamples,buf));
-        while(in < end) {
+        float *out = (float*)(samples = alloc_buffer(fmt, numsamples, buf));
+        while (in < end) {
             const int k = cyc_pos;
 
             const int fwr_pos = (k + FWRDURATION) % dlbuflen;
@@ -206,17 +206,17 @@ HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleForm
                           &adapt_lpr_gain, &adapt_lmr_gain,
                           &lf[0], &rf[0], &lr[0], &rr[0], &cf[0]);
 
-            out[0]=lf[k];
-            out[1]=rf[k];
-            out[2]=cf[k];
-            LFE_buf[lfe_pos]=(out[0]+out[1])/2;
-            out[3]=TfirFilter::firfilter(LFE_buf,lfe_pos,len125,len125,filter_coefs_lfe);
+            out[0] = lf[k];
+            out[1] = rf[k];
+            out[2] = cf[k];
+            LFE_buf[lfe_pos] = (out[0] + out[1]) / 2;
+            out[3] = TfirFilter::firfilter(LFE_buf, lfe_pos, len125, len125, filter_coefs_lfe);
             lfe_pos++;
-            if (lfe_pos==len125) {
-                lfe_pos=0;
+            if (lfe_pos == len125) {
+                lfe_pos = 0;
             }
-            out[4]=lr[k];
-            out[5]=rr[k];
+            out[4] = lr[k];
+            out[5] = rr[k];
             // Next sample...
             in += 2;
             out += fmt.nchannels;
@@ -226,21 +226,21 @@ HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleForm
             }
         }
     }
-    return parent->deliverSamples(++it,fmt,samples,numsamples);
+    return parent->deliverSamples(++it, fmt, samples, numsamples);
 }
 
 void TaudioFilterDolbyDecoder2::onSeek(void)
 {
-    l_fwr=r_fwr=lpr_fwr=lmr_fwr=0;
-    std::fill(fwrbuf_l.begin(),fwrbuf_l.end(),0.0f);
-    std::fill(fwrbuf_r.begin(),fwrbuf_r.end(),0.0f);
-    adapt_l_gain=adapt_r_gain=adapt_lpr_gain=adapt_lmr_gain=0;
-    std::fill(lf.begin(),lf.end(),0.0f);
-    std::fill(rf.begin(),rf.end(),0.0f);
-    std::fill(lr.begin(),lr.end(),0.0f);
-    std::fill(rr.begin(),rr.end(),0.0f);
-    std::fill(cf.begin(),cf.end(),0.0f);
-    std::fill(cr.begin(),cr.end(),0.0f);
-    lfe_pos=0;
-    memset(LFE_buf,0,sizeof(LFE_buf));
+    l_fwr = r_fwr = lpr_fwr = lmr_fwr = 0;
+    std::fill(fwrbuf_l.begin(), fwrbuf_l.end(), 0.0f);
+    std::fill(fwrbuf_r.begin(), fwrbuf_r.end(), 0.0f);
+    adapt_l_gain = adapt_r_gain = adapt_lpr_gain = adapt_lmr_gain = 0;
+    std::fill(lf.begin(), lf.end(), 0.0f);
+    std::fill(rf.begin(), rf.end(), 0.0f);
+    std::fill(lr.begin(), lr.end(), 0.0f);
+    std::fill(rr.begin(), rr.end(), 0.0f);
+    std::fill(cf.begin(), cf.end(), 0.0f);
+    std::fill(cr.begin(), cr.end(), 0.0f);
+    lfe_pos = 0;
+    memset(LFE_buf, 0, sizeof(LFE_buf));
 }

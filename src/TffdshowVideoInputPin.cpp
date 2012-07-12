@@ -29,9 +29,9 @@
 #include "ffdshow_mediaguids.h"
 
 //================================== TffdshowVideoInputPin =================================
-TffdshowVideoInputPin::TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *Ifv,HRESULT *phr):
-    TinputPin(objectName,Ifv->filter,phr,L"In"),
-    allocator(Ifv->filter,phr),
+TffdshowVideoInputPin::TffdshowVideoInputPin(TCHAR *objectName, TffdshowVideo *Ifv, HRESULT *phr):
+    TinputPin(objectName, Ifv->filter, phr, L"In"),
+    allocator(Ifv->filter, phr),
     fv(Ifv),
     video(NULL),
     isInterlacedRawVideo(false),
@@ -39,8 +39,8 @@ TffdshowVideoInputPin::TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *If
     pCompatibleFilter(NULL),
     wasVC1(false)
 {
-    usingOwnAllocator=false;
-    supdvddec=fv->deci->getParam2(IDFF_supDVDdec) && fv->deci->getParam2(IDFF_mpg2);
+    usingOwnAllocator = false;
+    supdvddec = fv->deci->getParam2(IDFF_supDVDdec) && fv->deci->getParam2(IDFF_mpg2);
     done();
 }
 
@@ -51,59 +51,59 @@ TffdshowVideoInputPin::~TffdshowVideoInputPin()
 
 HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 {
-    if (mt->majortype!=MEDIATYPE_Video && !(mt->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec)) {
+    if (mt->majortype != MEDIATYPE_Video && !(mt->majortype == MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec)) {
         return VFW_E_TYPE_NOT_ACCEPTED;
     }
-    if (mt->subtype==MEDIASUBTYPE_DVD_SUBPICTURE) {
+    if (mt->subtype == MEDIASUBTYPE_DVD_SUBPICTURE) {
         return VFW_E_TYPE_NOT_ACCEPTED;
     }
-    BITMAPINFOHEADER *hdr=NULL,hdr0;
+    BITMAPINFOHEADER *hdr = NULL, hdr0;
 
-    if (mt->formattype==FORMAT_VideoInfo) {
-        VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt->pbFormat;
-        hdr=&vih->bmiHeader;
+    if (mt->formattype == FORMAT_VideoInfo) {
+        VIDEOINFOHEADER *vih = (VIDEOINFOHEADER*)mt->pbFormat;
+        hdr = &vih->bmiHeader;
         fixMPEGinAVI(hdr->biCompression);
-    } else if (mt->formattype==FORMAT_VideoInfo2) {
-        VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt->pbFormat;
-        hdr=&vih2->bmiHeader;
+    } else if (mt->formattype == FORMAT_VideoInfo2) {
+        VIDEOINFOHEADER2 *vih2 = (VIDEOINFOHEADER2*)mt->pbFormat;
+        hdr = &vih2->bmiHeader;
         fixMPEGinAVI(hdr->biCompression);
-    } else if (mt->formattype==FORMAT_MPEGVideo) {
-        MPEG1VIDEOINFO *mpeg1info=(MPEG1VIDEOINFO*)mt->pbFormat;
-        hdr=&(hdr0=mpeg1info->hdr.bmiHeader);
-        hdr->biCompression=FOURCC_MPG1;
-    } else if (mt->formattype==FORMAT_MPEG2Video) {
-        MPEG2VIDEOINFO *mpeg2info=(MPEG2VIDEOINFO*)mt->pbFormat;
-        hdr=&(hdr0=mpeg2info->hdr.bmiHeader);
-        if (hdr->biCompression==0 || hdr->biCompression == 0x0038002d) {
+    } else if (mt->formattype == FORMAT_MPEGVideo) {
+        MPEG1VIDEOINFO *mpeg1info = (MPEG1VIDEOINFO*)mt->pbFormat;
+        hdr = &(hdr0 = mpeg1info->hdr.bmiHeader);
+        hdr->biCompression = FOURCC_MPG1;
+    } else if (mt->formattype == FORMAT_MPEG2Video) {
+        MPEG2VIDEOINFO *mpeg2info = (MPEG2VIDEOINFO*)mt->pbFormat;
+        hdr = &(hdr0 = mpeg2info->hdr.bmiHeader);
+        if (hdr->biCompression == 0 || hdr->biCompression == 0x0038002d) {
             if (mt->subtype == MEDIASUBTYPE_H264_TRANSPORT) {
-                hdr->biCompression=FOURCC_H264;
+                hdr->biCompression = FOURCC_H264;
             } else if (mt->subtype == MEDIASUBTYPE_AVC1 || mt->subtype == MEDIASUBTYPE_avc1 || mt->subtype == MEDIASUBTYPE_H264 || mt->subtype == MEDIASUBTYPE_h264 || mt->subtype == MEDIASUBTYPE_CCV1) {
                 hdr->biCompression = FOURCC_H264;
             } else {
-                hdr->biCompression=FOURCC_MPG2;
+                hdr->biCompression = FOURCC_MPG2;
             }
         }
-    } else if (mt->formattype==FORMAT_TheoraIll) {
-        sTheoraFormatBlock *oggFormat=(sTheoraFormatBlock*)mt->pbFormat;
-        hdr=&hdr0;
-        hdr->biWidth=oggFormat->width;
-        hdr->biHeight=oggFormat->height;
-        hdr->biCompression=FOURCC_THEO;
-    } else if (mt->formattype==FORMAT_RLTheora) {
-        hdr=&hdr0;
-        hdr->biCompression=FOURCC_THEO;
+    } else if (mt->formattype == FORMAT_TheoraIll) {
+        sTheoraFormatBlock *oggFormat = (sTheoraFormatBlock*)mt->pbFormat;
+        hdr = &hdr0;
+        hdr->biWidth = oggFormat->width;
+        hdr->biHeight = oggFormat->height;
+        hdr->biCompression = FOURCC_THEO;
+    } else if (mt->formattype == FORMAT_RLTheora) {
+        hdr = &hdr0;
+        hdr->biCompression = FOURCC_THEO;
     } else {
         return VFW_E_TYPE_NOT_ACCEPTED;
     }
 
     char_t pomS[60];
-    DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: %s, %i, %i"),fourcc2str(hdr2fourcc(hdr,&mt->subtype),pomS,60),hdr->biWidth,hdr->biHeight);
+    DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: %s, %i, %i"), fourcc2str(hdr2fourcc(hdr, &mt->subtype), pomS, 60), hdr->biWidth, hdr->biHeight);
 
     /* Information : WMP 11 and Media Center under Vista do not check for uncompressed format anymore, so no way to get
        ffdshow raw video decoder for postprocessing on uncompressed.
        So instead of saying "Media Type not supported", we says it is but only if there is an existing filter that can
        take this format in charge, and then ffdshow will be plugged after this codec (plug is done by TffdshowDecVideo::ConnectCompatibleFilter). */
-    int res = getVideoCodecId(hdr,&mt->subtype,NULL);
+    int res = getVideoCodecId(hdr, &mt->subtype, NULL);
 
     OSVERSIONINFO osvi;
     ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
@@ -113,23 +113,23 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
     exeFilename.ConvertToLowerCase();
 
     if (res == 0 && pCompatibleFilter == NULL &&
-            fv->deci->getParam2(IDFF_alternateUncompressed)==1 && // Enable WMP11 postprocessing
-            fv->deci->getParam2(IDFF_rawv)!=0 && // Raw video not on disabled
+            fv->deci->getParam2(IDFF_alternateUncompressed) == 1 && // Enable WMP11 postprocessing
+            fv->deci->getParam2(IDFF_rawv) != 0 && // Raw video not on disabled
             (exeFilename == _l("wmplayer.exe") ||
              exeFilename == _l("ehshell.exe"))) { // Only WMP and Media Center are concerned
         bool doPostProcessing = false;
         if (osvi.dwMajorVersion > 5) { // OS >= VISTA
             doPostProcessing = true;
         } else if (osvi.dwMajorVersion == 5 // If OS=XP, check version of WMP
-                   && exeFilename== _l("ehshell.exe")) { // But only for Media Center
+                   && exeFilename == _l("ehshell.exe")) { // But only for Media Center
             // Read WMP version from the aRegistry
-            HKEY hKey= NULL;
+            HKEY hKey = NULL;
             LONG regErr;
 
             // Read WMP version from the following registry key
             regErr = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _l("SOFTWARE\\Microsoft\\MediaPlayer\\Setup\\Installed Versions"), 0, KEY_READ, &hKey);
-            if(regErr!=ERROR_SUCCESS) {
-                return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
+            if (regErr != ERROR_SUCCESS) {
+                return res == CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
             }
 
             DWORD dwType;
@@ -137,12 +137,12 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
             DWORD dwSize = sizeof(buf);
             regErr = RegQueryValueEx(hKey, _T("wmplayer.exe"), 0, &dwType, buf, &dwSize);
 
-            if(hKey) {
+            if (hKey) {
                 RegCloseKey(hKey);
             }
 
             if (regErr != ERROR_SUCCESS || dwType != REG_BINARY) {
-                return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
+                return res == CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
             }
 
             if (buf[2] >= 0x0b) { // Third byte is the major version number
@@ -172,7 +172,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
                      &pEnum,
                      0,                  // Reserved.
                      TRUE,               // Use exact match?
-                     MERIT_DO_NOT_USE+1, // Minimum merit.
+                     MERIT_DO_NOT_USE + 1, // Minimum merit.
                      TRUE,               // At least one input pin?
                      1,                  // Number of major type/subtype pairs for input.
                      arrayInTypes,       // Array of major type/subtype pairs for input.
@@ -200,7 +200,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
                     VariantInit(&varName);
                     hr = pPropBag->Read(L"FriendlyName", &varName, 0);
                     if (SUCCEEDED(hr)) {
-                        if (varName.pbstrVal == NULL || _strnicmp(FFDSHOW_NAME_L,varName.bstrVal,22)!=0) {
+                        if (varName.pbstrVal == NULL || _strnicmp(FFDSHOW_NAME_L, varName.bstrVal, 22) != 0) {
                             // Display the name in your UI somehow.
                             DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: compatible filter found (%s)"), varName.pbstrVal);
                             hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pCompatibleFilter);
@@ -208,16 +208,16 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
                     }
 
                     // Now add the filter to the graph. Remember to release pFilter later.
-                    IFilterGraph *pGraph=NULL;
+                    IFilterGraph *pGraph = NULL;
                     fv->deci->getGraph(&pGraph);
 
                     IGraphBuilder *pGraphBuilder = NULL;
                     hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
-                    if (hr==S_OK) {
+                    if (hr == S_OK) {
                         pGraphBuilder->AddFilter(pCompatibleFilter, varName.bstrVal);
                     } else {
                         pCompatibleFilter->Release();
-                        pCompatibleFilter=NULL;
+                        pCompatibleFilter = NULL;
                     }
 
                     // Clean up.
@@ -239,7 +239,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
     if (pCompatibleFilter != NULL) {
         return S_OK;
     }
-    return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
+    return res == CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
 }
 
 STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
@@ -247,7 +247,7 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
     HRESULT hr;
     DPRINTF(_l("TffdshowVideoInputPin::ReceiveConnection"));
     CAutoLock cObjectLock(m_pLock);
-    const CLSID &ref=GetCLSID(pConnector);
+    const CLSID &ref = GetCLSID(pConnector);
     if (ref == CLSID_MPC_MatroskaSplitter || ref == CLSID_GabestMatroskaSplitter) {
         connectedSplitter = MPC_matroska_splitter;
     } else if (ref == CLSID_HaaliMediaSplitter) {
@@ -268,15 +268,15 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
     pConnector->QueryPinInfo(&pininfo);
     if (pininfo.pFilter) {
         pininfo.pFilter->QueryFilterInfo(&filterinfo);
-        DPRINTF (_l("TffdshowVideoInputPin::ReceiveConnection filter=%s pin=%s"),filterinfo.achName,pininfo.achName);
+        DPRINTF(_l("TffdshowVideoInputPin::ReceiveConnection filter=%s pin=%s"), filterinfo.achName, pininfo.achName);
         if (filterinfo.pGraph) {
             filterinfo.pGraph->Release();
         }
         pininfo.pFilter->Release();
     }
-    DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);
-    for(int i=0; i<8; i++) {
-        DPRINTF(_l(",0x%2x"),ref.Data4[i]);
+    DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"), ref.Data1, ref.Data2, ref.Data3);
+    for (int i = 0; i < 8; i++) {
+        DPRINTF(_l(",0x%2x"), ref.Data4[i]);
     }
 #endif
 
@@ -297,24 +297,24 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
 
         // TODO: send ReceiveConnection downstream
     } else {
-        hr=fv->deci->checkInputConnect(pConnector);
-        if (hr!=S_OK) {
+        hr = fv->deci->checkInputConnect(pConnector);
+        if (hr != S_OK) {
             return hr;
         }
     }
 
-    hr=TinputPin::ReceiveConnection(pConnector, pmt);
+    hr = TinputPin::ReceiveConnection(pConnector, pmt);
     return hr;
 }
 
 void TffdshowVideoInputPin::init_VIH_and_VIH2_common_part(const RECT & rcSource,
-    const RECT rcTarget,
-    DWORD dwBitRate,
-    DWORD dwBitErrorRate,
-    REFERENCE_TIME AvgTimePerFrame,
-    const BITMAPINFOHEADER &bmiHeader)
+        const RECT rcTarget,
+        DWORD dwBitRate,
+        DWORD dwBitErrorRate,
+        REFERENCE_TIME AvgTimePerFrame,
+        const BITMAPINFOHEADER &bmiHeader)
 {
-    biIn.bmiHeader=bmiHeader;
+    biIn.bmiHeader = bmiHeader;
     LONG width = bmiHeader.biWidth;
     LONG height = abs(bmiHeader.biHeight);
     // TODO: ffdshow should scale like a video renderer. Fix this drive-by implementation.
@@ -323,7 +323,7 @@ void TffdshowVideoInputPin::init_VIH_and_VIH2_common_part(const RECT & rcSource,
         height = rcTarget.bottom;
     }
     pictIn.setSize(width, height);
-    FOURCC 
+    FOURCC
     fixMPEGinAVI(biIn.bmiHeader.biCompression);
 }
 
@@ -331,62 +331,62 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
 {
     DPRINTF(_l("TffdshowVideoInputPin::init"));
     bool dont_use_rtStop_from_upper_stream = false;
-    isInterlacedRawVideo=false;
-    if (mt.formattype==FORMAT_VideoInfo) {
-        VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
+    isInterlacedRawVideo = false;
+    if (mt.formattype == FORMAT_VideoInfo) {
+        VIDEOINFOHEADER *vih = (VIDEOINFOHEADER*)mt.pbFormat;
         init_VIH_and_VIH2_common_part(vih->rcSource, vih->rcTarget, vih->dwBitRate, vih->dwBitErrorRate, vih->AvgTimePerFrame, vih->bmiHeader);
-    } else if (mt.formattype==FORMAT_VideoInfo2) {
-        VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
+    } else if (mt.formattype == FORMAT_VideoInfo2) {
+        VIDEOINFOHEADER2 *vih2 = (VIDEOINFOHEADER2*)mt.pbFormat;
         init_VIH_and_VIH2_common_part(vih2->rcSource, vih2->rcTarget, vih2->dwBitRate, vih2->dwBitErrorRate, vih2->AvgTimePerFrame, vih2->bmiHeader);
-        isInterlacedRawVideo=vih2->dwInterlaceFlags & AMINTERLACE_IsInterlaced;
-        pictIn.setDar(Rational(vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY));
-        DPRINTF(_l("TffdshowVideoInputPin::initVideo: darX:%i, darY:%i"),vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY);
-    } else if (mt.formattype==FORMAT_MPEGVideo) {
-        MPEG1VIDEOINFO *mpeg1info=(MPEG1VIDEOINFO*)mt.pbFormat;
-        biIn.bmiHeader=mpeg1info->hdr.bmiHeader;
-        biIn.bmiHeader.biCompression=FOURCC_MPG1;
-        pictIn.setSize(std::max(mpeg1info->hdr.rcSource.right,mpeg1info->hdr.bmiHeader.biWidth),std::max(mpeg1info->hdr.rcSource.bottom,mpeg1info->hdr.bmiHeader.biHeight));
-    } else if (mt.formattype==FORMAT_MPEG2Video) {
-        MPEG2VIDEOINFO *mpeg2info=(MPEG2VIDEOINFO*)mt.pbFormat;
-        biIn.bmiHeader=mpeg2info->hdr.bmiHeader;
-        pictIn.setSize(std::max(mpeg2info->hdr.rcSource.right,mpeg2info->hdr.bmiHeader.biWidth),std::max(mpeg2info->hdr.rcSource.bottom,mpeg2info->hdr.bmiHeader.biHeight));
-        pictIn.setDar(Rational(mpeg2info->hdr.dwPictAspectRatioX,mpeg2info->hdr.dwPictAspectRatioY));
-        if (biIn.bmiHeader.biCompression==0 || biIn.bmiHeader.biCompression == 0x0038002d) {
+        isInterlacedRawVideo = vih2->dwInterlaceFlags & AMINTERLACE_IsInterlaced;
+        pictIn.setDar(Rational(vih2->dwPictAspectRatioX, vih2->dwPictAspectRatioY));
+        DPRINTF(_l("TffdshowVideoInputPin::initVideo: darX:%i, darY:%i"), vih2->dwPictAspectRatioX, vih2->dwPictAspectRatioY);
+    } else if (mt.formattype == FORMAT_MPEGVideo) {
+        MPEG1VIDEOINFO *mpeg1info = (MPEG1VIDEOINFO*)mt.pbFormat;
+        biIn.bmiHeader = mpeg1info->hdr.bmiHeader;
+        biIn.bmiHeader.biCompression = FOURCC_MPG1;
+        pictIn.setSize(std::max(mpeg1info->hdr.rcSource.right, mpeg1info->hdr.bmiHeader.biWidth), std::max(mpeg1info->hdr.rcSource.bottom, mpeg1info->hdr.bmiHeader.biHeight));
+    } else if (mt.formattype == FORMAT_MPEG2Video) {
+        MPEG2VIDEOINFO *mpeg2info = (MPEG2VIDEOINFO*)mt.pbFormat;
+        biIn.bmiHeader = mpeg2info->hdr.bmiHeader;
+        pictIn.setSize(std::max(mpeg2info->hdr.rcSource.right, mpeg2info->hdr.bmiHeader.biWidth), std::max(mpeg2info->hdr.rcSource.bottom, mpeg2info->hdr.bmiHeader.biHeight));
+        pictIn.setDar(Rational(mpeg2info->hdr.dwPictAspectRatioX, mpeg2info->hdr.dwPictAspectRatioY));
+        if (biIn.bmiHeader.biCompression == 0 || biIn.bmiHeader.biCompression == 0x0038002d) {
             if (mt.subtype == MEDIASUBTYPE_H264_TRANSPORT) {
                 biIn.bmiHeader.biCompression = FOURCC_H264;
             } else if (mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_H264 || mt.subtype == MEDIASUBTYPE_h264 || mt.subtype == MEDIASUBTYPE_CCV1) {
                 biIn.bmiHeader.biCompression = FOURCC_H264;
             } else {
-                biIn.bmiHeader.biCompression=FOURCC_MPG2;
+                biIn.bmiHeader.biCompression = FOURCC_MPG2;
             }
         } else {
-            biIn.bmiHeader.biCompression=FCCupper(biIn.bmiHeader.biCompression);
+            biIn.bmiHeader.biCompression = FCCupper(biIn.bmiHeader.biCompression);
             dont_use_rtStop_from_upper_stream = true;
         }
-    } else if (mt.formattype==FORMAT_TheoraIll) {
-        memset(&biIn,0,sizeof(biIn));
-        sTheoraFormatBlock *oggFormat=(sTheoraFormatBlock*)mt.pbFormat;
-        biIn.bmiHeader.biCompression=FOURCC_THEO;
-        pictIn.setSize(biIn.bmiHeader.biWidth=oggFormat->width,biIn.bmiHeader.biHeight=oggFormat->height);
-        pictIn.setDar(Rational(oggFormat->aspectNumerator,oggFormat->aspectDenominator));
-        biIn.bmiHeader.biBitCount=12;
-    } else if (mt.formattype==FORMAT_RLTheora) {
+    } else if (mt.formattype == FORMAT_TheoraIll) {
+        memset(&biIn, 0, sizeof(biIn));
+        sTheoraFormatBlock *oggFormat = (sTheoraFormatBlock*)mt.pbFormat;
+        biIn.bmiHeader.biCompression = FOURCC_THEO;
+        pictIn.setSize(biIn.bmiHeader.biWidth = oggFormat->width, biIn.bmiHeader.biHeight = oggFormat->height);
+        pictIn.setDar(Rational(oggFormat->aspectNumerator, oggFormat->aspectDenominator));
+        biIn.bmiHeader.biBitCount = 12;
+    } else if (mt.formattype == FORMAT_RLTheora) {
         struct RLTheora {
             VIDEOINFOHEADER hdr;
             DWORD headerSize[3];    // 0: Header, 1: Comment, 2: Codebook
         };
-        const RLTheora *rl=(const RLTheora*)mt.pbFormat;
+        const RLTheora *rl = (const RLTheora*)mt.pbFormat;
         GetBitContext gb;
-        init_get_bits(&gb,(const uint8_t*)(rl+1),rl->headerSize[0]);
+        init_get_bits(&gb, (const uint8_t*)(rl + 1), rl->headerSize[0]);
         int ptype = get_bits(&gb, 8);
-        if (!(ptype&0x80)) {
+        if (!(ptype & 0x80)) {
             return false;
         }
-        biIn.bmiHeader.biCompression=FOURCC_THEO;
-        skip_bits(&gb, 6*8); /* "theora" */
-        int major=get_bits(&gb,8); /* version major */
-        int minor=get_bits(&gb,8); /* version minor */
-        int micro=get_bits(&gb,8); /* version micro */
+        biIn.bmiHeader.biCompression = FOURCC_THEO;
+        skip_bits(&gb, 6 * 8); /* "theora" */
+        int major = get_bits(&gb, 8); /* version major */
+        int minor = get_bits(&gb, 8); /* version minor */
+        int micro = get_bits(&gb, 8); /* version micro */
         int theora = (major << 16) | (minor << 8) | micro;
 
         if (theora < 0x030200) {
@@ -395,7 +395,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
 
         biIn.bmiHeader.biWidth = get_bits(&gb, 16) << 4;
         biIn.bmiHeader.biHeight = get_bits(&gb, 16) << 4;
-        pictIn.setSize(biIn.bmiHeader.biWidth,biIn.bmiHeader.biHeight);
+        pictIn.setSize(biIn.bmiHeader.biWidth, biIn.bmiHeader.biHeight);
 
         skip_bits(&gb, 24); /* frame width */
         skip_bits(&gb, 24); /* frame height */
@@ -414,13 +414,13 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         return false;
     }
 
-    REFERENCE_TIME avgTimePerFrame0=getAvgTimePerFrame(mt);
+    REFERENCE_TIME avgTimePerFrame0 = getAvgTimePerFrame(mt);
     avgTimePerFrame = avgTimePerFrame0 ? avgTimePerFrame0 : 400000;
 
     char_t pomS[60];
-    DPRINTF(_l("TffdshowVideoInputPin::initVideo: %s, width:%i, height:%i, aspectX:%i, aspectY:%i"),fourcc2str(hdr2fourcc(&biIn.bmiHeader,&mt.subtype),pomS,60) ,pictIn.rectFull.dx,pictIn.rectFull.dy,pictIn.rectFull.dar().num,pictIn.rectFull.dar().den);
+    DPRINTF(_l("TffdshowVideoInputPin::initVideo: %s, width:%i, height:%i, aspectX:%i, aspectY:%i"), fourcc2str(hdr2fourcc(&biIn.bmiHeader, &mt.subtype), pomS, 60) , pictIn.rectFull.dx, pictIn.rectFull.dy, pictIn.rectFull.dar().num, pictIn.rectFull.dar().den);
 again:
-    codecId=(CodecID)getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
+    codecId = (CodecID)getVideoCodecId(&biIn.bmiHeader, &mt.subtype, &biIn.bmiHeader.biCompression);
 
     // FIXME Experimental //
     // VC1 (in EVO) stream may have attached media type during playback (say, once per 5 second).
@@ -429,23 +429,29 @@ again:
     // I gave up using it and decided to ignore it during playback of VC1 stream.
     // It works fine for my sample.
     if (video) {
-        if (/*video->codecId == CODEC_ID_WMV9_LIB && */wasVC1 && biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */ ) {
+        if (/*video->codecId == CODEC_ID_WMV9_LIB && */wasVC1 && biIn.bmiHeader.biCompression == 0x31435657 /* "WVC1" */) {
             return true;
         } else if (is_quicksync_codec(video->codecId)) {
             // check if output pin is connected to a supported filter
             IPin *pConnectedPin = NULL;
             if (fv && fv->output) {
                 pConnectedPin = fv->output->GetConnected();
-                const CLSID &out=GetCLSID(pConnectedPin);
+                const CLSID &out = GetCLSID(pConnectedPin);
                 if (out == CLSID_SampleGrabber || out == CLSID_MediaDetFilter) {
                     delete video;
-                    codec=video=NULL;
+                    codec = video = NULL;
                     switch (codecId) {
-                    case CODEC_ID_H264_QUICK_SYNC:  codecId = CODEC_ID_H264;     break;
-                    case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_MPEG2VIDEO; break;
-                    case CODEC_ID_VC1_QUICK_SYNC:   codecId = CODEC_ID_WMV9_LIB; break;
-                    default:
-                        ASSERT(FALSE); // this shouldn't happen!
+                        case CODEC_ID_H264_QUICK_SYNC:
+                            codecId = CODEC_ID_H264;
+                            break;
+                        case CODEC_ID_MPEG2_QUICK_SYNC:
+                            codecId = CODEC_ID_MPEG2VIDEO;
+                            break;
+                        case CODEC_ID_VC1_QUICK_SYNC:
+                            codecId = CODEC_ID_WMV9_LIB;
+                            break;
+                        default:
+                            ASSERT(FALSE); // this shouldn't happen!
                     }
                 }
             }
@@ -456,16 +462,16 @@ again:
             }
         } else {
             delete video;
-            codec=video=NULL;
+            codec = video = NULL;
         }
     }
     DPRINTF(_l("TffdshowVideoInputPin::initVideo Codec detected : %s"), getCodecName(codecId));
-    if (codecId==CODEC_ID_NONE) {
-        if (pCompatibleFilter!=NULL) {
-            rawDecode=true;
+    if (codecId == CODEC_ID_NONE) {
+        if (pCompatibleFilter != NULL) {
+            rawDecode = true;
             if (video) {
                 delete video;
-                codec=video=NULL;
+                codec = video = NULL;
             }
             return true;
         }
@@ -473,65 +479,65 @@ again:
     }
 
     if (h264_codec(codecId) || codecId == CODEC_ID_H264_DXVA) {
-        Textradata extradata(mt,16);
+        Textradata extradata(mt, 16);
         if (extradata.size) {
             H264_SPS sps;
-            decodeH264SPS(extradata.data,extradata.size,pictIn, &sps);
+            decodeH264SPS(extradata.data, extradata.size, pictIn, &sps);
             // Set frame rate information from SPS::VUI.
             if (!avgTimePerFrame0 // Use information from the upper stream filter if available.
-                && sps.timing_info_present_flag && sps.time_scale && sps.num_units_in_tick) {
+                    && sps.timing_info_present_flag && sps.time_scale && sps.num_units_in_tick) {
                 avgTimePerFrame = 2 * REF_SECOND_MULT * sps.num_units_in_tick / sps.time_scale;
             }
         }
     } else if (mpeg4_codec(codecId)) {
-        Textradata extradata(mt,16);
+        Textradata extradata(mt, 16);
         if (extradata.size) {
-            decodeMPEG4pictureHeader(extradata.data,extradata.size,pictIn);
+            decodeMPEG4pictureHeader(extradata.data, extradata.size, pictIn);
         }
     } else if (mpeg12_codec(codecId)) {
-        Textradata extradata(mt,16);
+        Textradata extradata(mt, 16);
         if (extradata.size) {
             bool isH264;
-            if (decodeMPEGsequenceHeader(biIn.bmiHeader.biCompression==FOURCC_MPG2,extradata.data,extradata.size,pictIn,&isH264) && isH264) {
-                biIn.bmiHeader.biCompression=FOURCC_H264;
+            if (decodeMPEGsequenceHeader(biIn.bmiHeader.biCompression == FOURCC_MPG2, extradata.data, extradata.size, pictIn, &isH264) && isH264) {
+                biIn.bmiHeader.biCompression = FOURCC_H264;
                 goto again;
             }
         }
     }
 
     if (!fv->sink) {
-        rawDecode=true;
+        rawDecode = true;
         if (video) {
             delete video;
-            codec=video=NULL;
+            codec = video = NULL;
         }
     } else {
         fv->initCodecSettings();
-        codec=video=TvideoCodecDec::initDec(fv->deci,fv->sink,codecId,biIn.bmiHeader.biCompression,mt);
+        codec = video = TvideoCodecDec::initDec(fv->deci, fv->sink, codecId, biIn.bmiHeader.biCompression, mt);
 
         if (!video) {
             return false;
         } else {
-            static const GUID CLSID_NeroDigitalParser= {0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
-            static const GUID CLSID_HaaliMatroskaFile= {0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
+            static const GUID CLSID_NeroDigitalParser = {0xE206E4DE, 0xA7EE, 0x4A62, 0xB3, 0xE9, 0x4F, 0xBC, 0x8F, 0xE8, 0x4C, 0x73};
+            static const GUID CLSID_HaaliMatroskaFile = {0x55DA30FC, 0xF16B, 0x49FC, 0xBA, 0xA5, 0xAE, 0x59, 0xFC, 0x65, 0xF8, 0x2D};
             codecId = video->codecId;
             //dont_use_rtStop_from_upper_stream=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HaaliMatroskaFile));
             video->connectedSplitter = connectedSplitter;
-            video->isInterlacedRawVideo=isInterlacedRawVideo;
-            video->containerSar=pictIn.rectFull.sar;
+            video->isInterlacedRawVideo = isInterlacedRawVideo;
+            video->containerSar = pictIn.rectFull.sar;
             if (!video->beginDecompress(pictIn,
-                                        biIn.bmiHeader.biCompression,mt,
+                                        biIn.bmiHeader.biCompression, mt,
                                         (dont_use_rtStop_from_upper_stream ? TvideoCodecDec::SOURCE_REORDER : 0))) {
                 delete video;
-                codec=video=NULL;
+                codec = video = NULL;
                 return false;
             }
         }
-        rawDecode=raw_codec(codecId);
+        rawDecode = raw_codec(codecId);
     }
     allocator.NotifyMediaType(mt);
-    strippacket=!!(mt.majortype==MEDIATYPE_DVD_ENCRYPTED_PACK);
-    wasVC1 = biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */;
+    strippacket = !!(mt.majortype == MEDIATYPE_DVD_ENCRYPTED_PACK);
+    wasVC1 = biIn.bmiHeader.biCompression == 0x31435657 /* "WVC1" */;
     return true;
 }
 
@@ -540,13 +546,13 @@ void TffdshowVideoInputPin::done()
     if (video) {
         delete video;
     }
-    codec=video=NULL;
-    memset(&biIn,0,sizeof(biIn));
-    avgTimePerFrame=0;
-    codecId=CODEC_ID_NONE;
-    rawDecode=false;
-    autosubflnm[0]=oldSubSearchDir[0]='\0';
-    oldSubHeuristic=false;
+    codec = video = NULL;
+    memset(&biIn, 0, sizeof(biIn));
+    avgTimePerFrame = 0;
+    codecId = CODEC_ID_NONE;
+    rawDecode = false;
+    autosubflnm[0] = oldSubSearchDir[0] = '\0';
+    oldSubHeuristic = false;
 }
 
 STDMETHODIMP TffdshowVideoInputPin::GetAllocator(IMemAllocator** ppAllocator)
@@ -555,23 +561,23 @@ STDMETHODIMP TffdshowVideoInputPin::GetAllocator(IMemAllocator** ppAllocator)
         return TinputPin::GetAllocator(ppAllocator);
     } else {
         CheckPointer(ppAllocator, E_POINTER);
-        if (m_pAllocator==NULL) {
-            m_pAllocator=&allocator;
+        if (m_pAllocator == NULL) {
+            m_pAllocator = &allocator;
             m_pAllocator->AddRef();
         }
         m_pAllocator->AddRef();
-        *ppAllocator=m_pAllocator;
+        *ppAllocator = m_pAllocator;
         return NOERROR;
     }
 }
 
-STDMETHODIMP TffdshowVideoInputPin::NotifyAllocator(IMemAllocator *pAllocator,BOOL bReadOnly)
+STDMETHODIMP TffdshowVideoInputPin::NotifyAllocator(IMemAllocator *pAllocator, BOOL bReadOnly)
 {
-    HRESULT hr=TinputPin::NotifyAllocator(pAllocator,bReadOnly);
+    HRESULT hr = TinputPin::NotifyAllocator(pAllocator, bReadOnly);
     if (FAILED(hr)) {
         return hr;
     }
-    usingOwnAllocator=(pAllocator==(IMemAllocator*)&allocator);
+    usingOwnAllocator = (pAllocator == (IMemAllocator*)&allocator);
     return S_OK;
 }
 
@@ -579,10 +585,10 @@ STDMETHODIMP TffdshowVideoInputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_
 {
     DPRINTF(_l("TffdshowVideoInputPin::NewSegment"));
     CAutoLock lock1((CCritSec*)fv->deci->get_csReceive_ptr());
-    HRESULT hr=TinputPin::NewSegment(tStart,tStop,dRate);
+    HRESULT hr = TinputPin::NewSegment(tStart, tStop, dRate);
 
     CAutoLock lock2(&m_csCodecs_and_imgFilters);
-    if (hr==S_OK && codec) {
+    if (hr == S_OK && codec) {
         codec->onSeek(tStart);
     }
 
@@ -609,7 +615,7 @@ STDMETHODIMP TffdshowVideoInputPin::BeginFlush()
     if (fv && fv->deci && video && video->useDXVA() != 0) {
         m_rateAndFlush.m_flushing = true;
         video->BeginFlush();
-        comptrQ<IffdshowDecVideo> deciV=fv->deci;
+        comptrQ<IffdshowDecVideo> deciV = fv->deci;
         TimgFilters* filters;
 
         if (deciV && deciV->getImgFilters_((void**)&filters) == S_OK && filters) {
@@ -634,7 +640,7 @@ STDMETHODIMP TffdshowVideoInputPin::BeginFlush()
                 video->BeginFlush();
             }
         }
-        comptrQ<IffdshowDecVideo> deciV=fv->deci;
+        comptrQ<IffdshowDecVideo> deciV = fv->deci;
         TimgFilters* filters;
 
         if (deciV && deciV->getImgFilters_((void**)&filters) == S_OK && filters) {
@@ -665,29 +671,29 @@ STDMETHODIMP TffdshowVideoInputPin::EndFlush()
 
 STDMETHODIMP TffdshowVideoInputPin::Receive(IMediaSample* pSample)
 {
-    AM_MEDIA_TYPE *pmt=NULL;
+    AM_MEDIA_TYPE *pmt = NULL;
     if (SUCCEEDED(pSample->GetMediaType(&pmt)) && pmt) {
         CAutoLock lock2(&m_csCodecs_and_imgFilters);
         CMediaType mt(*pmt);
         SetMediaType(&mt);
-        allocator.mtChanged=false;
+        allocator.mtChanged = false;
         DeleteMediaType(pmt);
     }
     return TinputPin::Receive(pSample);
 }
 
-HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample,long *srcLen)
+HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample, long *srcLen)
 {
     BYTE *bitstream;
-    if (pSample->GetPointer(&bitstream)!=S_OK) {
-        *srcLen=-1;
+    if (pSample->GetPointer(&bitstream) != S_OK) {
+        *srcLen = -1;
         return S_FALSE;
     }
-    *srcLen=pSample->GetActualDataLength();
+    *srcLen = pSample->GetActualDataLength();
     if (bitstream && strippacket) {
-        StripPacket(bitstream,*srcLen);
+        StripPacket(bitstream, *srcLen);
     }
-    return video->decompress(bitstream,*srcLen,pSample);
+    return video->decompress(bitstream, *srcLen, pSample);
 }
 
 STDMETHODIMP TffdshowVideoInputPin::EndOfStream()
@@ -704,52 +710,52 @@ STDMETHODIMP TffdshowVideoInputPin::EndOfStream()
 
 HRESULT TffdshowVideoInputPin::getAVIfps(unsigned int *fps1000)
 {
-    if (!fps1000 || avgTimePerFrame==0) {
+    if (!fps1000 || avgTimePerFrame == 0) {
         return S_FALSE;
     }
 
-    *fps1000=(unsigned int)(REF_SECOND_MULT*1000/avgTimePerFrame);
+    *fps1000 = (unsigned int)(REF_SECOND_MULT * 1000 / avgTimePerFrame);
     return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::getAverageTimePerFrame(int64_t *avg)
 {
     if (IsConnected() && m_mt.cbFormat) {
-        *avg=getAvgTimePerFrame(m_mt);
+        *avg = getAvgTimePerFrame(m_mt);
     } else {
-        *avg=avgTimePerFrame;
+        *avg = avgTimePerFrame;
     }
     return S_OK;
 }
 
-HRESULT TffdshowVideoInputPin::getAVIdimensions(unsigned int *x,unsigned int *y)
+HRESULT TffdshowVideoInputPin::getAVIdimensions(unsigned int *x, unsigned int *y)
 {
     if (!x || !y) {
         return E_POINTER;
     }
-    *x=pictIn.rectFull.dx;
-    *y=pictIn.rectFull.dy;
-    return (pictIn.rectFull.dx==0 || pictIn.rectFull.dy==0)?S_FALSE:S_OK;
+    *x = pictIn.rectFull.dx;
+    *y = pictIn.rectFull.dy;
+    return (pictIn.rectFull.dx == 0 || pictIn.rectFull.dy == 0) ? S_FALSE : S_OK;
 }
 
-HRESULT TffdshowVideoInputPin::getInputSAR(unsigned int *a1,unsigned int *a2)
+HRESULT TffdshowVideoInputPin::getInputSAR(unsigned int *a1, unsigned int *a2)
 {
     if (!a1 || !a2) {
         return E_POINTER;
     }
-    *a1=pictIn.rectFull.sar.num;
-    *a2=pictIn.rectFull.sar.den;
-    return *a1 && *a2?S_OK:S_FALSE;
+    *a1 = pictIn.rectFull.sar.num;
+    *a2 = pictIn.rectFull.sar.den;
+    return *a1 && *a2 ? S_OK : S_FALSE;
 }
 
-HRESULT TffdshowVideoInputPin::getInputDAR(unsigned int *a1,unsigned int *a2)
+HRESULT TffdshowVideoInputPin::getInputDAR(unsigned int *a1, unsigned int *a2)
 {
     if (!a1 || !a2) {
         return E_POINTER;
     }
-    *a1=pictIn.rectFull.dar().num;
-    *a2=pictIn.rectFull.dar().den;
-    return *a1 && *a2?S_OK:S_FALSE;
+    *a1 = pictIn.rectFull.dar().num;
+    *a2 = pictIn.rectFull.dar().den;
+    return *a1 && *a2 ? S_OK : S_FALSE;
 }
 
 HRESULT TffdshowVideoInputPin::getMovieSource(const TvideoCodecDec* *moviePtr)
@@ -757,36 +763,36 @@ HRESULT TffdshowVideoInputPin::getMovieSource(const TvideoCodecDec* *moviePtr)
     if (!moviePtr) {
         return S_FALSE;
     }
-    *moviePtr=video;
+    *moviePtr = video;
     return S_OK;
 }
 
 FOURCC TffdshowVideoInputPin::getMovieFOURCC()
 {
-    return codecId!=CODEC_ID_NONE?biIn.bmiHeader.biCompression:0;
+    return codecId != CODEC_ID_NONE ? biIn.bmiHeader.biCompression : 0;
 }
 
-HRESULT TffdshowVideoInputPin::getFrameTime(unsigned int framenum,unsigned int *sec)
+HRESULT TffdshowVideoInputPin::getFrameTime(unsigned int framenum, unsigned int *sec)
 {
     if (!sec) {
         return E_POINTER;
     }
-    if (avgTimePerFrame==0) {
+    if (avgTimePerFrame == 0) {
         return E_FAIL;
     }
-    *sec=(unsigned int)(avgTimePerFrame*framenum/REF_SECOND_MULT);
+    *sec = (unsigned int)(avgTimePerFrame * framenum / REF_SECOND_MULT);
     return S_OK;
 }
 
-HRESULT TffdshowVideoInputPin::getFrameTimeMS(unsigned int framenum,unsigned int *msec)
+HRESULT TffdshowVideoInputPin::getFrameTimeMS(unsigned int framenum, unsigned int *msec)
 {
     if (!msec) {
         return E_POINTER;
     }
-    if (avgTimePerFrame==0) {
+    if (avgTimePerFrame == 0) {
         return E_FAIL;
     }
-    *msec=(unsigned int)(avgTimePerFrame*framenum/10000);
+    *msec = (unsigned int)(avgTimePerFrame * framenum / 10000);
     return S_OK;
 }
 
@@ -798,7 +804,7 @@ HRESULT TffdshowVideoInputPin::calcMeanQuant(float *quant)
     if (!video) {
         return S_FALSE;
     }
-    *quant=video->calcMeanQuant();
+    *quant = video->calcMeanQuant();
     return S_OK;
 }
 
@@ -807,10 +813,10 @@ HRESULT TffdshowVideoInputPin::quantsAvailable()
     if (!video) {
         return E_FAIL;
     }
-    return video->quants?S_OK:S_FALSE;
+    return video->quants ? S_OK : S_FALSE;
 }
 
-HRESULT TffdshowVideoInputPin::getQuantMatrices(uint8_t intra8[64],uint8_t inter8[64])
+HRESULT TffdshowVideoInputPin::getQuantMatrices(uint8_t intra8[64], uint8_t inter8[64])
 {
     if (!intra8 || !inter8) {
         return E_POINTER;
@@ -818,44 +824,44 @@ HRESULT TffdshowVideoInputPin::getQuantMatrices(uint8_t intra8[64],uint8_t inter
     if (!video) {
         return E_FAIL;
     }
-    if ((!video->inter_matrix && !video->intra_matrix) || (video->intra_matrix[0]==0 && video->inter_matrix[0]==0)) {
+    if ((!video->inter_matrix && !video->intra_matrix) || (video->intra_matrix[0] == 0 && video->inter_matrix[0] == 0)) {
         return E_UNEXPECTED;
     }
     if (video->inter_matrix)
-        for (int i=0; i<64; i++) {
-            inter8[i]=(uint8_t)video->inter_matrix[i];
+        for (int i = 0; i < 64; i++) {
+            inter8[i] = (uint8_t)video->inter_matrix[i];
         }
     else {
-        memset(inter8,0,64);
+        memset(inter8, 0, 64);
     }
     if (video->intra_matrix)
-        for (int i=0; i<64; i++) {
-            intra8[i]=(uint8_t)video->intra_matrix[i];
+        for (int i = 0; i < 64; i++) {
+            intra8[i] = (uint8_t)video->intra_matrix[i];
         }
     else {
-        memset(intra8,0,64);
+        memset(intra8, 0, 64);
     }
     return S_OK;
 }
 
-HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf,size_t buflen)
+HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf, size_t buflen)
 {
     if (!buf) {
         return E_POINTER;
     }
     if (video) {
         char_t name[60];
-        tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s (%s)"),fourcc2str(biIn.bmiHeader.biCompression,name,60),video->getName());
-        buf[buflen-1]='\0';
+        tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s (%s)"), fourcc2str(biIn.bmiHeader.biCompression, name, 60), video->getName());
+        buf[buflen - 1] = '\0';
     } else {
-        buf[0]='\0';
+        buf[0] = '\0';
     }
     return S_OK;
 }
 
 bool TffdshowVideoInputPin::waitForKeyframes()
 {
-    return !rawDecode && codecId != CODEC_ID_H264 && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression!=FOURCC_MPEG);
+    return !rawDecode && codecId != CODEC_ID_H264 && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression != FOURCC_MPEG);
 }
 
 void TffdshowVideoInputPin::setSampleSkipped()
@@ -865,24 +871,24 @@ void TffdshowVideoInputPin::setSampleSkipped()
     }
 }
 
-const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtitle,const char_t *searchDir,const char_t *searchExt,bool heuristic)
+const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtitle, const char_t *searchDir, const char_t *searchExt, bool heuristic)
 {
-    if (IsConnected()==FALSE) {
+    if (IsConnected() == FALSE) {
         return _l("");
     }
-    const char_t *AVIname=getFileSourceName();
-    if (AVIname[0]=='\0') {
+    const char_t *AVIname = getFileSourceName();
+    if (AVIname[0] == '\0') {
         return _l("");
     }
-    if (autosubflnm[0]=='\0' || oldSubHeuristic!=heuristic || stricmp(oldSubSearchDir,searchDir)!=0) {
-        oldSubHeuristic=heuristic;
+    if (autosubflnm[0] == '\0' || oldSubHeuristic != heuristic || stricmp(oldSubSearchDir, searchDir) != 0) {
+        oldSubHeuristic = heuristic;
         ff_strncpy(oldSubSearchDir, searchDir, countof(oldSubSearchDir));
-        TsubtitlesFile::findSubtitlesFile(AVIname,searchDir,searchExt,autosubflnm,MAX_PATH,heuristic,checkSubtitle);
+        TsubtitlesFile::findSubtitlesFile(AVIname, searchDir, searchExt, autosubflnm, MAX_PATH, heuristic, checkSubtitle);
     }
     return autosubflnm;
 }
 
-int TffdshowVideoInputPin::getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc)
+int TffdshowVideoInputPin::getVideoCodecId(const BITMAPINFOHEADER *hdr, const GUID *subtype, FOURCC *AVIfourcc)
 {
     // Microsoft's wtv files are recognized as "MPEG in AVI" in ffdshow.
     // ffdshow tried to decode it and fails.
@@ -902,11 +908,11 @@ const long TffdshowVideoInputPin::MAX_SPEED = 2;
 
 HRESULT TffdshowVideoInputPin::SetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD cbInstanceData, LPVOID pPropertyData, DWORD cbPropData)
 {
-    switch(Id) {
+    switch (Id) {
         case AM_RATE_SimpleRateChange: {
             CAutoLock lock(&m_csCodecs_and_imgFilters);
             AM_SimpleRateChange* p = (AM_SimpleRateChange*)pPropertyData;
-            if(!m_rateAndFlush.correctTS) {
+            if (!m_rateAndFlush.correctTS) {
                 return E_PROP_ID_UNSUPPORTED;
             }
             m_rateAndFlush.ratechange.Rate = p->Rate;
@@ -921,12 +927,12 @@ HRESULT TffdshowVideoInputPin::SetPropSetRate(DWORD Id, LPVOID pInstanceData, DW
         }
         break;
         case AM_RATE_UseRateVersion: {
-            if(*(WORD*)pPropertyData == 0x0101) {
+            if (*(WORD*)pPropertyData == 0x0101) {
                 DPRINTF(_l("Rate Change 1.1\n"));
                 m_rateAndFlush.correctTS = true;
                 // todo get 1.1 working properly
                 return E_UNEXPECTED;
-            } else if(*(WORD*)pPropertyData == 0x0100) {
+            } else if (*(WORD*)pPropertyData == 0x0100) {
                 DPRINTF(_l("Rate Change 1.0\n"));
                 m_rateAndFlush.correctTS = true;
             } else {
@@ -942,7 +948,7 @@ HRESULT TffdshowVideoInputPin::SetPropSetRate(DWORD Id, LPVOID pInstanceData, DW
 
 HRESULT TffdshowVideoInputPin::GetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD InstanceLength, LPVOID pPropertyData, DWORD cbPropData, DWORD *pcbReturned)
 {
-    switch(Id) {
+    switch (Id) {
         case AM_RATE_MaxFullDataRate: {
             DPRINTF(_l("MaxFullDataRate\n"));
             AM_MaxFullDataRate* p = (AM_MaxFullDataRate*)pPropertyData;
@@ -978,7 +984,7 @@ HRESULT TffdshowVideoInputPin::GetPropSetRate(DWORD Id, LPVOID pInstanceData, DW
 
 HRESULT TffdshowVideoInputPin::SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSupport)
 {
-    switch(dwPropID) {
+    switch (dwPropID) {
         case AM_RATE_SimpleRateChange:
             *pTypeSupport = KSPROPERTY_SUPPORT_SET;
             break;
@@ -1004,9 +1010,9 @@ HRESULT TffdshowVideoInputPin::SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSu
 //================================ TffdshowVideoEncInputPin ================================
 STDMETHODIMP TffdshowVideoEncInputPin::NonDelegatingQueryInterface(REFIID riid, void** ppv)
 {
-    if (riid==IID_IMixerPinConfig) {
-        isOverlay=true;
-        return GetInterface<IMixerPinConfig>(this,ppv);
+    if (riid == IID_IMixerPinConfig) {
+        isOverlay = true;
+        return GetInterface<IMixerPinConfig>(this, ppv);
     } else {
         return TffdshowVideoInputPin::NonDelegatingQueryInterface(riid, ppv);
     }
@@ -1018,7 +1024,7 @@ STDMETHODIMP TffdshowVideoEncInputPin::SetRelativePosition(THIS_ IN DWORD dwLeft
     return S_OK;
 }
 
-STDMETHODIMP TffdshowVideoEncInputPin::GetRelativePosition(THIS_ OUT DWORD *pdwLeft,OUT DWORD *pdwTop,OUT DWORD *pdwRight,OUT DWORD *pdwBottom)
+STDMETHODIMP TffdshowVideoEncInputPin::GetRelativePosition(THIS_ OUT DWORD *pdwLeft, OUT DWORD *pdwTop, OUT DWORD *pdwRight, OUT DWORD *pdwBottom)
 {
     DPRINTF(_l(" GetRelativePosition"));
     return S_OK;
@@ -1042,7 +1048,7 @@ STDMETHODIMP TffdshowVideoEncInputPin::SetColorKey(THIS_ IN COLORKEY *pColorKey)
     return S_OK;
 }
 
-STDMETHODIMP TffdshowVideoEncInputPin::GetColorKey(THIS_ OUT COLORKEY *pColorKey,OUT DWORD *pColor)
+STDMETHODIMP TffdshowVideoEncInputPin::GetColorKey(THIS_ OUT COLORKEY *pColorKey, OUT DWORD *pColor)
 {
     DPRINTF(_l(" GetColorKey"));
     return S_OK;

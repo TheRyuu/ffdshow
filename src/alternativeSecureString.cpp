@@ -47,11 +47,11 @@ template<class tchar> static size_t strlen_limit(const tchar* src, size_t count)
 {
     size_t i = 0;
     do {
-        if (src[i]==0) {
+        if (src[i] == 0) {
             return i;
         }
         i++;
-    } while(i < count);
+    } while (i < count);
     return INT_MAX;
 }
 
@@ -121,11 +121,11 @@ template<class tchar> int tsnprintf_s(tchar *buffer, size_t sizeOfBuffer, size_t
     return vsnprintf_s(buffer, sizeOfBuffer, count, format, argptr);
 }
 
-errno_t _splitpath_s(const char_t    *path,
-                     char_t    *drive, size_t driveNumberOfElements,
-                     char_t    *dir,   size_t dirNumberOfElements,
-                     char_t    *fname, size_t nameNumberOfElements,
-                     char_t    *ext,   size_t extNumberOfElements)
+errno_t _splitpath_s(const char_t *path,
+                     char_t *drive, size_t driveNumberOfElements,
+                     char_t *dir, size_t dirNumberOfElements,
+                     char_t *fname, size_t nameNumberOfElements,
+                     char_t *ext, size_t extNumberOfElements)
 {
     if (!path) {
         return EINVAL;
@@ -167,7 +167,7 @@ errno_t _splitpath_s(const char_t    *path,
     tmp_fname[len] = 0;
     tmp_ext  [len] = 0;
 
-    if (   (drive && strlen(tmp_drive) >= driveNumberOfElements)
+    if ((drive && strlen(tmp_drive) >= driveNumberOfElements)
             || (dir   && strlen(tmp_dir)   >= dirNumberOfElements)
             || (fname && strlen(tmp_fname) >= nameNumberOfElements)
             || (ext   && strlen(tmp_ext)   >= extNumberOfElements)) {
@@ -190,7 +190,7 @@ errno_t _splitpath_s(const char_t    *path,
         strcpy(drive, tmp_drive);
     }
     if (dir) {
-        strcpy(dir,   tmp_dir);
+        strcpy(dir, tmp_dir);
     }
     if (fname) {
         strcpy(fname, tmp_fname);
@@ -201,12 +201,12 @@ errno_t _splitpath_s(const char_t    *path,
     return 0;
 }
 
-errno_t _makepath_s(char_t    *path,
+errno_t _makepath_s(char_t *path,
                     size_t sizeInCharacters,
-                    const char_t    *drive,
-                    const char_t    *dir,
-                    const char_t    *fname,
-                    const char_t    *ext)
+                    const char_t *drive,
+                    const char_t *dir,
+                    const char_t *fname,
+                    const char_t *ext)
 {
     if (!path || sizeInCharacters <= 0) {
         return EINVAL;

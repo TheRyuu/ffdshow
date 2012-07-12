@@ -30,9 +30,9 @@
 //================================= TsubtitleLine ==================================
 size_t TsubtitleLine::strlen(void) const
 {
-    size_t len=0;
-    for (Tbase::const_iterator w=this->begin(); w!=this->end(); w++) {
-        len+=::strlen(*w);
+    size_t len = 0;
+    for (Tbase::const_iterator w = this->begin(); w != this->end(); w++) {
+        len +=::strlen(*w);
     }
     return len;
 }
@@ -45,26 +45,26 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subForm
 
     // If there are only one word, then just change the props and return.
     if (words.size() == 1) {
-        this->front().props=words.front().props;
+        this->front().props = words.front().props;
         return;
     }
 
     bool karaokeNewWord = false;
     const wchar_t *lineString = this->front().getString();
-    foreach (const TsubtitleFormat::Tword &w, words) {
+    foreach(const TsubtitleFormat::Tword & w, words) {
         karaokeNewWord |= w.props.karaokeNewWord;
 
         // avoid adding empty words
-        if (w.i1==w.i2) {
+        if (w.i1 == w.i2) {
             continue;
         }
         TsubtitleWord word(lineString + w.i1, w.i2 - w.i1);
-        word.props=w.props;
+        word.props = w.props;
         word.props.karaokeNewWord = karaokeNewWord;
 
         /* With SRT subtitles the secondary color is (most of the time) not set
             so we have to revert the primary (which is the overlay color of karaoke) with the secondary color */
-        if ((subFormat==Tsubreader::SUB_SUBVIEWER || subFormat==Tsubreader::SUB_SUBVIEWER2)
+        if ((subFormat == Tsubreader::SUB_SUBVIEWER || subFormat == Tsubreader::SUB_SUBVIEWER2)
                 && word.props.karaokeMode != TSubtitleProps::KARAOKE_NONE) {
             word.props.SecondaryColour = w.props.color;
             word.props.color = w.props.SecondaryColour;
@@ -78,10 +78,10 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subForm
     }
 }
 
-void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &parent)
+void TsubtitleLine::format(TsubtitleFormat &format, int sfmt, TsubtitleText &parent)
 {
     TsubtitleFormat::Twords words;
-    if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2) {
+    if (sfmt == Tsubreader::SUB_SSA || sfmt == Tsubreader::SUB_SUBVIEWER || sfmt == Tsubreader::SUB_SUBVIEWER2) {
         props = format.processSSA(words, *this, sfmt, parent);
         applyWords(words, sfmt);
     } else {
@@ -94,8 +94,9 @@ bool TsubtitleLine::checkTrailingSpaceRight(const_iterator w) const
 {
     while (++w != end()) {
         ffstring wstr(w->getString());
-        if (wstr.size() && wstr.find_first_not_of(L" ") != ffstring::npos)
+        if (wstr.size() && wstr.find_first_not_of(L" ") != ffstring::npos) {
             return false;
+        }
     }
     return true;
 }
@@ -106,7 +107,7 @@ bool TsubtitleLine::checkTrailingSpaceRight(const_iterator w) const
 TsubtitleText::TsubtitleText(const TsubtitleText &src):
     Tsubtitle(src)
 {
-    insert(end(),src.begin(),src.end());
+    insert(end(), src.begin(), src.end());
     lines = src.lines;
     subformat = src.subformat;
     defProps = src.defProps;
@@ -119,8 +120,8 @@ void TsubtitleText::fixFade(const TSubtitleProps &lineProps)
     // Some style over-rides belongs to line, rather than words (thanks, STaRGaZeR).
     // For such properties, lineProps has been used to store parameters.
     // Here we copy some members of lineProps to props.
-    foreach (TsubtitleLine &line, *this) {
-        foreach (TsubtitleWord &word, line) {
+    foreach(TsubtitleLine & line, *this) {
+        foreach(TsubtitleWord & word, line) {
             word.props.isFad  = lineProps.isFad;
             word.props.fadeA1 = lineProps.fadeA1;
             word.props.fadeA2 = lineProps.fadeA2;
@@ -145,17 +146,17 @@ void TsubtitleText::fixFade(const TSubtitleProps &lineProps)
 
 void TsubtitleText::format(TsubtitleFormat &format)
 {
-    int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
-    foreach (TsubtitleLine &line, *this)
-        line.format(format,sfmt,*this);
+    int sfmt = subformat & Tsubreader::SUB_FORMATMASK;
+    foreach(TsubtitleLine & line, *this)
+    line.format(format, sfmt, *this);
 
-    for (Tbase::iterator l=this->begin(); l!=this->end(); l++) {
-        format.processMicroDVD(*this,l);
+    for (Tbase::iterator l = this->begin(); l != this->end(); l++) {
+        format.processMicroDVD(*this, l);
     }
 
-    if ((sfmt==Tsubreader::SUB_MPL2)||(sfmt==Tsubreader::SUB_VPLAYER))
-        foreach (TsubtitleLine &line, *this)
-            format.processMPL2(line);
+    if ((sfmt == Tsubreader::SUB_MPL2) || (sfmt == Tsubreader::SUB_VPLAYER))
+        foreach(TsubtitleLine & line, *this)
+        format.processMPL2(line);
 }
 
 void TsubtitleText::print(
@@ -167,7 +168,7 @@ void TsubtitleText::print(
     unsigned char **dst,
     const stride_t *stride)
 {
-    f.prepareC(this,prefs,false);
+    f.prepareC(this, prefs, false);
 }
 
 size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceChange)
@@ -184,8 +185,8 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
 
 #if 0  // What is this code for? removed by h.yamagata
         if (prefs.sizeDx && prefs.sizeDy) {
-            dx=prefs.sizeDx;
-            dy=prefs.sizeDy;
+            dx = prefs.sizeDx;
+            dy = prefs.sizeDy;
         }
 #endif
 
@@ -196,56 +197,56 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
             comptrQ<IffdshowDecVideo>(deci)->getFontManager(&font.fontManager);
         }
         TfontManager *fontManager = font.fontManager;
-        bool nosplit=!prefs.fontSettings.split && !prefs.OSDitemSplit;
-        double splitdx0 = nosplit ? 0 : ((int)dx-prefs.textMarginLR<1 ? 1 : dx-prefs.textMarginLR) * gdi_font_scale;
+        bool nosplit = !prefs.fontSettings.split && !prefs.OSDitemSplit;
+        double splitdx0 = nosplit ? 0 : ((int)dx - prefs.textMarginLR < 1 ? 1 : dx - prefs.textMarginLR) * gdi_font_scale;
 
-        int *pwidths=NULL;
+        int *pwidths = NULL;
         Tbuffer width;
 
-        foreach (const TsubtitleLine &l, *this) {
-            int charCount=0;
+        foreach(const TsubtitleLine & l, *this) {
+            int charCount = 0;
             ffstring allStr;
             Tbuffer tempwidth;
-            double left=0.0,nextleft=0.0;
-            int wordWrapMode=-1;
-            double splitdxMax=splitdx0;
+            double left = 0.0, nextleft = 0.0;
+            int wordWrapMode = -1;
+            double splitdxMax = splitdx0;
             if (l.empty()) {
                 TtoGdiFont gf(l.props, font.hdc, prefs, dx, dy, fontManager);
                 // empty lines have half height.
-                TrenderedSubtitleLine *line=new TrenderedSubtitleLine(l.props, prefs, gf.getHeight() / 2.0);
+                TrenderedSubtitleLine *line = new TrenderedSubtitleLine(l.props, prefs, gf.getHeight() / 2.0);
                 lines.push_back(line);
             }
-            foreach (const TsubtitleWord &w, l) {
+            foreach(const TsubtitleWord & w, l) {
                 TtoGdiFont gf(w.props, font.hdc, prefs, dx, dy, fontManager);
                 int spacing = w.props.get_spacing(prefs);
-                const wchar_t *p=w;
-                double xscale=w.props.get_xscale(
-                               prefs.fontSettings.xscale/100.0,
-                               prefs.sar,
-                               prefs.fontSettings.fontSettingsOverride);
+                const wchar_t *p = w;
+                double xscale = w.props.get_xscale(
+                                    prefs.fontSettings.xscale / 100.0,
+                                    prefs.sar,
+                                    prefs.fontSettings.fontSettingsOverride);
 
                 wordWrapMode = w.props.wrapStyle;
                 int polygon = w.props.polygon; // ASS Drawing mode.
 
                 splitdxMax = get_splitdx_for_new_line(w, dx, prefs, deci);
                 allStr += p;
-                pwidths = (int*)width.resize((allStr.size()+1)*sizeof(int));
-                left=nextleft;
+                pwidths = (int*)width.resize((allStr.size() + 1) * sizeof(int));
+                left = nextleft;
                 int nfit; // dummy
                 SIZE sz;
-                size_t strlenp=strlen(p);
+                size_t strlenp = strlen(p);
 
                 int *ptempwidths = NULL;
                 TrenderedTextSubtitleWord *rw = NULL;
                 if (polygon == 0) {
-                    ptempwidths = (int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
+                    ptempwidths = (int*)tempwidth.alloc((strlenp + 1) * sizeof(int) * 2); // *2 to work around Layer For Unicode on Windows 9x.
                     if (spacing == 0) {
-                        GetTextExtentExPointW(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
+                        GetTextExtentExPointW(font.hdc, p, (int)strlenp, INT_MAX, &nfit, ptempwidths, &sz);
                     } else {
                         int sum = 0;
                         for (unsigned int i = 0; i < strlenp; i++) {
                             int char_width;
-                            GetTextExtentExPointW(font.hdc, p+i, 1, INT_MAX, &nfit, &char_width, &sz);
+                            GetTextExtentExPointW(font.hdc, p + i, 1, INT_MAX, &nfit, &char_width, &sz);
                             sum += char_width;
                             ptempwidths[i] = sum;
                         }
@@ -258,13 +259,15 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                     renderedPolygons.push_back(rw);
                 }
 
-                for (size_t x=0; x<strlenp; x++) {
+                for (size_t x = 0; x < strlenp; x++) {
                     nextleft = left;
                     // ASS Drawing mode commands should not be wrapped.
-                    if (ptempwidths)
+                    if (ptempwidths) {
                         nextleft += (double)ptempwidths[x] * xscale;
-                    if (rw)
+                    }
+                    if (rw) {
                         nextleft += rw->dxChar * 64;
+                    }
                     pwidths[charCount] = int(nextleft);
                     charCount++;
                 }
@@ -272,37 +275,38 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
             if (allStr.empty()) {
                 continue;
             }
-            if (wordWrapMode==-1) {
+            if (wordWrapMode == -1) {
                 // non SSA/ASS/ASS2
                 if (nosplit) {
-                    wordWrapMode=2;  // no word wrapping
+                    wordWrapMode = 2; // no word wrapping
                 } else {
-                    deci->getParam(IDFF_subWordWrap,&wordWrapMode);
-                    if (wordWrapMode>=2) {
+                    deci->getParam(IDFF_subWordWrap, &wordWrapMode);
+                    if (wordWrapMode >= 2) {
                         wordWrapMode++; // wordWrapMode = 3; lower line gets wider
                     }
                 }
             }
-            TwordWrap wordWrap(wordWrapMode,allStr.c_str(),pwidths,(int)splitdxMax,l.props.isSSA());
+            TwordWrap wordWrap(wordWrapMode, allStr.c_str(), pwidths, (int)splitdxMax, l.props.isSSA());
             //wordWrap.debugprint();
 
-            TrenderedSubtitleLine *line=NULL;
-            int cx=0,cy=0;
+            TrenderedSubtitleLine *line = NULL;
+            int cx = 0, cy = 0;
 
-            bool firstLine=true;
+            bool firstLine = true;
 
-            for (TsubtitleLine::const_iterator w0=l.begin(); w0!=l.end(); w0++) {
+            for (TsubtitleLine::const_iterator w0 = l.begin(); w0 != l.end(); w0++) {
                 TsubtitleWord w(*w0);
                 TtoGdiFont gf(w.props, font.hdc, prefs, dx, dy, fontManager);
-                if (!line)
-                    line=new TrenderedSubtitleLine(l.props, prefs);
+                if (!line) {
+                    line = new TrenderedSubtitleLine(l.props, prefs);
+                }
 
-                const wchar_t *p=w;
+                const wchar_t *p = w;
 
                 do {
-                    int strlenp=(int)strlen(p);
+                    int strlenp = (int)strlen(p);
                     // If line goes out of screen, wraps it except if no wrap defined
-                    int z1 = cx+strlenp-1;
+                    int z1 = cx + strlenp - 1;
                     int z2 = wordWrap.getRightOfTheLine(cy);
                     if (z1 <= z2) {
                         // OK, the word will be stored in the line.
@@ -311,19 +315,19 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                         if (rw) {
                             line->push_back(rw);
                         }
-                        cx+=strlenp;
+                        cx += strlenp;
                         break;
                     } else {
-                        int n=wordWrap.getRightOfTheLine(cy)-cx+1;
-                        if (n<=0) {
+                        int n = wordWrap.getRightOfTheLine(cy) - cx + 1;
+                        if (n <= 0) {
                             // We may have to split a word into some lines. (And don't split polygon)
                             cy++;
-                            n=wordWrap.getRightOfTheLine(cy)-cx+1;
+                            n = wordWrap.getRightOfTheLine(cy) - cx + 1;
                             if (!line->empty()) {
                                 lines.push_back(line);
-                                line=new TrenderedSubtitleLine(l.props, prefs);
+                                line = new TrenderedSubtitleLine(l.props, prefs);
                             }
-                            if (cy>=wordWrap.getLineCount()) {
+                            if (cy >= wordWrap.getLineCount()) {
                                 break;
                             }
                         }
@@ -336,15 +340,16 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                         }
                         if (!line->empty()) {
                             lines.push_back(line);
-                            line=new TrenderedSubtitleLine(l.props, prefs);
+                            line = new TrenderedSubtitleLine(l.props, prefs);
                         }
-                        if (w.props.polygon)
+                        if (w.props.polygon) {
                             break;
-                        p += wordWrap.getRightOfTheLine(cy)-cx+1;
-                        cx = wordWrap.getRightOfTheLine(cy)+1;
+                        }
+                        p += wordWrap.getRightOfTheLine(cy) - cx + 1;
+                        cx = wordWrap.getRightOfTheLine(cy) + 1;
                         cy++;
                     }
-                } while(cy<wordWrap.getLineCount());
+                } while (cy < wordWrap.getLineCount());
             }
             if (line) {
                 if (!line->empty()) {
@@ -360,7 +365,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
         // Because we need the axis of ratations (\fr) to get the bitmaps of the text, we use TrenderedSubtitleLine::print.
         // Note that the detection of collision is impossible here, because not all lines that should be displayed at the
         // same time are not included in TrenderedSubtitleLines.
-        lines.print(prefs,NULL,NULL);
+        lines.print(prefs, NULL, NULL);
         used_memory = getRenderedMemorySize();
     }
     renderedPolygons.clear();
@@ -402,23 +407,26 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     bool trimLeftSpaces,
     bool trimRightSpaces)
 {
-    if (!*s) return NULL;
+    if (!*s) { return NULL; }
 
     TfontSettings &fontSettings = prefs.fontSettings;
-    ffstring s1(s,slen);
+    ffstring s1(s, slen);
 
     if (trimLeftSpaces) {
-       while (s1.size() && TwordWrap::iswspace(s1.at(0))) 	 
-           s1.erase(0,1);
+        while (s1.size() && TwordWrap::iswspace(s1.at(0))) {
+            s1.erase(0, 1);
+        }
     }
 
     if (trimRightSpaces) {
-       while (s1.size() && TwordWrap::iswspace(s1.at(s1.size()-1))) 	 
-           s1.erase(s1.size()-1,1);
+        while (s1.size() && TwordWrap::iswspace(s1.at(s1.size() - 1))) {
+            s1.erase(s1.size() - 1, 1);
+        }
     }
 
-    if (s1.empty())
+    if (s1.empty()) {
         return NULL;
+    }
 
     TrenderedTextSubtitleWord *rw = NULL;
     if (w->props.polygon) {
@@ -455,7 +463,7 @@ void TsubtitleTexts::print(
     const stride_t *stride)
 {
     f.reset();
-    foreach (TsubtitleText *subtitleText, *this) {
+    foreach(TsubtitleText * subtitleText, *this) {
         boost::unique_lock<boost::mutex> lock(*subtitleText->get_lock_ptr(), boost::try_to_lock_t());
         if (!lock.owns_lock()) {
             // hustle glyphThread
@@ -464,7 +472,7 @@ void TsubtitleTexts::print(
                                THREAD_PRIORITY_BELOW_NORMAL);
             lock.lock();
         }
-        subtitleText->print(time,wasseek,f,forceChange,prefs,dst,stride);
+        subtitleText->print(time, wasseek, f, forceChange, prefs, dst, stride);
     }
-    f.print(prefs,dst,stride);
+    f.print(prefs, dst, stride);
 }

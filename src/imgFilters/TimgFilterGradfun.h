@@ -5,7 +5,7 @@
 #include "Tlibavcodec.h"
 #include "libavfilter/gradfun.h"
 
-DECLARE_FILTER(TimgFilterGradfun,public,TimgFilter)
+DECLARE_FILTER(TimgFilterGradfun, public, TimgFilter)
 
 private:
 Tlibavcodec *ffmpeg;
@@ -17,8 +17,8 @@ unsigned int oldWidth;
 unsigned int oldHeight;
 int reconfigure;
 
-virtual GradFunContext *configure (float threshold, int radius, TffPict &pict);
-virtual void filter (GradFunContext *gradFunContext, uint8_t *src[4], TffPict &pict);
+virtual GradFunContext *configure(float threshold, int radius, TffPict &pict);
+virtual void filter(GradFunContext *gradFunContext, uint8_t *src[4], TffPict &pict);
 
 protected:
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
@@ -27,9 +27,9 @@ virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) c
 }
 
 public:
-TimgFilterGradfun(IffdshowBase *Ideci,Tfilters *Iparent);
+TimgFilterGradfun(IffdshowBase *Ideci, Tfilters *Iparent);
 TimgFilterGradfun::~TimgFilterGradfun();
-virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual HRESULT process(TfilterQueue::iterator it, TffPict &pict, const TfilterSettingsVideo *cfg0);
 virtual void onDiscontinuity(void);
 virtual void onSizeChange(void);
 virtual void done(void);

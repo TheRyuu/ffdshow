@@ -3,10 +3,10 @@
 
 #include "TconfPageDecAudio.h"
 
-class TlfeCrossoverPage :public TconfPageDecAudio
+class TlfeCrossoverPage : public TconfPageDecAudio
 {
 public:
-    TlfeCrossoverPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TlfeCrossoverPage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void init(void);
     virtual void cfg2dlg(void);
 };

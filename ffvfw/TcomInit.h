@@ -26,27 +26,27 @@
 
 class TcomInit
 {
-    std::map<DWORD,HRESULT> CoInitializedThreads;
+    std::map<DWORD, HRESULT> CoInitializedThreads;
     boost::mutex mutex;
 
 public:
     void init() {
         DPRINTF(_l("TcomInit::init"));
         boost::unique_lock<boost::mutex> lock(mutex);
-        DWORD currentthread= GetCurrentThreadId();
-        std::map<DWORD,HRESULT>::iterator i= CoInitializedThreads.find(currentthread);
-        if(i==CoInitializedThreads.end()
+        DWORD currentthread = GetCurrentThreadId();
+        std::map<DWORD, HRESULT>::iterator i = CoInitializedThreads.find(currentthread);
+        if (i == CoInitializedThreads.end()
                 || FAILED(CoInitializedThreads[currentthread])) {
-            CoInitializedThreads[currentthread]= CoInitialize(NULL);
+            CoInitializedThreads[currentthread] = CoInitialize(NULL);
         }
     }
 
     void uninit() {
         DPRINTF(_l("TcomInit::init"));
         boost::unique_lock<boost::mutex> lock(mutex);
-        DWORD currentthread= GetCurrentThreadId();
-        std::map<DWORD,HRESULT>::iterator i= CoInitializedThreads.find(currentthread);
-        if(i == CoInitializedThreads.end()) {
+        DWORD currentthread = GetCurrentThreadId();
+        std::map<DWORD, HRESULT>::iterator i = CoInitializedThreads.find(currentthread);
+        if (i == CoInitializedThreads.end()) {
             return;
         }
         if (SUCCEEDED(CoInitializedThreads[currentthread])) {

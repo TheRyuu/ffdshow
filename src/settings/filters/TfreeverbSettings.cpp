@@ -22,7 +22,7 @@
 #include "Cfreeverb.h"
 #include "TffdshowPageDec.h"
 
-const TfilterIDFF TfreeverbSettings::idffs= {
+const TfilterIDFF TfreeverbSettings::idffs = {
     /*name*/      _l("Freeverb"),
     /*id*/        IDFF_filterFreeverb,
     /*is*/        IDFF_isFreeverb,
@@ -33,37 +33,37 @@ const TfilterIDFF TfreeverbSettings::idffs= {
     /*dlgId*/     IDD_FREEVERB,
 };
 
-TfreeverbSettings::TfreeverbSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsAudio(sizeof(*this),Icoll,filters,&idffs)
+TfreeverbSettings::TfreeverbSettings(TintStrColl *Icoll, TfilterIDFFs *filters): TfilterSettingsAudio(sizeof(*this), Icoll, filters, &idffs)
 {
-    static const TintOptionT<TfreeverbSettings> iopts[]= {
-        IDFF_isFreeverb      ,&TfreeverbSettings::is      ,0,0,_l(""),1,
-        _l("isFreeverb"),0,
-        IDFF_showFreeverb    ,&TfreeverbSettings::show    ,0,0,_l(""),1,
-        _l("showFreeverb"),1,
-        IDFF_orderFreeverb   ,&TfreeverbSettings::order   ,1,1,_l(""),1,
-        _l("orderFreeverb"),0,
-        IDFF_freeverbRoomsize,&TfreeverbSettings::roomsize,0,1000,_l(""),1,
-        _l("freeverbRoomsize"),initialroom,
-        IDFF_freeverbDamp    ,&TfreeverbSettings::damp    ,0,1000,_l(""),1,
-        _l("freeverbDamp"),initialdamp,
-        IDFF_freeverbWet     ,&TfreeverbSettings::wet     ,0,1000,_l(""),1,
-        _l("freeverbWet"),initialwet,
-        IDFF_freeverbDry     ,&TfreeverbSettings::dry     ,0,1000,_l(""),1,
-        _l("freeverbDry"),initialdry,
-        IDFF_freeverbWidth   ,&TfreeverbSettings::width   ,0,1000,_l(""),1,
-        _l("freeverbWidth"),initialwidth,
-        IDFF_freeverbMode    ,&TfreeverbSettings::mode    ,0,1000,_l(""),1,
-        _l("freeverbMode"),initialmode,
+    static const TintOptionT<TfreeverbSettings> iopts[] = {
+        IDFF_isFreeverb      , &TfreeverbSettings::is      , 0, 0, _l(""), 1,
+        _l("isFreeverb"), 0,
+        IDFF_showFreeverb    , &TfreeverbSettings::show    , 0, 0, _l(""), 1,
+        _l("showFreeverb"), 1,
+        IDFF_orderFreeverb   , &TfreeverbSettings::order   , 1, 1, _l(""), 1,
+        _l("orderFreeverb"), 0,
+        IDFF_freeverbRoomsize, &TfreeverbSettings::roomsize, 0, 1000, _l(""), 1,
+        _l("freeverbRoomsize"), initialroom,
+        IDFF_freeverbDamp    , &TfreeverbSettings::damp    , 0, 1000, _l(""), 1,
+        _l("freeverbDamp"), initialdamp,
+        IDFF_freeverbWet     , &TfreeverbSettings::wet     , 0, 1000, _l(""), 1,
+        _l("freeverbWet"), initialwet,
+        IDFF_freeverbDry     , &TfreeverbSettings::dry     , 0, 1000, _l(""), 1,
+        _l("freeverbDry"), initialdry,
+        IDFF_freeverbWidth   , &TfreeverbSettings::width   , 0, 1000, _l(""), 1,
+        _l("freeverbWidth"), initialwidth,
+        IDFF_freeverbMode    , &TfreeverbSettings::mode    , 0, 1000, _l(""), 1,
+        _l("freeverbMode"), initialmode,
         0
     };
     addOptions(iopts);
 }
 
-void TfreeverbSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
+void TfreeverbSettings::createFilters(size_t filtersorder, Tfilters *filters, TfilterQueue &queue) const
 {
-    idffOnChange(idffs,filters,queue.temporary);
+    idffOnChange(idffs, filters, queue.temporary);
     if (is && show) {
-        queueFilter<TaudioFilterFreeverb>(filtersorder,filters,queue);
+        queueFilter<TaudioFilterFreeverb>(filtersorder, filters, queue);
     }
 }
 void TfreeverbSettings::createPages(TffdshowPageDec *parent) const
@@ -73,6 +73,6 @@ void TfreeverbSettings::createPages(TffdshowPageDec *parent) const
 
 const int* TfreeverbSettings::getResets(unsigned int pageId)
 {
-    static const int idResets[]= {IDFF_freeverbRoomsize,IDFF_freeverbDamp,IDFF_freeverbWet,IDFF_freeverbDry,IDFF_freeverbWidth,IDFF_freeverbMode,0};
+    static const int idResets[] = {IDFF_freeverbRoomsize, IDFF_freeverbDamp, IDFF_freeverbWet, IDFF_freeverbDry, IDFF_freeverbWidth, IDFF_freeverbMode, 0};
     return idResets;
 }

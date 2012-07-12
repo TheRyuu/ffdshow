@@ -3,10 +3,10 @@
 
 #include "TconfPageDecVideo.h"
 
-class TshowMVpage :public TconfPageDecVideo
+class TshowMVpage : public TconfPageDecVideo
 {
 public:
-    TshowMVpage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    TshowMVpage(TffdshowPageDec *Iparent, const TfilterIDFF *idff);
     virtual void cfg2dlg(void);
 };
 

@@ -25,21 +25,21 @@ void TqosPage::init(void)
 {
     const TvideoCodecDec *movie;
     deciV->getMovieSource(&movie);
-    int source=movie?movie->getType():0;
-    islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && source==IDFF_MOVIE_LAVC) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
-    static const int idLavc[]= {IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_CMB_H264_SKIP_METHOD,0};
-    enable(islavc,idLavc);
+    int source = movie ? movie->getType() : 0;
+    islavc = ((filterMode & IDFF_FILTERMODE_PLAYER) && source == IDFF_MOVIE_LAVC) || (filterMode & (IDFF_FILTERMODE_CONFIG | IDFF_FILTERMODE_VFW));
+    static const int idLavc[] = {IDC_CHB_H264_SKIP_ON_DELAY, IDC_ED_H264SKIP_ON_DELAY_TIME, IDC_CMB_H264_SKIP_METHOD, 0};
+    enable(islavc, idLavc);
 }
 
 void TmiscPage::cfg2dlg(void)
 {
     if (islavc) {
-        setCheck(IDC_CHB_H264_SKIP_ON_DELAY,cfgGet(IDFF_h264skipOnDelay));
-        SetDlgItemInt(m_hwnd,IDC_ED_H264SKIP_ON_DELAY_TIME,cfgGet(IDFF_h264skipOnDelayTime),FALSE);
-        cbxSetCurSel(IDC_CMB_H264_SKIP_METHOD,cfgGet(IDFF_fastH264));
+        setCheck(IDC_CHB_H264_SKIP_ON_DELAY, cfgGet(IDFF_h264skipOnDelay));
+        SetDlgItemInt(m_hwnd, IDC_ED_H264SKIP_ON_DELAY_TIME, cfgGet(IDFF_h264skipOnDelayTime), FALSE);
+        cbxSetCurSel(IDC_CMB_H264_SKIP_METHOD, cfgGet(IDFF_fastH264));
     }
-    setCheck(IDC_CHB_DROP_ON_DELAY,cfgGet(IDFF_dropOnDelay));
-    SetDlgItemInt(m_hwnd,IDC_ED_DROP_ON_DELAY_TIME,cfgGet(IDFF_dropOnDelayTime),FALSE);
+    setCheck(IDC_CHB_DROP_ON_DELAY, cfgGet(IDFF_dropOnDelay));
+    SetDlgItemInt(m_hwnd, IDC_ED_DROP_ON_DELAY_TIME, cfgGet(IDFF_dropOnDelayTime), FALSE);
 }
 
 INT_PTR TmiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -48,7 +48,7 @@ INT_PTR TmiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_COMMAND:
             break;
     }
-    return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
+    return TconfPageDecVideo::msgProc(uMsg, wParam, lParam);
 }
 bool TmiscPage::reset(bool testonly)
 {
@@ -67,37 +67,37 @@ void TmiscPage::translate(void)
     TconfPageBase::translate();
 }
 
-void TmiscPage::getTip(char_t *tipS,size_t len)
+void TmiscPage::getTip(char_t *tipS, size_t len)
 {
     tsnprintf_s(tipS, len, _TRUNCATE, _l("IDCT: %s"), Tlibavcodec::idctNames[cfgGet(IDFF_idct)]);
     if (cfgGet(IDFF_grayscale)) {
         strncatf(tipS, len, _l("\nGrayscale"));
     }
-    int bugs=cfgGet(IDFF_workaroundBugs);
-    if (bugs && bugs!=FF_BUG_AUTODETECT) {
+    int bugs = cfgGet(IDFF_workaroundBugs);
+    if (bugs && bugs != FF_BUG_AUTODETECT) {
         strncatf(tipS, len, _l("\nBugs workaround"));
     }
 }
 
-TqosPage::TqosPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
+TqosPage::TqosPage(TffdshowPageDec *Iparent): TconfPageDecVideo(Iparent)
 {
-    dialogId=IDD_QOS;
-    inPreset=1;
-    idffOrder=maxOrder+2;
-    static const TbindCheckbox<TmiscPage> chb[]= {
-        IDC_CHB_DROP_ON_DELAY,IDFF_dropOnDelay,NULL,
-        IDC_CHB_H264_SKIP_ON_DELAY,IDFF_h264skipOnDelay,NULL,
-        0,NULL,NULL
+    dialogId = IDD_QOS;
+    inPreset = 1;
+    idffOrder = maxOrder + 2;
+    static const TbindCheckbox<TmiscPage> chb[] = {
+        IDC_CHB_DROP_ON_DELAY, IDFF_dropOnDelay, NULL,
+        IDC_CHB_H264_SKIP_ON_DELAY, IDFF_h264skipOnDelay, NULL,
+        0, NULL, NULL
     };
     bindCheckboxes(chb);
-    static const TbindEditInt<TmiscPage> edInt[]= {
-        IDC_ED_DROP_ON_DELAY_TIME,0,20000,IDFF_dropOnDelayTime,NULL,
-        IDC_ED_H264SKIP_ON_DELAY_TIME,0,20000,IDFF_h264skipOnDelayTime,NULL,
-        0,NULL,NULL
+    static const TbindEditInt<TmiscPage> edInt[] = {
+        IDC_ED_DROP_ON_DELAY_TIME, 0, 20000, IDFF_dropOnDelayTime, NULL,
+        IDC_ED_H264SKIP_ON_DELAY_TIME, 0, 20000, IDFF_h264skipOnDelayTime, NULL,
+        0, NULL, NULL
     };
     bindEditInts(edInt);
-    static const TbindCombobox<TmiscPage> cbx[]= {
-        IDC_CMB_H264_SKIP_METHOD,IDFF_fastH264,BINDCBX_SEL,NULL,
+    static const TbindCombobox<TmiscPage> cbx[] = {
+        IDC_CMB_H264_SKIP_METHOD, IDFF_fastH264, BINDCBX_SEL, NULL,
         0
     };
     bindComboboxes(cbx);

@@ -5,12 +5,12 @@
 #include "TsubtitleMixedProps.h"
 
 extern "C" {
-    void __cdecl YV12_lum2chr_min_mmx(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    void __cdecl YV12_lum2chr_max_mmx(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    void __cdecl YV12_lum2chr_min_mmx2(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    void __cdecl YV12_lum2chr_max_mmx2(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    unsigned int __cdecl fontPrepareOutline_sse2(const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV);
-    unsigned int __cdecl fontPrepareOutline_mmx (const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV,size_t matrixGap);
+    void __cdecl YV12_lum2chr_min_mmx(const unsigned char* lum0, const unsigned char* lum1, unsigned char* chr);
+    void __cdecl YV12_lum2chr_max_mmx(const unsigned char* lum0, const unsigned char* lum1, unsigned char* chr);
+    void __cdecl YV12_lum2chr_min_mmx2(const unsigned char* lum0, const unsigned char* lum1, unsigned char* chr);
+    void __cdecl YV12_lum2chr_max_mmx2(const unsigned char* lum0, const unsigned char* lum1, unsigned char* chr);
+    unsigned int __cdecl fontPrepareOutline_sse2(const unsigned char *src, size_t srcStrideGap, const short *matrix, size_t matrixSizeH, size_t matrixSizeV);
+    unsigned int __cdecl fontPrepareOutline_mmx(const unsigned char *src, size_t srcStrideGap, const short *matrix, size_t matrixSizeH, size_t matrixSizeV, size_t matrixGap);
 }
 
 class CPolygon;
@@ -23,8 +23,8 @@ private:
     int m_outlineWidth;
     TfontSettings::TshadowMode m_shadowMode;
     double outlineWidth_double;
-    mutable unsigned int oldBodyYUVa,oldOutlineYUVa;
-    unsigned int gdi_dx,gdi_dy;
+    mutable unsigned int oldBodyYUVa, oldOutlineYUVa;
+    unsigned int gdi_dx, gdi_dy;
     bool m_bitmapReady;
 
     void calcOutlineTextMetric(
@@ -54,16 +54,17 @@ private:
 
     void prepareForColorSpace() const;
     void createShadow() const;
-    unsigned char* blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy, int blurStrength);
+    unsigned char* blur(unsigned char *src, stride_t Idx, stride_t Idy, int startx, int starty, int endx, int endy, int blurStrength);
     void init();
 
     // color and constants table for SIMD
-    template<class _mm> class Tcctbl {
+    template<class _mm> class Tcctbl
+    {
     public:
-        typename _mm::__m mask256,mask00ff,maskffff,mask8080,mask64;
-        typename _mm::__m body_Y,body_U,body_V,body_A;
-        typename _mm::__m outline_Y,outline_U,outline_V,outline_A;
-        typename _mm::__m shadow_Y,shadow_U,shadow_V,shadow_A;
+        typename _mm::__m mask256, mask00ff, maskffff, mask8080, mask64;
+        typename _mm::__m body_Y, body_U, body_V, body_A;
+        typename _mm::__m outline_Y, outline_U, outline_V, outline_A;
+        typename _mm::__m shadow_Y, shadow_U, shadow_V, shadow_A;
         void _mm_set1_16(__m128i &dst, short w) {
             dst = _mm_set1_epi16(w);
         }
@@ -71,12 +72,12 @@ private:
             dst = _mm_set1_pi16(w);
         }
         void _mm_set4_16(__m128i &dst, short w3, short w2, short w1, short w0) {
-            dst = _mm_set_epi16(w3,w2,w1,w0,w3,w2,w1,w0);
+            dst = _mm_set_epi16(w3, w2, w1, w0, w3, w2, w1, w0);
         }
         void _mm_set4_16(__m64 &dst, short w3, short w2, short w1, short w0) {
-            dst = _mm_set_pi16(w3,w2,w1,w0);
+            dst = _mm_set_pi16(w3, w2, w1, w0);
         }
-        Tcctbl(uint64_t csp, const TSubtitleMixedProps &mprops,int bodyA, int outlineA, int shadowA, int outlineWidth) {
+        Tcctbl(uint64_t csp, const TSubtitleMixedProps &mprops, int bodyA, int outlineA, int shadowA, int outlineWidth) {
             _mm_set1_16(mask256, 0x100);
             _mm_set1_16(mask00ff, 0xff);
             _mm_set1_16(maskffff, -1);
@@ -116,46 +117,46 @@ private:
         return (bodyA == 256 && m_outlineWidth > 0);
     }
 
-        inline void RGBfontRenderer(int x, int y,
-        int bodyA, int outlineA, int shadowA,
-        unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
-        unsigned char *dst, stride_t dstStride) const;
+    inline void RGBfontRenderer(int x, int y,
+                                int bodyA, int outlineA, int shadowA,
+                                unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+                                unsigned char *dst, stride_t dstStride) const;
     inline void RGBfontRendererFillBody(int x, int y,
-        int bodyA, int outlineA, int shadowA,
-        unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
-        unsigned char *dst, stride_t dstStride) const;
+                                        int bodyA, int outlineA, int shadowA,
+                                        unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+                                        unsigned char *dst, stride_t dstStride) const;
     inline void YV12_YfontRenderer(int x, int y,
-        int bodyA, int outlineA, int shadowA,
-        unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
-        unsigned char *dst, stride_t dstStride) const;
+                                   int bodyA, int outlineA, int shadowA,
+                                   unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+                                   unsigned char *dst, stride_t dstStride) const;
     inline void YV12_UVfontRenderer(int x, int y,
-        int bodyA, int outlineA, int shadowA,
-        unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
-        unsigned char *dstU, unsigned char *dstV, stride_t dstStride) const;
+                                    int bodyA, int outlineA, int shadowA,
+                                    unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+                                    unsigned char *dstU, unsigned char *dstV, stride_t dstStride) const;
 
     template<class _mm, bool fillBody, bool fillOutline> __forceinline void fontRenderer_simd(
         const Tcctbl<_mm> &cctbl,
         unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
         unsigned char *dst) const;
     template<class _mm> __forceinline void fontRenderer_simd_funcs(bool fBody, bool fOutline,
-        const Tcctbl<_mm> &cctbl,
-        unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
-        unsigned char *dst) const;
+            const Tcctbl<_mm> &cctbl,
+            unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+            unsigned char *dst) const;
     template<class _mm> __forceinline void fontRendererUV_simd(
         const Tcctbl<_mm> &cctbl,
         unsigned char *bmp, unsigned char *outline, unsigned char *shadow,
-        unsigned char *dstU,unsigned char* dstV) const;
+        unsigned char *dstU, unsigned char* dstV) const;
     void paintC_RGB(int startx, int endx, int starty, int dy1, int dstStartx,
-        int bodyA, int outlineA, int shadowA,
-        unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
-        unsigned char *dst, stride_t dstStride) const;
+                    int bodyA, int outlineA, int shadowA,
+                    unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+                    unsigned char *dst, stride_t dstStride) const;
     void paintC_YV12(int startx, int startxUV, int endx, int endxUV,
-        int starty, int startyUV, int dy1, int dy1UV, int dstStartx,
-        int bodyA, int outlineA, int shadowA,
-        unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
-        unsigned char *bmpUV, unsigned char *outlineUV, unsigned char *shadowUV, unsigned char *mskUV,
-        unsigned char *dst, unsigned char *dstU, unsigned char *dstV,
-        stride_t dstStride, stride_t dstStrideUV) const;
+                     int starty, int startyUV, int dy1, int dy1UV, int dstStartx,
+                     int bodyA, int outlineA, int shadowA,
+                     unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+                     unsigned char *bmpUV, unsigned char *outlineUV, unsigned char *shadowUV, unsigned char *mskUV,
+                     unsigned char *dst, unsigned char *dstU, unsigned char *dstV,
+                     stride_t dstStride, stride_t dstStrideUV) const;
 
     class TexpandedGlyph
     {
@@ -169,7 +170,7 @@ private:
             dy = word.dy[0] + 2 * word.m_outlineWidth;
             expBmp = aligned_calloc3<uint8_t>(dx, dy, 16);
             for (unsigned int y = 0 ; y < word.dy[0] ; y++) {
-                memcpy(expBmp + dx * (y + word.m_outlineWidth)+ owx, word.bmp[0] + word.dx[0] * y, word.dx[0]);
+                memcpy(expBmp + dx * (y + word.m_outlineWidth) + owx, word.bmp[0] + word.dx[0] * y, word.dx[0]);
             }
         }
 
@@ -185,11 +186,11 @@ private:
     void Y2RGB(unsigned char *const bitmap[3], unsigned int size) const;
 
 protected:
-	CPolygon* m_pOpaqueBox;
+    CPolygon* m_pOpaqueBox;
 
     int m_shadowSize;
     double m_baseline;
-    double m_ascent,m_descent;
+    double m_ascent, m_descent;
     double m_sar;
     CRect overhang;
 
@@ -216,16 +217,16 @@ public:
         const TrenderedTextSubtitleWord &parent,
         struct secondaryColor_t);
     virtual ~TrenderedTextSubtitleWord();
-    virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const {} // unused
-    template<class _mm> void paint(int startx, int starty, int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],ptrdiff_t srcOffset[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
+    virtual void print(int startx, int starty, unsigned int dx[3], int dy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *bmp[3], const unsigned char *msk[3], REFERENCE_TIME rtStart = REFTIME_INVALID) const {} // unused
+    template<class _mm> void paint(int startx, int starty, int dx[3], int dy[3], unsigned char *dstLn[3], const stride_t stride[3], ptrdiff_t srcOffset[3], REFERENCE_TIME rtStart = REFTIME_INVALID) const;
     unsigned int alignXsize;
-    void (__cdecl *YV12_lum2chr_min)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    void (__cdecl *YV12_lum2chr_max)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+    void (__cdecl *YV12_lum2chr_min)(const unsigned char* lum0, const unsigned char* lum1, unsigned char* chr);
+    void (__cdecl *YV12_lum2chr_max)(const unsigned char* lum0, const unsigned char* lum1, unsigned char* chr);
     virtual double get_ascent() const;
     virtual double get_descent() const;
     virtual double get_baseline() const;
 
-    // for collisions 
+    // for collisions
     double aboveBaseLinePlusOutline() const;
     double belowBaseLinePlusOutline() const;
 

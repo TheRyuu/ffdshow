@@ -21,28 +21,28 @@
 #include "Tcodec.h"
 #include "dsutil.h"
 
-TinputPin::TinputPin(const char_t* objectName,CTransformFilter *filter,HRESULT* phr,LPWSTR pinname):
-    CDeCSSInputPin(objectName,filter,phr,pinname),
+TinputPin::TinputPin(const char_t* objectName, CTransformFilter *filter, HRESULT* phr, LPWSTR pinname):
+    CDeCSSInputPin(objectName, filter, phr, pinname),
     codec(NULL)
 {
-    strippacket=false;
-    wasGetSourceName=false;
+    strippacket = false;
+    wasGetSourceName = false;
 }
 
 HRESULT TinputPin::SetMediaType(const CMediaType* mt)
 {
     DPRINTF(_l("TinputPin::SetMediaType"));
-    HRESULT hr=CDeCSSInputPin::SetMediaType(mt);
-    return hr!=S_OK?hr:(init(*mt)?S_OK:E_FAIL);
+    HRESULT hr = CDeCSSInputPin::SetMediaType(mt);
+    return hr != S_OK ? hr : (init(*mt) ? S_OK : E_FAIL);
 }
 
 HRESULT TinputPin::Disconnect(void)
 {
-    HRESULT hr=CDeCSSInputPin::Disconnect();
-    if (hr==S_OK) {
+    HRESULT hr = CDeCSSInputPin::Disconnect();
+    if (hr == S_OK) {
         done();
         filesourceFlnm = _l("");
-        wasGetSourceName=false;
+        wasGetSourceName = false;
     }
     return hr;
 }
@@ -50,7 +50,7 @@ HRESULT TinputPin::Disconnect(void)
 STDMETHODIMP TinputPin::EndOfStream(void)
 {
     if (codec) {
-        HRESULT hr=codec->flush();
+        HRESULT hr = codec->flush();
         if (FAILED(hr)) {
             return hr;
         }
@@ -60,85 +60,85 @@ STDMETHODIMP TinputPin::EndOfStream(void)
 
 const char_t* TinputPin::getDecoderName(void)
 {
-    return codec?codec->getName():_l("unknown");
+    return codec ? codec->getName() : _l("unknown");
 }
 
-HRESULT TinputPin::getEncoderInfo(char_t *buf,size_t buflen)
+HRESULT TinputPin::getEncoderInfo(char_t *buf, size_t buflen)
 {
     if (!buf) {
         return E_POINTER;
     }
     if (codec) {
-        codec->getEncoderInfo(buf,buflen);
+        codec->getEncoderInfo(buf, buflen);
         return S_OK;
     } else {
-        buf[0]='\0';
+        buf[0] = '\0';
         return S_FALSE;
     }
 }
 
 struct TpinFileSourceComp {
-    bool operator ()(IBaseFilter *bff,IPin*) const {
-        comptr<IFileSourceFilter> ifsf=NULL;
-        return SUCCEEDED(bff->QueryInterface(IID_IFileSourceFilter,(void**)&ifsf)) && ifsf!=NULL;
+    bool operator()(IBaseFilter *bff, IPin*) const {
+        comptr<IFileSourceFilter> ifsf = NULL;
+        return SUCCEEDED(bff->QueryInterface(IID_IFileSourceFilter, (void**)&ifsf)) && ifsf != NULL;
     }
 };
 
 const char_t* TinputPin::getFileSourceName(void)
 {
-    IFilterGraph *graph=m_pFilter->GetFilterGraph();
+    IFilterGraph *graph = m_pFilter->GetFilterGraph();
     if (!graph || wasGetSourceName || !filesourceFlnm.empty()) {
         return filesourceFlnm.c_str();
     }
-    wasGetSourceName=true;
+    wasGetSourceName = true;
     comptr<IBaseFilter> filter;
-    if (searchPrevNextFilter(PINDIR_INPUT,this,this,&filter,TpinFileSourceComp()) && filter) {
+    if (searchPrevNextFilter(PINDIR_INPUT, this, this, &filter, TpinFileSourceComp()) && filter) {
         comptr<IFileSourceFilter> ifsf;
-        filter->QueryInterface(IID_IFileSourceFilter,(void**)&ifsf);
-        LPOLESTR aviNameL=NULL;
-        ifsf->GetCurFile(&aviNameL,NULL);
+        filter->QueryInterface(IID_IFileSourceFilter, (void**)&ifsf);
+        LPOLESTR aviNameL = NULL;
+        ifsf->GetCurFile(&aviNameL, NULL);
         if (aviNameL) {
             filesourceFlnm = text<char_t>(aviNameL);
             CoTaskMemFree(aviNameL);
         } else {
-            filesourceFlnm=_l("");
+            filesourceFlnm = _l("");
         }
     }
     return filesourceFlnm.c_str();
 }
 
-HRESULT TinputPin::getStreamName(char_t *buf,size_t buflen)
+HRESULT TinputPin::getStreamName(char_t *buf, size_t buflen)
 {
-    if (!buf || buflen==0) {
+    if (!buf || buflen == 0) {
         return E_POINTER;
     }
-    *buf=0;
-    HRESULT hr=getInCodecString(buf,buflen);
+    *buf = 0;
+    HRESULT hr = getInCodecString(buf, buflen);
     if (FAILED(hr)) {
         return hr;
     }
     char_t pname[256];
-    hr=connectedTo(pname,(int)countof(pname));
+    hr = connectedTo(pname, (int)countof(pname));
     if (FAILED(hr)) {
         return hr;
     }
-    if (pname[0]=='\0') {
+    if (pname[0] == '\0') {
         return S_OK;
     }
     char_t buf2[256];
-    tsnprintf_s(buf2, 256, _TRUNCATE,_l("%s - %s"),pname,buf);
-    buf2[255]='\0';
-    ff_strncpy(buf,buf2,buflen);
-    buf[buflen-1]='\0';
+    tsnprintf_s(buf2, 256, _TRUNCATE, _l("%s - %s"), pname, buf);
+    buf2[255] = '\0';
+    ff_strncpy(buf, buf2, buflen);
+    buf[buflen - 1] = '\0';
     return S_OK;
 }
 
-HRESULT TinputPin::connectedTo(char_t *buf,size_t buflen)
+HRESULT TinputPin::connectedTo(char_t *buf, size_t buflen)
 {
-    if (!buf || buflen==0) {
+    if (!buf || buflen == 0) {
         return E_POINTER;
     }
-    *buf='\0';
+    *buf = '\0';
     if (!m_Connected) {
         return E_UNEXPECTED;
     }

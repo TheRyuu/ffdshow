@@ -3,26 +3,26 @@
 
 #include "TpresetSettings.h"
 
-struct TvideoAutoPresetProps :TautoPresetProps {
+struct TvideoAutoPresetProps : TautoPresetProps {
 private:
     comptrQ<IffdshowDecVideo> deciV;
     bool wasResolution;
-    unsigned int dx,dy;
+    unsigned int dx, dy;
     char_t fourcc[5];
     char_t previousfourcc[5];
-    double SAR,DAR;
+    double SAR, DAR;
     double fps;
-    static const char_t aspectSAR,aspectDAR;
+    static const char_t aspectSAR, aspectDAR;
 public:
     TvideoAutoPresetProps(IffdshowBase *Ideci);
-    virtual void getSourceResolution(unsigned int *dx,unsigned int *dy);
+    virtual void getSourceResolution(unsigned int *dx, unsigned int *dy);
     const char_t* getFOURCC(void);
     const char_t* getPreviousFOURCC(void);
-    static const char_t* getFOURCCitem(IffdshowDec *deciD,unsigned int index);
-    const char_t *getSAR(void),*getDAR(void);
+    static const char_t* getFOURCCitem(IffdshowDec *deciD, unsigned int index);
+    const char_t *getSAR(void), *getDAR(void);
     const char_t *getFps(void);
-    bool aspectMatch(const char_t *mask,const char_t *flnm);
-    bool fpsMatch(const char_t *mask,const char_t *flnm);
+    bool aspectMatch(const char_t *mask, const char_t *flnm);
+    bool fpsMatch(const char_t *mask, const char_t *flnm);
 };
 
 struct TpostprocSettings;
@@ -35,9 +35,9 @@ struct TresizeAspectSettings;
 struct TdeinterlaceSettings;
 struct TQSSettings;
 
-struct TpresetVideo :public Tpreset {
+struct TpresetVideo : public Tpreset {
 private:
-    int needOutcspsFix,needGlobalFix;
+    int needOutcspsFix, needGlobalFix;
 protected:
     virtual void reg_op(TregOp &t);
     virtual int getDefault(int id);
@@ -51,25 +51,25 @@ public:
     }
     virtual void loadReg(void);
 
-    int autoloadSize,autoloadSizeXmin,autoloadSizeXmax,autoloadSizeCond,autoloadSizeYmin,autoloadSizeYmax;
-    virtual bool autoloadSizeMatch(int AVIdx,int AVIdy) const;
+    int autoloadSize, autoloadSizeXmin, autoloadSizeXmax, autoloadSizeCond, autoloadSizeYmin, autoloadSizeYmax;
+    virtual bool autoloadSizeMatch(int AVIdx, int AVIdy) const;
     virtual bool is_autoloadSize(void) const {
         return !!autoloadSize;
     }
 
-    int videoDelay,isVideoDelayEnd,videoDelayEnd;
+    int videoDelay, isVideoDelayEnd, videoDelayEnd;
     int idct;
     int softTelecine;
     int workaroundBugs;
     int lavcDecThreads;
     int grayscale;
     int multiThread;
-    int dontQueueInWMP,useQueueOnlyIn,queueCount,queueVMR9YV12;
+    int dontQueueInWMP, useQueueOnlyIn, queueCount, queueVMR9YV12;
     int dropOnDelay, dropDelayTime, dropDelayTimeReal;
     int h264skipOnDelay, h264skipDelayTime;
     char_t useQueueOnlyInList[256];
 
-    int isDyInterlaced,dyInterlaced;
+    int isDyInterlaced, dyInterlaced;
     int bordersBrightness;
     int dec_dxva_h264;
     int dec_dxva_vc1;
@@ -78,7 +78,7 @@ public:
 
     // QuickSync params:
     int qs_enable_ts_corr, qs_enable_mt, qs_field_order, qs_enable_sw_emulation, qs_force_field_order,
-        qs_enable_dvd_decode, qs_enable_di, qs_force_di, qs_enable_full_rate, qs_detail,             
+        qs_enable_dvd_decode, qs_enable_di, qs_force_di, qs_enable_full_rate, qs_detail,
         qs_denoise;
 
     TpostprocSettings *postproc;
@@ -98,7 +98,7 @@ public:
         TpresetVideo::operator =(src);
         return *this;
     }
-    TpresetVideoPlayer(const char_t *Ireg_child,const char_t *IpresetName, int filtermode);
+    TpresetVideoPlayer(const char_t *Ireg_child, const char_t *IpresetName, int filtermode);
     virtual Tpreset* copy(void) const {
         return new_copy(this);
     }

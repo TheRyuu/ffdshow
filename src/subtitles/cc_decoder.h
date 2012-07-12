@@ -14,8 +14,8 @@ private:
 
     static int good_parity(uint16_t data);
 
-    static const wchar_t TRANSP_SPACE=0x19;   /* code for transparent space, essentially arbitrary */
-    static const int CC_ROWS=15,CC_COLUMNS=32,CC_CHANNELS=2;
+    static const wchar_t TRANSP_SPACE = 0x19; /* code for transparent space, essentially arbitrary */
+    static const int CC_ROWS = 15, CC_COLUMNS = 32, CC_CHANNELS = 2;
     static wchar_t chartbl[128];
 
     struct cc_attribute_t {
@@ -65,10 +65,10 @@ private:
         cc_buffer_t channel[CC_CHANNELS];
         int channel_no;          /* currently active channel */
         void ccmem_clear(void);
-    } **active,*on_buf,*off_buf,buffer[2];
+    } **active, *on_buf, *off_buf, buffer[2];
 
     struct cc_renderer_t {
-        cc_renderer_t(IffdshowDecVideo *IdeciV):deciV(IdeciV) {}
+        cc_renderer_t(IffdshowDecVideo *IdeciV): deciV(IdeciV) {}
         IffdshowDecVideo *deciV;
         int displayed;              /* true when caption currently is displayed */
         void cc_renderer_show_caption(cc_buffer_t *buf, int64_t vpts);
@@ -76,7 +76,7 @@ private:
     } cc_renderer;
 
     struct cc_state_t {
-        cc_state_t(cc_renderer_t *Irenderer):renderer(Irenderer) {}
+        cc_state_t(cc_renderer_t *Irenderer): renderer(Irenderer) {}
         cc_renderer_t *renderer;
     } cc_state;
 
@@ -88,15 +88,15 @@ private:
     void cc_decode_extended_special_char(int channel,  uint8_t c1, uint8_t c2);
     void cc_decode_more_extended_special_char(int channel,  uint8_t c1, uint8_t c2);
     void cc_decode_midrow_attr(int channel,  uint8_t c1, uint8_t c2);
-    void cc_decode_misc_control_code(int channel,uint8_t c1, uint8_t c2);
+    void cc_decode_misc_control_code(int channel, uint8_t c1, uint8_t c2);
     void cc_decode_tab(int channel, uint8_t c1, uint8_t c2);
     void cc_decode_EIA608(uint16_t data);
     cc_buffer_t* active_ccbuffer(void);
     void cc_swap_buffers(void);
-    void cc_hide_displayed(void),cc_show_displayed(void);
+    void cc_hide_displayed(void), cc_show_displayed(void);
     int cc_onscreen_displayable(void);
 public:
     TccDecoder(IffdshowDecVideo *deciV);
-    void decode(const uint8_t *buffer,size_t buf_len);
+    void decode(const uint8_t *buffer, size_t buf_len);
     void onSeek(void);
 };

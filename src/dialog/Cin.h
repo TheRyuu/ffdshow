@@ -4,11 +4,11 @@
 #include "TconfPageEnc.h"
 
 class TffProcVideo;
-class TinPage :public TconfPageEnc
+class TinPage : public TconfPageEnc
 {
 private:
     TffProcVideo *ffproc;
-    void in2dlg(void),incsp2dlg(void),interlaced2dlg(void),lavcnr2dlg(void);
+    void in2dlg(void), incsp2dlg(void), interlaced2dlg(void), lavcnr2dlg(void);
     void onProcConfig(void);
 public:
     TinPage(TffdshowPageEnc *Iparent);
