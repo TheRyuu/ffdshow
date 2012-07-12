@@ -79,7 +79,7 @@ namespace FFDShowAPI.Interfaces
     [PreserveSig]
     int getParamStr3(uint paramID, out IntPtr bufPtr);
     //int getParamStr3(uint paramID, [Out, MarshalAs(UnmanagedType.LPWStr)] out string bufPtr);
-   
+
     //int savePresetMem(void *buf,int len); //if len=0, then buf should point to int variable which will be filled with required buffer length
     //int loadPresetMem(const void *buf,int len);
     int savePresetMem(IntPtr buf, int len); //if len=0, then buf should point to int variable which will be filled with required buffer length

@@ -16,7 +16,7 @@ namespace FFDShowAPI
         public const string FFDSHOWDXVA_NAME_L = "ffdshow DXVA Video Decoder";
         public const string FFDSHOWRAW_NAME_L = "ffdshow raw video filter";
         public const string FFDSHOWVFW_NAME_L = "ffdshow VFW decoder helper";
-        
+
         /// <summary>
         /// Parameter Id of FFDShow to set/get
         /// </summary>

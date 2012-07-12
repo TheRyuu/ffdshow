@@ -862,7 +862,7 @@ void TglobalSettingsDecVideo::save(void)
  FF_FOURCC1_OP(MPG4,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
  FF_FOURCC1_OP(DIV1,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
  FF_FOURCC1_OP(MP41,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
- 
+
 #define FF_FOURCC_LIST(fourCC,decoder,codec) _l(#fourCC),
 
 const char_t* TglobalSettingsDecVideo::fourccs[] = {

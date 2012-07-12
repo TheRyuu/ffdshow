@@ -32,7 +32,7 @@ namespace FFDShowAPI
 
     /// <summary>
     /// List of commands understood by FFDShow remote API
-    /// These are commands that concern integers transmission (get or set) or 
+    /// These are commands that concern integers transmission (get or set) or
     /// single commands such as "Pause video"
     /// </summary>
     private enum FFD_WPRM : int
@@ -931,7 +931,7 @@ namespace FFDShowAPI
         return subtitleStreams;
       }
     }
-  
+
     /// <summary>
     /// Gets the list of internal audio streams
     /// </summary>
@@ -1547,8 +1547,8 @@ namespace FFDShowAPI
     #region Constructors
 
     /// <summary>
-    /// Constructor using a DirectShow graph filter. 
-    /// Recommanded if you have access to DirectShow graph. 
+    /// Constructor using a DirectShow graph filter.
+    /// Recommanded if you have access to DirectShow graph.
     /// However it cannot be using with the ROT (running object table)
     /// </summary>
     /// <param name="filter">FFDShow filter object</param>

@@ -2508,7 +2508,7 @@ typedef struct AVCodecContext {
      */
     uint64_t vbv_delay;
 
-/* ffdshow custom stuff (begin) */  
+/* ffdshow custom stuff (begin) */
     /**
      * Percentage of dynamic range compression to be applied by the decoder.
      * The default value is 1.0, corresponding to full compression.
@@ -2531,7 +2531,7 @@ typedef struct AVCodecContext {
      * - decoding: unused
      */
     int qmin_b,qmax_b;
-    
+
     uint8_t ac3channels[6];
     int nal_length_size;
     int vorbis_header_size[3];

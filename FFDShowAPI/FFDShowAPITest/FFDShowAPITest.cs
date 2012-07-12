@@ -16,9 +16,9 @@ namespace FFDShowAPI
 {
 
     /// <summary>
-	/// Summary description for Form1.
-	/// </summary>
-	public partial class FFDShowAPITest : System.Windows.Forms.Form
+    /// Summary description for Form1.
+    /// </summary>
+    public partial class FFDShowAPITest : System.Windows.Forms.Form
     {
         #region Variables and initialization
         private TabControl tabControl1;
@@ -76,23 +76,23 @@ namespace FFDShowAPI
             }
         }
 
-		public FFDShowAPITest()
-		{
-			//
-			// Required for Windows Form Designer support
-			//
-			InitializeComponent();
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
-			Form1Ref = this;
-		}
+        public FFDShowAPITest()
+        {
+            //
+            // Required for Windows Form Designer support
+            //
+            InitializeComponent();
+            //
+            // TODO: Add any constructor code after InitializeComponent call
+            //
+            Form1Ref = this;
+        }
         #endregion Variables and initalization
 
         private void close_Click(object sender, System.EventArgs e)
-		{
+        {
             this.Close();
-		}
+        }
 
         private FFDShowAPI ffdshowAPI = null;
 

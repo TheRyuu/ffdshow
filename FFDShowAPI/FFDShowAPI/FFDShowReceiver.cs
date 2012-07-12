@@ -23,7 +23,7 @@ namespace FFDShowAPI
         /// </summary>
         public const Int32 WM_COPYDATA = 0x004A;
 
-       
+
         [StructLayout(LayoutKind.Sequential)]
         internal struct COPYDATASTRUCT
         {
