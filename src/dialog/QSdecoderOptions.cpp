@@ -31,7 +31,6 @@ void TQSdecoderOptionsPage::cfg2dlg(void)
 {
     // Update GUI from config
     setCheck(IDC_QS_ENABLE_TS_CORR     , cfgGet(IDFF_QS_ENABLE_TS_CORR));
-    setCheck(IDC_QS_ENABLE_MT          , cfgGet(IDFF_QS_ENABLE_MT));
     setCheck(IDC_QS_FORCE_FIELD_ORDER  , cfgGet(IDFF_QS_FORCE_FIELD_ORDER));
     setCheck(IDC_QS_ENABLE_SW_EMULATION, cfgGet(IDFF_QS_ENABLE_SW_EMULATION));
     setCheck(IDC_QS_ENABLE_DVD_DECODE  , cfgGet(IDFF_QS_ENABLE_DVD_DECODE));
@@ -39,6 +38,7 @@ void TQSdecoderOptionsPage::cfg2dlg(void)
     setCheck(IDC_QS_FORCE_DI           , cfgGet(IDFF_QS_FORCE_DI));
     setCheck(IDC_QS_ENABLE_FULL_RATE   , cfgGet(IDFF_QS_ENABLE_FULL_RATE));
 
+    cbxSetCurSel(IDC_QS_ENABLE_MT  , cfgGet(IDFF_QS_ENABLE_MT));
     cbxSetCurSel(IDC_QS_FIELD_ORDER, cfgGet(IDFF_QS_FIELD_ORDER));
 
     detail2dlg();
@@ -84,9 +84,18 @@ void TQSdecoderOptionsPage::translate(void)
         NULL
     };
 
+    static const char_t* mtEnableNames[] = {
+        _l("Disable multithreading (low power)"),
+        _l("Multithreaded copy"),
+        _l("Async post process"),
+        _l("Best performance (more power)"),
+        NULL
+    };
+
     TconfPageBase::translate();
 
     cbxTranslate(IDC_QS_FIELD_ORDER, fieldOrderNames);
+    cbxTranslate(IDC_QS_ENABLE_MT  , mtEnableNames);
 }
 
 void TQSdecoderOptionsPage::getTip(char_t *tipS, size_t len)
@@ -102,7 +111,6 @@ TQSdecoderOptionsPage::TQSdecoderOptionsPage(TffdshowPageDec *Iparent): TconfPag
 
     static const TbindCheckbox<TQSdecoderOptionsPage> chb[] = {
         IDC_QS_ENABLE_TS_CORR     , IDFF_QS_ENABLE_TS_CORR     , NULL,
-        IDC_QS_ENABLE_MT          , IDFF_QS_ENABLE_MT          , NULL,
         IDC_QS_ENABLE_SW_EMULATION, IDFF_QS_ENABLE_SW_EMULATION, NULL,
         IDC_QS_FORCE_FIELD_ORDER  , IDFF_QS_FORCE_FIELD_ORDER  , NULL,
         IDC_QS_ENABLE_DVD_DECODE  , IDFF_QS_ENABLE_DVD_DECODE  , NULL,
@@ -122,6 +130,7 @@ TQSdecoderOptionsPage::TQSdecoderOptionsPage(TffdshowPageDec *Iparent): TconfPag
 
     static const TbindCombobox<TQSdecoderOptionsPage> cbx[] = {
         IDC_QS_FIELD_ORDER, IDFF_QS_FIELD_ORDER, BINDCBX_SEL, NULL,
+        IDC_QS_ENABLE_MT  , IDFF_QS_ENABLE_MT  , BINDCBX_SEL, NULL,
         0
     };
     bindComboboxes(cbx);

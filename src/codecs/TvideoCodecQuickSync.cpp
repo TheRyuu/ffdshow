@@ -114,7 +114,20 @@ bool TvideoCodecQuickSync::beginDecompress(TffPictBase &pict, FOURCC infcc, cons
 
     // force ffdshow defaults/options
     cfg.bTimeStampCorrection          = deci->getParam2(IDFF_QS_ENABLE_TS_CORR) != 0;
-    cfg.bEnableMultithreading         = deci->getParam2(IDFF_QS_ENABLE_MT) != 0;
+
+    switch (deci->getParam2(IDFF_QS_ENABLE_MT)) {
+    case 3:
+        cfg.bEnableMtDecode       = true;
+    case 2:
+        cfg.bEnableMtProcessing   = true;
+    case 1:
+        cfg.bEnableMtCopy         = true;
+        cfg.bEnableMultithreading = true;
+        break;
+    case 0: // disabled
+    default:
+        cfg.bEnableMultithreading = false;
+    }
     cfg.eFieldOrder                   = deci->getParam2(IDFF_QS_FIELD_ORDER);
     cfg.bEnableSwEmulation            = deci->getParam2(IDFF_QS_ENABLE_SW_EMULATION) != 0;
     cfg.bForceFieldOrder              = deci->getParam2(IDFF_QS_FORCE_FIELD_ORDER) != 0;
