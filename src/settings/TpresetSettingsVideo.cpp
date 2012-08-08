@@ -299,7 +299,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
 
         // Intel QuickSync Decoder options
         IDFF_QS_ENABLE_TS_CORR      , &TpresetVideo::qs_enable_ts_corr     , 0,  1, _l(""), 1, _l("qsEnableTimeStampCorrection"), 1,
-        IDFF_QS_ENABLE_MT           , &TpresetVideo::qs_enable_mt          , 0,  1, _l(""), 1, _l("qsEnableMT")                 , 1,
+        IDFF_QS_ENABLE_MT           , &TpresetVideo::qs_enable_mt          , 0,  3, _l(""), 1, _l("qsEnableMT")                 , 3,
         IDFF_QS_FIELD_ORDER         , &TpresetVideo::qs_field_order        , 0,  2, _l(""), 1, _l("qsFieldOrder")               , 0,
         IDFF_QS_ENABLE_SW_EMULATION , &TpresetVideo::qs_enable_sw_emulation, 0,  1, _l(""), 1, _l("qsEnableSwEmulation")        , 0,
         IDFF_QS_FORCE_FIELD_ORDER   , &TpresetVideo::qs_force_field_order  , 0,  1, _l(""), 1, _l("qsForceFieldOrder")          , 0,
