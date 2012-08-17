@@ -27,6 +27,12 @@ es.FileAbortRetryIgnore=Cierre la aplicacion que está usando ffdshow y haga cli
 es.FinishedRestartLabel=Para completar la instalación de ffdshow es necesario reiniciar su ordenador. ¿Quiere reiniciar ahora?%n%nConsejo: Para evitar tener que reiniciar el ordenador la próxima vez, puede ser útil activar la opción "Control DirectShow" -> "No usar ffdshow con:" -> "explorer.exe" en el panel de configuración del decodificador de Vídeo.
 es.WinVersionTooLowError=Esta versión de ffdshow requiere Windows XP SP2 o posterior.
 
+; Basque
+eu.WelcomeLabel2=Honek ffdshow ezarriko du zure ordenagailuan.%n%nGomendatzen da beste aplikazio guztiak istea jarraitu aurretik.
+eu.FileAbortRetryIgnore=Utzi ffdshow erabiltzen ari den aplikazioa eta klikatu Bersaiatu. Arazoak jarraitzen badu, klikatu Utzi, berrabiarazi zure ordenagailua eta abiarazi ezartzailea berriro.
+eu.FinishedRestartLabel=ffdshow ezarpena osatzeko, Ezartzaileak zure ordenagailua berrabiarazi behar du. Orain berrabiaraztea nahi duzu?%n%nOharra: Hurrengoan ordenagailua berrabiarazi behar izatea saihesteko, eraginkorra izan daiteke gaitzea, "DirectShow agintea" -> "Ez erabili ffdshow honekin:" -> "explorer.exe" bideo dekodeatzaile itxurapenean.
+eu.WinVersionTooLowError=ffdshow eraiketa honek Windows XP SP2 edo berriagoa behar du.
+
 ; French
 fr.WelcomeLabel2=Ceci installera ffdshow sur votre ordinateur.%n%nIl est recommandé de fermer toutes les autres applications avant de continuer.
 fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur Ressayer. Si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
@@ -376,6 +382,83 @@ es.shrt_audioConfig=Configuración del decodificador de audio
 es.shrt_vfwConfig=Configuración de VFW
 es.shrt_uninstall=Desinstalar ffdshow
 es.shrt_homepage=Página web
+
+
+; Basque
+eu.langid=1069
+eu.msg_uninstallFirst=Lehenik zure ffdshow ezarpen zaharra kendu behar duzu.
+eu.simd_msg_sse=ffdshow eraiketa honek SSE hedapen sostengua duen CPU-a behar du. Zure CPU-ak ez ditu gaitasun hauek.
+eu.simd_msg_sse2=ffdshow eraiketa honek SSE2 hedapen sostengua duen CPU-a behar du. Zure CPU-ak ez ditu gaitasun hauek.
+eu.unsupported_cpu=ffdshow eraiketa honek i686 edo berriagoa den CPU mota behar du. Zure CPU-a ez dago sostengatua. ffdshow-ren rev.1990 da CPU zaharrekin lan egiten duen azkena.
+
+eu.comp_ffdshowds=ffdshow DirectShow iragazkia
+eu.comp_dxvaDecoder=DXVA bideo dekodeatzailea
+eu.comp_vfwInterface=VFW interfazea
+eu.comp_makeAvis=AviSynth eskript zerbitzapena
+eu.comp_appPlugins=Aplikazio pluginak:
+eu.comp_msg_selectOneComp=Gutxienez osagai bat hautatu behar duzu.
+
+eu.tsk_settings=Ezarpenak
+eu.tsk_resetSettings=Berrezarri ffdshow ezarpen guztiak
+eu.tsk_videoFormats=Bideo heuskarriak
+eu.tsk_videoFormatsSelect=Dekodeatu hurrengo bideo heuskarriak ffdshow-rekin:
+eu.tsk_gen.ricMpeg4=MPEG-4 Generikoa
+eu.tsk_rawVideo=Raw Bideoa
+eu.tsk_audioFormats=Audio heuskarriak
+eu.tsk_audioFormatsSelect=Dekodeatu hurrengo audio heuskarriak ffdshow-rekin:
+eu.tsk_rawAudio=Raw Audioa
+eu.tsk_filters=Iragazki ezarpenak
+eu.tsk_filtersSelect=Gaitu hurrengo iragazkiak berezkotzat:
+eu.tsk_passthroughac3=Gaitu AC3 igaropen-zuzena (S/PDIF, HDMI)
+eu.tsk_passthroughdts=Gaitu DTS igaropen-zuzena (S/PDIF, HDMI)
+eu.tsk_volumeNorm=Bolumen normalkuntza
+eu.tsk_subtitles=Azpidatziak
+eu.tsk_tweaks=Aldaketak
+eu.tsk_skipInloop=Betik jauzi H.264 barne desblokeaketa
+eu.tsk_compatibilityManager=Bateragarritasun Kudeatzailea
+eu.tsk_whitelist=Mugatu ffdshow zerrenda-zuriko aplikazioek bakarrik erabiltzeko
+eu.tsk_whitelistPrompt=Erakutsi Bateragarritasun Kudeatzaile leihoa aplikazio ezezagun bat ffdshow gertatzen saiatzen denean
+
+eu.spk_Label1=Hotsgorailu Ezarpena
+eu.spk_Label2=Hautatu behean zure ordenagailuaren itxurapenaren antzekoen den hotsgorailua. Hau aldatu dezakezu "Nahastzailea" ezerpenak erabiliz ezerpenaren ondoren.
+eu.spk_Label3=Hotsgorailu Ezarpena:
+eu.spk_mono=monoa
+eu.spk_stereo=estereoa
+eu.spk_quadro=lau bide
+eu.spk_rear_1ch=1 atzean
+eu.spk_front_2ch=2 aurrean
+eu.spk_side_2ch=2 alboan
+eu.spk_rear_2ch=2 atzean
+eu.spk_front_3ch=3 aurrean
+eu.spk_5ch=3 aurrean + 2 atzean
+eu.spk_7ch=3 aurrean + 2 alboan + 2 atzean
+eu.spk_headPhone=Buru entzungailua
+eu.spk_surround=surround
+eu.spk_subwoofer=hotslodiak
+eu.spk_dolby1=Dolby Surround/ProLogic
+eu.spk_dolby2=Dolby ProLogic II
+eu.spk_hrtf=Buru-loturako eskualdaketa eginkizuna (HRTF)
+eu.spk_sameAsInput=Sarreraren berdina
+eu.spk_disableMixer=Ezgaitu Nahastzailea
+eu.spk_voiceControl=Ahots agintea (bolumena)
+eu.spk_expandStereo=Estereo hedatua (ingurasoinua)
+eu.spk_unknownSpk=Hotsgorailu itxurapen ezezaguna
+
+eu.plg_Label1=Hautatu %1 Plugin Zuzenbidea
+eu.plg_Label2=Non nahi duzu %1 plugina ezartzea?
+eu.plg_Label3=Hautatu ezartzaileak %1 plugina ezarriko duen agiritegia, orduan klikatu Hurrengoa.
+
+eu.run_videoConfig=Abiarazi bideo dekodeatzaile itxurapena
+eu.run_videoDXVAConfig=Abiarazi DXVA bideo dekodeatzaile itxurapena
+eu.run_audioConfig=Abiarazi audio dekodeatzaile itxurapena
+eu.run_vfwConfig=Abiarazi VFW itxurapena
+
+eu.shrt_videoConfig=Bideo dekodeatzaile itxurapena
+eu.shrt_videoDXVAConfig=DXVA Bideo dekodeatzaile itxurapena
+eu.shrt_audioConfig=Audio dekodeatzaile itxurapena
+eu.shrt_vfwConfig=VFW itxurapena
+eu.shrt_uninstall=Kendu ffdshow
+eu.shrt_homepage=Webgunea
 
 
 ; French
@@ -844,7 +927,6 @@ zh_Hans.shrt_uninstall=卸载 ffdshow
 ; Add other languages here
 ca.langid=1027
 da.langid=1030
-eu.langid=1069
 fi.langid=1035
 hu.langid=1038
 it.langid=1040
