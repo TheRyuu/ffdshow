@@ -1,5 +1,5 @@
 @ECHO OFF
-rem command line used to build libboost_thread-vcTOOLSET-mt-VARIANT-1_50.lib
+rem command line used to build libboost_thread-vcTOOLSET-mt-VARIANT-1_51.lib
 rem You need to build bjam first by running bootstrap.bat
 SET toolset=intel-12.1
 
