@@ -212,6 +212,15 @@ public:
     }
 };
 
+class TrenderedVobsubWord : public TrenderedSubtitleWordBase
+{
+private:
+    bool shiftChroma;
+public:
+    TrenderedVobsubWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
+    virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
+};
+
 class TrenderedTextSubtitleWord;
 
 class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>

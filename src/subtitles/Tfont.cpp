@@ -827,6 +827,103 @@ bool TrenderedSubtitleLines::TlayerSort::operator()(TrenderedSubtitleLine *lt, T
     return lt->getProps().layer < rt->getProps().layer;
 }
 
+//============================== TrenderedVobsubWord ===============================
+void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned int sdx[3],int sdy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart) const
+{
+    if (sdy[0]<=0 || sdy[1]<0) {
+        return;
+    }
+    int sdx15=sdx[0]-15;
+    for (unsigned int y=0; y<(unsigned int)sdy[0]; y++,dstLn[0]+=stride[0],msk[0]+=bmpmskstride[0],bmp[0]+=bmpmskstride[0]) {
+        int x=0;
+        for (; x<sdx15; x+=16) {
+            __m64 mm0=*(__m64*)(dstLn[0]+x),mm1=*(__m64*)(dstLn[0]+x+8);
+            mm0=_mm_subs_pu8(mm0,*(__m64*)(msk[0]+x));
+            mm1=_mm_subs_pu8(mm1,*(__m64*)(msk[0]+x+8));
+            mm0=_mm_adds_pu8(mm0,*(__m64*)(bmp[0]+x));
+            mm1=_mm_adds_pu8(mm1,*(__m64*)(bmp[0]+x+8));
+            *(__m64*)(dstLn[0]+x)=mm0;
+            *(__m64*)(dstLn[0]+x+8)=mm1;
+        }
+        for (; x<int(sdx[0]); x++) {
+            int c=dstLn[0][x];
+            c-=msk[0][x];
+            if (c<0) {
+                c=0;
+            }
+            c+=bmp[0][x];
+            if (c>255) {
+                c=255;
+            }
+            dstLn[0][x]=(unsigned char)c;
+        }
+    }
+    __m64 m128=_mm_set1_pi8((char)-128/* 0x80 */),m0=_mm_setzero_si64(),mAdd=shiftChroma?m128:m0;
+    int add=shiftChroma?128:0;
+    int sdx7=sdx[1]-7;
+    for (unsigned int y=0; y<dy[1]; y++,dstLn[1]+=stride[1],dstLn[2]+=stride[2],msk[1]+=bmpmskstride[1],bmp[1]+=bmpmskstride[1],bmp[2]+=bmpmskstride[2]) {
+        int x=0;
+        for (; x<sdx7; x+=8) {
+            __m64 mm0=*(__m64*)(dstLn[1]+x);
+            __m64 mm1=*(__m64*)(dstLn[2]+x);
+
+            psubb(mm0,m128);
+            psubb(mm1,m128);
+
+            const __m64 msk8=*(const __m64*)(msk[1]+x);
+
+            __m64 mskU=_mm_cmpgt_pi8(m0,mm0); //what to be negated
+            mm0=_mm_or_si64(_mm_and_si64(mskU,_mm_adds_pu8(mm0,msk8)),_mm_andnot_si64(mskU,_mm_subs_pu8(mm0,msk8)));
+
+            __m64 mskV=_mm_cmpgt_pi8(m0,mm1);
+            mm1=_mm_or_si64(_mm_and_si64(mskV,_mm_adds_pu8(mm1,msk8)),_mm_andnot_si64(mskV,_mm_subs_pu8(mm1,msk8)));
+
+            mm0=_mm_add_pi8(_mm_add_pi8(mm0,*(__m64*)(bmp[1]+x)),mAdd);
+            mm1=_mm_add_pi8(_mm_add_pi8(mm1,*(__m64*)(bmp[2]+x)),mAdd);
+
+            *(__m64*)(dstLn[1]+x)=mm0;
+            *(__m64*)(dstLn[2]+x)=mm1;
+        }
+        for (; x<int(sdx[1]); x++) {
+            int m=msk[1][x],c;
+            c=dstLn[1][x];
+            c-=128;
+            if (c<0) {
+                c+=m;
+                if (c>0) {
+                    c=0;
+                }
+            } else     {
+                c-=m;
+                if (c<0) {
+                    c=0;
+                }
+            }
+            c+=bmp[1][x];
+            c+=add;
+            dstLn[1][x]=c;//(unsigned char)limit(c,0,255);
+
+            c=dstLn[2][x];
+            c-=128;
+            if (c<0) {
+                c+=m;
+                if (c>0) {
+                    c=0;
+                }
+            } else     {
+                c-=m;
+                if (c<0) {
+                    c=0;
+                }
+            };
+            c+=bmp[2][x];
+            c+=add;
+            dstLn[2][x]=c;//(unsigned char)limit(c,0,255);
+        }
+    }
+    _mm_empty();
+}
+
 //==================================== Tfont ====================================
 Tfont::Tfont(IffdshowBase *Ideci):
     fontManager(NULL),

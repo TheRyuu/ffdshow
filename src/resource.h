@@ -1245,6 +1245,7 @@
 #define IDC_ED_QUANT_TABLE_INTRA26      1724
 #define IDC_GRP_VOBSUB                  1724
 #define IDC_ED_QUANT_TABLE_INTRA27      1725
+#define IDC_CHB_VOBSUB                  1725
 #define IDC_ED_QUANT_TABLE_INTRA28      1726
 #define IDC_LBL_VOBSUB_DEFLANG          1726
 #define IDC_ED_QUANT_TABLE_INTRA29      1727

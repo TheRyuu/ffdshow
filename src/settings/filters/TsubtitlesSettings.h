@@ -35,6 +35,7 @@ public:
     static const Tlang  langs[];
     static const char_t *getLangDescr(const char_t *lang), *getLangDescrIso(const char_t *isolang);
     static LCID getLangId(const char_t *isolang);
+    int vobsub;
     int vobsubAA;
     static const char_t *vobsubAAs[];
     int vobsubAAswgauss;

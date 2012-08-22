@@ -446,6 +446,9 @@
     <ClCompile Include="src\subtitles\TsubreaderPGS.cpp">
       <Filter>subtitles</Filter>
     </ClCompile>
+    <ClCompile Include="src\subtitles\TsubreaderVobsub.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
     <ClCompile Include="src\subtitles\TsubtitleDVD.cpp">
       <Filter>subtitles</Filter>
     </ClCompile>
@@ -476,10 +479,19 @@
     <ClCompile Include="src\subtitles\TsubtitlesTextpinText.cpp">
       <Filter>subtitles</Filter>
     </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinVobSub.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
     <ClCompile Include="src\subtitles\TsubtitleText.cpp">
       <Filter>subtitles</Filter>
     </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitleVobsub.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
     <ClCompile Include="src\subtitles\TwordWrap.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\vobsub.cpp">
       <Filter>subtitles</Filter>
     </ClCompile>
     <ClCompile Include="src\imgFilters\2xsai.cpp">
@@ -1632,6 +1644,9 @@
     <ClInclude Include="src\subtitles\TsubreaderPGS.h">
       <Filter>subtitles</Filter>
     </ClInclude>
+    <ClInclude Include="src\subtitles\TsubreaderVobsub.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
     <ClInclude Include="src\subtitles\Tsubtitle.h">
       <Filter>subtitles</Filter>
     </ClInclude>
@@ -1659,13 +1674,22 @@
     <ClInclude Include="src\subtitles\TsubtitlesTextpinText.h">
       <Filter>subtitles</Filter>
     </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinVobSub.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
     <ClInclude Include="src\subtitles\TsubtitleText.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitleVobsub.h">
       <Filter>subtitles</Filter>
     </ClInclude>
     <ClInclude Include="src\subtitles\TtoGdiFont.h">
       <Filter>subtitles</Filter>
     </ClInclude>
     <ClInclude Include="src\subtitles\TwordWrap.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\vobsub.h">
       <Filter>subtitles</Filter>
     </ClInclude>
     <ClInclude Include="src\imgFilters\2xsai.h">

@@ -338,6 +338,7 @@
     <ClCompile Include="src\subtitles\Tsubreader.cpp" />
     <ClCompile Include="src\subtitles\TsubreaderMplayer.cpp" />
     <ClCompile Include="src\subtitles\TsubreaderPGS.cpp" />
+    <ClCompile Include="src\subtitles\TsubreaderVobsub.cpp" />
     <ClCompile Include="src\subtitles\TsubtitleDVD.cpp" />
     <ClCompile Include="src\subtitles\TsubtitlePGS.cpp" />
     <ClCompile Include="src\subtitles\TsubtitlePGSParser.cpp" />
@@ -348,8 +349,11 @@
     <ClCompile Include="src\subtitles\TsubtitlesTextpinDVD.cpp" />
     <ClCompile Include="src\subtitles\TsubtitlesTextpinPGS.cpp" />
     <ClCompile Include="src\subtitles\TsubtitlesTextpinText.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinVobSub.cpp" />
     <ClCompile Include="src\subtitles\TsubtitleText.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitleVobsub.cpp" />
     <ClCompile Include="src\subtitles\TwordWrap.cpp" />
+    <ClCompile Include="src\subtitles\vobsub.cpp" />
     <ClCompile Include="src\imgFilters\2xsai.cpp" />
     <ClCompile Include="src\imgFilters\md5sum.cpp" />
     <ClCompile Include="src\imgFilters\SimpleResize.cpp" />
@@ -755,6 +759,7 @@
     <ClInclude Include="src\subtitles\Tsubreader.h" />
     <ClInclude Include="src\subtitles\TsubreaderMplayer.h" />
     <ClInclude Include="src\subtitles\TsubreaderPGS.h" />
+    <ClInclude Include="src\subtitles\TsubreaderVobsub.h" />
     <ClInclude Include="src\subtitles\Tsubtitle.h" />
     <ClInclude Include="src\subtitles\TsubtitlePGS.h" />
     <ClInclude Include="src\subtitles\TsubtitleProps.h" />
@@ -764,9 +769,12 @@
     <ClInclude Include="src\subtitles\TsubtitlesTextpinDVD.h" />
     <ClInclude Include="src\subtitles\TsubtitlesTextpinPGS.h" />
     <ClInclude Include="src\subtitles\TsubtitlesTextpinText.h" />
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinVobSub.h" />
     <ClInclude Include="src\subtitles\TsubtitleText.h" />
+    <ClInclude Include="src\subtitles\TsubtitleVobsub.h" />
     <ClInclude Include="src\subtitles\TtoGdiFont.h" />
     <ClInclude Include="src\subtitles\TwordWrap.h" />
+    <ClInclude Include="src\subtitles\vobsub.h" />
     <ClInclude Include="src\imgFilters\2xsai.h" />
     <ClInclude Include="src\imgFilters\md5sum.h" />
     <ClInclude Include="src\imgFilters\SimpleResize.h" />

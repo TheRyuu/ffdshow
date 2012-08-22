@@ -491,7 +491,7 @@
 #define IDFF_subStereoscopicPar      834 // stereoscopic parallax <-10%,10%> of picture width
 #define IDFF_subDefLang              836
 #define IDFF_subDefLang2             852
-//#define IDFF_subVobsub             835  // Deleted
+#define IDFF_subVobsub               835
 #define IDFF_subVobsubAA             837
 #define IDFF_subVobsubAAswgauss      851
 #define IDFF_subVobsubChangePosition 849

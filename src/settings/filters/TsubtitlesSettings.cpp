@@ -647,6 +647,8 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll, TfilterIDFFs *filters
         _l("subDefLang"), 0,
         IDFF_subDefLang2            , &TsubtitlesSettings::deflang2                , 1, 1, _l(""), 1,
         _l("subDefLang2"), 0,
+        IDFF_subVobsub              , &TsubtitlesSettings::vobsub                  , 0, 0, _l(""), 1,
+        _l("subVobsub"), 1,
         IDFF_subVobsubAA            , &TsubtitlesSettings::vobsubAA                , 0, 4, _l(""), 1,
         _l("subVobsubAA"), 4,
         IDFF_subVobsubAAswgauss     , &TsubtitlesSettings::vobsubAAswgauss         , 1, 2000, _l(""), 1,
