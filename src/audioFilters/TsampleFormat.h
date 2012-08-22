@@ -63,7 +63,7 @@ public:
     WAVEFORMATEXTENSIBLE toWAVEFORMATEXTENSIBLE(bool alwaysextensible = true) const;
     WAVEFORMATEXTENSIBLE_IEC61937 toWAVEFORMATEXTENSIBLE_IEC61937(bool alwaysextensible = true) const;
     void fillCommonWAVEFORMATEX(WAVEFORMATEX *pWfe, WAVEFORMATEXTENSIBLE *pWfex, bool alwaysextensible = true) const;
-    static int getSampleFormat(CodecID codecId);
+    static int getSampleFormat(AVCodecID codecId);
     static void DPRINTMediaTypeInfo(CMediaType mt);
     static void updateAlternateMediaType(CMediaType &mt, int newSF);
     static const char_t *getGuidName(GUID guid);

@@ -103,7 +103,7 @@ protected:
     TvideoCodecs enclibs;
     uint64_t totalsize;
     TvideoCodecEnc *enc;
-    CodecID oldCodecId;
+    AVCodecID oldCodecId;
     TvideoCodecEnc *findEncLib(void);
     Textradata extradata;
     Tmuxer *mux;

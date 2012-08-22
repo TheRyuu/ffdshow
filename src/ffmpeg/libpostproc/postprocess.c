@@ -75,6 +75,7 @@ try to unroll inner for(x=0 ... loop to avoid these damn if(x ... checks
 
 #include "config.h"
 #include "libavutil/avutil.h"
+#include "libavutil/common.h"
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>

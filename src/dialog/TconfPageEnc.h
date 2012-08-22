@@ -13,7 +13,7 @@ class TconfPageEnc : public TconfPageBase
 protected:
     comptrQ<IffdshowEnc> deciE;
     TffdshowPageEnc *parent;
-    CodecID &codecId;
+    AVCodecID &codecId;
 public:
     TconfPageEnc(TffdshowPageEnc *Iparent): TconfPageBase(Iparent), codecId(Iparent->codecId) {
         parent = Iparent;

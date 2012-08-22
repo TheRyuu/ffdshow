@@ -32,8 +32,11 @@
  * Dither it back to 8bit.
  */
 
+#include "config.h"
 #include "libavutil/imgutils.h"
+#include "libavutil/common.h"
 #include "libavutil/cpu.h"
+#include "libavutil/mem.h"
 #include "libavutil/pixdesc.h"
 #include "avfilter.h"
 #include "gradfun.h"

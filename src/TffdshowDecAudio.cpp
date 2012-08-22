@@ -204,19 +204,19 @@ STDMETHODIMP TffdshowDecAudio::FindPin(LPCWSTR Id, IPin **ppPin)
     }
 }
 
-CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
+AVCodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
 {
     DPRINTF(_l("TffdshowDecAudio::getCodecId"));
     //char typeS[256];DPRINTF("TffdshowDecAudio::getCodecId Type:%s",guid2str(type,typeS,256));
     if (mt.majortype != MEDIATYPE_Audio && mt.majortype != MEDIATYPE_MPEG2_PES && mt.majortype != MEDIATYPE_DVD_ENCRYPTED_PACK) {
-        return CODEC_ID_NONE;
+        return AV_CODEC_ID_NONE;
     }
     //char subtypeS[256],formattypeS[256];DPRINTF("TffdshowDecAudio::getCodecId Subtype:%s, FormatType:%s",guid2str(subtype,subtypeS,256),guid2str(formattype,formattypeS,256));
     if (mt.formattype != FORMAT_WaveFormatEx &&
             mt.formattype != FORMAT_VorbisFormat &&
             mt.formattype != FORMAT_VorbisFormat2 &&
             mt.formattype != FORMAT_VorbisFormatIll) {
-        return CODEC_ID_NONE;
+        return AV_CODEC_ID_NONE;
     }
 
     DWORD wFormatTag = 0;
@@ -308,14 +308,14 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
         DPRINTF(_l("TffdshowDecAudio::getCodecId: %i Hz, %i channels"), (int)wfex->nSamplesPerSec, (int)wfex->nChannels);
         wFormatTag = TsampleFormat::getPCMformat(mt, wFormatTag);
     }
-    CodecID codecId = globalSettings->getCodecId(wFormatTag, NULL);
+    AVCodecID codecId = globalSettings->getCodecId(wFormatTag, NULL);
     // Codec Id returned is CODEC_ID_MP3 when input format is MP1,MP2 and libavcodec is selected (because same config table mp123[])
-    if (wFormatTag == WAVE_FORMAT_MPEG && codecId == CODEC_ID_MP3) {
+    if (wFormatTag == WAVE_FORMAT_MPEG && codecId == AV_CODEC_ID_MP3) {
         MPEG1WAVEFORMAT *m1wf = (MPEG1WAVEFORMAT*)mt.pbFormat;
         switch (m1wf->fwHeadLayer) {
             case ACM_MPEG_LAYER1:
             case ACM_MPEG_LAYER2:
-                codecId = CODEC_ID_MP2;
+                codecId = AV_CODEC_ID_MP2;
                 break;
         }
     }
@@ -326,23 +326,23 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
         DPRINTF(_l("TffdshowDecAudio::getCodecId Check if it is a SPDIF/bistream format"));
         switch (codecId) {
             case CODEC_ID_LIBA52:
-            case CODEC_ID_AC3:
+            case AV_CODEC_ID_AC3:
                 if (presetSettings->output->passthroughAC3) {
                     codecId = CODEC_ID_SPDIF_AC3;
                 }
                 break;
             case CODEC_ID_LIBDTS:
-            case CODEC_ID_DTS:
+            case AV_CODEC_ID_DTS:
                 if (presetSettings->output->passthroughDTS) {
                     codecId = CODEC_ID_SPDIF_DTS;
                 }
                 break;
-            case CODEC_ID_TRUEHD:
+            case AV_CODEC_ID_TRUEHD:
                 if (presetSettings->output->passthroughTRUEHD) {
                     codecId = CODEC_ID_BITSTREAM_TRUEHD;
                 }
                 break;
-            case CODEC_ID_EAC3:
+            case AV_CODEC_ID_EAC3:
                 if (presetSettings->output->passthroughEAC3) {
                     codecId = CODEC_ID_BITSTREAM_EAC3;
                 }
@@ -366,7 +366,7 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
 HRESULT TffdshowDecAudio::CheckInputType(const CMediaType *mtIn)
 {
     DPRINTF(_l("TffdshowDecAudio::CheckInputType"));
-    return getCodecId(*mtIn) == CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
+    return getCodecId(*mtIn) == AV_CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
 }
 
 HRESULT TffdshowDecAudio::CheckConnect(PIN_DIRECTION dir, IPin *pPin)
@@ -524,7 +524,7 @@ HRESULT TffdshowDecAudio::CheckTransform(const CMediaType *mtIn, const CMediaTyp
         if (!m_pInput->IsConnected() && m_pOutput->IsConnected()) {
             return S_OK;
         } else {
-            CodecID codecId = CODEC_ID_NONE;
+            AVCodecID codecId = AV_CODEC_ID_NONE;
             if (inpin != NULL) {
                 this->inpin->getCodecId(&codecId);
             }
@@ -722,7 +722,7 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf, size_t size, int
     TaudioParser *pAudioParser = NULL;
     TaudioParserData audioParserData;
 
-    CodecID codecId = CODEC_ID_NONE;
+    AVCodecID codecId = AV_CODEC_ID_NONE;
     if (inpin != NULL) {
         inpin->getAudioParser(&pAudioParser);
         this->inpin->getCodecId(&codecId);
@@ -1059,7 +1059,7 @@ STDMETHODIMP TffdshowDecAudio::getOutCodecString(char_t *buf, size_t buflen)
     if (!buf) {
         return E_POINTER;
     }
-    CodecID codecId = CODEC_ID_NONE;
+    AVCodecID codecId = AV_CODEC_ID_NONE;
     if (inpin) {
         inpin->getCodecId(&codecId);
     }

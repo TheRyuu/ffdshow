@@ -23,6 +23,7 @@
 
 #include "avfilter.h"
 #include "libavutil/audioconvert.h"
+#include "libavutil/common.h"
 
 typedef struct {
     int64_t channel_layout;

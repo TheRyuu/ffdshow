@@ -61,8 +61,8 @@ public:
     // IdecAudioSink
     STDMETHODIMP deliverDecodedSample(void *buf, size_t numsamples, const TsampleFormat &fmt);
     STDMETHODIMP flushDecodedSamples(void);
-    STDMETHODIMP setCodecId(CodecID codecId);
-    STDMETHODIMP getCodecId(CodecID *pCodecId);
+    STDMETHODIMP setCodecId(AVCodecID codecId);
+    STDMETHODIMP getCodecId(AVCodecID *pCodecId);
     STDMETHODIMP getAudioParser(TaudioParser **ppAudioParser);
     STDMETHODIMP deliverProcessedSample(const void *buf, size_t numsamples, const TsampleFormat &fmt);
     STDMETHODIMP_(bool)getsf(TsampleFormat &sf); //true if S/PDIF or bitstream HDMI

@@ -24,6 +24,7 @@
  * AMR wideband decoder
  */
 
+#include "libavutil/common.h"
 #include "libavutil/lfg.h"
 
 #include "avcodec.h"
@@ -121,7 +122,7 @@ static int decode_mime_header(AMRWBContext *ctx, const uint8_t *buf)
 {
     /* Decode frame header (1st octet) */
     ctx->fr_cur_mode  = buf[0] >> 3 & 0x0F;
-    ctx->fr_quality   = (buf[0] & 0x4) != 0x4;
+    ctx->fr_quality   = (buf[0] & 0x4) == 0x4;
 
     return 1;
 }
@@ -1237,12 +1238,12 @@ static int amrwb_decode_frame(AVCodecContext *avctx, void *data,
 AVCodec ff_amrwb_decoder = {
     .name           = "amrwb",
     .type           = AVMEDIA_TYPE_AUDIO,
-    .id             = CODEC_ID_AMR_WB,
+    .id             = AV_CODEC_ID_AMR_WB,
     .priv_data_size = sizeof(AMRWBContext),
     .init           = amrwb_decode_init,
     .decode         = amrwb_decode_frame,
     .capabilities   = CODEC_CAP_DR1,
-    .long_name      = NULL_IF_CONFIG_SMALL("Adaptive Multi-Rate WideBand"),
+    .long_name      = NULL_IF_CONFIG_SMALL("AMR-WB (Adaptive Multi-Rate WideBand)"),
     .sample_fmts    = (const enum AVSampleFormat[]){ AV_SAMPLE_FMT_FLT,
                                                      AV_SAMPLE_FMT_NONE },
 };

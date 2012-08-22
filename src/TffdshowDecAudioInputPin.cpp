@@ -53,7 +53,7 @@ bool TffdshowDecAudioInputPin::init(const CMediaType &mt)
 {
     DPRINTF(_l("TffdshowDecAudioInputPin::initAudio"));
     codecId = filter->getCodecId(mt);
-    if (codecId == CODEC_ID_NONE) {
+    if (codecId == AV_CODEC_ID_NONE) {
         return false;
     }
     strippacket = (mt.majortype == MEDIATYPE_DVD_ENCRYPTED_PACK || mt.majortype == MEDIATYPE_MPEG2_PES);
@@ -89,7 +89,7 @@ void TffdshowDecAudioInputPin::done(void)
         delete audioParser;
         audioParser = NULL;
     }
-    codecId = CODEC_ID_NONE;
+    codecId = AV_CODEC_ID_NONE;
 }
 
 // IPin
@@ -250,12 +250,12 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
         REFERENCE_TIME j = filter->m_rtStartDec - rtStart;
         jitter = int(j);
         if ((uint64_t)ff_abs(j) > 100 * (REF_SECOND_MULT / 1000) // +-100ms jitter is allowed for now
-                && codecId != CODEC_ID_FLAC
-                && codecId != CODEC_ID_TTA
-                && codecId != CODEC_ID_WAVPACK
-                && codecId != CODEC_ID_TRUEHD
-                && codecId != CODEC_ID_MLP
-                && codecId != CODEC_ID_COOK
+                && codecId != AV_CODEC_ID_FLAC
+                && codecId != AV_CODEC_ID_TTA
+                && codecId != AV_CODEC_ID_WAVPACK
+                && codecId != AV_CODEC_ID_TRUEHD
+                && codecId != AV_CODEC_ID_MLP
+                && codecId != AV_CODEC_ID_COOK
                 && !bitstream_codec(codecId)
                 && filter->getParam2(IDFF_audio_decoder_JitterCorrection)) {
             DPRINTF(_l("jitter correction"));
@@ -271,17 +271,17 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
     buf.append(src, srclen);
     buf.reserve(buf.size() + 32);
 
-    CodecID newCodecId = codecId;
+    AVCodecID newCodecId = codecId;
     TaudioParserData audioParserData;
     // Before sending data to the decoder, we parse it
     switch (codecId) {
-        case CODEC_ID_DTS:
+        case AV_CODEC_ID_DTS:
         case CODEC_ID_LIBDTS:
         case CODEC_ID_SPDIF_DTS:
-        case CODEC_ID_AC3:
-        case CODEC_ID_EAC3:
-        case CODEC_ID_MLP:
-        case CODEC_ID_TRUEHD:
+        case AV_CODEC_ID_AC3:
+        case AV_CODEC_ID_EAC3:
+        case AV_CODEC_ID_MLP:
+        case AV_CODEC_ID_TRUEHD:
         case CODEC_ID_LIBA52:
         case CODEC_ID_SPDIF_AC3:
         case CODEC_ID_PCM:
@@ -296,7 +296,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
             searchdts = false;
 
             newCodecId = audioParser->parseStream(buf.size() ? &buf[0] : NULL, (int)buf.size(), &newSrcBuffer);
-            if (newCodecId == CODEC_ID_NONE) {
+            if (newCodecId == AV_CODEC_ID_NONE) {
                 newSrcBuffer.clear();
                 break;
             }
@@ -416,13 +416,13 @@ STDMETHODIMP TffdshowDecAudioInputPin::flushDecodedSamples(void)
     return filter->flushDecodedSamples(this);
 }
 
-STDMETHODIMP TffdshowDecAudioInputPin::setCodecId(CodecID codecId)
+STDMETHODIMP TffdshowDecAudioInputPin::setCodecId(AVCodecID codecId)
 {
     this->codecId = codecId;
     return S_OK;
 }
 
-STDMETHODIMP TffdshowDecAudioInputPin::getCodecId(CodecID *pCodecId)
+STDMETHODIMP TffdshowDecAudioInputPin::getCodecId(AVCodecID *pCodecId)
 {
     *pCodecId = codecId;
     return S_OK;
@@ -489,7 +489,7 @@ STDMETHODIMP_(bool) TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
 
 int TffdshowDecAudioInputPin::getJitter(void) const
 {
-    if (codecId != CODEC_ID_FLAC && codecId != CODEC_ID_TTA && codecId != CODEC_ID_WAVPACK) {
+    if (codecId != AV_CODEC_ID_FLAC && codecId != AV_CODEC_ID_TTA && codecId != AV_CODEC_ID_WAVPACK) {
         return jitter / int(REF_SECOND_MULT / 1000);
     } else {
         return 0;

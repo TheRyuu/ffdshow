@@ -34,12 +34,12 @@ private:
     Tlibavcodec *dll;
     AVCodecContext *avctx;
     AVFrame *picture;
-    CodecID codecId;
+    AVCodecID codecId;
     bool avctxinited;
 protected:
     virtual int setQual(int qual) = 0;
 public:
-    TimgExportLibavcodec(const Tconfig *config, IffdshowBase *deci, CodecID IcodecId);
+    TimgExportLibavcodec(const Tconfig *config, IffdshowBase *deci, AVCodecID IcodecId);
     virtual ~TimgExportLibavcodec();
     virtual void init(unsigned int dx, unsigned int dy);
     virtual int compress(const unsigned char *src[4], stride_t stride[4], unsigned char *dst, unsigned int dstlen, int qual);
@@ -51,7 +51,7 @@ protected:
         return int(FF_QP2LAMBDA * (30.0f * (100 - qual) / 100 + 1));
     }
 public:
-    TimgExportJPEG(const Tconfig *config, IffdshowBase *deci): TimgExportLibavcodec(config, deci, CODEC_ID_MJPEG) {}
+    TimgExportJPEG(const Tconfig *config, IffdshowBase *deci): TimgExportLibavcodec(config, deci, AV_CODEC_ID_MJPEG) {}
     virtual uint64_t requiredCSP() {
         return FF_CSP_420P | FF_CSP_FLAGS_YUV_JPEG;
     }
@@ -67,7 +67,7 @@ struct TimgExportPNG : public TimgExportLibavcodec {
 public:
     // We are interesting in writing RGB24 (as required by PNG), so we have to select FF_CSP_BGR24.
     // see the comment above the FF_CSP_ enum definition.
-    TimgExportPNG(const Tconfig *config, IffdshowBase *deci): TimgExportLibavcodec(config, deci, CODEC_ID_PNG) {}
+    TimgExportPNG(const Tconfig *config, IffdshowBase *deci): TimgExportLibavcodec(config, deci, AV_CODEC_ID_PNG) {}
     virtual uint64_t requiredCSP() {
         return FF_CSP_BGR24;
     }

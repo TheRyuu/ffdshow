@@ -691,7 +691,7 @@ STDMETHODIMP_(const char_t*) TffdshowBase::getSourceName(void)
 }
 STDMETHODIMP_(int) TffdshowBase::getCurrentCodecId2(void)
 {
-    return minput ? minput->getInCodecId2() : CODEC_ID_NONE;
+    return minput ? minput->getInCodecId2() : AV_CODEC_ID_NONE;
 }
 
 HRESULT TffdshowBase::checkInputConnect(IPin *pin)

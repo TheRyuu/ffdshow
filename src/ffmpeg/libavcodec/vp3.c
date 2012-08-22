@@ -40,6 +40,7 @@
 #include "get_bits.h"
 
 #include "vp3data.h"
+#include "vp3dsp.h"
 #include "xiph.h"
 #include "thread.h"
 
@@ -51,8 +52,6 @@ typedef struct Vp3Fragment {
     uint8_t coding_method;
     uint8_t qpi;
 } Vp3Fragment;
-
-#define _ilog(i) av_log2(2*(i)) /* ffdshow custom code */
 
 #define SB_NOT_CODED        0
 #define SB_PARTIALLY_CODED  1
@@ -137,6 +136,7 @@ typedef struct Vp3DecodeContext {
     AVFrame current_frame;
     int keyframe;
     DSPContext dsp;
+    VP3DSPContext vp3dsp;
     int flipped_image;
     int last_slice_end;
     int skip_loop_filter;
@@ -249,11 +249,6 @@ typedef struct Vp3DecodeContext {
 
     uint8_t filter_limit_values[64];
     DECLARE_ALIGNED(8, int, bounding_values_array)[256+2];
-
-    /* ffdshow custom stuffs (begin) */
-    int64_t granulepos;
-    int keyframe_granule_shift,keyframe_frequency_force;
-    /* ffdshow custom stuffs (end) */
 } Vp3DecodeContext;
 
 /************************************************************************
@@ -1309,14 +1304,14 @@ static void apply_loop_filter(Vp3DecodeContext *s, int plane, int ystart, int ye
             {
                 /* do not perform left edge filter for left columns frags */
                 if (x > 0) {
-                    s->dsp.vp3_h_loop_filter(
+                    s->vp3dsp.h_loop_filter(
                         plane_data + 8*x,
                         stride, bounding_values);
                 }
 
                 /* do not perform top edge filter for top row fragments */
                 if (y > 0) {
-                    s->dsp.vp3_v_loop_filter(
+                    s->vp3dsp.v_loop_filter(
                         plane_data + 8*x,
                         stride, bounding_values);
                 }
@@ -1326,7 +1321,7 @@ static void apply_loop_filter(Vp3DecodeContext *s, int plane, int ystart, int ye
                  * in this frame (it will be filtered in next iteration) */
                 if ((x < width - 1) &&
                     (s->all_fragments[fragment + 1].coding_method == MODE_COPY)) {
-                    s->dsp.vp3_h_loop_filter(
+                    s->vp3dsp.h_loop_filter(
                         plane_data + 8*x + 8,
                         stride, bounding_values);
                 }
@@ -1336,7 +1331,7 @@ static void apply_loop_filter(Vp3DecodeContext *s, int plane, int ystart, int ye
                  * in this frame (it will be filtered in the next row) */
                 if ((y < height - 1) &&
                     (s->all_fragments[fragment + width].coding_method == MODE_COPY)) {
-                    s->dsp.vp3_v_loop_filter(
+                    s->vp3dsp.v_loop_filter(
                         plane_data + 8*x + 8*stride,
                         stride, bounding_values);
                 }
@@ -1584,9 +1579,7 @@ static void render_slice(Vp3DecodeContext *s, int slice)
                         index = vp3_dequant(s, s->all_fragments + i, plane, 0, block);
                         if (index > 63)
                             continue;
-                        if(s->avctx->idct_algo!=FF_IDCT_VP3)
-                            block[0] += 128<<3;
-                        s->dsp.idct_put(
+                        s->vp3dsp.idct_put(
                             output_plane + first_pixel,
                             stride,
                             block);
@@ -1595,12 +1588,12 @@ static void render_slice(Vp3DecodeContext *s, int slice)
                         if (index > 63)
                             continue;
                         if (index > 0) {
-                        s->dsp.idct_add(
+                        s->vp3dsp.idct_add(
                             output_plane + first_pixel,
                             stride,
                             block);
                         } else {
-                            s->dsp.vp3_idct_dc_add(output_plane + first_pixel, stride, block);
+                            s->vp3dsp.idct_dc_add(output_plane + first_pixel, stride, block);
                         }
                     }
                 } else {
@@ -1683,10 +1676,10 @@ static av_cold int vp3_decode_init(AVCodecContext *avctx)
     if (avctx->pix_fmt == PIX_FMT_NONE)
         avctx->pix_fmt = PIX_FMT_YUV420P;
     avctx->chroma_sample_location = AVCHROMA_LOC_CENTER;
-    //if(avctx->idct_algo==FF_IDCT_AUTO)
-        avctx->idct_algo=FF_IDCT_VP3;
     ff_dsputil_init(&s->dsp, avctx);
+    ff_vp3dsp_init(&s->vp3dsp, avctx->flags);
 
+    ff_init_scantable_permutation(s->dsp.idct_permutation, s->vp3dsp.idct_perm);
     ff_init_scantable(s->dsp.idct_permutation, &s->scantable, ff_zigzag_direct);
 
     /* initialize to an impossible value which will force a recalculation
@@ -1915,19 +1908,6 @@ static int vp3_update_thread_context(AVCodecContext *dst, const AVCodecContext *
     return 0;
 }
 
-/* ffdshow custom code (begin) */
-static int64_t theora_granule_frame(Vp3DecodeContext *s,int64_t granulepos) 	 
-{ 	 
-    if(granulepos>=0){
-        int64_t iframe=granulepos>>s->keyframe_granule_shift;
-        int64_t pframe=granulepos-(iframe<<s->keyframe_granule_shift);
-        return iframe+pframe;
-    }else{
-        return -1;
-    }
-}
-/* ffdshow custom code (end) */
-
 static int vp3_decode_frame(AVCodecContext *avctx,
                             void *data, int *data_size,
                             AVPacket *avpkt)
@@ -1980,7 +1960,6 @@ static int vp3_decode_frame(AVCodecContext *avctx,
 
     s->current_frame.reference = 3;
     s->current_frame.pict_type = s->keyframe ? AV_PICTURE_TYPE_I : AV_PICTURE_TYPE_P;
-    s->current_frame.key_frame = s->keyframe;
     if (ff_thread_get_buffer(avctx, &s->current_frame) < 0) {
         av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed\n");
         goto error;
@@ -2065,28 +2044,6 @@ static int vp3_decode_frame(AVCodecContext *avctx,
         apply_loop_filter(s, i, row, row+1);
     }
     vp3_draw_horiz_band(s, s->avctx->height);
-
-    /* ffdshow custom code (begin) */
-    if (s->theora && avctx->time_base.num){
-        if (avctx->granulepos>-1){
-            s->granulepos=avctx->granulepos;
-        }else{
-            if (s->granulepos==-1)
-                s->granulepos=0;
-            else
-                if (s->keyframe){
-                    long frames= s->granulepos & ((1<<s->keyframe_granule_shift)-1);
-                    s->granulepos>>=s->keyframe_granule_shift;
-                    s->granulepos+=frames+1;
-                    s->granulepos<<=s->keyframe_granule_shift;
-                }else{
-                    s->granulepos++;
-                }
-        }
-        s->current_frame.reordered_opaque = 10000000LL * theora_granule_frame(s,s->granulepos) * avctx->time_base.den / avctx->time_base.num;
-        s->current_frame.pict_type=s->keyframe?AV_PICTURE_TYPE_I:AV_PICTURE_TYPE_P;
-    }
-    /* ffdshow custom code (end) */
 
     *data_size=sizeof(AVFrame);
     *(AVFrame*)data= s->current_frame;
@@ -2212,7 +2169,7 @@ static int theora_decode_header(AVCodecContext *avctx, GetBitContext *gb)
     }
 
     if (s->theora < 0x030200)
-        s->keyframe_frequency_force=1<<get_bits(gb, 5); /* keyframe frequency force */ /* ffdshow custom code */
+        skip_bits(gb, 5); /* keyframe frequency force */
     colorspace = get_bits(gb, 8);
     skip_bits(gb, 24); /* bitrate */
 
@@ -2220,11 +2177,10 @@ static int theora_decode_header(AVCodecContext *avctx, GetBitContext *gb)
 
     if (s->theora >= 0x030200)
     {
-        s->keyframe_frequency_force=1<<get_bits(gb, 5); /* keyframe frequency force */ /* ffdshow custom code */
+        skip_bits(gb, 5); /* keyframe frequency force */
         avctx->pix_fmt = theora_pix_fmts[get_bits(gb, 2)];
         skip_bits(gb, 3); /* reserved */
     }
-    s->keyframe_granule_shift=_ilog(s->keyframe_frequency_force-1); // ffdshow custom code
 
 //    align_get_bits(gb);
 
@@ -2415,14 +2371,13 @@ static av_cold int theora_decode_init(AVCodecContext *avctx)
         break;
   }
 
-    s->granulepos=-1; /* ffdshow custom code */
     return vp3_decode_init(avctx);
 }
 
 AVCodec ff_theora_decoder = {
     .name                  = "theora",
     .type                  = AVMEDIA_TYPE_VIDEO,
-    .id                    = CODEC_ID_THEORA,
+    .id                    = AV_CODEC_ID_THEORA,
     .priv_data_size        = sizeof(Vp3DecodeContext),
     .init                  = theora_decode_init,
     .close                 = vp3_decode_end,
@@ -2439,7 +2394,7 @@ AVCodec ff_theora_decoder = {
 AVCodec ff_vp3_decoder = {
     .name                  = "vp3",
     .type                  = AVMEDIA_TYPE_VIDEO,
-    .id                    = CODEC_ID_VP3,
+    .id                    = AV_CODEC_ID_VP3,
     .priv_data_size        = sizeof(Vp3DecodeContext),
     .init                  = vp3_decode_init,
     .close                 = vp3_decode_end,

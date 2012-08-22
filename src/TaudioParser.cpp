@@ -48,7 +48,7 @@ TaudioParser::TaudioParser(IffdshowBase *Ideci, IdecAudioSink *Isink):
 void TaudioParser::init(void)
 {
     streamformat = UNDEFINED;
-    codecId = CODEC_ID_NONE;
+    codecId = AV_CODEC_ID_NONE;
     hasMLPFrames = false;
     searchSync = true;
     initConfig();
@@ -88,7 +88,7 @@ TaudioParserData TaudioParser::getParserData(void)
 /* This method is used by other decoders to parse AC3/DTS streams
  Returns the stream format and parsed buffer
  */
-CodecID TaudioParser::parseStream(unsigned char *src, int size,
+AVCodecID TaudioParser::parseStream(unsigned char *src, int size,
                                   TbyteBuffer *newsrcBuffer)
 {
 #if 0
@@ -125,16 +125,16 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
 #endif
     audioParserData.frames.clear();
 
-    if (codecId == CODEC_ID_NONE) {
+    if (codecId == AV_CODEC_ID_NONE) {
         sinkA->getCodecId(&codecId);
     }
 
     // For DTS streams, DTS-HD blocks must be removed, libavcodec does not know how to handle them yet
-    if ((codecId == CODEC_ID_DTS || codecId == CODEC_ID_LIBDTS || codecId == CODEC_ID_SPDIF_DTS || codecId == CODEC_ID_BITSTREAM_DTSHD
+    if ((codecId == AV_CODEC_ID_DTS || codecId == CODEC_ID_LIBDTS || codecId == CODEC_ID_SPDIF_DTS || codecId == CODEC_ID_BITSTREAM_DTSHD
             || codecId == CODEC_ID_PCM) && size > 0) {
         parseDTS(src, size, newsrcBuffer);
         codecId = getCodecIdFromStream();
-    } else if ((codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_MLP  || codecId == CODEC_ID_TRUEHD
+    } else if ((codecId == AV_CODEC_ID_AC3 || codecId == AV_CODEC_ID_EAC3 || codecId == AV_CODEC_ID_MLP  || codecId == AV_CODEC_ID_TRUEHD
                 || codecId == CODEC_ID_LIBA52 || codecId == CODEC_ID_SPDIF_AC3 || codecId == CODEC_ID_BITSTREAM_EAC3 || codecId == CODEC_ID_BITSTREAM_TRUEHD)
                && size > 0) {
         parseAC3(src, size, newsrcBuffer);
@@ -144,7 +144,7 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
 }
 
 // This method is called for bitstream formats to check if the output renderer is compatible
-bool TaudioParser::checkOutputFormat(CodecID codecId)
+bool TaudioParser::checkOutputFormat(AVCodecID codecId)
 {
     TsampleFormat fmt = TsampleFormat((audioParserData.sample_format != 0) ? audioParserData.sample_format : TsampleFormat::SF_PCM16,
                                       audioParserData.sample_rate, audioParserData.channels);
@@ -272,19 +272,19 @@ void TaudioParser::initConfig(void)
 
     // Use AC3 core from TrueHD only if : an AC3 decoder is enabled & TrueHD decoder is disabled &
     // TrueHD passthrough is disabled
-    CodecID codecIDAC3 = globalSettings->getCodecId(WAVE_FORMAT_AC3_W, NULL);
+    AVCodecID codecIDAC3 = globalSettings->getCodecId(WAVE_FORMAT_AC3_W, NULL);
 
-    useAC3CoreOnly = (codecIDAC3 != CODEC_ID_NONE)
-                     && (globalSettings->getCodecId(WAVE_FORMAT_TRUEHD, NULL) == CODEC_ID_NONE)
+    useAC3CoreOnly = (codecIDAC3 != AV_CODEC_ID_NONE)
+                     && (globalSettings->getCodecId(WAVE_FORMAT_TRUEHD, NULL) == AV_CODEC_ID_NONE)
                      &&  !useTrueHDPassthrough;
 
-    useAC3Passthrough = usableAC3Passthrough && (codecIDAC3 != CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughAC3) == 1);
+    useAC3Passthrough = usableAC3Passthrough && (codecIDAC3 != AV_CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughAC3) == 1);
 
-    CodecID codecIDDTS = globalSettings->getCodecId(WAVE_FORMAT_DTS_W, NULL);
-    useDTSPassthrough = usableDTSPassthrough && (codecIDDTS != CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughDTS) == 1);
+    AVCodecID codecIDDTS = globalSettings->getCodecId(WAVE_FORMAT_DTS_W, NULL);
+    useDTSPassthrough = usableDTSPassthrough && (codecIDDTS != AV_CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughDTS) == 1);
 }
 
-CodecID TaudioParser::getCodecIdFromStream()
+AVCodecID TaudioParser::getCodecIdFromStream()
 {
     initConfig();
 
@@ -388,7 +388,7 @@ CodecID TaudioParser::getCodecIdFromStream()
                     } else {
                         usableAC3Passthrough = false;
                     }
-                    codecId = CODEC_ID_AC3;
+                    codecId = AV_CODEC_ID_AC3;
                     audioParserData.nbFormatChanges++;
                     return codecId;
                 } else { //MLP decoder is disabled and AC3 pass-through is disabled
@@ -434,7 +434,7 @@ CodecID TaudioParser::getCodecIdFromStream()
             audioParserData.wFormatTag = WAVE_FORMAT_DTS_W;
             break;
         case UNDEFINED:
-            return CODEC_ID_NONE;
+            return AV_CODEC_ID_NONE;
         default:
             break;
     }

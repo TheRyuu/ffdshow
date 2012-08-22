@@ -13,7 +13,7 @@ private:
 protected:
     virtual bool init(const CMediaType &mt) = 0;
     virtual void done(void) = 0;
-    CodecID codecId;
+    AVCodecID codecId;
     Tcodec *codec;
     bool strippacket;
 public:

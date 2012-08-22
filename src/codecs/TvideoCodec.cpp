@@ -42,11 +42,11 @@ TvideoCodec::~TvideoCodec()
 }
 
 //===================================== TvideoCodecDec ======================================
-TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci, IdecVideoSink *sink, CodecID codecId, FOURCC fcc, const CMediaType &mt)
+TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci, IdecVideoSink *sink, AVCodecID codecId, FOURCC fcc, const CMediaType &mt)
 {
     // DXVA mode is a preset setting
     switch (codecId) {
-        case CODEC_ID_H264:
+        case AV_CODEC_ID_H264:
             if (deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA) {
                 if (deci->getParam2(IDFF_dec_DXVA_H264)) {
                     codecId = CODEC_ID_H264_DXVA;
@@ -55,7 +55,7 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci, IdecVideoSink *sink,
                 }
             }
             break;
-        case CODEC_ID_VC1:
+        case AV_CODEC_ID_VC1:
         case CODEC_ID_WMV9_LIB:
             if (deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA) {
                 if (deci->getParam2(IDFF_dec_DXVA_VC1)) {
@@ -100,7 +100,7 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci, IdecVideoSink *sink,
         // QuickSync decoder init failed, revert to internal decoder.
         switch (codecId) {
             case CODEC_ID_H264_QUICK_SYNC:
-                codecId = CODEC_ID_H264;
+                codecId = AV_CODEC_ID_H264;
                 break;
             case CODEC_ID_MPEG2_QUICK_SYNC:
                 codecId = CODEC_ID_LIBMPEG2;
@@ -158,7 +158,7 @@ float TvideoCodecDec::calcMeanQuant(void)
 Rational TvideoCodecDec::guessMPEG2sar(const Trect &r, const Rational &sar2, const Rational &containerSar)
 {
     const Rational &sar1 = r.sar;
-    if (codecId != CODEC_ID_MPEG2VIDEO && codecId != CODEC_ID_LIBMPEG2) {
+    if (codecId != AV_CODEC_ID_MPEG2VIDEO && codecId != CODEC_ID_LIBMPEG2) {
         return sar1;
     }
     if (isdvdproc) {

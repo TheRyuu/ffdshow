@@ -43,6 +43,7 @@ static char THIS_FILE[] = __FILE__;
 #include <windows.h>
 #endif
 
+#include "libavutil/attributes.h"
 #include "libavutil/avutil.h"
 #include "libavutil/bswap.h"
 #include "libavutil/cpu.h"
@@ -50,7 +51,7 @@ static char THIS_FILE[] = __FILE__;
 #include "libavutil/mathematics.h"
 #include "libavutil/opt.h"
 #include "libavutil/pixdesc.h"
-#include "libavutil/x86_cpu.h"
+#include "libavutil/x86/asm.h"
 #include "rgb2rgb.h"
 #include "swscale.h"
 #include "swscale_internal.h"
@@ -582,7 +583,7 @@ fail:
     return ret;
 }
 
-#if HAVE_MMX2
+#if HAVE_MMXEXT && HAVE_INLINE_ASM
 static int initMMX2HScaler(int dstW, int xInc, uint8_t *filterCode,
                            int16_t *filter, int32_t *filterPos, int numSplits)
 {
@@ -745,7 +746,7 @@ static int initMMX2HScaler(int dstW, int xInc, uint8_t *filterCode,
 
     return fragmentPos + 1;
 }
-#endif /* HAVE_MMX2 */
+#endif /* HAVE_MMXEXT && HAVE_INLINE_ASM */
 
 static void getSubSampleFactors(int *h, int *v, enum PixelFormat format)
 {
@@ -829,7 +830,8 @@ SwsContext *sws_alloc_context(int threadCount)
     return c;
 }
 
-int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, SwsParams *ffdshow_params)
+av_cold int sws_init_context(SwsContext *c, SwsFilter *srcFilter,
+                             SwsFilter *dstFilter, SwsParams *ffdshow_params)
 {
     int i;
     int usesVFilter, usesHFilter;
@@ -983,7 +985,7 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
                      (FFALIGN(srcW, 16) * 2 * FFALIGN(c->srcBpc, 8) >> 3) + 16,
                      fail);
 #endif
-    if (HAVE_MMX2 && cpu_flags & AV_CPU_FLAG_MMX2 &&
+    if (HAVE_MMXEXT && HAVE_INLINE_ASM && cpu_flags & AV_CPU_FLAG_MMXEXT &&
         c->srcBpc == 8 && c->dstBpc <= 10) {
         c->canMMX2BeUsed = (dstW >= srcW && (dstW & 31) == 0 &&
                             (srcW & 15) == 0) ? 1 : 0;
@@ -1049,7 +1051,7 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
 
     /* precalculate horizontal scaler filter coefficients */
     {
-#if HAVE_MMX2
+#if HAVE_MMXEXT && HAVE_INLINE_ASM
 // can't downscale !!!
         if (c->canMMX2BeUsed && (flags & SWS_FAST_BILINEAR)) {
             c->lumMmx2FilterCodeSize = initMMX2HScaler(dstW, c->lumXInc, NULL,
@@ -1085,7 +1087,7 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
             mprotect(c->chrMmx2FilterCode, c->chrMmx2FilterCodeSize, PROT_EXEC | PROT_READ);
 #endif
         } else
-#endif /* HAVE_MMX2 */
+#endif /* HAVE_MMXEXT && HAVE_INLINE_ASM */
         {
             const int filterAlign =
                 (HAVE_MMX && cpu_flags & AV_CPU_FLAG_MMX) ? 4 :
@@ -1094,15 +1096,15 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
 
             // ffdshow custom code
             if (initFilter(&c->hLumFilter, &c->hLumFilterPos,
-            	             &c->hLumFilterSize, c->lumXInc,
-                           srcW      ,       dstW, filterAlign, 1<<14,
+                           &c->hLumFilterSize, c->lumXInc,
+                           srcW, dstW, filterAlign, 1 << 14,
                            ffdshow_params->methodLuma.method|flags,
                            cpu_flags, srcFilter->lumH, dstFilter->lumH,
                            ffdshow_params->methodLuma.param, 1) < 0)
                 goto fail;
             if (initFilter(&c->hChrFilter, &c->hChrFilterPos,
-            	             &c->hChrFilterSize, c->chrXInc,
-                           c->chrSrcW, c->chrDstW, filterAlign, 1<<14,
+                           &c->hChrFilterSize, c->chrXInc,
+                           c->chrSrcW, c->chrDstW, filterAlign, 1 << 14,
                            ffdshow_params->methodChroma.method|flags,
                            cpu_flags, srcFilter->chrH, dstFilter->chrH,
                            ffdshow_params->methodChroma.param, 1) < 0)
@@ -1118,14 +1120,14 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
             1;
 
         if (initFilter(&c->vLumFilter, &c->vLumFilterPos, &c->vLumFilterSize,
-        	             c->lumYInc, srcH, dstH, filterAlign, (1<<12),
+                       c->lumYInc, srcH, dstH, filterAlign, (1 << 12),
                        ffdshow_params->methodLuma.method|flags,
                        cpu_flags, srcFilter->lumV, dstFilter->lumV,
                        ffdshow_params->methodLuma.param, 0) < 0)
             goto fail;
         if (initFilter(&c->vChrFilter, &c->vChrFilterPos, &c->vChrFilterSize,
-        	             c->chrYInc, c->chrSrcH, c->chrDstH,
-                       filterAlign, (1<<12),
+                       c->chrYInc, c->chrSrcH, c->chrDstH,
+                       filterAlign, (1 << 12),
                        ffdshow_params->methodChroma.method|flags,
                        cpu_flags, srcFilter->chrV, dstFilter->chrV,
                        ffdshow_params->methodChroma.param, 0) < 0)
@@ -1252,7 +1254,7 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
 #endif
                sws_format_name(dstFormat));
 
-        if (HAVE_MMX2 && cpu_flags & AV_CPU_FLAG_MMX2)
+        if (HAVE_MMXEXT && cpu_flags & AV_CPU_FLAG_MMXEXT)
             av_log(c, AV_LOG_INFO, "using MMX2\n");
         else if (HAVE_AMD3DNOW && cpu_flags & AV_CPU_FLAG_3DNOW)
             av_log(c, AV_LOG_INFO, "using 3DNOW\n");
@@ -1402,10 +1404,10 @@ SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur,
 
     // FFDShow custom code
 #if 1
-    if(chromaSharpen!=0.0){
-        SwsVector *g= sws_getConstVec(-1.0, 3);
-        SwsVector *id= sws_getConstVec(10.0/chromaSharpen, 1);
-        g->coeff[1]=2.0;
+    if(chromaSharpen != 0.0){
+        SwsVector *g  = sws_getConstVec(-1.0, 3);
+        SwsVector *id = sws_getConstVec(10.0/chromaSharpen, 1);
+        g->coeff[1]   = 2.0;
         sws_addVec(id, g);
         sws_convVec(filter->chrH, id);
         sws_convVec(filter->chrV, id);
@@ -1414,9 +1416,9 @@ SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur,
     }
 
     if(lumaSharpen!=0.0){
-        SwsVector *g= sws_getConstVec(-1.0, 3);
-        SwsVector *id= sws_getConstVec(10.0/lumaSharpen, 1);
-        g->coeff[1]=2.0;
+        SwsVector *g  = sws_getConstVec(-1.0, 3);
+        SwsVector *id = sws_getConstVec(10.0/lumaSharpen, 1);
+        g->coeff[1]   = 2.0;
         sws_addVec(id, g);
         sws_convVec(filter->lumH, id);
         sws_convVec(filter->lumV, id);
@@ -1424,8 +1426,8 @@ SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur,
         sws_freeVec(id);
     }
 #else
-    if (chromaSharpen!=0.0) {
-        SwsVector *id= sws_getIdentityVec();
+    if (chromaSharpen != 0.0) {
+        SwsVector *id = sws_getIdentityVec();
         sws_scaleVec(filter->chrH, -chromaSharpen);
         sws_scaleVec(filter->chrV, -chromaSharpen);
         sws_addVec(filter->chrH, id);

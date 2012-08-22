@@ -309,17 +309,17 @@ TcspInfos Tffvfw::TautoForcedCsps::decGetForcedCsp(IffdshowDec *deciD)
     }
 }
 
-TvideoCodecDec* Tffvfw::initDecoder(const BITMAPINFO *lpbiInput, CodecID *codecId)
+TvideoCodecDec* Tffvfw::initDecoder(const BITMAPINFO *lpbiInput, AVCodecID *codecId)
 {
     BITMAPINFOHEADER inhdr = lpbiInput->bmiHeader;
     fixMPEGinAVI(inhdr.biCompression);
     FOURCC fcc;
-    CodecID owncodecId;
+    AVCodecID owncodecId;
     if (!codecId) {
         codecId = &owncodecId;
     }
-    *codecId = (CodecID)decVFW->getCodecId(&inhdr, NULL, &fcc);
-    if (*codecId == CODEC_ID_NONE) {
+    *codecId = (AVCodecID)decVFW->getCodecId(&inhdr, NULL, &fcc);
+    if (*codecId == AV_CODEC_ID_NONE) {
         return NULL;
     }
     CMediaType mt;
@@ -333,9 +333,9 @@ STDMETHODIMP_(LRESULT) Tffvfw::decQuery(BITMAPINFO *lpbiInput, BITMAPINFO *lpbiO
         if (lpbiInput == NULL) {
             return ICERR_ERROR;
         }
-        CodecID codecId;
+        AVCodecID codecId;
         autoptr<TvideoCodecDec> dec = initDecoder(lpbiInput, &codecId);
-        if (codecId == CODEC_ID_NONE) {
+        if (codecId == AV_CODEC_ID_NONE) {
             return ICERR_UNSUPPORTED;
         }
         if (lpbiOutput != NULL) {

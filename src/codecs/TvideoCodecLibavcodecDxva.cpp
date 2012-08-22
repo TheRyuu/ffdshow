@@ -105,7 +105,7 @@ TcspInfo dxva2List[] = {
 };
 
 
-TvideoCodecLibavcodecDxva::TvideoCodecLibavcodecDxva(IffdshowBase *Ideci, IdecVideoSink *IsinkD, CodecID IcodecId):
+TvideoCodecLibavcodecDxva::TvideoCodecLibavcodecDxva(IffdshowBase *Ideci, IdecVideoSink *IsinkD, AVCodecID IcodecId):
     Tcodec(Ideci), TcodecDec(Ideci, IsinkD),
     TvideoCodec(Ideci),
     TvideoCodecLibavcodec(Ideci, IsinkD),
@@ -833,7 +833,7 @@ bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict, FOURCC fcc, c
     if (!result) {
         return false;
     }
-    if (codecId == CODEC_ID_VC1) {
+    if (codecId == AV_CODEC_ID_VC1) {
         bReorderBFrame = true;
     }
 

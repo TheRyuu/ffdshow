@@ -29,7 +29,7 @@ private:
     TffdshowDecVideoVFW *decVFW;
     Tconvert *convert;
 
-    TvideoCodecDec* initDecoder(const BITMAPINFO *lpbiInput, CodecID *codecId);
+    TvideoCodecDec* initDecoder(const BITMAPINFO *lpbiInput, AVCodecID *codecId);
     struct TautoForcedCsps : TcspInfos {
         TcspInfos decGetForcedCsp(IffdshowDec *deciD);
     } autoforcedcolorspaces;

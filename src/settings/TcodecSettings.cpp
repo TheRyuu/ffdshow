@@ -75,7 +75,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll): Toptions(Icoll), options(Icoll)
         _l("qual"), 85,
 
         IDFF_enc_codecId , &TcoSettings::codecId         , 1, 10000, _l(""), 1,
-        _l("codecId"), CODEC_ID_MJPEG,
+        _l("codecId"), AV_CODEC_ID_MJPEG,
         IDFF_enc_fourcc  , (TintVal)&TcoSettings::fourcc , 1,    1, _l(""), 1,
         _l("fourcc"), FOURCC_MJPG,
 

@@ -26,7 +26,7 @@ void TgenericDVpage::init(void)
 
 bool TgenericDVpage::enabled(void)
 {
-    return codecId == CODEC_ID_DVVIDEO;
+    return codecId == AV_CODEC_ID_DVVIDEO;
 }
 
 void TgenericDVpage::cfg2dlg(void)

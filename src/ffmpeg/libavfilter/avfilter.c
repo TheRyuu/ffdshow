@@ -21,10 +21,13 @@
 
 /* #define DEBUG */
 
+#include "config.h"
 #include "libavutil/pixdesc.h"
 #include "libavutil/rational.h"
 #include "libavutil/audioconvert.h"
+#include "libavutil/common.h"
 #include "libavutil/imgutils.h"
+#include "libavutil/mem.h"
 #include "avfilter.h"
 #include "internal.h"
 

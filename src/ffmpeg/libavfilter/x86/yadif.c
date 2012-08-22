@@ -18,10 +18,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "config.h"
+#include "libavutil/attributes.h"
 #include "libavutil/cpu.h"
-#include "libavutil/x86_cpu.h"
+#include "libavutil/mem.h"
+#include "libavutil/x86/asm.h"
 #include "libavcodec/x86/dsputil_mmx.h"
 #include "libavfilter/yadif.h"
+
+#if HAVE_INLINE_ASM
 
 DECLARE_ASM_CONST(16, const xmm_reg, pb_1) = {0x0101010101010101ULL, 0x0101010101010101ULL};
 DECLARE_ASM_CONST(16, const xmm_reg, pw_1) = {0x0001000100010001ULL, 0x0001000100010001ULL};
@@ -47,3 +52,5 @@ DECLARE_ASM_CONST(16, const xmm_reg, pw_1) = {0x0001000100010001ULL, 0x000100010
 #define RENAME(a) a ## _mmx
 #include "yadif_template.c"
 #endif
+
+#endif /* HAVE_INLINE_ASM */

@@ -27,6 +27,7 @@
  */
 
 #include "avutil.h"
+#include "common.h"
 #include "eval.h"
 #include "log.h"
 #include "mathematics.h"
@@ -279,8 +280,8 @@ static int parse_primary(AVExpr **e, Parser *p)
     else if (strmatch(next, "eq"    )) d->type = e_eq;
     else if (strmatch(next, "gte"   )) d->type = e_gte;
     else if (strmatch(next, "gt"    )) d->type = e_gt;
-    else if (strmatch(next, "lte"   )) { AVExpr *tmp = d->param[1]; d->param[1] = d->param[0]; d->param[0] = tmp; d->type = e_gt; }
-    else if (strmatch(next, "lt"    )) { AVExpr *tmp = d->param[1]; d->param[1] = d->param[0]; d->param[0] = tmp; d->type = e_gte; }
+    else if (strmatch(next, "lte"   )) { AVExpr *tmp = d->param[1]; d->param[1] = d->param[0]; d->param[0] = tmp; d->type = e_gte; }
+    else if (strmatch(next, "lt"    )) { AVExpr *tmp = d->param[1]; d->param[1] = d->param[0]; d->param[0] = tmp; d->type = e_gt; }
     else if (strmatch(next, "ld"    )) d->type = e_ld;
     else if (strmatch(next, "isnan" )) d->type = e_isnan;
     else if (strmatch(next, "isinf" )) d->type = e_isinf;
@@ -596,6 +597,14 @@ int main(int argc, char **argv)
         "1Gi",
         "st(0, 123)",
         "st(1, 123); ld(1)",
+        "lte(0, 1)",
+        "lte(1, 1)",
+        "lte(1, 0)",
+        "lt(0, 1)",
+        "lt(1, 1)",
+        "gt(1, 0)",
+        "gt(2, 7)",
+        "gte(122, 122)",
         /* compute 1+2+...+N */
         "st(0, 1); while(lte(ld(0), 100), st(1, ld(1)+ld(0));st(0, ld(0)+1)); ld(1)",
         /* compute Fib(N) */
@@ -628,7 +637,10 @@ int main(int argc, char **argv)
         av_expr_parse_and_eval(&d, *expr,
                                const_names, const_values,
                                NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        printf("'%s' -> %f\n\n", *expr, d);
+        if (isnan(d))
+            printf("'%s' -> nan\n\n", *expr);
+        else
+            printf("'%s' -> %f\n\n", *expr, d);
     }
 
     av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",

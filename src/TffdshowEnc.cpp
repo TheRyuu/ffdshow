@@ -156,7 +156,7 @@ TffdshowEnc::TffdshowEnc(LPUNKNOWN punk, HRESULT *phr, TintStrColl *Ioptions, co
     h_graph = NULL;
     convert = NULL;
     ffproc = NULL;
-    oldCodecId = CODEC_ID_NONE;
+    oldCodecId = AV_CODEC_ID_NONE;
     options = Ioptions;
 }
 
@@ -250,7 +250,7 @@ HRESULT TffdshowEnc::CheckInputType(const CMediaType * mtIn)
 int TffdshowEnc::getVideoCodecId(const BITMAPINFOHEADER *hdr, const GUID *subtype, FOURCC *AVIfourcc)
 {
     initCo();
-    return query(hdr, NULL) == ICERR_OK ? CODEC_ID_RAW : CODEC_ID_NONE;
+    return query(hdr, NULL) == ICERR_OK ? CODEC_ID_RAW : AV_CODEC_ID_NONE;
 }
 
 HRESULT TffdshowEnc::CheckConnect(PIN_DIRECTION dir, IPin *pPin)
@@ -362,7 +362,7 @@ HRESULT TffdshowEnc::GetMediaType(int iPosition, CMediaType *mtOut)
             mtOut->SetType(&MEDIATYPE_Video);
             mtOut->SetTemporalCompression(TRUE);
             mtOut->SetSampleSize(outdx * outdy * 4);
-            if (coSettings->codecId == CODEC_ID_MPEG1VIDEO) { //mpeg1 (including VideoCD)
+            if (coSettings->codecId == AV_CODEC_ID_MPEG1VIDEO) { //mpeg1 (including VideoCD)
                 mtOut->SetSubtype(&MEDIASUBTYPE_MPEG1Video);
                 mtOut->SetFormatType(&FORMAT_MPEGVideo);
                 MPEG1VIDEOINFO *mvi = (MPEG1VIDEOINFO*)mtOut->ReallocFormatBuffer(sizeof(MPEG1VIDEOINFO));
@@ -421,7 +421,7 @@ int TffdshowEnc::getQuantQuant(void)
 TvideoCodecEnc* TffdshowEnc::findEncLib(void)
 {
     if (!enc || oldCodecId != coSettings->codecId) {
-        oldCodecId = (CodecID)coSettings->codecId;
+        oldCodecId = (AVCodecID)coSettings->codecId;
         enc = enclibs.getEncLib(oldCodecId);
     }
     return enc;

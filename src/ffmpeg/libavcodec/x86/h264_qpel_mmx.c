@@ -21,6 +21,8 @@
 
 #include "dsputil_mmx.h"
 
+#if HAVE_INLINE_ASM
+
 /***********************************/
 /* motion compensation */
 
@@ -838,10 +840,6 @@ static av_noinline void OPNAME ## h264_qpel16_v_lowpass_ ## MMX(uint8_t *dst, ui
     OPNAME ## h264_qpel8or16_v_lowpass_ ## MMX(dst+8, src+8, dstStride, srcStride, 16);\
 }
 
-/* ffdshow custom code */
-#pragma GCC push_options
-#pragma GCC target ("sse2")
-
 static av_always_inline void put_h264_qpel8or16_hv1_lowpass_sse2(int16_t *tmp, uint8_t *src, int tmpStride, int srcStride, int size){
     int w = (size+8)>>3;
     src -= 2*srcStride+2;
@@ -892,9 +890,6 @@ static av_always_inline void put_h264_qpel8or16_hv1_lowpass_sse2(int16_t *tmp, u
         src += 8 - (size+5)*srcStride;
     }
 }
-
-/* ffdshow custom code */
-#pragma GCC pop_options
 
 #define QPEL_H264_HV2_XMM(OPNAME, OP, MMX)\
 static av_always_inline void OPNAME ## h264_qpel8or16_hv2_lowpass_ ## MMX(uint8_t *dst, int16_t *tmp, int dstStride, int tmpStride, int size){\
@@ -1175,9 +1170,6 @@ QPEL_H264(avg_, AVG_3DNOW_OP, 3dnow)
 #define PAVGB "pavgb"
 QPEL_H264(put_,       PUT_OP, mmx2)
 QPEL_H264(avg_,  AVG_MMX2_OP, mmx2)
-/* ffdshow custom code */
-#pragma GCC push_options
-#pragma GCC target ("sse2")
 QPEL_H264_V_XMM(put_,       PUT_OP, sse2)
 QPEL_H264_V_XMM(avg_,  AVG_MMX2_OP, sse2)
 QPEL_H264_HV_XMM(put_,       PUT_OP, sse2)
@@ -1191,7 +1183,6 @@ QPEL_H264_HV_XMM(put_,       PUT_OP, ssse3)
 QPEL_H264_HV_XMM(avg_,  AVG_MMX2_OP, ssse3)
 #endif
 #undef PAVGB
-#pragma GCC pop_options
 
 H264_MC_4816(3dnow)
 H264_MC_4816(mmx2)
@@ -1202,7 +1193,7 @@ H264_MC_816(H264_MC_H, ssse3)
 H264_MC_816(H264_MC_HV, ssse3)
 #endif
 
-
+#endif /* HAVE_INLINE_ASM */
 
 //10bit
 #define LUMA_MC_OP(OP, NUM, DEPTH, TYPE, OPT) \

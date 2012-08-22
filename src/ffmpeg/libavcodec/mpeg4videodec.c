@@ -1468,7 +1468,7 @@ intra:
 end:
 
         /* per-MB end of slice check */
-    if(s->codec_id==CODEC_ID_MPEG4){
+    if(s->codec_id==AV_CODEC_ID_MPEG4){
         int next= mpeg4_is_resync(s);
         if(next) {
             if        (s->mb_x + s->mb_y*s->mb_width + 1 >  next && (s->avctx->err_recognition & AV_EF_AGGRESSIVE)) {
@@ -2302,7 +2302,7 @@ static const AVClass mpeg4_vdpau_class = {
 AVCodec ff_mpeg4_decoder = {
     .name                  = "mpeg4",
     .type                  = AVMEDIA_TYPE_VIDEO,
-    .id                    = CODEC_ID_MPEG4,
+    .id                    = AV_CODEC_ID_MPEG4,
     .priv_data_size        = sizeof(MpegEncContext),
     .init                  = decode_init,
     .close                 = ff_h263_decode_end,

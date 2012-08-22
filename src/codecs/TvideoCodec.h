@@ -88,7 +88,7 @@ protected:
     } telecineManager;
 
 public:
-    static TvideoCodecDec* initDec(IffdshowBase *deci, IdecVideoSink *Isink, CodecID codecId, FOURCC fcc, const CMediaType &mt);
+    static TvideoCodecDec* initDec(IffdshowBase *deci, IdecVideoSink *Isink, AVCodecID codecId, FOURCC fcc, const CMediaType &mt);
 
     virtual ~TvideoCodecDec();
 
@@ -133,8 +133,8 @@ typedef vectorEx<uint64_t, array_allocator<uint64_t, FF_CSPS_NUM> > Tcsps;
 typedef vectorEx<FOURCC> Tfourccs;
 
 struct Tencoder {
-    Tencoder(const char_t *Iname, CodecID Iid, const Tfourccs &Ifourccs): name(Iname), id(Iid), fourccs(Ifourccs) {}
-    Tencoder(const char_t *Iname, CodecID Iid): name(Iname), id(Iid) {
+    Tencoder(const char_t *Iname, AVCodecID Iid, const Tfourccs &Ifourccs): name(Iname), id(Iid), fourccs(Ifourccs) {}
+    Tencoder(const char_t *Iname, AVCodecID Iid): name(Iname), id(Iid) {
         const FOURCC *fccs = getCodecFOURCCs(id);
         for (const FOURCC *fcc = fccs; *fcc; fcc++) {
             fourccs.push_back(*fcc);
@@ -142,7 +142,7 @@ struct Tencoder {
     }
 
     const char_t *name;
-    CodecID id;
+    AVCodecID id;
     Tfourccs fourccs;
 };
 
@@ -203,7 +203,7 @@ public:
     TvideoCodecEnc(IffdshowBase *Ideci, IencVideoSink *Isink);
     virtual ~TvideoCodecEnc();
     Tencoders encoders;
-    void setCoSettings(CodecID IcodecId) {
+    void setCoSettings(AVCodecID IcodecId) {
         codecId = IcodecId;
     }
     virtual void getCompressColorspaces(Tcsps &csps, unsigned int outDx, unsigned int outDy) {

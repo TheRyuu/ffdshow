@@ -49,6 +49,7 @@ SRCS_C=\
     libavcodec/cyuv.c \
     libavcodec/dca.c \
     libavcodec/dca_parser.c \
+    libavcodec/dcadec.c \
     libavcodec/dcadsp.c \
     libavcodec/dct.c \
     libavcodec/dct32_fixed.c \
@@ -147,6 +148,7 @@ SRCS_C=\
     libavcodec/mpegaudiodsp_float.c \
     libavcodec/mpegvideo.c \
     libavcodec/mpegvideo_enc.c \
+    libavcodec/mpegvideo_motion.c \
     libavcodec/mpegvideo_parser.c \
     libavcodec/msgsmdec.c \
     libavcodec/msmpeg4.c \
@@ -204,7 +206,7 @@ SRCS_C=\
     libavcodec/vcr1.c \
     libavcodec/vorbis.c \
     libavcodec/vorbis_data.c \
-    libavcodec/vorbis_dec.c \
+    libavcodec/vorbisdec.c \
     libavcodec/vp3.c \
     libavcodec/vp3dsp.c \
     libavcodec/vp5.c \
@@ -227,32 +229,30 @@ SRCS_C=\
     libavcodec/xl.c \
     libavcodec/zmbv.c \
     \
-    libavcodec/x86/ac3dsp_mmx.c \
+    libavcodec/x86/ac3dsp_init.c \
     libavcodec/x86/cavsdsp_mmx.c \
     libavcodec/x86/dsputil_mmx.c \
     libavcodec/x86/dsputilenc_mmx.c \
     libavcodec/x86/fdct_mmx.c \
-    libavcodec/x86/fft.c \
-    libavcodec/x86/fft_3dn.c \
-    libavcodec/x86/fft_3dn2.c \
-    libavcodec/x86/fmtconvert_mmx.c \
+    libavcodec/x86/fft_init.c \
+    libavcodec/x86/fmtconvert_init.c \
     libavcodec/x86/h264_intrapred_init.c \
-    libavcodec/x86/h264dsp_mmx.c \
-    libavcodec/x86/idct_mmx.c \
+    libavcodec/x86/h264dsp_init.c \
     libavcodec/x86/idct_mmx_xvid.c \
     libavcodec/x86/idct_sse2_xvid.c \
     libavcodec/x86/mlpdsp.c \
     libavcodec/x86/motion_est_mmx.c \
     libavcodec/x86/mpegaudiodec_mmx.c \
     libavcodec/x86/mpegvideo_mmx.c \
-    libavcodec/x86/pngdsp-init.c \
+    libavcodec/x86/pngdsp_init.c \
     libavcodec/x86/rv34dsp_init.c \
     libavcodec/x86/rv40dsp_init.c \
     libavcodec/x86/sbrdsp_init.c \
     libavcodec/x86/simple_idct_mmx.c \
     libavcodec/x86/vc1dsp_mmx.c \
+    libavcodec/x86/vp3dsp_init.c \
     libavcodec/x86/vp56dsp_init.c \
-    libavcodec/x86/vp8dsp-init.c \
+    libavcodec/x86/vp8dsp_init.c \
     \
     libavutil/audioconvert.c \
     libavutil/avstring.c \
@@ -303,8 +303,8 @@ SRCS_C=\
     libswscale/yuv2rgb.c \
     \
     libswscale/x86/rgb2rgb.c \
-    libswscale/x86/swscale_mmx.c \
-    libswscale/x86/yuv2rgb_mmx.c \
+    libswscale/x86/swscale.c \
+    libswscale/x86/yuv2rgb.c \
     \
     libpostproc/postprocess.c \
     \
@@ -327,8 +327,8 @@ SRCS_C=\
 SRCS_YASM=\
     libavcodec/x86/ac3dsp.asm \
     libavcodec/x86/dct32_sse.asm \
-    libavcodec/x86/dsputil_yasm.asm \
-    libavcodec/x86/dsputilenc_yasm.asm \
+    libavcodec/x86/dsputil.asm \
+    libavcodec/x86/dsputilenc.asm \
     libavcodec/x86/fft_mmx.asm \
     libavcodec/x86/fmtconvert.asm \
     libavcodec/x86/h264_chromamc.asm \
@@ -347,7 +347,7 @@ SRCS_YASM=\
     libavcodec/x86/rv34dsp.asm \
     libavcodec/x86/rv40dsp.asm \
     libavcodec/x86/sbrdsp.asm \
-    libavcodec/x86/vc1dsp_yasm.asm \
+    libavcodec/x86/vc1dsp.asm \
     libavcodec/x86/vp3dsp.asm \
     libavcodec/x86/vp56dsp.asm \
     libavcodec/x86/vp8dsp.asm \

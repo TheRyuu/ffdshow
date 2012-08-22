@@ -162,7 +162,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it, TsampleFormat &fm
             };
             for (int i = 0; i < countof(ac3channels); i++)
                 if (channelmask == ac3channels[i].mask) {
-                    AVCodec *avcodec = libavcodec->avcodec_find_encoder(CODEC_ID_AC3);
+                    AVCodec *avcodec = libavcodec->avcodec_find_encoder(AV_CODEC_ID_AC3);
                     avctx = libavcodec->avcodec_alloc_context(avcodec);
 
                     avctx->sample_rate = fmt.freq;

@@ -177,42 +177,50 @@ const uint8_t *ff_h264_decode_nal(H264Context *h, const uint8_t *src,
     src++;
     length--;
 
+#define STARTCODE_TEST                                                  \
+        if (i + 2 < length && src[i + 1] == 0 && src[i + 2] <= 3) {     \
+            if (src[i + 2] != 3) {                                      \
+                /* startcode, so we must be past the end */             \
+                length = i;                                             \
+            }                                                           \
+            break;                                                      \
+        }
 #if HAVE_FAST_UNALIGNED
+#define FIND_FIRST_ZERO                                                 \
+        if (i > 0 && !src[i])                                           \
+            i--;                                                        \
+        while (src[i])                                                  \
+            i++
 #if HAVE_FAST_64BIT
-#define RS 7
     for (i = 0; i + 1 < length; i += 9) {
         if (!((~AV_RN64A(src + i) &
                (AV_RN64A(src + i) - 0x0100010001000101ULL)) &
               0x8000800080008080ULL))
+            continue;
+        FIND_FIRST_ZERO;
+        STARTCODE_TEST;
+        i -= 7;
+    }
 #else
-#define RS 3
     for (i = 0; i + 1 < length; i += 5) {
         if (!((~AV_RN32A(src + i) &
                (AV_RN32A(src + i) - 0x01000101U)) &
               0x80008080U))
-#endif
             continue;
-        if (i > 0 && !src[i])
-            i--;
-        while (src[i])
-            i++;
+        FIND_FIRST_ZERO;
+        STARTCODE_TEST;
+        i -= 3;
+    }
+#endif
 #else
-#define RS 0
     for (i = 0; i + 1 < length; i += 2) {
         if (src[i])
             continue;
         if (i > 0 && src[i - 1] == 0)
             i--;
-#endif
-        if (i + 2 < length && src[i + 1] == 0 && src[i + 2] <= 3) {
-            if (src[i + 2] != 3) {
-                /* startcode, so we must be past the end */
-                length = i;
-            }
-            break;
-        }
-        i -= RS;
+        STARTCODE_TEST;
     }
+#endif
 
     if (i >= length - 1) { // no escaped 0
         *dst_length = length;
@@ -1048,7 +1056,7 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx)
     h->prev_poc_msb = 1 << 16;
     h->x264_build   = -1;
     ff_h264_reset_sei(h);
-    if (avctx->codec_id == CODEC_ID_H264) {
+    if (avctx->codec_id == AV_CODEC_ID_H264) {
         if (avctx->ticks_per_frame == 1)
             s->avctx->time_base.den *= 2;
         avctx->ticks_per_frame = 2;
@@ -1287,7 +1295,7 @@ int ff_h264_frame_start(H264Context *h)
      * SVQ3 as well as most other codecs have only last/next/current and thus
      * get released even with set reference, besides SVQ3 and others do not
      * mark frames as reference later "naturally". */
-    if (s->codec_id != CODEC_ID_SVQ3)
+    if (s->codec_id != AV_CODEC_ID_SVQ3)
         s->current_picture_ptr->f.reference = 0;
 
     s->current_picture_ptr->field_poc[0]     =
@@ -3423,7 +3431,7 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg)
     s->mb_skip_run = -1;
 
     h->is_complex = FRAME_MBAFF || s->picture_structure != PICT_FRAME ||
-                    s->codec_id != CODEC_ID_H264 ||
+                    s->codec_id != AV_CODEC_ID_H264 ||
                     (CONFIG_GRAY && (s->flags & CODEC_FLAG_GRAY));
 
     if (h->pps.cabac) {
@@ -4078,7 +4086,7 @@ static const AVProfile profiles[] = {
 AVCodec ff_h264_decoder = {
     .name                  = "h264",
     .type                  = AVMEDIA_TYPE_VIDEO,
-    .id                    = CODEC_ID_H264,
+    .id                    = AV_CODEC_ID_H264,
     .priv_data_size        = sizeof(H264Context),
     .init                  = ff_h264_decode_init,
     .close                 = h264_decode_end,

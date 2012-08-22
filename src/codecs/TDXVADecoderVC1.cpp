@@ -258,7 +258,7 @@ void TDXVADecoderVC1::CopyBitstream(BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSiz
         memcpy(pDXVABuffer, (BYTE*)pBuffer, nSize);
     } else {
         if ((*((DWORD*)pBuffer) & 0x00FFFFFF) != 0x00010000) {
-            if (m_pCodec->avctx->codec_id == CODEC_ID_WMV3) {
+            if (m_pCodec->avctx->codec_id == AV_CODEC_ID_WMV3) {
                 memcpy(pDXVABuffer, (BYTE*)pBuffer, nSize);
             } else { // Some splitter have remove startcode (Haali)
                 pDXVABuffer[0] = pDXVABuffer[1] = 0;

@@ -48,7 +48,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             return false;
         }
 
-        if (codecId == CODEC_ID_AMR_NB) {
+        if (codecId == AV_CODEC_ID_AMR_NB) {
             fmt.setChannels(1);
             fmt.freq = 8000;
         }
@@ -63,7 +63,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
         }
 
         // Disable AAC parser, as of 03/2011 ffmpeg returns "More than one AAC RDB per ADTS frame is not implemented. Update your FFmpeg..."
-        if (codecId != CODEC_ID_AAC && codecId != CODEC_ID_AAC_LATM) {
+        if (codecId != AV_CODEC_ID_AAC && codecId != AV_CODEC_ID_AAC_LATM) {
             parser = ffmpeg->av_parser_init(codecId);
         }
 
@@ -71,7 +71,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             const WAVEFORMATEX *wfex = (const WAVEFORMATEX*)mt.pbFormat;
             avctx->bit_rate = wfex->nAvgBytesPerSec * 8;
             avctx->bits_per_coded_sample = wfex->wBitsPerSample;
-            if (wfex->wBitsPerSample == 0 && codecId == CODEC_ID_COOK) {
+            if (wfex->wBitsPerSample == 0 && codecId == AV_CODEC_ID_COOK) {
                 avctx->bits_per_coded_sample = 16;
             }
             avctx->block_align = wfex->nBlockAlign;
@@ -83,7 +83,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
 
         Textradata extradata(mt, FF_INPUT_BUFFER_PADDING_SIZE);
 
-        if (codecId == CODEC_ID_COOK && mt.formattype == FORMAT_WaveFormatEx && mt.pbFormat) {
+        if (codecId == AV_CODEC_ID_COOK && mt.formattype == FORMAT_WaveFormatEx && mt.pbFormat) {
             /* Cook specifications : extradata is located after the real audio info, 4 or 5 depending on the version
                @See http://wiki.multimedia.cx/index.php?title=RealMedia the audio block information
                TODO : add support for header version 3
@@ -145,7 +145,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             avctx->extradata_size = (int)extradata.size;
         }
 
-        if (codecId == CODEC_ID_VORBIS && mt.formattype == FORMAT_VorbisFormat2) {
+        if (codecId == AV_CODEC_ID_VORBIS && mt.formattype == FORMAT_VorbisFormat2) {
             const VORBISFORMAT2 *vf2 = (const VORBISFORMAT2*)mt.pbFormat;
             avctx->vorbis_header_size[0] = vf2->HeaderSize[0];
             avctx->vorbis_header_size[1] = vf2->HeaderSize[1];
@@ -293,7 +293,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
     }
 
     //Special behaviour for real audio cook decoder
-    if (codecId == CODEC_ID_COOK) {
+    if (codecId == AV_CODEC_ID_COOK) {
         int w = m_realAudioInfo.coded_frame_size;
         int h = m_realAudioInfo.sub_packet_h;
         int sps = m_realAudioInfo.sub_packet_size;
@@ -328,7 +328,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
     }
 
     while (srcBufferLength > 0) {
-        if ((codecId == CODEC_ID_MLP || codecId == CODEC_ID_TRUEHD) && srcBufferLength == 1) {
+        if ((codecId == AV_CODEC_ID_MLP || codecId == AV_CODEC_ID_TRUEHD) && srcBufferLength == 1) {
             break;    // workaround for silence when skipping TrueHD in MPC-HC
         }
         AVPacket avpkt;

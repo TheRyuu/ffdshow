@@ -83,8 +83,8 @@ inline MpegEncContext* GetMpegEncContext(struct AVCodecContext* pAVCtx)
     MpegEncContext*     s = NULL;
 
     switch (pAVCtx->codec_id) {
-        case CODEC_ID_VC1 :
-        case CODEC_ID_H264 :
+        case AV_CODEC_ID_VC1 :
+        case AV_CODEC_ID_H264 :
             s = (MpegEncContext*) pAVCtx->priv_data;
             break;
     }

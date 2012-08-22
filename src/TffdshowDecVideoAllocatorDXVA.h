@@ -53,7 +53,7 @@ public:
     STDMETHODIMP GetPointer(BYTE ** ppBuffer);
 
 private:
-    CodecID dxvaCodecId;
+    AVCodecID dxvaCodecId;
     // Sets the pointer to the Direct3D surface.
     void SetSurface(DWORD surfaceId, IDirect3DSurface9 *pSurf);
     CComPtr<IDirect3DSurface9> m_pSurface;

@@ -35,7 +35,7 @@
 #define AC3ENC_TYPE AC3ENC_TYPE_AC3_FIXED
 #include "ac3enc_opts_template.c"
 static const AVClass ac3enc_class = { "Fixed-Point AC-3 Encoder", av_default_item_name,
-                                      ac3fixed_options, LIBAVUTIL_VERSION_INT };
+                                      ac3_options, LIBAVUTIL_VERSION_INT };
 
 #include "ac3enc_template.c"
 
@@ -144,7 +144,7 @@ static av_cold int ac3_fixed_encode_init(AVCodecContext *avctx)
 AVCodec ff_ac3_fixed_encoder = {
     .name            = "ac3_fixed",
     .type            = AVMEDIA_TYPE_AUDIO,
-    .id              = CODEC_ID_AC3,
+    .id              = AV_CODEC_ID_AC3,
     .priv_data_size  = sizeof(AC3EncodeContext),
     .init            = ac3_fixed_encode_init,
     .encode2         = ff_ac3_fixed_encode_frame,

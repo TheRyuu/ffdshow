@@ -30,7 +30,7 @@ void TgenericHuffyuvPage::init(void)
 
 bool TgenericHuffyuvPage::enabled(void)
 {
-    return codecId == CODEC_ID_FFVHUFF;
+    return codecId == AV_CODEC_ID_FFVHUFF;
 }
 
 void TgenericHuffyuvPage::cfg2dlg(void)

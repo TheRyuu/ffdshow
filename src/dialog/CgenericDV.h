@@ -12,7 +12,7 @@ public:
     virtual void init(void);
     virtual void cfg2dlg(void);
     virtual bool forCodec(int codecId) {
-        return codecId == CODEC_ID_DVVIDEO;
+        return codecId == AV_CODEC_ID_DVVIDEO;
     }
     virtual bool enabled(void);
     virtual void translate(void);

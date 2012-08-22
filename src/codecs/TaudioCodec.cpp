@@ -29,7 +29,7 @@
 #include "TaudioCodecLibDTS.h"
 #include "TaudioCodecBitstream.h"
 
-TaudioCodec* TaudioCodec::initSource(IffdshowBase *Ideci, IdecAudioSink *Isink, CodecID codecId, const TsampleFormat &fmt, const CMediaType &mt)
+TaudioCodec* TaudioCodec::initSource(IffdshowBase *Ideci, IdecAudioSink *Isink, AVCodecID codecId, const TsampleFormat &fmt, const CMediaType &mt)
 {
     TaudioCodec *movie = getDecLib(codecId, Ideci, Isink);
     if (movie) {
@@ -52,7 +52,7 @@ TaudioCodec::TaudioCodec(IffdshowBase *Ideci, IdecAudioSink *Isink):
 {
 }
 
-TaudioCodec* TaudioCodec::getDecLib(CodecID codecId, IffdshowBase *deci, IdecAudioSink *sink)
+TaudioCodec* TaudioCodec::getDecLib(AVCodecID codecId, IffdshowBase *deci, IdecAudioSink *sink)
 {
     TaudioCodec *movie;
     if (lavc_codec(codecId)) {

@@ -34,7 +34,7 @@ void TgenericFFV1page::init(void)
 
 bool TgenericFFV1page::enabled(void)
 {
-    return codecId == CODEC_ID_FFV1;
+    return codecId == AV_CODEC_ID_FFV1;
 }
 
 void TgenericFFV1page::cfg2dlg(void)

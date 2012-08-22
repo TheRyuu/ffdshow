@@ -55,24 +55,24 @@ bool TimgFilterPostprocBase::pp_codec(int CodecID)
         return true;
     }
     switch (CodecID) {
-        case CODEC_ID_MPEG1VIDEO:
-        case CODEC_ID_MPEG2VIDEO:
+        case AV_CODEC_ID_MPEG1VIDEO:
+        case AV_CODEC_ID_MPEG2VIDEO:
         case CODEC_ID_LIBMPEG2:
-        case CODEC_ID_MPEG4:
-        case CODEC_ID_MSMPEG4V1:
-        case CODEC_ID_MSMPEG4V2:
-        case CODEC_ID_MSMPEG4V3:
-        case CODEC_ID_H263:
-        case CODEC_ID_SVQ1:
-        case CODEC_ID_FLV1:
+        case AV_CODEC_ID_MPEG4:
+        case AV_CODEC_ID_MSMPEG4V1:
+        case AV_CODEC_ID_MSMPEG4V2:
+        case AV_CODEC_ID_MSMPEG4V3:
+        case AV_CODEC_ID_H263:
+        case AV_CODEC_ID_SVQ1:
+        case AV_CODEC_ID_FLV1:
         case CODEC_ID_XVID4:
-        case CODEC_ID_MJPEG:
-        case CODEC_ID_MJPEGB:
-        case CODEC_ID_MSVIDEO1:
-        case CODEC_ID_CINEPAK:
-        case CODEC_ID_VP5:
-        case CODEC_ID_VP6:
-        case CODEC_ID_VP6F:
+        case AV_CODEC_ID_MJPEG:
+        case AV_CODEC_ID_MJPEGB:
+        case AV_CODEC_ID_MSVIDEO1:
+        case AV_CODEC_ID_CINEPAK:
+        case AV_CODEC_ID_VP5:
+        case AV_CODEC_ID_VP6:
+        case AV_CODEC_ID_VP6F:
             return true;
         default:
             return false;

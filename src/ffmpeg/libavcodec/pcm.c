@@ -47,11 +47,11 @@ static av_cold int pcm_decode_init(AVCodecContext *avctx)
     }
 
     switch (avctx->codec->id) {
-    case CODEC_ID_PCM_ALAW:
+    case AV_CODEC_ID_PCM_ALAW:
         for (i = 0; i < 256; i++)
             s->table[i] = alaw2linear(i);
         break;
-    case CODEC_ID_PCM_MULAW:
+    case AV_CODEC_ID_PCM_MULAW:
         for (i = 0; i < 256; i++)
             s->table[i] = ulaw2linear(i);
         break;
@@ -127,8 +127,8 @@ static int pcm_decode_frame(AVCodecContext *avctx, void *data,
     samples = s->frame.data[0];
 
     switch (avctx->codec->id) {
-    case CODEC_ID_PCM_ALAW:
-    case CODEC_ID_PCM_MULAW:
+    case AV_CODEC_ID_PCM_ALAW:
+    case AV_CODEC_ID_PCM_MULAW:
         for (; n > 0; n--) {
             AV_WN16A(samples, s->table[*src++]);
             samples += 2;
@@ -162,5 +162,5 @@ AVCodec ff_ ## name_ ## _decoder = {                                        \
 #define PCM_DECODER(id, sample_fmt_, name, long_name_)
 #endif
 
-PCM_DECODER(CODEC_ID_PCM_ALAW,  AV_SAMPLE_FMT_S16, pcm_alaw,  "PCM A-law");
-PCM_DECODER(CODEC_ID_PCM_MULAW, AV_SAMPLE_FMT_S16, pcm_mulaw, "PCM mu-law");
+PCM_DECODER(AV_CODEC_ID_PCM_ALAW,  AV_SAMPLE_FMT_S16, pcm_alaw,  "PCM A-law");
+PCM_DECODER(AV_CODEC_ID_PCM_MULAW, AV_SAMPLE_FMT_S16, pcm_mulaw, "PCM mu-law");

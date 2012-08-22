@@ -654,7 +654,7 @@ void TsampleFormat::getSpeakersDescr(char_t *buf, size_t buflen, bool shrt) cons
 }
 
 // Static method that returns the output sample format according to the input stream to passthrough
-int TsampleFormat::getSampleFormat(CodecID codecId)
+int TsampleFormat::getSampleFormat(AVCodecID codecId)
 {
     switch (codecId) {
         case CODEC_ID_BITSTREAM_TRUEHD:

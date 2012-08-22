@@ -160,7 +160,7 @@ private:
     bool firstFrame;
     StreamFormat streamformat;
     TglobalSettingsDecAudio *globalSettings;
-    CodecID codecId;
+    AVCodecID codecId;
     bool initConfigDone;
 protected:
     comptrQ<IffdshowBase> deci;
@@ -176,11 +176,11 @@ protected:
 public:
     TaudioParser(IffdshowBase *Ideci, IdecAudioSink *Isink);
     virtual ~TaudioParser();
-    virtual CodecID parseStream(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
-    virtual CodecID getCodecIdFromStream(void);
+    virtual AVCodecID parseStream(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
+    virtual AVCodecID getCodecIdFromStream(void);
     virtual void NewSegment(void);
     virtual void init(void);
-    virtual bool checkOutputFormat(CodecID codecId);
+    virtual bool checkOutputFormat(AVCodecID codecId);
     virtual TaudioParserData getParserData(void);
     void SearchSync() {
         searchSync = true;

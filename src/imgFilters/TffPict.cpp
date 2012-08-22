@@ -190,7 +190,7 @@ void TffPict::readLibavcodec(uint64_t Icsp, const char_t *flnm, const char_t *ex
     if (FAILED(deci->getLibavcodec(&libavcodec))) {
         return;
     }
-    AVCodec *avcodec = libavcodec->avcodec_find_decoder(stricmp(ext, _l(".png")) == 0 ? CODEC_ID_PNG : CODEC_ID_MJPEG);
+    AVCodec *avcodec = libavcodec->avcodec_find_decoder(stricmp(ext, _l(".png")) == 0 ? AV_CODEC_ID_PNG : AV_CODEC_ID_MJPEG);
     if (!avcodec) {
         return;
     }

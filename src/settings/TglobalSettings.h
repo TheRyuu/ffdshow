@@ -88,7 +88,7 @@ protected:
     void fixMissing(int &codecId, int movie1, int movie2);
     void fixMissing(int &codecId, int movie);
     virtual int getDefault(int id);
-    static void cleanupCodecsList(std::vector<CodecID> &ids, Tstrptrs &codecs);
+    static void cleanupCodecsList(std::vector<AVCodecID> &ids, Tstrptrs &codecs);
     TglobalSettingsDec(const Tconfig *Iconfig, int Imode, const char_t *Ireg_child, TintStrColl *Icoll);
 public:
     char_t defaultPreset[MAX_PATH];
@@ -99,7 +99,7 @@ public:
     virtual void load(void);
     virtual void save(void);
 
-    virtual CodecID getCodecId(DWORD fourCC, FOURCC *AVIfourCC) const = 0;
+    virtual AVCodecID getCodecId(DWORD fourCC, FOURCC *AVIfourCC) const = 0;
     virtual const char_t** getFOURCClist(void) const = 0;
     virtual void getCodecsList(Tstrptrs &codecs) const = 0;
 };
@@ -109,7 +109,7 @@ private:
     int forceInCSP;
     void fixNewCodecs(void);
     static const char_t *fourccs[];
-    static const CodecID c_mpeg4[IDFF_MOVIE_MAX + 1], c_mpeg1[IDFF_MOVIE_MAX + 1], c_mpeg2[IDFF_MOVIE_MAX + 1], c_wvc1[IDFF_MOVIE_MAX + 1], c_wmv3[IDFF_MOVIE_MAX + 1], c_wmv2[IDFF_MOVIE_MAX + 1], c_wmv1[IDFF_MOVIE_MAX + 1], c_h264[IDFF_MOVIE_MAX + 1];
+    static const AVCodecID c_mpeg4[IDFF_MOVIE_MAX + 1], c_mpeg1[IDFF_MOVIE_MAX + 1], c_mpeg2[IDFF_MOVIE_MAX + 1], c_wvc1[IDFF_MOVIE_MAX + 1], c_wmv3[IDFF_MOVIE_MAX + 1], c_wmv2[IDFF_MOVIE_MAX + 1], c_wmv1[IDFF_MOVIE_MAX + 1], c_h264[IDFF_MOVIE_MAX + 1];
 protected:
     virtual void reg_op(TregOp &t);
     virtual void reg_op_codec(TregOp &t, TregOp *t2);
@@ -138,7 +138,7 @@ public:
     } sub;
 
     TglobalSettingsDecVideo(const Tconfig *Iconfig, int Imode, TintStrColl *Icoll);
-    virtual CodecID getCodecId(DWORD fourCC, FOURCC *AVIfourCC) const;
+    virtual AVCodecID getCodecId(DWORD fourCC, FOURCC *AVIfourCC) const;
     virtual const char_t** getFOURCClist(void) const;
     virtual void getCodecsList(Tstrptrs &codecs) const;
 };
@@ -146,7 +146,7 @@ public:
 struct TglobalSettingsDecAudio : public TglobalSettingsDec {
 private:
     static const char_t *wave_formats[];
-    static const CodecID c_mp123[IDFF_MOVIE_MAX + 1], c_ac3[IDFF_MOVIE_MAX + 1], c_dts[IDFF_MOVIE_MAX + 1], c_aac[IDFF_MOVIE_MAX + 1], c_vorbis[IDFF_MOVIE_MAX + 1];
+    static const AVCodecID c_mp123[IDFF_MOVIE_MAX + 1], c_ac3[IDFF_MOVIE_MAX + 1], c_dts[IDFF_MOVIE_MAX + 1], c_aac[IDFF_MOVIE_MAX + 1], c_vorbis[IDFF_MOVIE_MAX + 1];
 protected:
     virtual void reg_op_codec(TregOp &t, TregOp *t2);
     virtual int getDefault(int id);
@@ -166,7 +166,7 @@ public:
     char_t winamp2dir[MAX_PATH];
     virtual void load(void);
     virtual void save(void);
-    virtual CodecID getCodecId(DWORD fourCC, FOURCC *AVIfourCC) const;
+    virtual AVCodecID getCodecId(DWORD fourCC, FOURCC *AVIfourCC) const;
     virtual const char_t** getFOURCClist(void) const;
     virtual void getCodecsList(Tstrptrs &codecs) const;
 };

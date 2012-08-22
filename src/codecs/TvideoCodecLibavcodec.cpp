@@ -59,10 +59,10 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci, IencVideoSink 
 {
     create();
     if (ok) {
-        encoders.push_back(new Tencoder(_l("MJPEG"), CODEC_ID_MJPEG));
-        encoders.push_back(new Tencoder(_l("HuffYUV (FFmpeg variant)"), CODEC_ID_FFVHUFF));
-        encoders.push_back(new Tencoder(_l("FFV1"), CODEC_ID_FFV1));
-        encoders.push_back(new Tencoder(_l("DV"), CODEC_ID_DVVIDEO));
+        encoders.push_back(new Tencoder(_l("MJPEG"), AV_CODEC_ID_MJPEG));
+        encoders.push_back(new Tencoder(_l("HuffYUV (FFmpeg variant)"), AV_CODEC_ID_FFVHUFF));
+        encoders.push_back(new Tencoder(_l("FFV1"), AV_CODEC_ID_FFV1));
+        encoders.push_back(new Tencoder(_l("DV"), AV_CODEC_ID_DVVIDEO));
     }
 }
 void TvideoCodecLibavcodec::create(void)
@@ -150,7 +150,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
     prior_out_rtStop = 0;
     rtStart = rtStop = REFTIME_INVALID;
     prior_in_rtStart = prior_in_rtStop = REFTIME_INVALID;
-    mpeg2_in_doubt = codecId == CODEC_ID_MPEG2VIDEO;
+    mpeg2_in_doubt = codecId == AV_CODEC_ID_MPEG2VIDEO;
 
     int using_dxva = 0;
 
@@ -180,10 +180,10 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
     }
 
     if (codecId == CODEC_ID_H264_DXVA) {
-        codecId = CODEC_ID_H264;
+        codecId = AV_CODEC_ID_H264;
         using_dxva = 1;
     } else if (codecId == CODEC_ID_VC1_DXVA) {
-        codecId = CODEC_ID_VC1;
+        codecId = AV_CODEC_ID_VC1;
         using_dxva = 1;
     }
 
@@ -195,7 +195,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
     avctx->thread_type = thread_type;
     avctx->thread_count = threadcount;
     avctx->h264_using_dxva = using_dxva;
-    if (codecId == CODEC_ID_H264) {
+    if (codecId == AV_CODEC_ID_H264) {
         // If we do not set this, first B-frames before the IDR pictures are dropped.
         avctx->has_b_frames = 1;
     }
@@ -219,13 +219,13 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
     avctx->error_concealment = FF_EC_GUESS_MVS | FF_EC_DEBLOCK;
     avctx->err_recognition   = AV_EF_CRCCHECK | AV_EF_BITSTREAM | AV_EF_BUFFER | AV_EF_COMPLIANT | AV_EF_AGGRESSIVE;
 #endif
-    if (codecId == CODEC_ID_MJPEG) {
+    if (codecId == AV_CODEC_ID_MJPEG) {
         avctx->flags |= CODEC_FLAG_TRUNCATED;
     }
     if (mpeg12_codec(codecId) && deci->getParam2(IDFF_fastMpeg2)) {
         avctx->flags2 = CODEC_FLAG2_FAST;
     }
-    if (codecId == CODEC_ID_H264)
+    if (codecId == AV_CODEC_ID_H264)
         if (int skip = deci->getParam2(IDFF_fastH264)) {
             avctx->skip_loop_filter = skip & 2 ? AVDISCARD_ALL : AVDISCARD_NONREF;
         }
@@ -238,7 +238,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
         delete extradata;
     }
     extradata = new Textradata(mt, FF_INPUT_BUFFER_PADDING_SIZE);
-    if (extradata->size > 0 && (codecId != CODEC_ID_H264 || fcc == FOURCC_AVC1)) {
+    if (extradata->size > 0 && (codecId != AV_CODEC_ID_H264 || fcc == FOURCC_AVC1)) {
         avctx->extradata_size = (int)extradata->size;
         avctx->extradata = extradata->data;
         sendextradata = mpeg12_codec(codecId);
@@ -292,7 +292,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
                 avctx->extradata_size = (int)extradata->size;
             }
         }
-    } else if (codecId == CODEC_ID_VP6 || codecId == CODEC_ID_VP6A || codecId == CODEC_ID_VP6F) {
+    } else if (codecId == AV_CODEC_ID_VP6 || codecId == AV_CODEC_ID_VP6A || codecId == AV_CODEC_ID_VP6F) {
         // Copyright (C) 2011 Hendrik Leppkes
         // for FLV cropping
         int cropWidth = 0, cropHeight = 0;
@@ -331,7 +331,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
         BITMAPINFOHEADER bih;
         ExtractBIH(mt, &bih);
         avctx->bits_per_coded_sample = bih.biBitCount;
-        if (avctx->bits_per_coded_sample <= 8 || codecId == CODEC_ID_PNG) {
+        if (avctx->bits_per_coded_sample <= 8 || codecId == AV_CODEC_ID_PNG) {
             const void *pal;
             if (!extradata->data)
                 switch (avctx->bits_per_coded_sample) {
@@ -355,7 +355,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
             }
             memcpy(palette, pal, palette_size);
         }
-    } else if (extradata->data && (codecId == CODEC_ID_RV10 || codecId == CODEC_ID_RV20)) {
+    } else if (extradata->data && (codecId == AV_CODEC_ID_RV10 || codecId == AV_CODEC_ID_RV20)) {
 #pragma pack(push, 1)
         struct rvinfo {
             /*     DWORD dwSize, fcc1, fcc2;
@@ -394,7 +394,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
     sourceExt.ConvertToLowerCase();
 
     if (mpeg12_codec(codecId)
-            || (codecId == CODEC_ID_H264
+            || (codecId == AV_CODEC_ID_H264
                 && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_CCV1))) {
         // avi and ogm files do not have access unit delimiter
         // Neuview Source is an AVI splitter that does not implement IFileSourceFilter.
@@ -417,7 +417,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict, FOURCC fcc, const
     }
 
     // check color space of FRAPS (in AVI). Works only if the file has proper chunk.
-    if (codecId == CODEC_ID_FRAPS && avctx->pix_fmt == PIX_FMT_NONE) {
+    if (codecId == AV_CODEC_ID_FRAPS && avctx->pix_fmt == PIX_FMT_NONE) {
         BITMAPINFOHEADER bih;
         ExtractBIH(mt, &bih);
         if (bih.biBitCount == 24) {
@@ -472,7 +472,7 @@ REFERENCE_TIME TvideoCodecLibavcodec::getDuration()
     REFERENCE_TIME duration = REF_SECOND_MULT / 100;
     if (avctx && avctx->time_base.num && avctx->time_base.den) {
         duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
-        if (codecId == CODEC_ID_H264) {
+        if (codecId == AV_CODEC_ID_H264) {
             duration *= 2;
         }
     }
@@ -525,10 +525,10 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
         // If 5 byte access unit delimiter plus next start code is splitted into chunks, it would be slipped by.
         // Don't care too much, let's wait for the next one.
         int isMPEG2 = isReallyMPEG2(src, srcLen0);
-        if (codecId == CODEC_ID_MPEG2VIDEO && !isMPEG2) {
+        if (codecId == AV_CODEC_ID_MPEG2VIDEO && !isMPEG2) {
             DPRINTF(L"Re-initializing libavcodec. Changing from CODEC_ID_MPEG2VIDEO to CODEC_ID_H264.");
             end();
-            codecId = CODEC_ID_H264;
+            codecId = AV_CODEC_ID_H264;
             FOURCC fcc = FOURCC_H264;
             TffPictBase pict;
             CMediaType mt(&MEDIATYPE_Video);
@@ -549,7 +549,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
     }
 
     bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
-    if (codecId == CODEC_ID_FFV1) {
+    if (codecId == AV_CODEC_ID_FFV1) {
         // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
         if (!wasKey)
             if (isSyncPoint) {
@@ -565,7 +565,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
 
     unsigned int skip = 0;
 
-    if (src && (codecId == CODEC_ID_RV10 || codecId == CODEC_ID_RV20) && avctx->sub_id) {
+    if (src && (codecId == AV_CODEC_ID_RV10 || codecId == AV_CODEC_ID_RV20) && avctx->sub_id) {
         avctx->slice_count = src[0] + 1;
         if (!avctx->slice_offset) {
             avctx->slice_offset = (int*)malloc(sizeof(int) * 1000);
@@ -618,7 +618,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
         inPosB = 0;
     }
 
-    if (codecId == CODEC_ID_H264) {
+    if (codecId == AV_CODEC_ID_H264) {
         if (autoSkipingLoopFilter) {
             if (deciV->getLate() <= 0) {
                 avctx->skip_loop_filter = initialSkipLoopFilter;
@@ -707,7 +707,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
             } else {
                 avpkt.data = src ? ffbuf : NULL;
                 avpkt.size = size;
-                if (codecId == CODEC_ID_H264) {
+                if (codecId == AV_CODEC_ID_H264) {
                     if (h264RandomAccess.search(avpkt.data, avpkt.size)) {
                         used_bytes = libavcodec->avcodec_decode_video2(avctx, frame, &got_picture, &avpkt);
                         if (used_bytes < 0) {
@@ -730,7 +730,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
 
         if (got_picture && frame->data[0]) {
             int frametype;
-            if (avctx->codec_id == CODEC_ID_H261) {
+            if (avctx->codec_id == AV_CODEC_ID_H261) {
                 frametype = FRAME_TYPE::I;
             } else {
                 switch (frame->pict_type) {
@@ -772,7 +772,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
                                  FIELD_TYPE::INT_BFF) :
                                     FIELD_TYPE::PROGRESSIVE_FRAME;
 
-                if (codecId == CODEC_ID_MPEG2VIDEO) {
+                if (codecId == AV_CODEC_ID_MPEG2VIDEO) {
                     if (mpeg2_new_sequence) {
                         fieldtype |= FIELD_TYPE::SEQ_START;
                     }
@@ -801,7 +801,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
                 }
 
                 // Correct impossible sar for DVD
-                if (codecId == CODEC_ID_MPEG2VIDEO) {
+                if (codecId == AV_CODEC_ID_MPEG2VIDEO) {
                     r.sar = guessMPEG2sar(r, avctx->sample_aspect_ratio2, containerSar);
                 }
 
@@ -951,7 +951,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
                 hr = sinkD->deliverDecodedSample(pict);
                 if (hr != S_OK
                         || (used_bytes && sinkD->acceptsManyFrames() != S_OK)
-                        || avctx->codec_id == CODEC_ID_LOCO) {
+                        || avctx->codec_id == AV_CODEC_ID_LOCO) {
                     return hr;
                 }
             }
@@ -961,7 +961,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src, size_t srcLe
             }
         }
 
-        if (!used_bytes && codecId == CODEC_ID_SVQ3) {
+        if (!used_bytes && codecId == AV_CODEC_ID_SVQ3) {
             return S_OK;
         }
 
@@ -1040,7 +1040,7 @@ const char_t* TvideoCodecLibavcodec::getName(void) const
 void TvideoCodecLibavcodec::getEncoderInfo(char_t *buf, size_t buflen) const
 {
     int xvid_build, divx_version, divx_build, lavc_build;
-    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || codecId == CODEC_ID_FLV1)) {
+    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || codecId == AV_CODEC_ID_FLV1)) {
         libavcodec->avcodec_get_encoder_info(avctx, &xvid_build, &divx_version, &divx_build, &lavc_build);
         if (xvid_build) {
             tsnprintf_s(buf, buflen, _TRUNCATE, _l("XviD build %i"), xvid_build);
@@ -1102,7 +1102,7 @@ bool TvideoCodecLibavcodec::drawMV(unsigned char *dst, unsigned int dstdx, strid
 
     const int shift = 1 + ((frame->play_flags & CODEC_FLAG_QPEL) ? 1 : 0);
     const int mv_sample_log2 = 4 - frame->motion_subsample_log2;
-    const int mv_stride = (frame->mb_width << mv_sample_log2) + (avctx->codec_id == CODEC_ID_H264 ? 0 : 1);
+    const int mv_stride = (frame->mb_width << mv_sample_log2) + (avctx->codec_id == AV_CODEC_ID_H264 ? 0 : 1);
     int direction = 0;
 
     int mulx = (dstdx << 12) / avctx->width;
@@ -1168,14 +1168,14 @@ bool TvideoCodecLibavcodec::drawMV(unsigned char *dst, unsigned int dstdx, strid
 void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps, unsigned int outDx, unsigned int outDy)
 {
     switch (coCfg->codecId) {
-        case CODEC_ID_FFVHUFF:
+        case AV_CODEC_ID_FFVHUFF:
             if (coCfg->huffyuv_csp == 0) {
                 csps.add(FF_CSP_422P);
             } else {
                 csps.add(FF_CSP_420P);
             }
             break;
-        case CODEC_ID_FFV1:
+        case AV_CODEC_ID_FFV1:
             switch (coCfg->ffv1_csp) {
                 case FOURCC_YV12:
                     csps.add(FF_CSP_420P);
@@ -1197,7 +1197,7 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps, unsigned int out
                     break;
             }
             break;
-        case CODEC_ID_MJPEG:
+        case AV_CODEC_ID_MJPEG:
             csps.add(FF_CSP_420P | FF_CSP_FLAGS_YUV_JPEG);
             break;
         default:
@@ -1208,7 +1208,7 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps, unsigned int out
 
 bool TvideoCodecLibavcodec::supExtradata(void)
 {
-    return coCfg->codecId == CODEC_ID_HUFFYUV || coCfg->codecId == CODEC_ID_FFVHUFF;
+    return coCfg->codecId == AV_CODEC_ID_HUFFYUV || coCfg->codecId == AV_CODEC_ID_FFVHUFF;
 }
 bool TvideoCodecLibavcodec::getExtradata(const void* *ptr, size_t *len)
 {
@@ -1226,7 +1226,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode, uint64_t csp, const 
 {
     _mm_empty();
 
-    avcodec = libavcodec->avcodec_find_encoder((CodecID)coCfg->codecId);
+    avcodec = libavcodec->avcodec_find_encoder((AVCodecID)coCfg->codecId);
     if (!avcodec) {
         return ICERR_ERROR;
     }
@@ -1249,7 +1249,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode, uint64_t csp, const 
         avctx->time_base.num = (int)(0.5 + (double)avctx->time_base.num / avctx->time_base.den * ((1 << 16) - 1));
         avctx->time_base.den = (1 << 16) - 1;
     }
-    if (coCfg->codecId == CODEC_ID_FFV1) {
+    if (coCfg->codecId == AV_CODEC_ID_FFV1) {
         avctx->gop_size = coCfg->ffv1_key_interval;
     }
 
@@ -1274,7 +1274,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode, uint64_t csp, const 
         avctx->qmax_i = avctx->qmax = avctx->qmax_b = coCfg->getMinMaxQuant().second;
     }
 
-    if (coCfg->codecId != CODEC_ID_MJPEG) {
+    if (coCfg->codecId != AV_CODEC_ID_MJPEG) {
         avctx->i_quant_factor = coCfg->i_quant_factor / 100.0f;
         avctx->i_quant_offset = coCfg->i_quant_offset / 100.0f;
     } else {
@@ -1297,7 +1297,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode, uint64_t csp, const 
 
     avctx->pix_fmt = PIX_FMT_YUV420P;
     switch (coCfg->codecId) {
-        case CODEC_ID_FFVHUFF: {
+        case AV_CODEC_ID_FFVHUFF: {
             avctx->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
             avctx->prediction_method = coCfg->huffyuv_pred;
             switch (coCfg->huffyuv_csp) {
@@ -1311,7 +1311,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode, uint64_t csp, const 
             avctx->context_model = coCfg->huffyuv_ctx;
             break;
         }
-        case CODEC_ID_FFV1: {
+        case AV_CODEC_ID_FFV1: {
             avctx->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
             avctx->coder_type = coCfg->ffv1_coder;
             avctx->context_model = coCfg->ffv1_context;
@@ -1337,7 +1337,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode, uint64_t csp, const 
             }
             break;
         }
-        case CODEC_ID_MJPEG:
+        case AV_CODEC_ID_MJPEG:
             avctx->pix_fmt = PIX_FMT_YUVJ420P;
             break;
     }
@@ -1512,7 +1512,7 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict, TencFrameParams &pa
 
 const char* TvideoCodecLibavcodec::get_current_idct(void)
 {
-    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || codecId == CODEC_ID_FLV1)) {
+    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || codecId == AV_CODEC_ID_FLV1)) {
         return libavcodec->avcodec_get_current_idct(avctx);
     } else {
         return NULL;
@@ -1550,7 +1550,7 @@ void TvideoCodecLibavcodec::Th264RandomAccess::onSeek(void)
 // return 0:not found, don't send it to libavcodec, 1:send it anyway.
 int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
 {
-    if (parent->codecId == CODEC_ID_H264 && recovery_mode == 1) {
+    if (parent->codecId == AV_CODEC_ID_H264 && recovery_mode == 1) {
         if (!buf || !buf_size) {
             return 0;
         }
@@ -1581,7 +1581,7 @@ int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
 
 void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_ptr)
 {
-    if (parent->codecId != CODEC_ID_H264) {
+    if (parent->codecId != AV_CODEC_ID_H264) {
         return;
     }
 

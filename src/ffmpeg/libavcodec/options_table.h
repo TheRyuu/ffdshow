@@ -25,6 +25,7 @@
 
 #include "libavutil/opt.h"
 #include "avcodec.h"
+#include "config.h"
 
 #define OFFSET(x) offsetof(AVCodecContext,x)
 #define DEFAULT 0 //should be NAN but it does not work as it is not a constant in glibc as required by ANSI/ISO C
@@ -193,7 +194,6 @@ static const AVOption options[]={
 {"int", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_IDCT_INT }, INT_MIN, INT_MAX, V|E|D, "idct"},
 {"simple", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_IDCT_SIMPLE }, INT_MIN, INT_MAX, V|E|D, "idct"},
 {"simplemmx", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_IDCT_SIMPLEMMX }, INT_MIN, INT_MAX, V|E|D, "idct"},
-{"libmpeg2mmx", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_IDCT_LIBMPEG2MMX }, INT_MIN, INT_MAX, V|E|D, "idct"},
 {"h264", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_IDCT_H264 }, INT_MIN, INT_MAX, V|E|D, "idct"},
 {"vp3", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_IDCT_VP3 }, INT_MIN, INT_MAX, V|E|D, "idct"},
 {"xvidmmx", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_IDCT_XVIDMMX }, INT_MIN, INT_MAX, V|E|D, "idct"},
@@ -306,6 +306,10 @@ static const AVOption options[]={
 {"aac_low", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_AAC_LOW }, INT_MIN, INT_MAX, A|E, "profile"},
 {"aac_ssr", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_AAC_SSR }, INT_MIN, INT_MAX, A|E, "profile"},
 {"aac_ltp", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_AAC_LTP }, INT_MIN, INT_MAX, A|E, "profile"},
+{"aac_he", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_AAC_HE }, INT_MIN, INT_MAX, A|E, "profile"},
+{"aac_he_v2", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_AAC_HE_V2 }, INT_MIN, INT_MAX, A|E, "profile"},
+{"aac_ld", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_AAC_LD }, INT_MIN, INT_MAX, A|E, "profile"},
+{"aac_eld", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_AAC_ELD }, INT_MIN, INT_MAX, A|E, "profile"},
 {"dts", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_DTS }, INT_MIN, INT_MAX, A|E, "profile"},
 {"dts_es", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_DTS_ES }, INT_MIN, INT_MAX, A|E, "profile"},
 {"dts_96_24", NULL, 0, AV_OPT_TYPE_CONST, {.dbl = FF_PROFILE_DTS_96_24 }, INT_MIN, INT_MAX, A|E, "profile"},

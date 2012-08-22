@@ -90,7 +90,7 @@ HRESULT TffdshowPageEnc::OnConnect(IUnknown *pUnk)
         if (ve) {
             ve->setIffdshowBase(IID_IffdshowEnc, deci);
         }
-        codecId = (CodecID)cfgGet(IDFF_enc_codecId);
+        codecId = (AVCodecID)cfgGet(IDFF_enc_codecId);
     }
     return FAILED(hr) ? hr : S_OK;
 }
@@ -272,7 +272,7 @@ void TffdshowPageEnc::quick2dlg(bool redraw)
 
 void TffdshowPageEnc::codec2dlg(void)
 {
-    codecId = (CodecID)cfgGet(IDFF_enc_codecId);
+    codecId = (AVCodecID)cfgGet(IDFF_enc_codecId);
     SendDlgItemMessage(m_hwnd, IDC_CBX_FOURCC, CB_RESETCONTENT, 0, 0);
     int cnt = cbxGetItemCount(IDC_CBX_ENCODER);
     for (int i = 0; i < cnt; i++)
@@ -296,7 +296,7 @@ void TffdshowPageEnc::codec2dlg(void)
                     fourcc2dlg();
                 }
                 SendDlgItemMessage(m_hwnd, IDC_CBX_MODES, CB_RESETCONTENT, 0, 0);
-                if (sup_CBR(codecId) && codecId != CODEC_ID_MJPEG) {
+                if (sup_CBR(codecId) && codecId != AV_CODEC_ID_MJPEG) {
                     cbxAdd(IDC_CBX_MODES, _(IDC_CBX_MODES, encModeNames[ENC_MODE::CBR]), ENC_MODE::CBR);
                 }
                 if (sup_VBR_QUAL(codecId)) {

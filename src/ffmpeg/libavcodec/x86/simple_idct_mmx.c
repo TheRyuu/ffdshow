@@ -21,7 +21,11 @@
  */
 #include "libavcodec/dsputil.h"
 #include "libavcodec/simple_idct.h"
+#include "libavutil/internal.h"
+#include "libavutil/mem.h"
 #include "dsputil_mmx.h"
+
+#if HAVE_INLINE_ASM
 
 /*
 23170.475006
@@ -1161,3 +1165,5 @@ void ff_simple_idct_add_mmx(uint8_t *dest, int line_size, DCTELEM *block)
     idct(block);
     ff_add_pixels_clamped_mmx(block, dest, line_size);
 }
+
+#endif /* HAVE_INLINE_ASM */

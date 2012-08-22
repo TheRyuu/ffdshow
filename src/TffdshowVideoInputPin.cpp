@@ -129,7 +129,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
             // Read WMP version from the following registry key
             regErr = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _l("SOFTWARE\\Microsoft\\MediaPlayer\\Setup\\Installed Versions"), 0, KEY_READ, &hKey);
             if (regErr != ERROR_SUCCESS) {
-                return res == CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
+                return res == AV_CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
             }
 
             DWORD dwType;
@@ -142,7 +142,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
             }
 
             if (regErr != ERROR_SUCCESS || dwType != REG_BINARY) {
-                return res == CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
+                return res == AV_CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
             }
 
             if (buf[2] >= 0x0b) { // Third byte is the major version number
@@ -239,7 +239,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
     if (pCompatibleFilter != NULL) {
         return S_OK;
     }
-    return res == CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
+    return res == AV_CODEC_ID_NONE ? VFW_E_TYPE_NOT_ACCEPTED : S_OK;
 }
 
 STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
@@ -420,7 +420,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
     char_t pomS[60];
     DPRINTF(_l("TffdshowVideoInputPin::initVideo: %s, width:%i, height:%i, aspectX:%i, aspectY:%i"), fourcc2str(hdr2fourcc(&biIn.bmiHeader, &mt.subtype), pomS, 60) , pictIn.rectFull.dx, pictIn.rectFull.dy, pictIn.rectFull.dar().num, pictIn.rectFull.dar().den);
 again:
-    codecId = (CodecID)getVideoCodecId(&biIn.bmiHeader, &mt.subtype, &biIn.bmiHeader.biCompression);
+    codecId = (AVCodecID)getVideoCodecId(&biIn.bmiHeader, &mt.subtype, &biIn.bmiHeader.biCompression);
 
     // FIXME Experimental //
     // VC1 (in EVO) stream may have attached media type during playback (say, once per 5 second).
@@ -442,10 +442,10 @@ again:
                     codec = video = NULL;
                     switch (codecId) {
                         case CODEC_ID_H264_QUICK_SYNC:
-                            codecId = CODEC_ID_H264;
+                            codecId = AV_CODEC_ID_H264;
                             break;
                         case CODEC_ID_MPEG2_QUICK_SYNC:
-                            codecId = CODEC_ID_MPEG2VIDEO;
+                            codecId = AV_CODEC_ID_MPEG2VIDEO;
                             break;
                         case CODEC_ID_VC1_QUICK_SYNC:
                             codecId = CODEC_ID_WMV9_LIB;
@@ -466,7 +466,7 @@ again:
         }
     }
     DPRINTF(_l("TffdshowVideoInputPin::initVideo Codec detected : %s"), getCodecName(codecId));
-    if (codecId == CODEC_ID_NONE) {
+    if (codecId == AV_CODEC_ID_NONE) {
         if (pCompatibleFilter != NULL) {
             rawDecode = true;
             if (video) {
@@ -549,7 +549,7 @@ void TffdshowVideoInputPin::done()
     codec = video = NULL;
     memset(&biIn, 0, sizeof(biIn));
     avgTimePerFrame = 0;
-    codecId = CODEC_ID_NONE;
+    codecId = AV_CODEC_ID_NONE;
     rawDecode = false;
     autosubflnm[0] = oldSubSearchDir[0] = '\0';
     oldSubHeuristic = false;
@@ -769,7 +769,7 @@ HRESULT TffdshowVideoInputPin::getMovieSource(const TvideoCodecDec* *moviePtr)
 
 FOURCC TffdshowVideoInputPin::getMovieFOURCC()
 {
-    return codecId != CODEC_ID_NONE ? biIn.bmiHeader.biCompression : 0;
+    return codecId != AV_CODEC_ID_NONE ? biIn.bmiHeader.biCompression : 0;
 }
 
 HRESULT TffdshowVideoInputPin::getFrameTime(unsigned int framenum, unsigned int *sec)
@@ -861,7 +861,7 @@ HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf, size_t buflen)
 
 bool TffdshowVideoInputPin::waitForKeyframes()
 {
-    return !rawDecode && codecId != CODEC_ID_H264 && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression != FOURCC_MPEG);
+    return !rawDecode && codecId != AV_CODEC_ID_H264 && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression != FOURCC_MPEG);
 }
 
 void TffdshowVideoInputPin::setSampleSkipped()
@@ -896,7 +896,7 @@ int TffdshowVideoInputPin::getVideoCodecId(const BITMAPINFOHEADER *hdr, const GU
     FOURCC fourcc = 0;
     int id = fv->getVideoCodecId(hdr, subtype, &fourcc);
     if (connectedSplitter == PBDA_DTFilter && fourcc == FOURCC_MPEG) {
-        return CODEC_ID_NONE;
+        return AV_CODEC_ID_NONE;
     }
     if (AVIfourcc && fourcc) {
         *AVIfourcc = fourcc;

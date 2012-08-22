@@ -48,7 +48,7 @@ public:
     virtual void translate(void);
 
     int qmin, qmax;
-    CodecID codecId;
+    AVCodecID codecId;
 };
 
 class TffdshowPageEncVFW : public TffdshowPageEnc

@@ -96,7 +96,8 @@ void av_fast_padded_malloc(void *ptr, unsigned int *size, size_t min_size)
 /* encoder management */
 static AVCodec *first_avcodec = NULL;
 
-AVCodec *av_codec_next(AVCodec *c){
+AVCodec *av_codec_next(const AVCodec *c)
+{
     if(c) return c->next;
     else  return first_avcodec;
 }
@@ -112,12 +113,12 @@ static void avcodec_init(void)
     ff_dsputil_static_init();
 }
 
-int av_codec_is_encoder(AVCodec *codec)
+int av_codec_is_encoder(const AVCodec *codec)
 {
     return codec && (codec->encode || codec->encode2);
 }
 
-int av_codec_is_decoder(AVCodec *codec)
+int av_codec_is_decoder(const AVCodec *codec)
 {
     return codec && codec->decode;
 }
@@ -197,18 +198,18 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height,
         h_align=8;
         break;
     case PIX_FMT_YUV410P:
-        if(s->codec_id == CODEC_ID_SVQ1){
+        if(s->codec_id == AV_CODEC_ID_SVQ1){
             w_align=64;
             h_align=64;
         }
     case PIX_FMT_RGB555:
-        if(s->codec_id == CODEC_ID_RPZA){
+        if(s->codec_id == AV_CODEC_ID_RPZA){
             w_align=4;
             h_align=4;
         }
         break;
     case PIX_FMT_BGR24:
-        if((s->codec_id == CODEC_ID_MSZH) || (s->codec_id == CODEC_ID_ZLIB)){
+        if((s->codec_id == AV_CODEC_ID_MSZH) || (s->codec_id == AV_CODEC_ID_ZLIB)){
             w_align=4;
             h_align=4;
         }
@@ -221,7 +222,7 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height,
 
     *width = FFALIGN(*width , w_align);
     *height= FFALIGN(*height, h_align);
-    if (s->codec_id == CODEC_ID_H264)
+    if (s->codec_id == AV_CODEC_ID_H264)
         *height+=2; // some of the optimized chroma MC reads one line too much
 
     for (i = 0; i < 4; i++)
@@ -624,7 +625,7 @@ AVFrame *avcodec_alloc_frame(void){
     return pic;
 }
 
-int attribute_align_arg avcodec_open2(AVCodecContext *avctx, AVCodec *codec, AVDictionary **options)
+int attribute_align_arg avcodec_open2(AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options)
 {
     int ret = 0;
     AVDictionary *tmp = NULL;
@@ -715,7 +716,7 @@ int attribute_align_arg avcodec_open2(AVCodecContext *avctx, AVCodec *codec, AVD
 
     avctx->codec = codec;
     if ((avctx->codec_type == AVMEDIA_TYPE_UNKNOWN || avctx->codec_type == codec->type) &&
-        avctx->codec_id == CODEC_ID_NONE) {
+        avctx->codec_id == AV_CODEC_ID_NONE) {
         avctx->codec_type = codec->type;
         avctx->codec_id   = codec->id;
     }
@@ -1315,7 +1316,7 @@ av_cold int avcodec_close(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec *avcodec_find_encoder(enum CodecID id)
+AVCodec *avcodec_find_encoder(enum AVCodecID id)
 {
     AVCodec *p, *experimental=NULL;
     p = first_avcodec;
@@ -1345,7 +1346,7 @@ AVCodec *avcodec_find_encoder_by_name(const char *name)
     return NULL;
 }
 
-AVCodec *avcodec_find_decoder(enum CodecID id)
+AVCodec *avcodec_find_decoder(enum AVCodecID id)
 {
     AVCodec *p;
     p = first_avcodec;
@@ -1449,51 +1450,51 @@ void avcodec_default_free_buffers(AVCodecContext *avctx)
     }
 }
 
-int av_get_exact_bits_per_sample(enum CodecID codec_id)
+int av_get_exact_bits_per_sample(enum AVCodecID codec_id)
 {
     switch(codec_id){
-    case CODEC_ID_ADPCM_CT:
-    case CODEC_ID_ADPCM_IMA_WS:
-    case CODEC_ID_ADPCM_YAMAHA:
+    case AV_CODEC_ID_ADPCM_CT:
+    case AV_CODEC_ID_ADPCM_IMA_WS:
+    case AV_CODEC_ID_ADPCM_YAMAHA:
         return 4;
-    case CODEC_ID_PCM_ALAW:
-    case CODEC_ID_PCM_MULAW:
-    case CODEC_ID_PCM_S8:
-    case CODEC_ID_PCM_U8:
+    case AV_CODEC_ID_PCM_ALAW:
+    case AV_CODEC_ID_PCM_MULAW:
+    case AV_CODEC_ID_PCM_S8:
+    case AV_CODEC_ID_PCM_U8:
         return 8;
-    case CODEC_ID_PCM_S16BE:
-    case CODEC_ID_PCM_S16LE:
-    case CODEC_ID_PCM_U16BE:
-    case CODEC_ID_PCM_U16LE:
+    case AV_CODEC_ID_PCM_S16BE:
+    case AV_CODEC_ID_PCM_S16LE:
+    case AV_CODEC_ID_PCM_U16BE:
+    case AV_CODEC_ID_PCM_U16LE:
         return 16;
-    case CODEC_ID_PCM_S24DAUD:
-    case CODEC_ID_PCM_S24BE:
-    case CODEC_ID_PCM_S24LE:
-    case CODEC_ID_PCM_U24BE:
-    case CODEC_ID_PCM_U24LE:
+    case AV_CODEC_ID_PCM_S24DAUD:
+    case AV_CODEC_ID_PCM_S24BE:
+    case AV_CODEC_ID_PCM_S24LE:
+    case AV_CODEC_ID_PCM_U24BE:
+    case AV_CODEC_ID_PCM_U24LE:
         return 24;
-    case CODEC_ID_PCM_S32BE:
-    case CODEC_ID_PCM_S32LE:
-    case CODEC_ID_PCM_U32BE:
-    case CODEC_ID_PCM_U32LE:
+    case AV_CODEC_ID_PCM_S32BE:
+    case AV_CODEC_ID_PCM_S32LE:
+    case AV_CODEC_ID_PCM_U32BE:
+    case AV_CODEC_ID_PCM_U32LE:
         return 32;
     default:
         return 0;
     }
 }
 
-int av_get_bits_per_sample(enum CodecID codec_id)
+int av_get_bits_per_sample(enum AVCodecID codec_id)
 {
     switch (codec_id) {
-    case CODEC_ID_ADPCM_SBPRO_2:
+    case AV_CODEC_ID_ADPCM_SBPRO_2:
         return 2;
-    case CODEC_ID_ADPCM_SBPRO_3:
+    case AV_CODEC_ID_ADPCM_SBPRO_3:
         return 3;
-    case CODEC_ID_ADPCM_SBPRO_4:
-    case CODEC_ID_ADPCM_IMA_WAV:
-    case CODEC_ID_ADPCM_IMA_QT:
-    case CODEC_ID_ADPCM_SWF:
-    case CODEC_ID_ADPCM_MS:
+    case AV_CODEC_ID_ADPCM_SBPRO_4:
+    case AV_CODEC_ID_ADPCM_IMA_WAV:
+    case AV_CODEC_ID_ADPCM_IMA_QT:
+    case AV_CODEC_ID_ADPCM_SWF:
+    case AV_CODEC_ID_ADPCM_MS:
         return 4;
     default:
         return av_get_exact_bits_per_sample(codec_id);

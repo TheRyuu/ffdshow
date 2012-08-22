@@ -18,7 +18,7 @@ protected:
     Tcodec(IffdshowBase *Ideci);
     virtual ~Tcodec();
 public:
-    CodecID codecId;
+    AVCodecID codecId;
     virtual int getType(void) const = 0;
     virtual const char_t* getName(void) const {
         return getMovieSourceName(getType());

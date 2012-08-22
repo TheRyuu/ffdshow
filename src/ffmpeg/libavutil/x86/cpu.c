@@ -22,9 +22,10 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "libavutil/x86_cpu.h"
+#include "libavutil/x86/asm.h"
 #include "libavutil/cpu.h"
 
+#if HAVE_INLINE_ASM
 /* ebx saving is necessary for PIC. gcc seems unable to see it alone */
 #define cpuid(index, eax, ebx, ecx, edx)                        \
     __asm__ volatile (                                          \
@@ -33,9 +34,35 @@
         "xchg   %%"REG_b", %%"REG_S                             \
         : "=a" (eax), "=S" (ebx), "=c" (ecx), "=d" (edx)        \
         : "0" (index))
+#elif HAVE_CPUID
+#include <intrin.h>
 
+#define cpuid(index, eax, ebx, ecx, edx)        \
+    do {                                        \
+        int info[4];                            \
+        __cpuid(info, index);                   \
+        eax = info[0];                          \
+        ebx = info[1];                          \
+        ecx = info[2];                          \
+        edx = info[3];                          \
+    } while (0)
+#endif /* HAVE_CPUID */
+
+#if HAVE_INLINE_ASM
 #define xgetbv(index, eax, edx)                                 \
     __asm__ (".byte 0x0f, 0x01, 0xd0" : "=a"(eax), "=d"(edx) : "c" (index))
+#elif HAVE_XGETBV
+#include <immintrin.h>
+
+#define xgetbv(index, eax, edx)                 \
+    do {                                        \
+        uint64_t res = __xgetbv(index);         \
+        eax = res;                              \
+        edx = res >> 32;                        \
+    } while (0)
+#endif /* HAVE_XGETBV */
+
+#if HAVE_INLINE_ASM
 
 #define get_eflags(x)                           \
     __asm__ volatile ("pushfl     \n"           \
@@ -46,6 +73,18 @@
     __asm__ volatile ("push    %0 \n"           \
                       "popfl      \n"           \
                       :: "r"(x))
+
+#elif HAVE_RWEFLAGS
+
+#include <intrin.h>
+
+#define get_eflags(x)                           \
+    x = __readeflags()
+
+#define set_eflags(x)                           \
+    __writeeflags(x)
+
+#endif /* HAVE_INLINE_ASM */
 
 /* Function to test if multimedia instructions are supported...  */
 int ff_get_cpu_flags_x86(void)
@@ -83,7 +122,7 @@ int ff_get_cpu_flags_x86(void)
         if (std_caps & (1 << 23))
             rval |= AV_CPU_FLAG_MMX;
         if (std_caps & (1 << 25))
-            rval |= AV_CPU_FLAG_MMX2;
+            rval |= AV_CPU_FLAG_MMXEXT;
 #if HAVE_SSE
         if (std_caps & (1 << 25))
             rval |= AV_CPU_FLAG_SSE;
@@ -120,7 +159,7 @@ int ff_get_cpu_flags_x86(void)
         if (ext_caps & (1 << 23))
             rval |= AV_CPU_FLAG_MMX;
         if (ext_caps & (1 << 22))
-            rval |= AV_CPU_FLAG_MMX2;
+            rval |= AV_CPU_FLAG_MMXEXT;
 
         /* Allow for selectively disabling SSE2 functions on AMD processors
            with SSE2 support but not SSE4a. This includes Athlon64, some

@@ -34,6 +34,7 @@
 
 #include "avcodec.h"
 #include "dsputil.h"
+#include "libavutil/internal.h"
 
 
 typedef struct CyuvDecodeContext {
@@ -177,7 +178,7 @@ static av_cold int cyuv_decode_end(AVCodecContext *avctx)
 AVCodec ff_cyuv_decoder = {
     .name           = "cyuv",
     .type           = AVMEDIA_TYPE_VIDEO,
-    .id             = CODEC_ID_CYUV,
+    .id             = AV_CODEC_ID_CYUV,
     .priv_data_size = sizeof(CyuvDecodeContext),
     .init           = cyuv_decode_init,
     .close          = cyuv_decode_end,

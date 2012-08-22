@@ -61,7 +61,7 @@ private:
     GUID dxvaDecoderGUID;
     DXVA_MODE nDXVAMode;
     TDXVADecoder* pDXVADecoder;
-    CodecID dxvaCodecId;
+    AVCodecID dxvaCodecId;
     bool initDXVAMode;
 
     // DXVA settings
@@ -95,7 +95,7 @@ protected:
     virtual void OverlayYV12OnUSWCFrame(unsigned char * pSrc, unsigned char * pDest, UINT width, UINT height, UINT pitch);
 
 public:
-    TvideoCodecLibavcodecDxva(IffdshowBase *Ideci, IdecVideoSink *IsinkD, CodecID IcodecId);
+    TvideoCodecLibavcodecDxva(IffdshowBase *Ideci, IdecVideoSink *IsinkD, AVCodecID IcodecId);
     virtual ~TvideoCodecLibavcodecDxva();
 
     //TvideoCodecDec overloaded methods

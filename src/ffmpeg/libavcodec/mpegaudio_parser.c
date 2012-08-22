@@ -22,6 +22,7 @@
 
 #include "parser.h"
 #include "mpegaudiodecheader.h"
+#include "libavutil/common.h"
 
 
 typedef struct MpegAudioParseContext {
@@ -101,7 +102,7 @@ static int mpegaudio_parse(AVCodecParserContext *s1,
 
 
 AVCodecParser ff_mpegaudio_parser = {
-    .codec_ids      = { CODEC_ID_MP1, CODEC_ID_MP2, CODEC_ID_MP3 },
+    .codec_ids      = { AV_CODEC_ID_MP1, AV_CODEC_ID_MP2, AV_CODEC_ID_MP3 },
     .priv_data_size = sizeof(MpegAudioParseContext),
     .parser_parse   = mpegaudio_parse,
     .parser_close   = ff_parse_close,

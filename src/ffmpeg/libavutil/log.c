@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include "avstring.h"
 #include "avutil.h"
+#include "common.h"
 #include "log.h"
 #include "../../ffdebug.c"
 

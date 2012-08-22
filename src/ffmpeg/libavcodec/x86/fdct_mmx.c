@@ -31,8 +31,10 @@
  */
 
 #include "libavutil/common.h"
-#include "libavutil/x86_cpu.h"
+#include "libavutil/x86/asm.h"
 #include "libavcodec/dsputil.h"
+
+#if HAVE_INLINE_ASM
 
 /* ffdshow custom code */
 #pragma GCC target ("sse")
@@ -582,3 +584,5 @@ void ff_fdct_sse2(int16_t *block)
     fdct_col_sse2(block, block1, 0);
     fdct_row_sse2(block1, block);
 }
+
+#endif /* HAVE_INLINE_ASM */

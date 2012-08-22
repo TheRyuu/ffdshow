@@ -92,7 +92,7 @@ void TquantTablesPageBase::create(HWND parent)
 void TquantTablesPageBase::cfg2dlg(void)
 {
     codecId = getCodecId();
-    if (codecId == CODEC_ID_H264) {
+    if (codecId == AV_CODEC_ID_H264) {
         enable(1, IDC_CBX_QUANT_TABLE);
     } else {
         enable(0, IDC_CBX_QUANT_TABLE);
@@ -151,7 +151,7 @@ void TquantTablesPageBase::table2dlg(void)
     }
     enable(1, cnt == 64 ? idIntra8 : idIntra4);
     enable(1, cnt == 64 ? idInter8 : idInter4);
-    enable(codecId == CODEC_ID_H264, IDC_ED_QUANT_TABLE_INTRA1);
+    enable(codecId == AV_CODEC_ID_H264, IDC_ED_QUANT_TABLE_INTRA1);
 }
 
 

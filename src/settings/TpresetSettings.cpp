@@ -107,7 +107,7 @@ const char_t* TautoPresetProps::getVolumeSerial(void)
 const char_t* TautoPresetProps::getDecoder(void)
 {
     if (!decoder) {
-        decoder = getCodecName((CodecID)deci->getCurrentCodecId2());
+        decoder = getCodecName((AVCodecID)deci->getCurrentCodecId2());
     }
     return decoder;
 }

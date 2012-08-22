@@ -83,12 +83,12 @@ bool TvideoCodecWmv9::testMediaType(FOURCC fcc, const CMediaType &mt)
     if (wmv9) {
         const Tff_wmv9codecInfo *codec = wmv9->findCodec(fcc);
         if (!codec) {
-            return CODEC_ID_NONE;
+            return AV_CODEC_ID_NONE;
         }
         codecIndex = codec->index;
         return !!codec;
     } else {
-        return CODEC_ID_NONE;
+        return AV_CODEC_ID_NONE;
     }
 }
 

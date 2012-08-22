@@ -53,7 +53,7 @@ void TquantPage::cfg2dlg(void)
     setDlgItemText(m_hwnd, IDC_LBL_Q_P, _(IDC_LBL_Q_P, _l("P frames")));
     enable(is && 1, idIquants);
     static const int idIoffset[] = {IDC_LBL_I_QUANTFACTOR, IDC_LBL_I_QUANTOFFSET, IDC_ED_I_QUANTFACTOR, IDC_ED_I_QUANTOFFSET, 0};
-    enable(lavc_codec(codecId) && codecId != CODEC_ID_MJPEG, idIoffset);
+    enable(lavc_codec(codecId) && codecId != AV_CODEC_ID_MJPEG, idIoffset);
 
     bias2dlg();
 

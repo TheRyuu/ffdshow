@@ -264,7 +264,7 @@ private:
     Twinamp2 *winamp2;
     void onWinamp2dirChange(int paramID, const char_t *valname);
 
-    CodecID getCodecId(const CMediaType &mtIn);
+    AVCodecID getCodecId(const CMediaType &mtIn);
     HRESULT ReconnectOutput(size_t numsamples, CMediaType& mt);
     REFERENCE_TIME m_rtStartDec, m_rtStartProc;
     HRESULT getMediaType(CMediaType *mtOut);

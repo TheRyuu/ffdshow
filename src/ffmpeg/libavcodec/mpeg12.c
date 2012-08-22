@@ -830,7 +830,7 @@ static int mpeg_decode_mb(MpegEncContext *s, DCTELEM block[12][64])
             memset(s->last_mv, 0, sizeof(s->last_mv)); /* reset mv prediction */
         s->mb_intra = 1;
 
-        if (s->codec_id == CODEC_ID_MPEG2VIDEO) {
+        if (s->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
             if (s->flags2 & CODEC_FLAG2_FAST) {
                 for (i = 0; i < 6; i++) {
                     mpeg2_fast_decode_block_intra(s, *s->pblocks[i], i);
@@ -1039,7 +1039,7 @@ static int mpeg_decode_mb(MpegEncContext *s, DCTELEM block[12][64])
                 return -1;
             }
 
-            if (s->codec_id == CODEC_ID_MPEG2VIDEO) {
+            if (s->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
                 if (s->flags2 & CODEC_FLAG2_FAST) {
                     for (i = 0; i < 6; i++) {
                         if (cbp & 32) {
@@ -1119,7 +1119,7 @@ static av_cold int mpeg_decode_init(AVCodecContext *avctx)
     s->repeat_field                = 0;
     s->mpeg_enc_ctx.codec_id       = avctx->codec->id;
     avctx->color_range = AVCOL_RANGE_MPEG;
-    if (avctx->codec->id == CODEC_ID_MPEG1VIDEO)
+    if (avctx->codec->id == AV_CODEC_ID_MPEG1VIDEO)
         avctx->chroma_sample_location = AVCHROMA_LOC_CENTER;
     else
         avctx->chroma_sample_location = AVCHROMA_LOC_LEFT;
@@ -1212,7 +1212,7 @@ static int mpeg_decode_postinit(AVCodecContext *avctx)
          * that behave like P-frames. */
         avctx->has_b_frames = !s->low_delay;
 
-        if (avctx->codec_id == CODEC_ID_MPEG1VIDEO) {
+        if (avctx->codec_id == AV_CODEC_ID_MPEG1VIDEO) {
             //MPEG-1 fps
             avctx->time_base.den = avpriv_frame_rate_tab[s->frame_rate_index].num;
             avctx->time_base.num = avpriv_frame_rate_tab[s->frame_rate_index].den;
@@ -1372,7 +1372,7 @@ static void mpeg_decode_sequence_extension(Mpeg1Context *s1)
     // ffdshow custom code end
 
     av_dlog(s->avctx, "sequence extension\n");
-    s->codec_id      = s->avctx->codec_id = CODEC_ID_MPEG2VIDEO;
+    s->codec_id      = s->avctx->codec_id = AV_CODEC_ID_MPEG2VIDEO;
 
     if (s->avctx->debug & FF_DEBUG_PICT_INFO)
         av_log(s->avctx, AV_LOG_DEBUG, "profile: %d, level: %d vbv buffer: %d, bitrate:%d\n",
@@ -1621,7 +1621,7 @@ static int mpeg_decode_slice(MpegEncContext *s, int mb_y,
     assert(mb_y < s->mb_height);
 
     init_get_bits(&s->gb, *buf, buf_size * 8);
-    if(s->codec_id != CODEC_ID_MPEG1VIDEO && s->mb_height > 2800/16)
+    if(s->codec_id != AV_CODEC_ID_MPEG1VIDEO && s->mb_height > 2800/16)
         skip_bits(&s->gb, 3);
 
     ff_mpeg1_clean_buffers(s);
@@ -1846,7 +1846,7 @@ static int slice_decode_thread(AVCodecContext *c, void *arg)
         start_code = -1;
         buf = avpriv_mpv_find_start_code(buf, s->gb.buffer_end, &start_code);
         mb_y= start_code - SLICE_MIN_START_CODE;
-        if(s->codec_id != CODEC_ID_MPEG1VIDEO && s->mb_height > 2800/16)
+        if(s->codec_id != AV_CODEC_ID_MPEG1VIDEO && s->mb_height > 2800/16)
             mb_y += (*buf&0xE0)<<2;
         mb_y <<= field_pic;
         if (s->picture_structure == PICT_BOTTOM_FIELD)
@@ -1966,7 +1966,7 @@ static int mpeg1_decode_sequence(AVCodecContext *avctx,
     s->first_field          = 0;
     s->frame_pred_frame_dct = 1;
     s->chroma_format        = 1;
-    s->codec_id             = s->avctx->codec_id = CODEC_ID_MPEG1VIDEO;
+    s->codec_id             = s->avctx->codec_id = AV_CODEC_ID_MPEG1VIDEO;
     s->out_format           = FMT_MPEG1;
     s->swap_uv              = 0; // AFAIK VCR2 does not have SEQ_HEADER
     if (s->flags & CODEC_FLAG_LOW_DELAY)
@@ -2019,11 +2019,11 @@ static int vcr2_init_sequence(AVCodecContext *avctx)
     s->frame_pred_frame_dct  = 1;
     s->chroma_format         = 1;
     if (s->codec_tag == AV_RL32("BW10")) {
-        s->codec_id              = s->avctx->codec_id = CODEC_ID_MPEG1VIDEO;
+        s->codec_id              = s->avctx->codec_id = AV_CODEC_ID_MPEG1VIDEO;
     } else {
         exchange_uv(s); // common init reset pblocks, so we swap them here
         s->swap_uv = 1; // in case of xvmc we need to swap uv for each MB
-        s->codec_id              = s->avctx->codec_id = CODEC_ID_MPEG2VIDEO;
+        s->codec_id              = s->avctx->codec_id = AV_CODEC_ID_MPEG2VIDEO;
     }
     s1->save_width           = s->width;
     s1->save_height          = s->height;
@@ -2350,7 +2350,7 @@ static int decode_chunks(AVCodecContext *avctx,
                 const int field_pic = s2->picture_structure != PICT_FRAME;
                 int mb_y = start_code - SLICE_MIN_START_CODE;
                 last_code = SLICE_MIN_START_CODE;
-                if(s2->codec_id != CODEC_ID_MPEG1VIDEO && s2->mb_height > 2800/16)
+                if(s2->codec_id != AV_CODEC_ID_MPEG1VIDEO && s2->mb_height > 2800/16)
                     mb_y += (*buf_ptr&0xE0)<<2;
 
                 mb_y <<= field_pic;
@@ -2383,7 +2383,7 @@ static int decode_chunks(AVCodecContext *avctx,
                 if (!s->mpeg_enc_ctx_allocated)
                     break;
 
-                if (s2->codec_id == CODEC_ID_MPEG2VIDEO) {
+                if (s2->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
                     if (mb_y < avctx->skip_top || mb_y >= s2->mb_height - avctx->skip_bottom)
                         break;
                 }
@@ -2481,7 +2481,7 @@ static const AVProfile mpeg2_video_profiles[] = {
 AVCodec ff_mpeg1video_decoder = {
     .name                  = "mpeg1video",
     .type                  = AVMEDIA_TYPE_VIDEO,
-    .id                    = CODEC_ID_MPEG1VIDEO,
+    .id                    = AV_CODEC_ID_MPEG1VIDEO,
     .priv_data_size        = sizeof(Mpeg1Context),
     .init                  = mpeg_decode_init,
     .close                 = mpeg_decode_end,
@@ -2497,7 +2497,7 @@ AVCodec ff_mpeg1video_decoder = {
 AVCodec ff_mpeg2video_decoder = {
     .name           = "mpeg2video",
     .type           = AVMEDIA_TYPE_VIDEO,
-    .id             = CODEC_ID_MPEG2VIDEO,
+    .id             = AV_CODEC_ID_MPEG2VIDEO,
     .priv_data_size = sizeof(Mpeg1Context),
     .init           = mpeg_decode_init,
     .close          = mpeg_decode_end,

@@ -58,8 +58,8 @@ public:
 
     void (*avcodec_register_all)(void);
     AVCodecContext* (*avcodec_alloc_context0)(AVCodec *codec);
-    AVCodec* (*avcodec_find_decoder)(CodecID codecId);
-    AVCodec* (*avcodec_find_encoder)(CodecID id);
+    AVCodec* (*avcodec_find_decoder)(AVCodecID codecId);
+    AVCodec* (*avcodec_find_encoder)(AVCodecID id);
     int (*avcodec_open0)(AVCodecContext *avctx, AVCodec *codec, AVDictionary **options);
     int  avcodec_open(AVCodecContext *avctx, AVCodec *codec);
     AVFrame* (*avcodec_alloc_frame)(void);

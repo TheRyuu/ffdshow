@@ -928,9 +928,9 @@ typedef struct AVCodecContext {
     int log_level_offset;
 
     enum AVMediaType codec_type; /* see AVMEDIA_TYPE_xxx */
-    struct AVCodec  *codec;
+    const struct AVCodec  *codec;
     char             codec_name[32];
-    enum CodecID     codec_id; /* see CODEC_ID_xxx */
+    enum AVCodecID     codec_id; /* see AV_CODEC_ID_xxx */
 
     /**
      * fourcc (LSB first, so "ABCD" -> ('D'<<24) + ('C'<<16) + ('B'<<8) + 'A').
@@ -2391,6 +2391,10 @@ typedef struct AVCodecContext {
 #define FF_PROFILE_AAC_LOW  1
 #define FF_PROFILE_AAC_SSR  2
 #define FF_PROFILE_AAC_LTP  3
+#define FF_PROFILE_AAC_HE   4
+#define FF_PROFILE_AAC_HE_V2 28
+#define FF_PROFILE_AAC_LD   22
+#define FF_PROFILE_AAC_ELD  38
 
 #define FF_PROFILE_DTS         20
 #define FF_PROFILE_DTS_ES      30
@@ -2576,7 +2580,7 @@ typedef struct AVCodec {
      */
     const char *long_name;
     enum AVMediaType type;
-    enum CodecID id;
+    enum AVCodecID id;
     /**
      * Codec capabilities.
      * see CODEC_CAP_*
@@ -2674,9 +2678,9 @@ typedef struct AVHWAccel {
     /**
      * Codec implemented by the hardware accelerator.
      *
-     * See CODEC_ID_xxx
+     * See AV_CODEC_ID_xxx
      */
-    enum CodecID id;
+    enum AVCodecID id;
 
     /**
      * Supported pixel format.
@@ -2771,7 +2775,7 @@ typedef struct AVPicture {
  * if c is non-NULL, returns the next registered codec after c,
  * or NULL if c is the last one.
  */
-AVCodec *av_codec_next(AVCodec *c);
+AVCodec *av_codec_next(const AVCodec *c);
 
 /**
  * Return the LIBAVCODEC_VERSION_INT constant.
@@ -2825,7 +2829,7 @@ void avcodec_register_all(void);
  * @return An AVCodecContext filled with default values or NULL on failure.
  * @see avcodec_get_context_defaults
  */
-AVCodecContext *avcodec_alloc_context3(AVCodec *codec);
+AVCodecContext *avcodec_alloc_context3(const AVCodec *codec);
 
 /**
  * Set the fields of the given AVCodecContext to default values corresponding
@@ -2836,7 +2840,7 @@ AVCodecContext *avcodec_alloc_context3(AVCodec *codec);
  * If codec is non-NULL, it is illegal to call avcodec_open2() with a
  * different codec on this AVCodecContext.
  */
-int avcodec_get_context_defaults3(AVCodecContext *s, AVCodec *codec);
+int avcodec_get_context_defaults3(AVCodecContext *s, const AVCodec *codec);
 
 /**
  * Get the AVClass for AVCodecContext. It can be used in combination with
@@ -2875,7 +2879,7 @@ void avcodec_get_frame_defaults(AVFrame *pic);
  * @code
  * avcodec_register_all();
  * av_dict_set(&opts, "b", "2.5M", 0);
- * codec = avcodec_find_decoder(CODEC_ID_H264);
+ * codec = avcodec_find_decoder(AV_CODEC_ID_H264);
  * if (!codec)
  *     exit(1);
  *
@@ -2898,7 +2902,7 @@ void avcodec_get_frame_defaults(AVFrame *pic);
  * @see avcodec_alloc_context3(), avcodec_find_decoder(), avcodec_find_encoder(),
  *      av_dict_set(), av_opt_find().
  */
-int avcodec_open2(AVCodecContext *avctx, AVCodec *codec, AVDictionary **options);
+int avcodec_open2(AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options);
 
 /**
  * Close a given AVCodecContext and free all the data associated with it
@@ -3024,10 +3028,10 @@ uint8_t* av_packet_get_side_data(AVPacket *pkt, enum AVPacketSideDataType type,
 /**
  * Find a registered decoder with a matching codec ID.
  *
- * @param id CodecID of the requested decoder
+ * @param id AVCodecID of the requested decoder
  * @return A decoder if one was found, NULL otherwise.
  */
-AVCodec *avcodec_find_decoder(enum CodecID id);
+AVCodec *avcodec_find_decoder(enum AVCodecID id);
 
 /**
  * Find a registered decoder with the specified name.
@@ -3426,10 +3430,10 @@ void av_parser_close(AVCodecParserContext *s);
 /**
  * Find a registered encoder with a matching codec ID.
  *
- * @param id CodecID of the requested encoder
+ * @param id AVCodecID of the requested encoder
  * @return An encoder if one was found, NULL otherwise.
  */
-AVCodec *avcodec_find_encoder(enum CodecID id);
+AVCodec *avcodec_find_encoder(enum AVCodecID id);
 
 /**
  * Find a registered encoder with the specified name.
@@ -3672,7 +3676,7 @@ void avcodec_default_free_buffers(AVCodecContext *s);
  * @param[in] codec_id the codec
  * @return Number of bits per sample or zero if unknown for the given codec.
  */
-int av_get_bits_per_sample(enum CodecID codec_id);
+int av_get_bits_per_sample(enum AVCodecID codec_id);
 
 /**
  * Return codec bits per sample.
@@ -3682,7 +3686,7 @@ int av_get_bits_per_sample(enum CodecID codec_id);
  * @param[in] codec_id the codec
  * @return Number of bits per sample or zero if unknown for the given codec.
  */
-int av_get_exact_bits_per_sample(enum CodecID codec_id);
+int av_get_exact_bits_per_sample(enum AVCodecID codec_id);
 
 /* memory */
 
@@ -3777,7 +3781,7 @@ int av_lockmgr_register(int (*cb)(void **mutex, enum AVLockOp op));
 /**
  * Get the type of the given codec.
  */
-enum AVMediaType avcodec_get_type(enum CodecID codec_id);
+enum AVMediaType avcodec_get_type(enum AVCodecID codec_id);
 
 /**
  * @return a positive value if s is open (i.e. avcodec_open2() was called on it
@@ -3788,12 +3792,12 @@ int avcodec_is_open(AVCodecContext *s);
 /**
  * @return a non-zero number if codec is an encoder, zero otherwise
  */
-int av_codec_is_encoder(AVCodec *codec);
+int av_codec_is_encoder(const AVCodec *codec);
 
 /**
  * @return a non-zero number if codec is a decoder, zero otherwise
  */
-int av_codec_is_decoder(AVCodec *codec);
+int av_codec_is_decoder(const AVCodec *codec);
 
 /**
  * @}
