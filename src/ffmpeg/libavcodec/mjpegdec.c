@@ -1091,6 +1091,10 @@ int ff_mjpeg_decode_sos(MJpegDecodeContext *s, const uint8_t *mb_bitmask,
     for (i = s->mjpb_skiptosod; i > 0; i--)
         skip_bits(&s->gb, 8);
 
+next_field:
+    for (i = 0; i < nb_components; i++)
+        s->last_dc[i] = 1024;
+
     if (s->lossless) {
         if (CONFIG_JPEGLS_DECODER && s->ls) {
 //            for () {
@@ -1125,6 +1129,22 @@ int ff_mjpeg_decode_sos(MJpegDecodeContext *s, const uint8_t *mb_bitmask,
                 return ret;
         }
     }
+
+    if (s->interlaced &&
+        get_bits_left(&s->gb) > 32 &&
+        show_bits(&s->gb, 8) == 0xFF) {
+        GetBitContext bak = s->gb;
+        align_get_bits(&bak);
+        if (show_bits(&bak, 16) == 0xFFD1) {
+            av_dlog(s->avctx, "AVRn interlaced picture marker found\n");
+            s->gb = bak;
+            skip_bits(&s->gb, 16);
+            s->bottom_field ^= 1;
+
+            goto next_field;
+        }
+    }
+
     emms_c();
     return 0;
  out_of_range:

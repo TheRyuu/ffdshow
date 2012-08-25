@@ -349,14 +349,14 @@ static const AVOption options[]={
 {"compression_level", NULL, OFFSET(compression_level), AV_OPT_TYPE_INT, {.dbl = FF_COMPRESSION_DEFAULT }, INT_MIN, INT_MAX, V|A|E},
 {"min_prediction_order", NULL, OFFSET(min_prediction_order), AV_OPT_TYPE_INT, {.dbl = -1 }, INT_MIN, INT_MAX, A|E},
 {"max_prediction_order", NULL, OFFSET(max_prediction_order), AV_OPT_TYPE_INT, {.dbl = -1 }, INT_MIN, INT_MAX, A|E},
-{"timecode_frame_start", "GOP timecode frame start number, in non drop frame format", OFFSET(timecode_frame_start), AV_OPT_TYPE_INT64, {.dbl = 0 }, 0, INT64_MAX, V|E},
+{"timecode_frame_start", "GOP timecode frame start number, in non drop frame format", OFFSET(timecode_frame_start), AV_OPT_TYPE_INT64, {.i64 = 0 }, 0, INT64_MAX, V|E},
 #if FF_API_REQUEST_CHANNELS
 {"request_channels", "set desired number of audio channels", OFFSET(request_channels), AV_OPT_TYPE_INT, {.dbl = DEFAULT }, 0, INT_MAX, A|D},
 #endif
 {"drc_scale", "percentage of dynamic range compression to apply", OFFSET(drc_scale), AV_OPT_TYPE_FLOAT, {.dbl = 0.0 }, 0.0, 1.0, A|D},
 {"bits_per_raw_sample", NULL, OFFSET(bits_per_raw_sample), AV_OPT_TYPE_INT, {.dbl = DEFAULT }, INT_MIN, INT_MAX},
-{"channel_layout", NULL, OFFSET(channel_layout), AV_OPT_TYPE_INT64, {.dbl = DEFAULT }, 0, INT64_MAX, A|E|D, "channel_layout"},
-{"request_channel_layout", NULL, OFFSET(request_channel_layout), AV_OPT_TYPE_INT64, {.dbl = DEFAULT }, 0, INT64_MAX, A|D, "request_channel_layout"},
+{"channel_layout", NULL, OFFSET(channel_layout), AV_OPT_TYPE_INT64, {.i64 = DEFAULT }, 0, INT64_MAX, A|E|D, "channel_layout"},
+{"request_channel_layout", NULL, OFFSET(request_channel_layout), AV_OPT_TYPE_INT64, {.i64 = DEFAULT }, 0, INT64_MAX, A|D, "request_channel_layout"},
 {"rc_max_vbv_use", NULL, OFFSET(rc_max_available_vbv_use), AV_OPT_TYPE_FLOAT, {.dbl = 1.0/3 }, 0.0, FLT_MAX, V|E},
 {"rc_min_vbv_use", NULL, OFFSET(rc_min_vbv_overflow_use),  AV_OPT_TYPE_FLOAT, {.dbl = 3 },     0.0, FLT_MAX, V|E},
 {"ticks_per_frame", NULL, OFFSET(ticks_per_frame), AV_OPT_TYPE_INT, {.dbl = 1 }, 1, INT_MAX, A|V|E|D},
@@ -386,6 +386,11 @@ static const AVOption options[]={
 {"s32", "32-bit signed integer",  0, AV_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_S32 }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
 {"flt", "32-bit float",           0, AV_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_FLT }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
 {"dbl", "64-bit double",          0, AV_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_DBL }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"u8p" , "8-bit unsigned integer planar", 0, AV_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_U8P  }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"s16p", "16-bit signed integer planar",  0, AV_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_S16P }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"s32p", "32-bit signed integer planar",  0, AV_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_S32P }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"fltp", "32-bit float planar",           0, AV_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_FLTP }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"dblp", "64-bit double planar",          0, AV_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_DBLP }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
 {NULL},
 };
 
