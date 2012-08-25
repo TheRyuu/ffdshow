@@ -64,8 +64,6 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig, int Imode, cons
         NULL, 0,
         IDFF_addToROT         , &TglobalSettingsBase::addToROT         , 0, 0, _l(""), 0,
         _l("addToROT"), 0,
-        IDFF_allowedCpuFlags  , &TglobalSettingsBase::allowedCPUflags  , 1, 1, _l(""), 0,
-        NULL, 0,
         IDFF_allowDPRINTF     , &TglobalSettingsBase::allowDPRINTF     , 0, 0, _l(""), 0,
         NULL, 0,
         IDFF_allowDPRINTFchanged, &TglobalSettingsBase::allowDPRINTFchanged, 0, 0, _l(""), 0,
@@ -99,8 +97,6 @@ void TglobalSettingsBase::load(void)
     reg_op_codec(tHKCU, &tHKLM);
     TregOpRegRead tDScaler(HKEY_LOCAL_MACHINE, FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
     tDScaler._REG_OP_S(IDFF_dscalerPath, _l("dscalerPth"), dscalerPth, MAX_PATH, _l(""));
-    TregOpRegRead tCPU(HKEY_CURRENT_USER, FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
-    tCPU._REG_OP_N(IDFF_allowedCpuFlags, _l("allowedCPUflags"), allowedCPUflags, 7935);
     firstBlacklist = firstWhitelist = true;
 
     // Load Icon type : shared by video, audio and vfw.
@@ -119,8 +115,6 @@ void TglobalSettingsBase::save(void)
     reg_op_codec(tHKCU, NULL);
     TregOpRegWrite tDScaler(HKEY_LOCAL_MACHINE, FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
     tDScaler._REG_OP_S(IDFF_dscalerPath, _l("dscalerPth"), dscalerPth, MAX_PATH, _l(""));
-    TregOpRegWrite tCPU(HKEY_CURRENT_USER, FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
-    tCPU._REG_OP_N(IDFF_allowedCpuFlags, _l("allowedCPUflags"), allowedCPUflags, 7935);
 
     // Save Icon type : shared by video, audio and vfw.
     if (trayIconChanged) {

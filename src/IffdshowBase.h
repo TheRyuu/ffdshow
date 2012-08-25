@@ -102,10 +102,6 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowBaseT, IUnknown)
     STDMETHOD_(int, getInfoShortcutItem)(const tchar * s, int * toklen) PURE;
     STDMETHOD_(DWORD, CPUcount)(void) PURE;
     STDMETHOD_(int, get_trayIconType)(void) PURE;
-    STDMETHOD(cpuSupportsSSE41)(void) PURE;
-    STDMETHOD(cpuSupportsSSE42)(void) PURE;
-    STDMETHOD(cpuSupportsSSE4A)(void) PURE;
-    STDMETHOD(cpuSupportsSSE5)(void) PURE;
     STDMETHOD_(void*, get_csReceive_ptr)(void) PURE;
 };
 

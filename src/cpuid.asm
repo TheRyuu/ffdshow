@@ -37,8 +37,6 @@
 %define CPUID_SSSE3             0x00000200
 %define CPUID_SSE41             0x00080000
 %define CPUID_SSE42             0x00100000
-%define CPUID_SSE4A             0x00000040
-%define CPUID_SSE5              0x00000800
 
 %define EXT_CPUID_3DNOW         0x80000000
 %define EXT_CPUID_AMD_3DNOWEXT  0x40000000
@@ -55,8 +53,6 @@
 %define FF_CPU_TSC              0x00000100
 %define FF_CPU_SSE41            0x00000200
 %define FF_CPU_SSE42            0x00000400
-%define FF_CPU_SSE4A            0x00000800
-%define FF_CPU_SSE5             0x00001000
 
 ;=============================================================================
 ; Read only data
@@ -172,12 +168,6 @@ check_cpu_features:
 
 ; extended MMX ?
   CHECK_FEATURE EXT_CPUID_AMD_MMXEXT, FF_CPU_MMXEXT, ebp, edx
-
-; SSE4A support?
-  CHECK_FEATURE CPUID_SSE4A, FF_CPU_SSE4A, ebp, ecx
-
-; SSE5 support?
-  CHECK_FEATURE CPUID_SSE5, FF_CPU_SSE5, ebp, ecx
 
 .cpu_quit:
 

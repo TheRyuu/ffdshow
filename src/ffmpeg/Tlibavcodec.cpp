@@ -164,25 +164,6 @@ Tlibavcodec::~Tlibavcodec()
     delete dll;
 }
 
-int Tlibavcodec::lavcCpuFlags(void)
-{
-    int lavc_cpu_flags = 0;
-    if (Tconfig::cpu_flags & FF_CPU_MMX) { lavc_cpu_flags |= AV_CPU_FLAG_MMX; }
-    if (Tconfig::cpu_flags & FF_CPU_MMXEXT) { lavc_cpu_flags |= AV_CPU_FLAG_MMX2; }
-    if (Tconfig::cpu_flags & FF_CPU_SSE) { lavc_cpu_flags |= AV_CPU_FLAG_SSE; }
-    if (Tconfig::cpu_flags & FF_CPU_SSE2) { lavc_cpu_flags |= AV_CPU_FLAG_SSE2 | AV_CPU_FLAG_SSE2SLOW; }
-    if (Tconfig::cpu_flags & FF_CPU_3DNOW) { lavc_cpu_flags |= AV_CPU_FLAG_3DNOW; }
-    if (Tconfig::cpu_flags & FF_CPU_3DNOWEXT) { lavc_cpu_flags |= AV_CPU_FLAG_3DNOWEXT; }
-    if (Tconfig::cpu_flags & FF_CPU_SSE3) { lavc_cpu_flags |= AV_CPU_FLAG_SSE3 | AV_CPU_FLAG_SSE3SLOW; }
-    if (Tconfig::cpu_flags & FF_CPU_SSSE3) { lavc_cpu_flags |= AV_CPU_FLAG_SSSE3 | AV_CPU_FLAG_ATOM; }
-    if (Tconfig::cpu_flags & FF_CPU_SSE41) { lavc_cpu_flags |= AV_CPU_FLAG_SSE4; }
-    if (Tconfig::cpu_flags & FF_CPU_SSE42) { lavc_cpu_flags |= AV_CPU_FLAG_SSE42; }
-    // ToDo: add AVX and XOP/FMA4 to ffdshow GUI, remove SSE4A/SSE5 which are not used by libavcodec
-    if (Tconfig::cpu_flags & FF_CPU_SSE42) { lavc_cpu_flags |= AV_CPU_FLAG_AVX | AV_CPU_FLAG_XOP | AV_CPU_FLAG_FMA4; }
-
-    return lavc_cpu_flags;
-}
-
 //Used by libswscale start
 void Tlibavcodec::swsInitParams(SwsParams *params, int resizeMethod)
 {
@@ -273,9 +254,6 @@ int Tlibavcodec::getPPmode(const TpostprocSettings *cfg, int currentq)
 AVCodecContext* Tlibavcodec::avcodec_alloc_context(AVCodec *codec, TlibavcodecExt *ext)
 {
     AVCodecContext *ctx = avcodec_alloc_context0(codec);
-    if (Tconfig::lavc_cpu_flags != 0x70007FFF) {
-        av_set_cpu_flags_mask(Tconfig::lavc_cpu_flags);
-    }
     if (ext) {
         ext->connectTo(ctx, this);
     }

@@ -59,7 +59,6 @@ public:
     virtual bool inBlacklist(const char_t *exe);
     virtual bool inWhitelist(const char_t *exe, IffdshowBase *Ideci);
     int addToROT;
-    int allowedCPUflags;
     int compOnLoadMode;
     const char_t* getRegChild(void) {
         return reg_child;

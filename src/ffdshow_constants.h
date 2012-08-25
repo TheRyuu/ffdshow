@@ -47,9 +47,7 @@
 //#define IDFF_lastFrameLength      41
 #define IDFF_movieDuration        38
 #define IDFF_installPath          35
-#define IDFF_availableCpuFlags    77 // CPU flags supported by CPU
-#define IDFF_allowedCpuFlags      78 // CPU flags allowed by user
-#define IDFF_cpuFlags             36 // IDFF_availableCpuFlags&IDFF_allowedCpuFlags
+#define IDFF_cpuFlags             36
 #define IDFF_notreg               47
 #define IDFF_multipleInstances    66 // 0 - allow multiple instances of ffdshow in graph to be connected to each other, 1 - only check previous filter, 2 - check all filters in graph
 #define IDFF_isBlacklist          93

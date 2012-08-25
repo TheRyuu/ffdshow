@@ -36,7 +36,7 @@
 #include "ThtmlColors.h"
 #include "TdialogSettings.h"
 
-int Tconfig::cpu_flags = 0, Tconfig::available_cpu_flags = 0, Tconfig::lavc_cpu_flags = 0;
+int Tconfig::cpu_flags = 0;
 int Tconfig::cache_line = 32;
 
 extern "C"
@@ -54,7 +54,6 @@ Tconfig::Tconfig(TintStrColl *Icoll): Toptions(Icoll), htmlcolors(NULL)
 {
     kernel = NULL;
     static const TintOptionT<Tconfig> iopts[] = {
-        IDFF_availableCpuFlags  , &Tconfig::available_cpu_flags0, -1, -1,       _l(""), 0, NULL, 0,
         IDFF_cpuFlags           , &Tconfig::cpu_flags0          , -1, -1,       _l(""), 0, NULL, 0,
         0
     };
@@ -66,11 +65,11 @@ Tconfig::Tconfig(TintStrColl *Icoll): Toptions(Icoll), htmlcolors(NULL)
     addOptions(sopts);
     is_WMEncEng = done_WMEncEng = false;
 }
-Tconfig::Tconfig(HINSTANCE hInst, int allowedCpuGFlags): Toptions(NULL), htmlcolors(NULL)
+Tconfig::Tconfig(HINSTANCE hInst): Toptions(NULL), htmlcolors(NULL)
 {
     kernel = NULL;
     init1(hInst);
-    initCPU(allowedCpuGFlags);
+    initCPU();
     init2();
 }
 Tconfig::~Tconfig()
@@ -118,7 +117,6 @@ void Tconfig::init1(HINSTANCE hi)
 
 void Tconfig::init2(void)
 {
-    available_cpu_flags0 = available_cpu_flags;
     cpu_flags0 = cpu_flags;
 }
 
@@ -134,15 +132,13 @@ void Tconfig::save(void)
     }
 }
 
-void Tconfig::initCPU(int allowed_cpu_flags)
+void Tconfig::initCPU(void)
 {
-    if (available_cpu_flags == 0) {
-        available_cpu_flags = check_cpu_features();
+    if (cpu_flags == 0) {
+        cpu_flags = check_cpu_features();
 #ifdef __INTEL_COMPILER
-        available_cpu_flags |= FF_CPU_MMX | FF_CPU_MMXEXT;
+        cpu_flags |= FF_CPU_MMX | FF_CPU_MMXEXT;
 #endif
-        cpu_flags = available_cpu_flags & allowed_cpu_flags;
-        lavc_cpu_flags = Tlibavcodec::lavcCpuFlags();
         cache_line = 64;
     }
 }

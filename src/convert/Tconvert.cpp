@@ -781,7 +781,7 @@ STDMETHODIMP TffColorspaceConvert::NonDelegatingQueryInterface(REFIID riid, void
 TffColorspaceConvert::TffColorspaceConvert(LPUNKNOWN punk, HRESULT *phr):
     CUnknown(NAME("TffColorspaceConvert"), punk, phr),
     c(NULL),
-    config(new Tconfig(g_hInst, 0xff))
+    config(new Tconfig(g_hInst))
 {
     libavcodec = new Tlibavcodec(config);
     libavcodec->AddRef();

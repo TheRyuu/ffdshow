@@ -85,7 +85,7 @@ TffdshowBase::TffdshowBase(LPUNKNOWN pUnk, TintStrColl *Ioptions, TglobalSetting
 
     config.init1(g_hInst);
     globalSettings->load();
-    config.initCPU(globalSettings->allowedCPUflags);
+    config.initCPU();
     config.init2();
     firstdialog = true;
     trans = NULL;
@@ -460,22 +460,6 @@ STDMETHODIMP TffdshowBase::cpuSupports3DNOW(void)
 STDMETHODIMP TffdshowBase::cpuSupports3DNOWEXT(void)
 {
     return (Tconfig::cpu_flags & FF_CPU_3DNOWEXT) ? 1 : 0;
-}
-STDMETHODIMP TffdshowBase::cpuSupportsSSE41(void)
-{
-    return (Tconfig::cpu_flags & FF_CPU_SSE41) ? 1 : 0;
-}
-STDMETHODIMP TffdshowBase::cpuSupportsSSE42(void)
-{
-    return (Tconfig::cpu_flags & FF_CPU_SSE42) ? 1 : 0;
-}
-STDMETHODIMP TffdshowBase::cpuSupportsSSE4A(void)
-{
-    return (Tconfig::cpu_flags & FF_CPU_SSE4A) ? 1 : 0;
-}
-STDMETHODIMP TffdshowBase::cpuSupportsSSE5(void)
-{
-    return (Tconfig::cpu_flags & FF_CPU_SSE5) ? 1 : 0;
 }
 STDMETHODIMP_(void *) TffdshowBase::get_csReceive_ptr(void)
 {

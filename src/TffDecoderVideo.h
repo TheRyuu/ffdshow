@@ -545,18 +545,6 @@ public:
     STDMETHODIMP compat_setFrameTimes(int64_t start, int64_t stop) {
         return setFrameTimes(start, stop);
     }
-    STDMETHODIMP compat_cpuSupportsSSE41(void) {
-        return cpuSupportsSSE41();
-    }
-    STDMETHODIMP compat_cpuSupportsSSE42(void) {
-        return cpuSupportsSSE42();
-    }
-    STDMETHODIMP compat_cpuSupportsSSE4A(void) {
-        return cpuSupportsSSE4A();
-    }
-    STDMETHODIMP compat_cpuSupportsSSE5(void) {
-        return cpuSupportsSSE5();
-    }
     STDMETHODIMP compat_getIffDecoder2Version(void) {
         return 1;
     }

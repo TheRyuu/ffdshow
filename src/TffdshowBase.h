@@ -113,10 +113,6 @@ public:
     STDMETHODIMP_(int) getInfoShortcutItem(const char_t *s, int *toklen);
     STDMETHODIMP_(DWORD) CPUcount(void);
     STDMETHODIMP_(int) get_trayIconType(void) PURE;
-    STDMETHODIMP cpuSupportsSSE41(void);
-    STDMETHODIMP cpuSupportsSSE42(void);
-    STDMETHODIMP cpuSupportsSSE4A(void);
-    STDMETHODIMP cpuSupportsSSE5(void);
     STDMETHODIMP_(void*) get_csReceive_ptr(void);
 
 
@@ -406,18 +402,6 @@ protected:
         }
         STDMETHODIMP_(int) get_trayIconType(void) {
             return deci->get_trayIconType();
-        }
-        STDMETHODIMP cpuSupportsSSE41(void) {
-            return deci->cpuSupportsSSE41();
-        }
-        STDMETHODIMP cpuSupportsSSE42(void) {
-            return deci->cpuSupportsSSE42();
-        }
-        STDMETHODIMP cpuSupportsSSE4A(void) {
-            return deci->cpuSupportsSSE4A();
-        }
-        STDMETHODIMP cpuSupportsSSE5(void) {
-            return deci->cpuSupportsSSE5();
         }
         STDMETHODIMP_(void*) get_csReceive_ptr(void) {
             return deci->get_csReceive_ptr();

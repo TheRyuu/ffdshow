@@ -127,10 +127,6 @@ extern "C" {
         STDMETHOD(compat_getSubtitleTimes)(int64_t * start, int64_t * stop) PURE;
         STDMETHOD(compat_resetSubtitleTimes)(void) PURE;
         STDMETHOD(compat_setFrameTimes)(int64_t start, int64_t stop) PURE;
-        STDMETHOD(compat_cpuSupportsSSE41)(void) PURE;
-        STDMETHOD(compat_cpuSupportsSSE42)(void) PURE;
-        STDMETHOD(compat_cpuSupportsSSE4A)(void) PURE;
-        STDMETHOD(compat_cpuSupportsSSE5)(void) PURE;
         STDMETHOD(compat_cpuSupportsSSE3)(void) PURE;
         STDMETHOD(compat_cpuSupportsSSSE3)(void) PURE;
         STDMETHOD(compat_getIffDecoder2Version)(void) PURE;
