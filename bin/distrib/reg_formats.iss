@@ -154,8 +154,7 @@ Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "zmbv
 
 ; Audio formats to decode
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\aac
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData: "15"; Components: ffdshow;     Tasks: audio\ac3\liba52
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\ac3\libavcodec
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\ac3
 ;Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData: "16"; Components: ffdshow;     Tasks: audio\ac3\spdif
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "amr";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\amr
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "dts";        ValueData: "17"; Components: ffdshow;     Tasks: audio\dts\libdts
@@ -181,8 +180,7 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "tta"
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\vorbis
 
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\aac
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData: "15"; Components: ffdshow;     Tasks: audio\ac3\liba52
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\ac3\libavcodec
+Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\ac3
 ;Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData: "16"; Components: ffdshow;     Tasks: audio\ac3\spdif
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "amr";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\amr
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "dts";        ValueData: "17"; Components: ffdshow;     Tasks: audio\dts\libdts

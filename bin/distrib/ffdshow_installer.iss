@@ -353,8 +353,6 @@ Name: "audio\mp2";               Description: "MP1, MP2";                       
 Name: "audio\mp3";               Description: "MP3";                              Components: ffdshow
 Name: "audio\aac";               Description: "AAC";                              Components: ffdshow
 Name: "audio\ac3";               Description: "AC3";                              Components: ffdshow
-Name: "audio\ac3\liba52";        Description: "liba52";                           Components: ffdshow; Flags:           exclusive
-Name: "audio\ac3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\dts";               Description: "DTS";                              Components: ffdshow
 Name: "audio\dts\libdts";        Description: "libdts";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\dts\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
